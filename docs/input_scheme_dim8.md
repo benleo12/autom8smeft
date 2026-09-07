@@ -3,8 +3,8 @@
 Status: drafted 2026-09-02 (analysis only, no Mathematica/FeynRules/MadGraph was run).
 Sources read: `docs/murphy_parsed.json`, `docs/block_index.json`, `gen/dsl.py`,
 `gen/emit_fr.py`, `tests/gen_smoke/base.fr`, `docs/hand_typed_operators.md`,
-the development log (not shipped), `validate/conventions.md`, and the SmeftFR v3.03 source
-(SmeftFR 3.03, file `code/smeft_input_scheme.m`, see docs/EXTERNAL.md) used as an
+`the development log, not shipped`, `validate/conventions.md`, and the SmeftFR v3.03 source
+(`external/smeftfr_3_03/smeftfr_3_03.tgz`, file `code/smeft_input_scheme.m`) used as an
 independent cross-check of the bosonic sector.
 
 
@@ -491,7 +491,7 @@ kinetic and mass matrices symbolically, diagonalise exactly, and series-expand o
 end, truncating at `1/Lam^4`. That is the geoSMEFT method and it is what SmeftFR's
 `SMEFTExpOrder` does.
 
-For the MG5 coupling-order bookkeeping, the plan already in the development log (not shipped) is
+For the MG5 coupling-order bookkeeping, the plan already in `the development log, not shipped` is
 consistent: dim-6 coefficients carry `InteractionOrder -> {NP,1}`, dim-8 carry `{NP,2}`,
 `M$InteractionOrderLimit = {{NP,2}}`, so `NP^2==2` selects `dim-6^2 + dim-8 x SM`. A shift
 parameter built as a product of two dim-6 coefficients must be declared `{NP,2}`.

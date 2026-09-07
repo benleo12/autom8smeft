@@ -80,6 +80,14 @@ Model and an interference that does not hold. Reproduce it with
 `validate/quicktest.sh` extended, or directly: generate `p p > w+ w- NP=0` and run it twice, once
 with the coefficients off and once on.
 
+It is process-dependent, which tells you when to worry. The same test on `p p > e+ e- a` gives
+0.02097 +- 0.00009 pb with the coefficients off and 0.02097 +- 0.00009 with all of them at one,
+identical to four digits on the same 5000 events, because that process has no W and no Higgs
+coupling at tree level, so neither the mass shift nor the untagged Higgs couplings reach it. The
+contamination is there whenever the process is sensitive to M_W or to a Higgs coupling, and
+absent otherwise. Since the `NP=0` row is also the cheapest one in any study, run it both ways
+and do not try to guess.
+
 The remedy has two halves. The fourteen couplings are an emitter bug whose cure already sits
 three lines above it in `gen/input_scheme.py`: `gw` and `g1` are emitted as FeynRules
 *Definitions*, `gw -> gwSM (1 + gw1 + gw2)`, so FeynRules expands them, `gw2` appears
