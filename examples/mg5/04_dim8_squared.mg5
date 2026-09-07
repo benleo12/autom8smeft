@@ -1,0 +1,15 @@
+# 04: the dimension-eight squared term, 1/Lambda^8 (one insertion in each amplitude, NP<=2 NP^2==4).
+# Positive definite; formally the same order as dimension-six-squared and dimension-eight
+# interference from a dimension-six model, which this model does not contain.
+import model dim8_is
+generate p p > w+ w- NP<=2 NP^2==4
+output runs/04_ww_sq
+launch runs/04_ww_sq
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8W2H2D2x1 1.0
+set c8q2W2Dx1 1.0
+done

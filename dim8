@@ -1,0 +1,365 @@
+#!/usr/bin/env python3
+"""
+dim8  --  dimension-eight SMEFT models for MadGraph, one process at a time.
+
+    ./dim8 build                       compute and cache the vertices (slow, once)
+    ./dim8 index                       export the vertex field content for the selector
+    ./dim8 select "p p > h j j"        which operators can contribute, and why
+    ./dim8 model  "p p > h j j" -o vbf write the FeynRules model for just those
+    ./dim8 ufo    "p p > h j j" -o vbf write the UFO for just those
+    ./dim8 check                       run the symbolic validation gates
+
+The point of the process argument is that nobody should import a 1220-coupling model to
+study one final state.  The selection is not a hand-maintained table: an operator is kept
+exactly when one of its Feynman rules can sit in a tree diagram whose external legs are
+the process, decided against the Standard Model's own vertices.  See gen/process.py.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+# vertex cache: DIM8_VDIR overrides build/vertices (the Dropbox copy of build/ gets evicted to the
+# cloud when the disk fills, and evicted files read back empty; keep the live cache outside Dropbox)
+VDIR = os.environ.get("DIM8_VDIR", os.path.join(ROOT, "build/vertices"))
+sys.path.insert(0, os.path.join(ROOT, "gen"))
+sys.path.insert(0, os.path.join(ROOT, "validate"))
+
+WOLFRAM = "/Applications/Wolfram.app/Contents/MacOS/wolframscript"
+
+
+def _need(path, hint):
+    if not os.path.exists(path):
+        sys.exit(f"missing {os.path.relpath(path, ROOT)}\n  -> {hint}")
+
+
+# ---------------------------------------------------------------------------- build ----
+
+
+def cmd_build(a):
+    """Fan the 674 blocks out over N external FeynRules processes and cache each one."""
+    from build_catalogue import main as build_main  # noqa
+
+    sys.argv = ["build_catalogue.py", "--emit", os.path.join(ROOT, "models/dev/dim8_generated.fr")]
+    build_main()
+    src = os.path.join(ROOT, "models/dev/dim8_generated.fr")
+    dst = os.path.join(ROOT, "tests/gen_smoke/gen.fr")
+    open(dst, "w").write(open(src).read())
+
+    n = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
+    procs = []
+    os.makedirs(os.path.join(ROOT, "build/logs"), exist_ok=True)
+    for s in range(1, a.jobs + 1):
+        log = open(os.path.join(ROOT, f"build/logs/worker_{s}.log"), "w")
+        procs.append(subprocess.Popen(
+            [WOLFRAM, "-file", os.path.join(ROOT, "validate/fr_worker.wls"),
+             str(s), str(a.jobs), str(n), str(a.kernels)], stdout=log, stderr=log))
+    print(f"{a.jobs} workers over {n} blocks; cached blocks are skipped, so this resumes.")
+    print(f"  progress:  ls {VDIR}/*.status | wc -l")
+    for p in procs:
+        p.wait()
+    cmd_status(a)
+
+
+def cmd_status(a):
+    vd = VDIR
+    if not os.path.isdir(vd):
+        sys.exit("nothing built yet, run ./dim8 build")
+    # errors="replace": a status file written by a Wolfram kernel on another platform can
+    # carry a non-UTF-8 byte (seen from Perlmutter's Mathematica 13), and one such file must
+    # not take the whole status report down
+    st = [open(os.path.join(vd, f), errors="replace").read().strip() for f in sorted(os.listdir(vd)) if f.endswith(".status") and not f.startswith(".")]
+    total = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
+    # "nonhermitian -1" means the check was DEFERRED (built with DIM8_HERM=0), not that it
+    # passed.  Count those separately so a deferred block can never be mistaken for a clean
+    # one; DIM8_HERMONLY=1 runs the outstanding checks.
+    deferred = [s for s in st if "nonhermitian -1" in s]
+    bad = [s for s in st if "nonhermitian 0 " not in s and "nonhermitian -1" not in s and "SKIPPED" not in s]
+    ok = len(st) - len(bad) - len(deferred)
+    print(f"cached {len(st)}/{total} blocks")
+    print(f"hermiticity: {ok} pass, {len(bad)} FAIL, {len(deferred)} not checked")
+    for s in bad:
+        print("  " + s)
+    if deferred:
+        print(f"  {len(deferred)} blocks built with the check deferred; run with DIM8_HERMONLY=1 to complete them")
+    # FeynRules prints QN::NonConserv when a vertex violates a conserved quantum number.
+    # It is a free correctness gate: attribute each warning to the block that finished
+    # after it in the worker log.
+    import glob
+    import re
+
+    warn = {}
+    for f in glob.glob(os.path.join(ROOT, "build/logs/worker_*_num.log")):
+        pending = 0
+        for line in open(f, errors="replace"):
+            # only electric charge: the B-violating blocks (675-734) legitimately violate
+            # FeynRules' baryon and lepton numbers, and so do their warnings
+            if "Quantum number Q not conserved" in line:
+                pending += 1
+            m = re.search(r"\[done\] (L8op\d+)", line)
+            if m and pending:
+                warn[m.group(1)] = warn.get(m.group(1), 0) + pending
+                pending = 0
+    print(f"charge/quantum-number warnings: {len(warn)} blocks")
+    for b, n in sorted(warn.items(), key=lambda kv: int(kv[0][4:])):
+        print(f"  {b}: {n} QN::NonConserv")
+
+
+def cmd_index(a):
+    _need(VDIR, "./dim8 build")
+    subprocess.check_call([WOLFRAM, "-file", os.path.join(ROOT, "validate/dump_vertex_index.wls")])
+
+
+# --------------------------------------------------------------------------- select ----
+
+
+# Operators whose coefficients enter the electroweak input scheme (docs/input_scheme_dim8.md).
+# With --input-scheme their blocks are ALWAYS included: the canonical field rotation cancels
+# against the kinetic and mass terms these operators induce, so a model that shifted the
+# couplings without carrying the operators would be inconsistent as soon as a coefficient
+# is nonzero (the writer's truncation test showed an uncancelled Lambda^-4 {A,A,H} exactly
+# when they were missing).  Resolved by coefficient name so the list cannot go stale.
+INPUT_SCHEME_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
+                    "c8l2H4Dx2", "c8l2H4Dx4", "c8G2H4x1", "c8H8", "c8quH5", "c8qdH5", "c8leH5"]
+
+
+def _input_scheme_blocks():
+    idx = json.load(open(os.path.join(ROOT, "docs/block_index.json")))
+    by_wc = {w: b["block"] for b in idx for w in b["wcs"]}
+    missing = [w for w in INPUT_SCHEME_WCS if w not in by_wc]
+    if missing:
+        sys.exit(f"input-scheme coefficients not in the catalogue: {missing}")
+    return {by_wc[w] for w in INPUT_SCHEME_WCS}
+
+
+def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
+    """Operators the process can see.  The B-violating classes 18-21 are dropped unless
+    asked for: their four-fermion vertices violate fermion flow, and MadGraph's ALOHA
+    refuses helicity routines for 4-point flow-violating interactions (verified on
+    u u > e+ d~ from Q_{eu^2dH^2}: diagrams generated, ALOHAERROR at the check).  They are
+    still generated, cached and Hermitian, for tools that can use them."""
+    import process as P
+
+    vi, sm = P.load_data(ROOT)
+    if not with_bviol:
+        idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
+        vi = {k: v for k, v in vi.items() if idx.get(k, {}).get("cls", 0) < 18 or not _is_bviol(idx[k])}
+    return P.select(proc, vi, sm, collapse=collapse, two_insertions=two_insertions), vi
+
+
+def _is_bviol(entry):
+    return int(entry["block"][4:]) >= 675
+
+
+def cmd_select(a):
+    import process as P
+
+    hits, vi = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
+    slots = P.parse_process(a.process, collapse=not a.all_flavours)
+    print(f"process : {a.process}")
+    print(f"external: {'  '.join('|'.join(s) for s in slots)}   (FeynRules all-incoming convention)")
+    cached = {f[:-3] for f in os.listdir(VDIR) if f.endswith(".mx") and not f.startswith(".")} if os.path.isdir(VDIR) else set()
+    print(f"selected: {len(hits)} of {len(vi)} indexed operators")
+    # This is a LOWER BOUND on the operators that affect the process.  The test is tree
+    # reachability over the model's vertices, so an operator that acts only through the
+    # electroweak input relations, having no vertex among the external legs, is not listed and
+    # still changes the answer: in p p > w+ w- the muon-decay operators Q_{l^2H^4D}^{(2,4)} carry
+    # a third of the dimension-eight interference through their shift of gw, vev and MW, with no
+    # vertex in any diagram (the development log, not shipped, 2026-09-07).  Add the input-relation operators
+    # to whatever this prints: classes 3 and 6, and the l^2H^4D operators of class 13.
+    print("note    : a lower bound. Operators acting only through the {alpha, MZ, GF} input")
+    print("          relations have no vertex here and are not listed, yet they contribute:")
+    print("          add classes 3 and 6 and the l^2H^4D operators of class 13 (see examples/14).")
+    # The selector can only see blocks that are in build/vertex_index.json.  If the cache has
+    # grown since the index was written, every count below is an UNDERCOUNT.  This happened
+    # silently for a whole session (index at 73 blocks, cache at 400+).  Compare names against
+    # the FULL index, not counts against the B-conserving view: the nine B-violating blocks in
+    # the cache made the count comparison cry wolf on a complete index (2026-09-05).
+    try:
+        full_index = set(json.load(open(os.path.join(ROOT, "build/vertex_index.json"))))
+    except Exception:
+        full_index = set()
+    missing = sorted(cached - full_index, key=lambda x: int(x[4:]) if x[4:].isdigit() else 0)
+    if missing:
+        print(f"WARNING: {len(missing)} cached blocks are not in the vertex index ({', '.join(missing[:6])}"
+              f"{', ...' if len(missing) > 6 else ''}); the selection is incomplete. Run ./dim8 index to regenerate it.")
+    print()
+    byclass = {}
+    for b in sorted(hits, key=lambda x: int(x[4:])):
+        meta = idx.get(b, {})
+        byclass.setdefault(meta.get("cls", 0), []).append((meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b]))
+    for cls in sorted(byclass):
+        print(f"class {cls}:")
+        for name, wc, legs in byclass[cls]:
+            print(f"  {name:34s} {wc:16s} via {' '.join(legs)}")
+    if a.out:
+        p = os.path.join(ROOT, "build", a.out + ".blocks")
+        open(p, "w").write("\n".join(sorted(hits, key=lambda x: int(x[4:]))) + "\n")
+        print(f"\nwrote {os.path.relpath(p, ROOT)}")
+
+
+def cmd_model(a):
+    """Emit a FeynRules model holding only the operators the process can see."""
+    import build_catalogue as BC  # noqa
+    from emit_fr import emit_model_fragment
+
+    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    ops = _parse_all()
+    keep = {int(b[4:]) - 1 for b in hits}
+    sub = [o for i, o in enumerate(ops) if i in keep]
+    txt, index = emit_model_fragment(sub, per_block=1)
+    out = os.path.join(ROOT, "models", a.out)
+    os.makedirs(out, exist_ok=True)
+    open(os.path.join(out, "dim8.fr"), "w").write(
+        f"(* dimension-eight operators contributing to:  {a.process}\n"
+        f"   {len(sub)} of {len(ops)} operators, selected by tree-level reachability.\n"
+        f"   Generated by dim8auto, do not edit. *)\n\n" + txt)
+    json.dump(index, open(os.path.join(out, "block_index.json"), "w"), indent=1)
+    open(os.path.join(out, "PROCESS"), "w").write(a.process + "\n")
+    print(f"{len(sub)} operators -> {os.path.relpath(out, ROOT)}/dim8.fr")
+
+
+def cmd_ufo(a):
+    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    if getattr(a, "input_scheme", False):
+        extra = _input_scheme_blocks() - set(hits)
+        for b in extra:
+            hits[b] = ["input scheme"]
+        print(f"input scheme: {len(extra)} operator blocks added so the rotation has its partners")
+    sel = os.path.join(ROOT, "build", a.out + ".blocks")
+    open(sel, "w").write("\n".join(sorted(hits, key=lambda x: int(x[4:]))) + "\n")
+    print(f"{len(hits)} operators selected, writing UFO {a.out}")
+    env = dict(os.environ)
+    if getattr(a, "input_scheme", False):
+        env["DIM8_BASE"] = "base_inputscheme.fr"
+        env["DIM8_TRUNCATE"] = "1"
+    if getattr(a, "two_insertions", False):
+        # NP order 2 per dim-8 coupling, so two insertions need the limit at 4 or MadGraph
+        # will not generate the diagrams even though the vertices are in the model
+        env["DIM8_NPORDER"] = "4"
+    if getattr(a, "max_legs", None):
+        env["DIM8_MAXLEGS"] = str(a.max_legs)
+    subprocess.check_call([WOLFRAM, "-file", os.path.join(ROOT, "validate/fr_writeufo.wls"), a.out, sel], env=env)
+
+
+def _parse_all():
+    """The catalogue, in the same order the blocks were numbered."""
+    import glob
+    import re
+
+    from build_catalogue import all_rows
+    from hermiticity import apply_convention
+    from murphy_patches import apply_patches, patch_label
+    from parse_murphy import parse_operator, wc_name
+
+    ops = []
+    for lab, ex, hc, header, fn in all_rows():
+            lab = patch_label(lab)
+            m = re.match(r"\s*(\d+)", header)
+            cls = int(m.group(1)) if m else 0
+            try:
+                op = parse_operator(apply_patches(lab, ex, []), lab, wc_name(lab), cls,
+                                    plus_hc=hc, hermitian=(not hc))
+            except Exception:
+                continue
+            apply_convention(op)
+            ops.append(op)
+    return ops
+
+
+def cmd_count(a):
+    """The lambda power counting, from Epower_count.nb, without Mathematica."""
+    import epower as E
+
+    if a.spec == "all":
+        for n in a.n:
+            print(f"--- dimension 8, n = {n} legs, regime Lambda >> E >> v ---")
+            print(E.table(E.DIM8_CLASSES, n))
+            print()
+        return 0
+    name, args = E.resolve(a.spec)
+    for n in a.n:
+        t = E.tower(*args, n, target=a.target)
+        if isinstance(t, str):
+            print(f"{name} n={n}: {t}")
+            continue
+        rows = t if isinstance(t, list) else t.Results
+        Dop = E.op_dimension(*args)
+        print(f"{name} (D,H,psi,F)={args} n={n}:  p_min={max(args[1]+args[2]+args[3]-n,0)}  "
+              + "  ".join(f"k={r['k']}: (p,q)=({r['p']},{r['q']}) lambda^{3*Dop-2*r['q']-r['p']}" for r in rows))
+    return 0
+
+
+def cmd_check(a):
+    import check_counts
+    import check_symbol_clash
+
+    rc = 0
+    rc |= check_symbol_clash.main(check_symbol_clash.DEFAULT_MODELS)
+    print()
+    check_counts.main() if hasattr(check_counts, "main") else None
+    return rc
+
+
+def main():
+    ap = argparse.ArgumentParser(prog="dim8", description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    b = sub.add_parser("build", help="compute and cache every operator's vertices")
+    b.add_argument("-j", "--jobs", type=int, default=6)
+    b.add_argument("-k", "--kernels", type=int, default=2)
+    b.set_defaults(func=cmd_build)
+
+    s = sub.add_parser("status", help="how much of the cache exists, and V5 results")
+    s.set_defaults(func=cmd_status)
+
+    i = sub.add_parser("index", help="export vertex field content for the selector")
+    i.set_defaults(func=cmd_index)
+
+    for name, fn, helptext in (("select", cmd_select, "list the operators a process can see"),
+                               ("model", cmd_model, "write a FeynRules model for one process"),
+                               ("ufo", cmd_ufo, "write a UFO for one process")):
+        p = sub.add_parser(name, help=helptext)
+        p.add_argument("process", help='MadGraph syntax, e.g. "p p > h j j" or "p p > w+ h, w+ > l+ vl"')
+        p.add_argument("-o", "--out", default=None if name == "select" else "proc")
+        p.add_argument("--all-flavours", action="store_true",
+                       help="do not collapse c to u and s,b to d (slower, same answer in the universal model)")
+        p.add_argument("--two-insertions", action="store_true",
+                       help="also select operators that need a SECOND dimension-eight vertex. "
+                            "That is order 1/Lambda^8, outside a consistent 1/Lambda^4 analysis; "
+                            "use it for dimension-eight-squared as a 1/Lambda^8 proxy or for "
+                            "positivity and unitarity studies. The UFO is written with the NP "
+                            "coupling order raised to 4 so MadGraph will generate the diagrams.")
+        p.add_argument("--input-scheme", action="store_true",
+                       help="use the corrected {alpha, MZ, GF} input relations (base_inputscheme.fr), always "
+                            "include the operators that enter them, and drop the Lambda^-8 remnant vertices. "
+                            "Load a dim-6 Lagrangian alongside before setting any dim-6 coefficient.")
+        p.add_argument("--max-legs", type=int, default=None, metavar="N",
+                       help="drop vertices with more than N legs from the UFO (an n-point vertex only enters "
+                            "tree amplitudes with at least n external legs); also honoured by the worker")
+        p.add_argument("--with-bviol", action="store_true",
+                       help="include the B-violating classes 18-21 (MadGraph/ALOHA cannot use their 4-fermion vertices)")
+        p.set_defaults(func=fn)
+
+    k = sub.add_parser("count", help="lambda power counting for a class or (D,H,psi,F), or 'all'")
+    k.add_argument("spec", help='e.g. "psi^2H^2D^3", "3,2,2,0", or all')
+    k.add_argument("-n", nargs="+", type=int, default=[4, 5, 6], help="vertex multiplicities")
+    k.add_argument("--target", type=int, default=None, help="only report if this lambda exponent appears")
+    k.set_defaults(func=cmd_count)
+
+    c = sub.add_parser("check", help="symbolic validation gates")
+    c.set_defaults(func=cmd_check)
+
+    a = ap.parse_args()
+    sys.exit(a.func(a) or 0)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,16 @@
+# 15: the checks MadGraph can run on the model.  `check lorentz` is the Ward-identity test for
+# external gluons and photons (a boost shifts a massless polarisation by a term proportional to
+# its momentum); `check gauge` needs a two-gauge model and is blind to gluons.  The checks use
+# the model's DEFAULT parameter values, in which every coefficient is zero, so on dim8_is itself
+# they only test the Standard Model (the param-card argument of `check` does not change the
+# couplings, and a top-level `set c8... 0.7` sets MadGraph options, not parameters).  Make a copy
+# with the coefficients on first, pure Python:
+#     python3 validate/ufo_on.py models/dim8_is 0.7      -> models/dim8_is_on
+# install it next to dim8_is, then run these in a fresh session (not after a `check gauge` on the
+# same process).  With all 899 live coefficients at 0.7 and Lam at 1 TeV they pass at 1e-14.
+import model dim8_is_on
+check lorentz g g > g g NP<=2
+check lorentz u u~ > g g NP<=2
+check lorentz g g > h g NP<=2
+check lorentz u u~ > a a NP<=2
+check lorentz u u~ > w+ w- NP<=2

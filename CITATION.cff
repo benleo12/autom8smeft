@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+title: autom8smeft
+message: >-
+  If you use this model, please cite the Murphy dimension-eight basis it implements
+  and the tools that write and read it.
+type: software
+repository-code: "https://github.com/benleo12/autom8smeft"
+license: MIT
+references:
+  - type: article
+    title: "Dimension-8 operators in the Standard Model Effective Field Theory"
+    authors:
+      - family-names: Murphy
+        given-names: Christopher W.
+    identifiers:
+      - type: other
+        value: "arXiv:2005.00059"
+    journal: "JHEP"
+    volume: "10"
+    year: 2020
+    start: 174
+  - type: article
+    title: "FeynRules 2.0 - A complete toolbox for tree-level phenomenology"
+    identifiers:
+      - type: other
+        value: "arXiv:1310.1921"
+  - type: article
+    title: "The automated computation of tree-level and next-to-leading order differential cross sections"
+    identifiers:
+      - type: other
+        value: "arXiv:1405.0301"

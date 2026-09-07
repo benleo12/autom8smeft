@@ -1,0 +1,10 @@
+# 02: Standard Model baseline for p p > w+ w- (NP=0 forbids every dimension-eight vertex)
+import model dim8_is
+generate p p > w+ w- NP=0
+output runs/02_ww_sm
+launch runs/02_ww_sm
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+done

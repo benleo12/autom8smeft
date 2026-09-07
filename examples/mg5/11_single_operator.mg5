@@ -1,0 +1,15 @@
+# 11: one operator, whatever the process.  Q_{q^2H^4D}^{(1)} shifts the Z coupling to left-handed quarks
+# by v^4/Lambda^4 and adds a q q Z h vertex, so it enters p p > z h (28 diagrams at NP^2==2).  First write the restriction card (once, Python only):
+#     python3 validate/make_restriction.py models/dim8_is only_q2H4D 'Q_{q^2H^4D}^{(1)}'
+# then import through it: MadGraph drops every other coefficient and every vertex that vanishes.
+import model dim8_is-only_q2H4D
+generate p p > z h NP^2==2
+output runs/11_zh_one_op
+launch runs/11_zh_one_op
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8q2H4Dx1 1.0
+done

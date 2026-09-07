@@ -1,0 +1,13 @@
+process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
+p p > w+ w- z	dim8_is	NP=0	0.08511	0.0002308	5000	7.982436e+01	dim8_all=0 Lam=1000	lhe/p_p___w__w__z_dim8_is_NP_0.lhe.gz
+p p > w+ w- z	dim8_is	NP^2==2	FAILED	-	5000	7.982436e+01	dim8_all=1 Lam=1000	-
+p p > w+ w- z	dim8_is	NP<=2 NP^2==4	FAILED	-	5000	7.982436e+01	dim8_all=1 Lam=1000	-
+p p > w+ w- z	dim8_is-cls1	NP^2==2	0.002105	2.808e-05	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls1_NP_2__2.lhe.gz
+p p > w+ w- z	dim8_is-cls1	NP<=2 NP^2==4	1122	3.142	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls1_NP__2_NP_2__4.lhe.gz
+p p > w+ w- z	dim8_is-cls2	NP^2==2	NO_OUTPUT	-	5000	-	dim8_all=1 Lam=1000	-
+p p > w+ w- z	dim8_is-cls2	NP<=2 NP^2==4	NO_OUTPUT	-	5000	-	dim8_all=1 Lam=1000	-
+p p > w+ w- z	dim8_is-cls3	NP^2==2	-0.0007417	2.195e-06	5000	7.981370e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls3_NP_2__2.lhe.gz
+p p > w+ w- z	dim8_is-cls3	NP<=2 NP^2==4	1.641e-06	5.065e-09	5000	7.981370e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls3_NP__2_NP_2__4.lhe.gz
+p p > w+ w- z	dim8_is-cls4	NP^2==2	-4.87e-06	3.682e-08	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls4_NP_2__2.lhe.gz
+p p > w+ w- z	dim8_is-cls4	NP<=2 NP^2==4	1.318e-07	5.719e-10	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls4_NP__2_NP_2__4.lhe.gz
+p p > w+ w- z	dim8_is-cls5	NP^2==2	0.0004072	2.597e-06	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__z_dim8_is_cls5_NP_2__2.lhe.gz

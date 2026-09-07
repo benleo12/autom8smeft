@@ -1,0 +1,40 @@
+MIT License
+
+Copyright (c) 2026 the autom8smeft authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+Third-party components, none of which are redistributed here
+------------------------------------------------------------
+
+The operator basis is that of C. W. Murphy, "Dimension-8 operators in the
+Standard Model Effective Field Theory", arXiv:2005.00059 (JHEP 10 (2020) 174).
+The operators are implemented from its tables. The paper itself is not
+included; fetch it from arXiv.
+
+The model files are written by FeynRules (Alloul, Christensen, Degrande, Duhr,
+Fuks, arXiv:1310.1921) and read by MadGraph5_aMC@NLO (Alwall et al.,
+arXiv:1405.0301) through ALOHA (de Aquino et al., arXiv:1108.2041). The UFO
+files under models/ carry the FeynRules boilerplate header that every UFO
+carries. Neither FeynRules nor MadGraph is included; install them yourself.
+
+The Standard Model FeynRules file the generator builds on, and the SmeftFR and
+SMEFTsim models used for cross-checks, are not included. docs/EXTERNAL.md says
+what to fetch and where the generator expects it.

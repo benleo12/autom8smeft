@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.tar
+*.tgz
+# MadGraph process directories and event files: large, regenerable, and not the deliverable
+examples/studies/*/lhe/
+.quicktest/
+# the model source and the operator tables are third-party, see docs/EXTERNAL.md
+models/base/
+murphy_src/
+external/
+prior_work/

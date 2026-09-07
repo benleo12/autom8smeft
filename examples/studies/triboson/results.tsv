@@ -1,0 +1,2 @@
+process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
+p p > w+ w- z	dim8_is	NP=0	0.08511	0.0002308	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___w__w__z_dim8_is_NP_0.lhe.gz

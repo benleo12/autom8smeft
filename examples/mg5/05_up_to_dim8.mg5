@@ -1,0 +1,14 @@
+# 05: "up to dimension eight" in one run: SM + interference + squared, one insertion per amplitude
+# (NP<=2).  The cross section equals 02 + 03 + 04 for the same coefficients, within statistics.
+import model dim8_is
+generate p p > w+ w- NP<=2
+output runs/05_ww_upto8
+launch runs/05_ww_upto8
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8W2H2D2x1 1.0
+set c8q2W2Dx1 1.0
+done

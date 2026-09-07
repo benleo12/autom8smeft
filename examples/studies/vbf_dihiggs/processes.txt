@@ -1,0 +1,2 @@
+# VBF di-Higgs: two forward jets, QCD=0 removes the gluon-fusion-like QCD topologies at tree level
+p p > h h j j QCD=0 | ptj=25 etaj=5 mmjj=400 | bosonic

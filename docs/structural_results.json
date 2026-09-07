@@ -1,0 +1,8090 @@
+[
+ {
+  "name": "Q_{leWH^3}^{(1)}",
+  "wc": "c8leWH3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leWH^3}^{(2)}",
+  "wc": "c8leWH3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leBH^3}",
+  "wc": "c8leBH3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGH^3}",
+  "wc": "c8quGH3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quWH^3}^{(1)}",
+  "wc": "c8quWH3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quWH^3}^{(2)}",
+  "wc": "c8quWH3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quBH^3}",
+  "wc": "c8quBH3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGH^3}",
+  "wc": "c8qdGH3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdWH^3}^{(1)}",
+  "wc": "c8qdWH3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdWH^3}^{(2)}",
+  "wc": "c8qdWH3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdBH^3}",
+  "wc": "c8qdBH3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2H^2D^3}^{(1)}",
+  "wc": "c8l2H2D3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{l^2H^2D^3}^{(2)}",
+  "wc": "c8l2H2D3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{l^2H^2D^3}^{(3)}",
+  "wc": "c8l2H2D3x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{l^2H^2D^3}^{(4)}",
+  "wc": "c8l2H2D3x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{e^2H^2D^3}^{(1)}",
+  "wc": "c8e2H2D3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{e^2H^2D^3}^{(2)}",
+  "wc": "c8e2H2D3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{q^2H^2D^3}^{(1)}",
+  "wc": "c8q2H2D3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{q^2H^2D^3}^{(2)}",
+  "wc": "c8q2H2D3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{q^2H^2D^3}^{(3)}",
+  "wc": "c8q2H2D3x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{q^2H^2D^2}^{(4)}",
+  "wc": "c8q2H2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{u^2H^2D^3}^{(1)}",
+  "wc": "c8u2H2D3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{u^2H^2D^3}^{(2)}",
+  "wc": "c8u2H2D3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{d^2H^2D^3}^{(1)}",
+  "wc": "c8d2H2D3x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{d^2H^2D^3}^{(2)}",
+  "wc": "c8d2H2D3x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{udH^2D^3}",
+  "wc": "c8udH2D3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 3
+  }
+ },
+ {
+  "name": "Q_{leH^5}",
+  "wc": "c8leH5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 5,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quH^5}",
+  "wc": "c8quH5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 5,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdH^5}",
+  "wc": "c8qdH5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 5,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2H^4D}^{(1)}",
+  "wc": "c8l2H4Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2H^4D}^{(2)}",
+  "wc": "c8l2H4Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2H^4D}^{(3)}",
+  "wc": "c8l2H4Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2H^4D}^{(4)}",
+  "wc": "c8l2H4Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2H^4D}",
+  "wc": "c8e2H4D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2H^4D}^{(1)}",
+  "wc": "c8q2H4Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2H^4D}^{(2)}",
+  "wc": "c8q2H4Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2H^4D}^{(3)}",
+  "wc": "c8q2H4Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2H^4D}^{(4)}",
+  "wc": "c8q2H4Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2H^4D}",
+  "wc": "c8u2H4D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2H^4D}",
+  "wc": "c8d2H4D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udH^4D}",
+  "wc": "c8udH4D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2G^2D}^{(1)}",
+  "wc": "c8q2G2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2G^2D}^{(2)}",
+  "wc": "c8q2G2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2G^2D}^{(3)}",
+  "wc": "c8q2G2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2W^2D}^{(1)}",
+  "wc": "c8q2W2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2W^2D}^{(2)}",
+  "wc": "c8q2W2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2B^2D}",
+  "wc": "c8q2B2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2G^2D}^{(1)}",
+  "wc": "c8u2G2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2G^2D}^{(2)}",
+  "wc": "c8u2G2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2G^2D}^{(3)}",
+  "wc": "c8u2G2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2W^2D}",
+  "wc": "c8u2W2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2B^2D}",
+  "wc": "c8u2B2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2G^2D}^{(1)}",
+  "wc": "c8d2G2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2G^2D}^{(2)}",
+  "wc": "c8d2G2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2G^2D}^{(3)}",
+  "wc": "c8d2G2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2W^2D}",
+  "wc": "c8d2W2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2B^2D}",
+  "wc": "c8d2B2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2G^2D}^{(4)}",
+  "wc": "c8q2G2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2G^2D}^{(5)}",
+  "wc": "c8q2G2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GWD}^{(1)}",
+  "wc": "c8q2GWDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GWD}^{(2)}",
+  "wc": "c8q2GWDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GWD}^{(3)}",
+  "wc": "c8q2GWDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GWD}^{(4)}",
+  "wc": "c8q2GWDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GBD}^{(1)}",
+  "wc": "c8q2GBDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GBD}^{(2)}",
+  "wc": "c8q2GBDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GBD}^{(3)}",
+  "wc": "c8q2GBDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GBD}^{(4)}",
+  "wc": "c8q2GBDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2W^2D}^{(3)}",
+  "wc": "c8q2W2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2W^2D}^{(4)}",
+  "wc": "c8q2W2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WBD}^{(1)}",
+  "wc": "c8q2WBDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WBD}^{(2)}",
+  "wc": "c8q2WBDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WBD}^{(3)}",
+  "wc": "c8q2WBDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WBD}^{(4)}",
+  "wc": "c8q2WBDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2G^2D}^{(4)}",
+  "wc": "c8u2G2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2G^2D}^{(5)}",
+  "wc": "c8u2G2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GBD}^{(1)}",
+  "wc": "c8u2GBDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GBD}^{(2)}",
+  "wc": "c8u2GBDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GBD}^{(3)}",
+  "wc": "c8u2GBDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GBD}^{(4)}",
+  "wc": "c8u2GBDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2G^2D}^{(4)}",
+  "wc": "c8d2G2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2G^2D}^{(5)}",
+  "wc": "c8d2G2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GBD}^{(1)}",
+  "wc": "c8d2GBDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GBD}^{(2)}",
+  "wc": "c8d2GBDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GBD}^{(3)}",
+  "wc": "c8d2GBDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GBD}^{(4)}",
+  "wc": "c8d2GBDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2G^2D}",
+  "wc": "c8l2G2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2W^2D}^{(1)}",
+  "wc": "c8l2W2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2W^2D}^{(2)}",
+  "wc": "c8l2W2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2B^2D}",
+  "wc": "c8l2B2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2G^2D}",
+  "wc": "c8e2G2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2W^2D}",
+  "wc": "c8e2W2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2B^2D}",
+  "wc": "c8e2B2D",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2W^2D}^{(3)}",
+  "wc": "c8l2W2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2W^2D}^{(4)}",
+  "wc": "c8l2W2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WBD}^{(1)}",
+  "wc": "c8l2WBDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WBD}^{(2)}",
+  "wc": "c8l2WBDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WBD}^{(3)}",
+  "wc": "c8l2WBDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WBD}^{(4)}",
+  "wc": "c8l2WBDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 0,
+   "N_X": 2,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2WH^2D}^{(1)}",
+  "wc": "c8e2WH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2WH^2D}^{(2)}",
+  "wc": "c8e2WH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2WH^2D}^{(3)}",
+  "wc": "c8e2WH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2WH^2D}^{(4)}",
+  "wc": "c8e2WH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2BH^2D}^{(1)}",
+  "wc": "c8e2BH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2BH^2D}^{(2)}",
+  "wc": "c8e2BH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2BH^2D}^{(3)}",
+  "wc": "c8e2BH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2BH^2D}^{(4)}",
+  "wc": "c8e2BH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GH^2D}^{(1)}",
+  "wc": "c8u2GH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GH^2D}^{(2)}",
+  "wc": "c8u2GH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GH^2D}^{(3)}",
+  "wc": "c8u2GH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2GH^2D}^{(4)}",
+  "wc": "c8u2GH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2WH^2D}^{(1)}",
+  "wc": "c8u2WH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2WH^2D}^{(2)}",
+  "wc": "c8u2WH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2WH^2D}^{(3)}",
+  "wc": "c8u2WH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2WH^2D}^{(4)}",
+  "wc": "c8u2WH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2BH^2D}^{(1)}",
+  "wc": "c8u2BH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2BH^2D}^{(2)}",
+  "wc": "c8u2BH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2BH^2D}^{(3)}",
+  "wc": "c8u2BH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{u^2BH^2D}^{(4)}",
+  "wc": "c8u2BH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GH^2D}^{(1)}",
+  "wc": "c8d2GH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GH^2D}^{(2)}",
+  "wc": "c8d2GH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GH^2D}^{(3)}",
+  "wc": "c8d2GH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2GH^2D}^{(4)}",
+  "wc": "c8d2GH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2WH^2D}^{(1)}",
+  "wc": "c8d2WH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2WH^2D}^{(2)}",
+  "wc": "c8d2WH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2WH^2D}^{(3)}",
+  "wc": "c8d2WH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2WH^2D}^{(4)}",
+  "wc": "c8d2WH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2BH^2D}^{(1)}",
+  "wc": "c8d2BH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2BH^2D}^{(2)}",
+  "wc": "c8d2BH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2BH^2D}^{(3)}",
+  "wc": "c8d2BH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{d^2BH^2D}^{(4)}",
+  "wc": "c8d2BH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udGH^2}^{(1)}",
+  "wc": "c8udGH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udGH^2}^{(2)}",
+  "wc": "c8udGH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udWH^2}^{(1)}",
+  "wc": "c8udWH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udWH^2}^{(2)}",
+  "wc": "c8udWH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udBH^2}^{(1)}",
+  "wc": "c8udBH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{udBH^2}^{(2)}",
+  "wc": "c8udBH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(1)}",
+  "wc": "c8l2WH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(2)}",
+  "wc": "c8l2WH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(3)}",
+  "wc": "c8l2WH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(4)}",
+  "wc": "c8l2WH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(5)}",
+  "wc": "c8l2WH2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(6)}",
+  "wc": "c8l2WH2Dx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(7)}",
+  "wc": "c8l2WH2Dx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(8)}",
+  "wc": "c8l2WH2Dx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(9)}",
+  "wc": "c8l2WH2Dx9",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(10)}",
+  "wc": "c8l2WH2Dx10",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(11)}",
+  "wc": "c8l2WH2Dx11",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2WH^2D}^{(12)}",
+  "wc": "c8l2WH2Dx12",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(1)}",
+  "wc": "c8l2BH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(2)}",
+  "wc": "c8l2BH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(3)}",
+  "wc": "c8l2BH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(4)}",
+  "wc": "c8l2BH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(5)}",
+  "wc": "c8l2BH2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(6)}",
+  "wc": "c8l2BH2Dx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(7)}",
+  "wc": "c8l2BH2Dx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2BH^2D}^{(8)}",
+  "wc": "c8l2BH2Dx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(1)}",
+  "wc": "c8q2GH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(2)}",
+  "wc": "c8q2GH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(3)}",
+  "wc": "c8q2GH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(4)}",
+  "wc": "c8q2GH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(5)}",
+  "wc": "c8q2GH2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(6)}",
+  "wc": "c8q2GH2Dx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(7)}",
+  "wc": "c8q2GH2Dx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2GH^2D}^{(8)}",
+  "wc": "c8q2GH2Dx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(1)}",
+  "wc": "c8q2WH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(2)}",
+  "wc": "c8q2WH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(3)}",
+  "wc": "c8q2WH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(4)}",
+  "wc": "c8q2WH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(5)}",
+  "wc": "c8q2WH2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(6)}",
+  "wc": "c8q2WH2Dx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(7)}",
+  "wc": "c8q2WH2Dx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(8)}",
+  "wc": "c8q2WH2Dx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(9)}",
+  "wc": "c8q2WH2Dx9",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(10)}",
+  "wc": "c8q2WH2Dx10",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(11)}",
+  "wc": "c8q2WH2Dx11",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2WH^2D}^{(12)}",
+  "wc": "c8q2WH2Dx12",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(1)}",
+  "wc": "c8q2BH2Dx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(2)}",
+  "wc": "c8q2BH2Dx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(3)}",
+  "wc": "c8q2BH2Dx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(4)}",
+  "wc": "c8q2BH2Dx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(5)}",
+  "wc": "c8q2BH2Dx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(6)}",
+  "wc": "c8q2BH2Dx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(7)}",
+  "wc": "c8q2BH2Dx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^2BH^2D}^{(8)}",
+  "wc": "c8q2BH2Dx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 2,
+   "N_X": 1,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leWHD^2}^{(1)}",
+  "wc": "c8leWHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leWHD^2}^{(2)}",
+  "wc": "c8leWHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leWHD^2}^{(3)}",
+  "wc": "c8leWHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leBHD^2}^{(1)}",
+  "wc": "c8leBHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leBHD^2}^{(2)}",
+  "wc": "c8leBHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leBHD^2}^{(3)}",
+  "wc": "c8leBHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quGHD^2}^{(1)}",
+  "wc": "c8quGHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quGHD^2}^{(2)}",
+  "wc": "c8quGHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quGHD^2}^{(3)}",
+  "wc": "c8quGHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quWHD^2}^{(1)}",
+  "wc": "c8quWHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quWHD^2}^{(2)}",
+  "wc": "c8quWHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quWHD^2}^{(3)}",
+  "wc": "c8quWHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quBHD^2}^{(1)}",
+  "wc": "c8quBHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quBHD^2}^{(2)}",
+  "wc": "c8quBHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quBHD^2}^{(3)}",
+  "wc": "c8quBHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdGHD^2}^{(1)}",
+  "wc": "c8qdGHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdGHD^2}^{(2)}",
+  "wc": "c8qdGHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdGHD^2}^{(3)}",
+  "wc": "c8qdGHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdWHD^2}^{(1)}",
+  "wc": "c8qdWHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdWHD^2}^{(2)}",
+  "wc": "c8qdWHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdWHD^2}^{(3)}",
+  "wc": "c8qdWHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdBHD^2}^{(1)}",
+  "wc": "c8qdBHD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdBHD^2}^{(2)}",
+  "wc": "c8qdBHD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdBHD^2}^{(3)}",
+  "wc": "c8qdBHD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(1)}",
+  "wc": "c8leH3D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(2)}",
+  "wc": "c8leH3D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(3)}",
+  "wc": "c8leH3D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(4)}",
+  "wc": "c8leH3D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(5)}",
+  "wc": "c8leH3D2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leH^3D^2}^{(6)}",
+  "wc": "c8leH3D2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(1)}",
+  "wc": "c8quH3D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(2)}",
+  "wc": "c8quH3D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(3)}",
+  "wc": "c8quH3D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(4)}",
+  "wc": "c8quH3D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(5)}",
+  "wc": "c8quH3D2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{quH^3D^2}^{(6)}",
+  "wc": "c8quH3D2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(1)}",
+  "wc": "c8qdH3D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(2)}",
+  "wc": "c8qdH3D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(3)}",
+  "wc": "c8qdH3D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(4)}",
+  "wc": "c8qdH3D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(5)}",
+  "wc": "c8qdH3D2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{qdH^3D^2}^{(6)}",
+  "wc": "c8qdH3D2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 3,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leqdH^2}^{(1)}",
+  "wc": "c8leqdH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leqdH^2}^{(2)}",
+  "wc": "c8leqdH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2udH^2}",
+  "wc": "c8l2udH2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequH^2}^{(5)}",
+  "wc": "c8lequH2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(5)}",
+  "wc": "c8q2udH2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(6)}",
+  "wc": "c8q2udH2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leqdD^2}^{(1)}",
+  "wc": "c8leqdD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leqdD^2}^{(2)}",
+  "wc": "c8leqdD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^4H^2}^{(1)}",
+  "wc": "c8l4H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^4H^2}^{(2)}",
+  "wc": "c8l4H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4H^2}^{(1)}",
+  "wc": "c8q4H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4H^2}^{(2)}",
+  "wc": "c8q4H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4H^2}^{(3)}",
+  "wc": "c8q4H2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2H^2}^{(1)}",
+  "wc": "c8l2q2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2H^2}^{(2)}",
+  "wc": "c8l2q2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2H^2}^{(3)}",
+  "wc": "c8l2q2H2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2H^2}^{(4)}",
+  "wc": "c8l2q2H2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2H^2}^{(5)}",
+  "wc": "c8l2q2H2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4H^2}^{(5)}",
+  "wc": "c8q4H2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^4H^2}",
+  "wc": "c8e4H2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^4H^2}",
+  "wc": "c8u4H2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{d^4H^2}",
+  "wc": "c8d4H2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2u^2H^2}",
+  "wc": "c8e2u2H2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2d^2H^2}",
+  "wc": "c8e2d2H2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2H^2}^{(1)}",
+  "wc": "c8u2d2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2H^2}^{(2)}",
+  "wc": "c8u2d2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2H^2}^{(1)}",
+  "wc": "c8l2e2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2H^2}^{(2)}",
+  "wc": "c8l2e2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2H^2}^{(1)}",
+  "wc": "c8l2u2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2H^2}^{(2)}",
+  "wc": "c8l2u2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2H^2}^{(1)}",
+  "wc": "c8l2d2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2H^2}^{(2)}",
+  "wc": "c8l2d2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2H^2}^{(1)}",
+  "wc": "c8q2e2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2H^2}^{(2)}",
+  "wc": "c8q2e2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(1)}",
+  "wc": "c8q2u2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(2)}",
+  "wc": "c8q2u2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(3)}",
+  "wc": "c8q2u2H2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(4)}",
+  "wc": "c8q2u2H2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(1)}",
+  "wc": "c8q2d2H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(2)}",
+  "wc": "c8q2d2H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(3)}",
+  "wc": "c8q2d2H2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(4)}",
+  "wc": "c8q2d2H2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(1)}",
+  "wc": "c8q2udH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(2)}",
+  "wc": "c8q2udH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(3)}",
+  "wc": "c8q2udH2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udH^2}^{(4)}",
+  "wc": "c8q2udH2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequH^2}^{(1)}",
+  "wc": "c8lequH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequH^2}^{(2)}",
+  "wc": "c8lequH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequH^2}^{(3)}",
+  "wc": "c8lequH2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequH^2}^{(4)}",
+  "wc": "c8lequH2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2H^2}^{(3)}",
+  "wc": "c8l2e2H2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leqdH^2}^{(3)}",
+  "wc": "c8leqdH2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leqdH^2}^{(4)}",
+  "wc": "c8leqdH2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(5)}",
+  "wc": "c8q2u2H2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2H^2}^{(6)}",
+  "wc": "c8q2u2H2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(5)}",
+  "wc": "c8q2d2H2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2H^2}^{(6)}",
+  "wc": "c8q2d2H2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 2,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^4W}^{(1)}",
+  "wc": "c8l4Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^4W}^{(2)}",
+  "wc": "c8l4Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4G}^{(1)}",
+  "wc": "c8q4Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4G}^{(2)}",
+  "wc": "c8q4Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4G}^{(3)}",
+  "wc": "c8q4Gx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4G}^{(4)}",
+  "wc": "c8q4Gx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4W}^{(1)}",
+  "wc": "c8q4Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4W}^{(2)}",
+  "wc": "c8q4Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4W}^{(3)}",
+  "wc": "c8q4Wx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4W}^{(4)}",
+  "wc": "c8q4Wx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2G}^{(1)}",
+  "wc": "c8l2q2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2G}^{(2)}",
+  "wc": "c8l2q2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2G}^{(3)}",
+  "wc": "c8l2q2Gx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2G}^{(4)}",
+  "wc": "c8l2q2Gx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(1)}",
+  "wc": "c8l2q2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(2)}",
+  "wc": "c8l2q2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(3)}",
+  "wc": "c8l2q2Wx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(4)}",
+  "wc": "c8l2q2Wx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(5)}",
+  "wc": "c8l2q2Wx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2W}^{(6)}",
+  "wc": "c8l2q2Wx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2B}^{(1)}",
+  "wc": "c8l2q2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2B}^{(2)}",
+  "wc": "c8l2q2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2B}^{(3)}",
+  "wc": "c8l2q2Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2q^2B}^{(4)}",
+  "wc": "c8l2q2Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^4B}^{(1)}",
+  "wc": "c8l4Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^4B}^{(2)}",
+  "wc": "c8l4Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4B}^{(1)}",
+  "wc": "c8q4Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4B}^{(2)}",
+  "wc": "c8q4Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4B}^{(3)}",
+  "wc": "c8q4Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^4B}^{(4)}",
+  "wc": "c8q4Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^4G}^{(1)}",
+  "wc": "c8u4Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^4G}^{(2)}",
+  "wc": "c8u4Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{d^4G}^{(1)}",
+  "wc": "c8d4Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{d^4G}^{(2)}",
+  "wc": "c8d4Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2u^2G}^{(1)}",
+  "wc": "c8e2u2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2u^2G}^{(2)}",
+  "wc": "c8e2u2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2u^2B}^{(1)}",
+  "wc": "c8e2u2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2u^2B}^{(2)}",
+  "wc": "c8e2u2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2d^2G}^{(1)}",
+  "wc": "c8e2d2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2d^2G}^{(2)}",
+  "wc": "c8e2d2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2d^2B}^{(1)}",
+  "wc": "c8e2d2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^2d^2B}^{(2)}",
+  "wc": "c8e2d2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(1)}",
+  "wc": "c8u2d2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(2)}",
+  "wc": "c8u2d2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(3)}",
+  "wc": "c8u2d2Gx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(4)}",
+  "wc": "c8u2d2Gx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(5)}",
+  "wc": "c8u2d2Gx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(6)}",
+  "wc": "c8u2d2Gx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(7)}",
+  "wc": "c8u2d2Gx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2G}^{(8)}",
+  "wc": "c8u2d2Gx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2B}^{(1)}",
+  "wc": "c8u2d2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2B}^{(2)}",
+  "wc": "c8u2d2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2B}^{(3)}",
+  "wc": "c8u2d2Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^2d^2B}^{(4)}",
+  "wc": "c8u2d2Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^4B}^{(1)}",
+  "wc": "c8e4Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{e^4B}^{(2)}",
+  "wc": "c8e4Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^4B}^{(1)}",
+  "wc": "c8u4Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{u^4B}^{(2)}",
+  "wc": "c8u4Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{d^4B}^{(1)}",
+  "wc": "c8d4Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{d^4B}^{(2)}",
+  "wc": "c8d4Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2W}^{(1)}",
+  "wc": "c8l2e2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2W}^{(2)}",
+  "wc": "c8l2e2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2B}^{(1)}",
+  "wc": "c8l2e2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2e^2B}^{(2)}",
+  "wc": "c8l2e2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2G}^{(1)}",
+  "wc": "c8l2u2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2G}^{(2)}",
+  "wc": "c8l2u2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2W}^{(1)}",
+  "wc": "c8l2u2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2W}^{(2)}",
+  "wc": "c8l2u2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2B}^{(1)}",
+  "wc": "c8l2u2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2u^2B}^{(2)}",
+  "wc": "c8l2u2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2G}^{(1)}",
+  "wc": "c8l2d2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2G}^{(2)}",
+  "wc": "c8l2d2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2W}^{(1)}",
+  "wc": "c8l2d2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2W}^{(2)}",
+  "wc": "c8l2d2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2B}^{(1)}",
+  "wc": "c8l2d2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{l^2d^2B}^{(2)}",
+  "wc": "c8l2d2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2G}^{(1)}",
+  "wc": "c8q2e2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2G}^{(2)}",
+  "wc": "c8q2e2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2W}^{(1)}",
+  "wc": "c8q2e2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2W}^{(2)}",
+  "wc": "c8q2e2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2B}^{(1)}",
+  "wc": "c8q2e2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2e^2B}^{(2)}",
+  "wc": "c8q2e2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(1)}",
+  "wc": "c8q2u2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(2)}",
+  "wc": "c8q2u2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(3)}",
+  "wc": "c8q2u2Gx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(4)}",
+  "wc": "c8q2u2Gx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(5)}",
+  "wc": "c8q2u2Gx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(6)}",
+  "wc": "c8q2u2Gx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(7)}",
+  "wc": "c8q2u2Gx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2G}^{(8)}",
+  "wc": "c8q2u2Gx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2W}^{(1)}",
+  "wc": "c8q2u2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2W}^{(2)}",
+  "wc": "c8q2u2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2W}^{(3)}",
+  "wc": "c8q2u2Wx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2W}^{(4)}",
+  "wc": "c8q2u2Wx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2B}^{(1)}",
+  "wc": "c8q2u2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2B}^{(2)}",
+  "wc": "c8q2u2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2B}^{(3)}",
+  "wc": "c8q2u2Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2u^2B}^{(4)}",
+  "wc": "c8q2u2Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(1)}",
+  "wc": "c8q2d2Gx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(2)}",
+  "wc": "c8q2d2Gx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(3)}",
+  "wc": "c8q2d2Gx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(4)}",
+  "wc": "c8q2d2Gx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(5)}",
+  "wc": "c8q2d2Gx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(6)}",
+  "wc": "c8q2d2Gx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(7)}",
+  "wc": "c8q2d2Gx7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2G}^{(8)}",
+  "wc": "c8q2d2Gx8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2W}^{(1)}",
+  "wc": "c8q2d2Wx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2W}^{(2)}",
+  "wc": "c8q2d2Wx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2W}^{(3)}",
+  "wc": "c8q2d2Wx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2W}^{(4)}",
+  "wc": "c8q2d2Wx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2B}^{(1)}",
+  "wc": "c8q2d2Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2B}^{(2)}",
+  "wc": "c8q2d2Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2B}^{(3)}",
+  "wc": "c8q2d2Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2d^2B}^{(4)}",
+  "wc": "c8q2d2Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqG}^{(1)}",
+  "wc": "c8ledqGx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqG}^{(2)}",
+  "wc": "c8ledqGx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqW}^{(1)}",
+  "wc": "c8ledqWx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqW}^{(2)}",
+  "wc": "c8ledqWx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqB}^{(1)}",
+  "wc": "c8ledqBx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{ledqB}^{(2)}",
+  "wc": "c8ledqBx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(1)}",
+  "wc": "c8q2udGx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(2)}",
+  "wc": "c8q2udGx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(3)}",
+  "wc": "c8q2udGx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(4)}",
+  "wc": "c8q2udGx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(5)}",
+  "wc": "c8q2udGx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udG}^{(6)}",
+  "wc": "c8q2udGx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udW}^{(1)}",
+  "wc": "c8q2udWx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udW}^{(2)}",
+  "wc": "c8q2udWx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udW}^{(3)}",
+  "wc": "c8q2udWx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udB}^{(1)}",
+  "wc": "c8q2udBx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udB}^{(2)}",
+  "wc": "c8q2udBx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{q^2udB}^{(3)}",
+  "wc": "c8q2udBx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequG}^{(1)}",
+  "wc": "c8lequGx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequG}^{(2)}",
+  "wc": "c8lequGx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequG}^{(3)}",
+  "wc": "c8lequGx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequW}^{(1)}",
+  "wc": "c8lequWx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequW}^{(2)}",
+  "wc": "c8lequWx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequW}^{(3)}",
+  "wc": "c8lequWx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequB}^{(1)}",
+  "wc": "c8lequBx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequB}^{(2)}",
+  "wc": "c8lequBx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{lequB}^{(3)}",
+  "wc": "c8lequBx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 1,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(1)}",
+  "wc": "c8G4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(2)}",
+  "wc": "c8G4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(3)}",
+  "wc": "c8G4x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(4)}",
+  "wc": "c8G4x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(5)}",
+  "wc": "c8G4x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(6)}",
+  "wc": "c8G4x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(7)}",
+  "wc": "c8G4x7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(8)}",
+  "wc": "c8G4x8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^4}^{(9)}",
+  "wc": "c8G4x9",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(1)}",
+  "wc": "c8W4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(2)}",
+  "wc": "c8W4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(3)}",
+  "wc": "c8W4x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(4)}",
+  "wc": "c8W4x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(5)}",
+  "wc": "c8W4x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^4}^{(6)}",
+  "wc": "c8W4x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{B^4}^{(1)}",
+  "wc": "c8B4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{B^4}^{(2)}",
+  "wc": "c8B4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{B^4}^{(3)}",
+  "wc": "c8B4x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^3B}^{(1)}",
+  "wc": "c8G3Bx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^3B}^{(2)}",
+  "wc": "c8G3Bx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^3B}^{(3)}",
+  "wc": "c8G3Bx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^3B}^{(4)}",
+  "wc": "c8G3Bx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(1)}",
+  "wc": "c8G2W2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(2)}",
+  "wc": "c8G2W2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(3)}",
+  "wc": "c8G2W2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(4)}",
+  "wc": "c8G2W2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(5)}",
+  "wc": "c8G2W2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(6)}",
+  "wc": "c8G2W2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2W^2}^{(7)}",
+  "wc": "c8G2W2x7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(1)}",
+  "wc": "c8G2B2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(2)}",
+  "wc": "c8G2B2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(3)}",
+  "wc": "c8G2B2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(4)}",
+  "wc": "c8G2B2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(5)}",
+  "wc": "c8G2B2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(6)}",
+  "wc": "c8G2B2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2B^2}^{(7)}",
+  "wc": "c8G2B2x7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(1)}",
+  "wc": "c8W2B2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(2)}",
+  "wc": "c8W2B2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(3)}",
+  "wc": "c8W2B2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(4)}",
+  "wc": "c8W2B2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(5)}",
+  "wc": "c8W2B2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(6)}",
+  "wc": "c8W2B2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2B^2}^{(7)}",
+  "wc": "c8W2B2x7",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 0,
+   "N_X": 4,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{H^8}",
+  "wc": "c8H8",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 8,
+   "N_X": 0,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{H^6}^{(1)}",
+  "wc": "c8H6x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 6,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{H^6}^{(2)}",
+  "wc": "c8H6x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 6,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{H^4}^{(1)}",
+  "wc": "c8H4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 4
+  }
+ },
+ {
+  "name": "Q_{H^4}^{(2)}",
+  "wc": "c8H4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 4
+  }
+ },
+ {
+  "name": "Q_{H^4}^{(3)}",
+  "wc": "c8H4x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 0,
+   "N_D": 4
+  }
+ },
+ {
+  "name": "Q_{l^3eHD}^{(1)}",
+  "wc": "c8l3eHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^3eHD}^{(2)}",
+  "wc": "c8l3eHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^3eHD}^{(3)}",
+  "wc": "c8l3eHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{le^3HD}^{(1)}",
+  "wc": "c8le3HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(1)}",
+  "wc": "c8leq2HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(2)}",
+  "wc": "c8leq2HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(3)}",
+  "wc": "c8leq2HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(4)}",
+  "wc": "c8leq2HDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(5)}",
+  "wc": "c8leq2HDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leq^2HD}^{(6)}",
+  "wc": "c8leq2HDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leu^2HD}^{(1)}",
+  "wc": "c8leu2HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leu^2HD}^{(2)}",
+  "wc": "c8leu2HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leu^2HD}^{(3)}",
+  "wc": "c8leu2HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{led^2HD}^{(1)}",
+  "wc": "c8led2HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{led^2HD}^{(2)}",
+  "wc": "c8led2HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{led^2HD}^{(3)}",
+  "wc": "c8led2HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leudHD}^{(1)}",
+  "wc": "c8leudHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leudHD}^{(2)}",
+  "wc": "c8leudHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{leudHD}^{(3)}",
+  "wc": "c8leudHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{le^3HD}^{(2)}",
+  "wc": "c8le3HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(1)}",
+  "wc": "c8l2quHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(2)}",
+  "wc": "c8l2quHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(3)}",
+  "wc": "c8l2quHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(4)}",
+  "wc": "c8l2quHDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(5)}",
+  "wc": "c8l2quHDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2quHD}^{(6)}",
+  "wc": "c8l2quHDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2quHD}^{(1)}",
+  "wc": "c8e2quHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2quHD}^{(2)}",
+  "wc": "c8e2quHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2quHD}^{(3)}",
+  "wc": "c8e2quHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(1)}",
+  "wc": "c8q3uHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(2)}",
+  "wc": "c8q3uHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(3)}",
+  "wc": "c8q3uHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(4)}",
+  "wc": "c8q3uHDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(5)}",
+  "wc": "c8q3uHDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3uHD}^{(6)}",
+  "wc": "c8q3uHDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^3HD}^{(1)}",
+  "wc": "c8qu3HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^3HD}^{(2)}",
+  "wc": "c8qu3HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^3HD}^{(3)}",
+  "wc": "c8qu3HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(1)}",
+  "wc": "c8qud2HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(2)}",
+  "wc": "c8qud2HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(3)}",
+  "wc": "c8qud2HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(4)}",
+  "wc": "c8qud2HDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(5)}",
+  "wc": "c8qud2HDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qud^2HD}^{(6)}",
+  "wc": "c8qud2HDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(1)}",
+  "wc": "c8l2qdHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(2)}",
+  "wc": "c8l2qdHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(3)}",
+  "wc": "c8l2qdHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(4)}",
+  "wc": "c8l2qdHDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(5)}",
+  "wc": "c8l2qdHDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^2qdHD}^{(6)}",
+  "wc": "c8l2qdHDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2qdHD}^{(1)}",
+  "wc": "c8e2qdHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2qdHD}^{(2)}",
+  "wc": "c8e2qdHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{e^2qdHD}^{(3)}",
+  "wc": "c8e2qdHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(1)}",
+  "wc": "c8q3dHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(2)}",
+  "wc": "c8q3dHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(3)}",
+  "wc": "c8q3dHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(4)}",
+  "wc": "c8q3dHDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(5)}",
+  "wc": "c8q3dHDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{q^3dHD}^{(6)}",
+  "wc": "c8q3dHDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(1)}",
+  "wc": "c8qu2dHDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(2)}",
+  "wc": "c8qu2dHDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(3)}",
+  "wc": "c8qu2dHDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(4)}",
+  "wc": "c8qu2dHDx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(5)}",
+  "wc": "c8qu2dHDx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qu^2dHD}^{(6)}",
+  "wc": "c8qu2dHDx6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qd^3HD}^{(1)}",
+  "wc": "c8qd3HDx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qd^3HD}^{(2)}",
+  "wc": "c8qd3HDx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{qd^3HD}^{(3)}",
+  "wc": "c8qd3HDx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 1,
+   "N_X": 0,
+   "N_D": 1
+  }
+ },
+ {
+  "name": "Q_{l^4D^2}^{(1)}",
+  "wc": "c8l4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^4D^2}^{(2)}",
+  "wc": "c8l4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^4D^2}^{(1)}",
+  "wc": "c8q4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^4D^2}^{(2)}",
+  "wc": "c8q4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^4D^2}^{(3)}",
+  "wc": "c8q4D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^4D^2}^{(4)}",
+  "wc": "c8q4D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2q^2D^2}^{(1)}",
+  "wc": "c8l2q2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2q^2D^2}^{(2)}",
+  "wc": "c8l2q2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2q^2D^2}^{(3)}",
+  "wc": "c8l2q2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2q^2D^2}^{(4)}",
+  "wc": "c8l2q2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{e^4D^2}",
+  "wc": "c8e4D2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^4D^2}^{(1)}",
+  "wc": "c8u4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^4D^2}^{(2)}",
+  "wc": "c8u4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{d^4D^2}^{(1)}",
+  "wc": "c8d4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{d^4D^2}^{(2)}",
+  "wc": "c8d4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{e^2u^2D^2}^{(1)}",
+  "wc": "c8e2u2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{e^2u^2D^2}^{(2)}",
+  "wc": "c8e2u2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{e^2d^2D^2}^{(1)}",
+  "wc": "c8e2d2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{e^2d^2D^2}^{(2)}",
+  "wc": "c8e2d2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^2d^2D^2}^{(1)}",
+  "wc": "c8u2d2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^2d^2D^2}^{(2)}",
+  "wc": "c8u2d2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^2d^2D^2}^{(3)}",
+  "wc": "c8u2d2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{u^2d^2D^2}^{(4)}",
+  "wc": "c8u2d2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2e^2D^2}^{(1)}",
+  "wc": "c8l2e2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2e^2D^2}^{(2)}",
+  "wc": "c8l2e2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2u^2D^2}^{(1)}",
+  "wc": "c8l2u2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2u^2D^2}^{(2)}",
+  "wc": "c8l2u2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2d^2D^2}^{(1)}",
+  "wc": "c8l2d2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{l^2d^2D^2}^{(2)}",
+  "wc": "c8l2d2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2e^2D^2}^{(1)}",
+  "wc": "c8q2e2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2e^2D^2}^{(2)}",
+  "wc": "c8q2e2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2u^2D^2}^{(1)}",
+  "wc": "c8q2u2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2u^2D^2}^{(2)}",
+  "wc": "c8q2u2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2u^2D^2}^{(3)}",
+  "wc": "c8q2u2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2u^2D^2}^{(4)}",
+  "wc": "c8q2u2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2d^2D^2}^{(1)}",
+  "wc": "c8q2d2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2d^2D^2}^{(2)}",
+  "wc": "c8q2d2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2d^2D^2}^{(3)}",
+  "wc": "c8q2d2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2d^2D^2}^{(4)}",
+  "wc": "c8q2d2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2udD^2}^{(1)}",
+  "wc": "c8q2udD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2udD^2}^{(2)}",
+  "wc": "c8q2udD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{q^2udD^2}^{(3)}",
+  "wc": "c8q2udD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{lequD^2}^{(1)}",
+  "wc": "c8lequD2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{lequD^2}^{(2)}",
+  "wc": "c8lequD2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{lequD^2}^{(3)}",
+  "wc": "c8lequD2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 4,
+   "N_H": 0,
+   "N_X": 0,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{G^3H^2}^{(1)}",
+  "wc": "c8G3H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^3H^2}^{(2)}",
+  "wc": "c8G3H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^3H^2}^{(1)}",
+  "wc": "c8W3H2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^3H^2}^{(2)}",
+  "wc": "c8W3H2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2BH^2}^{(1)}",
+  "wc": "c8W2BH2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2BH^2}^{(2)}",
+  "wc": "c8W2BH2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 3,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2H^4}^{(1)}",
+  "wc": "c8G2H4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2H^4}^{(2)}",
+  "wc": "c8G2H4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2H^4}^{(1)}",
+  "wc": "c8W2H4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2H^4}^{(2)}",
+  "wc": "c8W2H4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2H^4}^{(3)}",
+  "wc": "c8W2H4x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{W^2H^4}^{(4)}",
+  "wc": "c8W2H4x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{WBH^4}^{(1)}",
+  "wc": "c8WBH4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{WBH^4}^{(2)}",
+  "wc": "c8WBH4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{B^2H^4}^{(1)}",
+  "wc": "c8B2H4x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{B^2H^4}^{(2)}",
+  "wc": "c8B2H4x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{G^2H^2D^2}^{(1)}",
+  "wc": "c8G2H2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{G^2H^2D^2}^{(2)}",
+  "wc": "c8G2H2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{G^2H^2D^2}^{(3)}",
+  "wc": "c8G2H2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(1)}",
+  "wc": "c8W2H2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(2)}",
+  "wc": "c8W2H2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(3)}",
+  "wc": "c8W2H2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(4)}",
+  "wc": "c8W2H2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(5)}",
+  "wc": "c8W2H2D2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{W^2H^2D^2}^{(6)}",
+  "wc": "c8W2H2D2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(1)}",
+  "wc": "c8WBH2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(2)}",
+  "wc": "c8WBH2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(3)}",
+  "wc": "c8WBH2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(4)}",
+  "wc": "c8WBH2D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(5)}",
+  "wc": "c8WBH2D2x5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WBH^2D^2}^{(6)}",
+  "wc": "c8WBH2D2x6",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{B^2H^2D^2}^{(1)}",
+  "wc": "c8B2H2D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{B^2H^2D^2}^{(2)}",
+  "wc": "c8B2H2D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{B^2H^2D^2}^{(3)}",
+  "wc": "c8B2H2D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 2,
+   "N_X": 2,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WH^4D^2}^{(1)}",
+  "wc": "c8WH4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WH^4D^2}^{(2)}",
+  "wc": "c8WH4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WH^4D^2}^{(3)}",
+  "wc": "c8WH4D2x3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{WH^4D^2}^{(4)}",
+  "wc": "c8WH4D2x4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{BH^4D^2}^{(1)}",
+  "wc": "c8BH4D2x1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{BH^4D^2}^{(2)}",
+  "wc": "c8BH4D2x2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 0,
+   "N_H": 4,
+   "N_X": 1,
+   "N_D": 2
+  }
+ },
+ {
+  "name": "Q_{leG^2H}^{(1)}",
+  "wc": "c8leG2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leG^2H}^{(2)}",
+  "wc": "c8leG2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leW^2H}^{(1)}",
+  "wc": "c8leW2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leW^2H}^{(2)}",
+  "wc": "c8leW2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leW^2H}^{(3)}",
+  "wc": "c8leW2Hx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quG^2H}^{(1)}",
+  "wc": "c8quG2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quG^2H}^{(2)}",
+  "wc": "c8quG2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quG^2H}^{(3)}",
+  "wc": "c8quG2Hx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quG^2H}^{(4)}",
+  "wc": "c8quG2Hx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quG^2H}^{(5)}",
+  "wc": "c8quG2Hx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGWH}^{(1)}",
+  "wc": "c8quGWHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGWH}^{(2)}",
+  "wc": "c8quGWHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGWH}^{(3)}",
+  "wc": "c8quGWHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGBH}^{(1)}",
+  "wc": "c8quGBHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGBH}^{(2)}",
+  "wc": "c8quGBHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quGBH}^{(3)}",
+  "wc": "c8quGBHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quW^2H}^{(1)}",
+  "wc": "c8quW2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quW^2H}^{(2)}",
+  "wc": "c8quW2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quW^2H}^{(3)}",
+  "wc": "c8quW2Hx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quWBH}^{(3)}",
+  "wc": "c8quWBHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quWBH}^{(1)}",
+  "wc": "c8quWBHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quWBH}^{(2)}",
+  "wc": "c8quWBHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quB^2H}^{(1)}",
+  "wc": "c8quB2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{quB^2H}^{(2)}",
+  "wc": "c8quB2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leWBH}^{(1)}",
+  "wc": "c8leWBHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leWBH}^{(2)}",
+  "wc": "c8leWBHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leWBH}^{(3)}",
+  "wc": "c8leWBHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leB^2H}^{(1)}",
+  "wc": "c8leB2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{leB^2H}^{(2)}",
+  "wc": "c8leB2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdG^2H}^{(1)}",
+  "wc": "c8qdG2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdG^2H}^{(2)}",
+  "wc": "c8qdG2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdG^2H}^{(3)}",
+  "wc": "c8qdG2Hx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdG^2H}^{(4)}",
+  "wc": "c8qdG2Hx4",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdG^2H}^{(5)}",
+  "wc": "c8qdG2Hx5",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGWH}^{(1)}",
+  "wc": "c8qdGWHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGWH}^{(2)}",
+  "wc": "c8qdGWHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGWH}^{(3)}",
+  "wc": "c8qdGWHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGBH}^{(1)}",
+  "wc": "c8qdGBHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGBH}^{(2)}",
+  "wc": "c8qdGBHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdGBH}^{(3)}",
+  "wc": "c8qdGBHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdW^2H}^{(1)}",
+  "wc": "c8qdW2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdW^2H}^{(2)}",
+  "wc": "c8qdW2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdW^2H}^{(3)}",
+  "wc": "c8qdW2Hx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdWBH}^{(1)}",
+  "wc": "c8qdWBHx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdWBH}^{(2)}",
+  "wc": "c8qdWBHx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdWBH}^{(3)}",
+  "wc": "c8qdWBHx3",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdB^2H}^{(1)}",
+  "wc": "c8qdB2Hx1",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ },
+ {
+  "name": "Q_{qdB^2H}^{(2)}",
+  "wc": "c8qdB2Hx2",
+  "ok": true,
+  "problems": [],
+  "field_content": {
+   "N_f": 2,
+   "N_H": 1,
+   "N_X": 2,
+   "N_D": 0
+  }
+ }
+]

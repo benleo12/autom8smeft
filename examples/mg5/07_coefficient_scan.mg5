@@ -1,0 +1,13 @@
+# 07: MadGraph's scan syntax: one launch, several coefficient values; the interference (NP^2==2)
+# scales linearly, the squared term (04) quadratically.
+import model dim8_is
+generate p p > w+ w- NP^2==2
+output runs/07_ww_scan
+launch runs/07_ww_scan
+set nevents 2000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8W2H2D2x1 scan:[-2.0, -1.0, 1.0, 2.0]
+done

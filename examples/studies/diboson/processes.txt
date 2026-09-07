@@ -1,0 +1,5 @@
+# process | extra launch settings (cuts) ; 13.6 TeV, on-shell bosons
+p p > w+ w-
+p p > w+ z
+p p > w- z
+p p > z z

@@ -1,0 +1,16 @@
+# reweight card for example 08: one sample generated at c8W2H2D2x1 = 1, reweighted to other points.
+# Each "launch" block defines a new weight; parameters not listed keep the generation values.
+change rwgt_dir rwgt
+launch --rwgt_name=c8W2H2D2x1_0
+  set c8W2H2D2x1 0.0
+launch --rwgt_name=c8W2H2D2x1_m1
+  set c8W2H2D2x1 -1.0
+launch --rwgt_name=c8W2H2D2x1_2
+  set c8W2H2D2x1 2.0
+launch --rwgt_name=c8q2W2Dx1_1
+  set c8W2H2D2x1 0.0
+  set c8q2W2Dx1 1.0
+launch --rwgt_name=Lam_2TeV
+# "set Lam 2000" is silently ignored: MadGraph lowercases the name, the Standard Model already
+# has a "lam", and the written card therefore calls the scale lam__2.  Address it by block and id.
+  set dim8 0 2000

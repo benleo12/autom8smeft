@@ -1,0 +1,18 @@
+# 03: the 1/Lambda^4 term: interference of one dimension-eight insertion with the SM (NP^2==2).
+# Two operators that enter q q~ > W W at tree level switched on: Q_{q^2W^2D}^{(1)} (class 14) is a
+# quark-quark-W-W contact term, Q_{q^2WH^2D}^{(1)} (class 15) a momentum-dependent quark-quark-W
+# coupling.  The result is linear in each coefficient and can be negative.  Compare with 02.  Note that
+# the purely bosonic X^2 H^2 D^2 operators (class 7) do NOT enter here: their lowest vertex is four-point
+# (W W W W, W W H H, a W W Z), so they need a third boson or vector-boson scattering, see example 12.
+import model dim8_is
+generate p p > w+ w- NP^2==2
+output runs/03_ww_int
+launch runs/03_ww_int
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8q2WH2Dx1 1.0
+set c8q2W2Dx1 1.0
+done

@@ -1,0 +1,21 @@
+# one restriction card per Murphy class (cls<N>), written with make_restriction.py cls:<N>
+# The classes are those `./dim8 select "u c > u c h h"` and `"u d > u d h h"` find able to enter
+# vector boson fusion of a Higgs pair at tree level with one insertion (tree reachability over the
+# model's vertices with Standard-Model internal lines): 2, 3, 4, 6, 7, 8 among the bosonic ones,
+# 10, 11, 12, 13, 15, 16, 17 among the two-fermion ones. Classes 1, 5, 9, 14 and 19 have no
+# diagram here. The four-fermion classes 18, 20 and 21 do enter, through a contact term between
+# the two quark lines with the Higgs pair radiated off a quark, and are left out on cost: each
+# costs an hour of code generation for 120 subprocesses for a Yukawa-suppressed contribution.
+cls2
+cls3
+cls4
+cls6
+cls7
+cls8
+cls10
+cls11
+cls12
+cls13
+cls15
+cls16
+cls17

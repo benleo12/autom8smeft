@@ -1,0 +1,18 @@
+# 13: a hand-picked set.  Card, mixing operator names, coefficient names and block numbers:
+#     python3 validate/make_restriction.py models/dim8_is ten \
+#        'Q_{W^2H^2D^2}^{(1)}' 'Q_{W^2H^2D^2}^{(2)}' c8WBH2D2x1 c8B2H2D2x1 'Q_{W^3H^2}^{(1)}' \
+#        'Q_{q^2W^2D}^{(1)}' 'Q_{q^2W^2D}^{(2)}' 68 69 'Q_{H^4}^{(1)}'
+# (68 and 69 are Q_{q^2W^2D}^{(3)} and ^{(4)} by block number; the class-4 operators are Murphy's
+# Q_{H^4}^{(1,2,3)}, the D^4 being implicit in his notation)
+import model dim8_is-ten
+generate p p > w+ w- NP^2==2
+output runs/13_ww_ten
+launch runs/13_ww_ten
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8W2H2D2x1 1.0
+set c8q2W2Dx1 1.0
+done

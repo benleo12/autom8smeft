@@ -1,0 +1,9 @@
+# process | run-card settings | card for the full-model rows ("-" = no full rows for this process)
+# W+W-Z keeps the unrestricted full rows (the linearity check); the unrestricted interference
+# alone is 4066 diagrams and hours, so the other four processes run their full rows on the
+# bosonic card, the two-fermion classes being covered by their class rows.
+p p > w+ w- z | | -
+p p > w+ w- w+ | | bosonic
+p p > w+ w- w- | | bosonic
+p p > z z z | | bosonic
+p p > w+ z z | | bosonic

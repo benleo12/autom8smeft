@@ -1,0 +1,9 @@
+# 01: import the model and look at what it contains.  Nothing is generated.
+import model dim8_is
+# the coupling orders: NP is the dimension-eight order (2 per insertion), QCD and QED as usual
+display coupling_order
+# the particles are those of the Standard Model (plus ghosts and Goldstones used internally)
+display particles
+# every dimension-eight coefficient is a parameter in block DIM8 of the param card, zero by default;
+# Lam (GeV) is the scale.  This lists them all (long):
+# display parameters

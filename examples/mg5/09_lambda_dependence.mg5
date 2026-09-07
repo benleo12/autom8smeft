@@ -1,0 +1,13 @@
+# 09: scanning the scale at fixed coefficient.  Interference falls as 1/Lambda^4 (this run), the
+# squared term (NP<=2 NP^2==4) as 1/Lambda^8; plotting sigma against Lam shows both slopes.
+import model dim8_is
+generate p p > w+ w- NP^2==2
+output runs/09_ww_lam
+launch runs/09_ww_lam
+set nevents 2000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set c8W2H2D2x1 1.0
+set lam__2 scan:[1000, 1500, 2000, 3000]
+done

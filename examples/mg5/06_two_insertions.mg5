@@ -1,0 +1,15 @@
+# 06: everything at 1/Lambda^8 from dimension eight alone, including two insertions in one amplitude
+# interfering with the SM (NP<=4 NP^2<=4).  Needs expansion_order = 4 for NP in coupling_orders.py
+# (the shipped dim8_is has it).  Compare with 04: the difference is the double-insertion piece.
+import model dim8_is
+generate p p > w+ w- NP<=4 NP^2<=4
+output runs/06_ww_double
+launch runs/06_ww_double
+set nevents 5000
+set hel_recycling False
+set ebeam1 6800
+set ebeam2 6800
+set lam__2 1000
+set c8W2H2D2x1 1.0
+set c8q2W2Dx1 1.0
+done

@@ -1,0 +1,5 @@
+# High-mass neutral-current Drell-Yan, the process that opens the four-fermion classes.
+# mmll is the invariant mass of the same-flavour opposite-sign lepton pair, which is what e+ e-
+# is, so the cut applies (for a different-flavour pair it silently does nothing: use mmnl).
+p p > e+ e- | mmll=200
+p p > e+ e- a | mmll=200 ptgmin=20
