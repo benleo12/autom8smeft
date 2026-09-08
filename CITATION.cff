@@ -1,8 +1,9 @@
 cff-version: 1.2.0
 title: autom8smeft
 message: >-
-  If you use this model, please cite the Murphy dimension-eight basis it implements
-  and the tools that write and read it.
+  If you use this model, please cite it together with the paper whose operator
+  tabulation it implements and the tools that write and read it. The authors of
+  those references have no involvement in this work.
 type: software
 repository-code: "https://github.com/benleo12/autom8smeft"
 license: MIT

@@ -1,5 +1,16 @@
 # 07: MadGraph's scan syntax: one launch, several coefficient values; the interference (NP^2==2)
 # scales linearly, the squared term (04) quadratically.
+# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
+# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
+# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
+# an operator that does contribute; see examples/studies/diboson/table.md.
+# The numbers this prints are illustrative, not precision results.  At 2000 events an
+# interference sample's effective statistics is the excess of positive over negative
+# events, so MadGraph's quoted error is optimistic, and running several points in
+# sequence through one process directory reuses the integration grid from the previous
+# point.  A single point of this scan came out 4 sigma from the diboson study's row for
+# the same operator for exactly those two reasons; four seeds at 3000 events agree with
+# it. Use examples/studies/run_study.sh for numbers you intend to quote.
 import model dim8_is
 generate p p > w+ w- NP^2==2
 output runs/07_ww_scan
@@ -9,5 +20,5 @@ set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
 set lam__2 1000
-set c8W2H2D2x1 scan:[-2.0, -1.0, 1.0, 2.0]
+set c8q2W2Dx1 scan:[-2.0, -1.0, 1.0, 2.0]
 done

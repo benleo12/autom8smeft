@@ -1,6 +1,10 @@
 # 08: one event sample, many coefficient points.  Generate with a reference point, then reweight
 # to the points listed in cards/reweight_card.dat (copy it in when MadGraph asks for the reweight
 # card, or edit runs/08_ww_rw/Cards/reweight_card.dat before launching).
+# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
+# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
+# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
+# an operator that does contribute; see examples/studies/diboson/table.md.
 import model dim8_is
 generate p p > w+ w- NP<=2
 output runs/08_ww_rw
@@ -11,5 +15,5 @@ set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
 set lam__2 1000
-set c8W2H2D2x1 1.0
+set c8q2W2Dx1 1.0
 done

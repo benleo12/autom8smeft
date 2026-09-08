@@ -4,6 +4,10 @@
 #        'Q_{q^2W^2D}^{(1)}' 'Q_{q^2W^2D}^{(2)}' 68 69 'Q_{H^4}^{(1)}'
 # (68 and 69 are Q_{q^2W^2D}^{(3)} and ^{(4)} by block number; the class-4 operators are Murphy's
 # Q_{H^4}^{(1,2,3)}, the D^4 being implicit in his notation)
+# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
+# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
+# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
+# an operator that does contribute; see examples/studies/diboson/table.md.
 import model dim8_is-ten
 generate p p > w+ w- NP^2==2
 output runs/13_ww_ten
@@ -13,6 +17,6 @@ set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
 set lam__2 1000
-set c8W2H2D2x1 1.0
+set c8q2WH2Dx1 1.0
 set c8q2W2Dx1 1.0
 done

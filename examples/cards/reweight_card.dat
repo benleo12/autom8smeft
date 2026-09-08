@@ -1,15 +1,19 @@
-# reweight card for example 08: one sample generated at c8W2H2D2x1 = 1, reweighted to other points.
+# reweight card for example 08: one sample generated at c8q2W2Dx1 = 1, reweighted to other points.
 # Each "launch" block defines a new weight; parameters not listed keep the generation values.
+#
+# It used to vary c8W2H2D2x1, which is class 7 and has no diagram in p p > w+ w- at all, so the
+# sample was the Standard Model and four of the five weights were degenerate with it and with
+# each other.  c8q2W2Dx1 is the largest single-operator interference in that process, -1.189 pb.
 change rwgt_dir rwgt
-launch --rwgt_name=c8W2H2D2x1_0
-  set c8W2H2D2x1 0.0
-launch --rwgt_name=c8W2H2D2x1_m1
-  set c8W2H2D2x1 -1.0
-launch --rwgt_name=c8W2H2D2x1_2
-  set c8W2H2D2x1 2.0
-launch --rwgt_name=c8q2W2Dx1_1
-  set c8W2H2D2x1 0.0
-  set c8q2W2Dx1 1.0
+launch --rwgt_name=c8q2W2Dx1_0
+  set c8q2W2Dx1 0.0
+launch --rwgt_name=c8q2W2Dx1_m1
+  set c8q2W2Dx1 -1.0
+launch --rwgt_name=c8q2W2Dx1_2
+  set c8q2W2Dx1 2.0
+launch --rwgt_name=c8q2WH2Dx1_1
+  set c8q2W2Dx1 0.0
+  set c8q2WH2Dx1 1.0
 launch --rwgt_name=Lam_2TeV
 # "set Lam 2000" is silently ignored: MadGraph lowercases the name, the Standard Model already
 # has a "lam", and the written card therefore calls the scale lam__2.  Address it by block and id.

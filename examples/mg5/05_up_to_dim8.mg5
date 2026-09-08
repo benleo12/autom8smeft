@@ -1,5 +1,15 @@
 # 05: "up to dimension eight" in one run: SM + interference + squared, one insertion per amplitude
-# (NP<=2).  The cross section equals 02 + 03 + 04 for the same coefficients, within statistics.
+# (NP<=2).  The cross section equals 02 + 03 + 04 for the same coefficients, within statistics,
+# and it is worth knowing why that is true here and is not true in general.  02 is run with the
+# coefficients OFF, so the identity needs the NP=0 bin to be coefficient independent.  It is for
+# these two operators: c8q2W2Dx1 and c8q2WH2Dx1 leave M_W at 79.82436 and v at 246.22057, their
+# Standard Model values.  Switch on an operator that acts through the {alpha, MZ, GF} input
+# relations instead, say c8H6x1 or c8l2H4Dx2, and the NP=0 bin moves, so 02 is no longer the
+# right thing to add and the identity fails by that shift.  See docs/HOW_TO_BREAK_IT.md.
+# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
+# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
+# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
+# an operator that does contribute; see examples/studies/diboson/table.md.
 import model dim8_is
 generate p p > w+ w- NP<=2
 output runs/05_ww_upto8
@@ -9,6 +19,6 @@ set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
 set lam__2 1000
-set c8W2H2D2x1 1.0
+set c8q2WH2Dx1 1.0
 set c8q2W2Dx1 1.0
 done
