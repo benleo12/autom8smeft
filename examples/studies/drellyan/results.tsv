@@ -10,3 +10,9 @@ p p > e+ e- 	dim8_is-cls20	NP^2==2	-9.965e-06	2.708e-08	5000	79.824	dim8_all=1 L
 p p > e+ e- 	dim8_is-cls20	NP<=2 NP^2==4	0.409	0.002768	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___ep_em__dim8_ismcls20_NP__2_NP_2__4.lhe.gz
 p p > e+ e- 	dim8_is-cls21	NP^2==2	0.1877	0.006969	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___ep_em__dim8_ismcls21_NP_2__2.lhe.gz
 p p > e+ e- 	dim8_is-cls21	NP<=2 NP^2==4	508.5	5.336	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___ep_em__dim8_ismcls21_NP__2_NP_2__4.lhe.gz
+p p > e+ e- a 	dim8_is	NP=0	0.02097	9.074e-05	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___ep_em_a__dim8_is_NP_0.lhe.gz
+p p > e+ e- a 	dim8_is	NP=0 on	0.02097	9.074e-05	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___ep_em_a__dim8_is_NP_0_on.lhe.gz
+p p > e+ e- a 	dim8_is	NP^2==2	-0.00983	0.0001743	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___ep_em_a__dim8_is_NP_2__2.lhe.gz
+p p > e+ e- a 	dim8_is	NP<=2 NP^2==4	52.29	0.283	2000	79.325	dim8_all=1 Lam=1000	lhe/p_p___ep_em_a__dim8_is_NP__2_NP_2__4.lhe.gz
+p p > e+ e- a 	dim8_is-cls19	NP^2==2	-0.0003346	3.775e-06	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___ep_em_a__dim8_ismcls19_NP_2__2.lhe.gz
+p p > e+ e- a 	dim8_is-cls19	NP<=2 NP^2==4	0.1276	0.0005381	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___ep_em_a__dim8_ismcls19_NP__2_NP_2__4.lhe.gz

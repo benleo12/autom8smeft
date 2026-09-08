@@ -42,6 +42,14 @@ them all with operator and class. 27 restriction cards ship, one per class plus 
 `validate/make_restriction.py` writes any other selection. `./dim8 select "p p > w+ w-"` lists
 which operators can enter a process.
 
+## Try it
+
+    export MG5_DIR=/path/to/MG5_aMC
+    examples/studies/run_study.sh examples/studies/quickstart models/dim8_is 2000
+
+`p p > w+ w-` with two operator classes, about half an hour on two cores.
+`examples/studies/quickstart/README.md` lists the numbers to expect and what to change next.
+
 ## Analysis
 
 [docs/RUN_YOUR_OWN_ANALYSIS.md](docs/RUN_YOUR_OWN_ANALYSIS.md): from a process to cross sections,
