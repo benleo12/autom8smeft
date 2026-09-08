@@ -1,7 +1,6 @@
 # Running an analysis
 
-From a process to cross sections, LaTeX tables and distributions. Needs MadGraph5_aMC@NLO 3.5 and
-Python 3.11.
+From a process to cross sections. Needs MadGraph5_aMC@NLO 3.5 and Python 3.11.
 
 ## 1. Install
 
@@ -76,12 +75,10 @@ an interference of -3.998. It vanishes for processes with no W and no Higgs coup
 the W mass at that row's coefficients, the settings used, and the path to the event file. Event
 files land in `mystudy/lhe/` as gzipped LHE.
 
-Read `event_norm` from the LHE banner before histogramming. It defaults to `average`, so every
-event of an unweighted sample carries the full cross section as its weight and the cross section
-is the mean, not the sum. An interference sample has negative weights and reproduces its cross
-section only statistically.
+An interference sample has negative weights and reproduces its cross section only statistically,
+so its effective statistics is the excess of positive over negative events.
 
-## 7. One operator at a time
+## 6. One operator at a time
 
     for c in $(grep -o 'c8[A-Za-z0-9]*' models/dim8_is/param_card_template.dat | sort -u); do
         validate/make_restriction.py models/dim8_is op_$c $c
@@ -89,7 +86,7 @@ section only statistically.
 
 then put those card names in `classes.txt`.
 
-## 8. MadGraph practicalities
+## 7. MadGraph practicalities
 
 `set Lam 1000` at the launch prompt is accepted and does nothing. The card calls the scale
 `lam__2`, because MadGraph lowercases names and `lam` is already the Higgs quartic.
