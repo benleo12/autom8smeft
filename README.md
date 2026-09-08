@@ -45,7 +45,7 @@ which operators can enter a process.
 ## Analysis
 
 [docs/RUN_YOUR_OWN_ANALYSIS.md](docs/RUN_YOUR_OWN_ANALYSIS.md): from a process to cross sections,
-LaTeX tables and distributions, using `examples/studies/`.
+using `examples/studies/run_study.sh`.
 
 ## Limits
 

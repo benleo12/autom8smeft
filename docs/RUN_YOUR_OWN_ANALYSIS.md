@@ -70,21 +70,16 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
 On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.35 pb against
 an interference of -3.998. It vanishes for processes with no W and no Higgs coupling.
 
-## 5. Tables
+## 5. Output
 
-    examples/studies/table_study.py mystudy models/dim8_is
+`mystudy/results.tsv`, one row per process, model and order: cross section, error, event count,
+the W mass at that row's coefficients, the settings used, and the path to the event file. Event
+files land in `mystudy/lhe/` as gzipped LHE.
 
-writes `mystudy/table.md` and `table.tex`: per process, the Standard Model row, the full-model
-interference and square, one line per class with its interference and square and the ratio to the
-SM, and a ranked one-operator-at-a-time table when the study has single-operator rows.
-
-## 6. Distributions
-
-    examples/studies/plot_study.py mystudy/fig \
-        SM=mystudy/lhe/<sm>.lhe.gz  int=mystudy/lhe/<interference>.lhe.gz
-
-Invariant mass of the final-state bosons and leading transverse momentum, normalised to each
-sample's cross section from the banner, negative weights kept, with a ratio panel.
+Read `event_norm` from the LHE banner before histogramming. It defaults to `average`, so every
+event of an unweighted sample carries the full cross section as its weight and the cross section
+is the mean, not the sum. An interference sample has negative weights and reproduces its cross
+section only statistically.
 
 ## 7. One operator at a time
 
