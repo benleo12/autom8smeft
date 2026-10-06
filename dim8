@@ -42,14 +42,16 @@ def _need(path, hint):
 
 
 def cmd_build(a):
-    """Fan the 674 blocks out over N external FeynRules processes and cache each one."""
-    from build_catalogue import main as build_main  # noqa
+    """Fan the 734 blocks out over N external FeynRules processes and cache each one."""
+    from emit_fr import emit_model_fragment
 
-    sys.argv = ["build_catalogue.py", "--emit", os.path.join(ROOT, "models/dev/dim8_generated.fr")]
-    build_main()
-    src = os.path.join(ROOT, "models/dev/dim8_generated.fr")
-    dst = os.path.join(ROOT, "tests/gen_smoke/gen.fr")
-    open(dst, "w").write(open(src).read())
+    # the Lagrangian the workers load is emitted from the encoding, so that a corrected operator
+    # cannot be built from a stale file
+    txt, index = emit_model_fragment(_parse_all(), per_block=1)
+    if index != json.load(open(os.path.join(ROOT, "docs/block_index.json"))):
+        sys.exit("gen/operators.py and docs/block_index.json disagree on the block order; "
+                 "regenerate both from the same encoding before building")
+    open(os.path.join(ROOT, "tests/gen_smoke/gen.fr"), "w").write(txt)
 
     n = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
     procs = []
@@ -118,7 +120,7 @@ def cmd_index(a):
 # --------------------------------------------------------------------------- select ----
 
 
-# Operators whose coefficients enter the electroweak input scheme (docs/input_scheme_dim8.md).
+# Operators whose coefficients enter the electroweak input scheme (the input-scheme section of the paper).
 # With --input-scheme their blocks are ALWAYS included: the canonical field rotation cancels
 # against the kinetic and mass terms these operators induce, so a model that shifted the
 # couplings without carrying the operators would be inconsistent as soon as a coefficient
@@ -126,15 +128,23 @@ def cmd_index(a):
 # when they were missing).  Resolved by coefficient name so the list cannot go stale.
 INPUT_SCHEME_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
                     "c8l2H4Dx2", "c8l2H4Dx4", "c8G2H4x1", "c8H8", "c8quH5", "c8qdH5", "c8leH5"]
+# The eight of those that act with NO vertex of their own in a process: they shift gw, g1, the
+# vev, the W mass and the neutral field rotation (the paper's expressions for delta v and
+# delta M_W), and so enter every electroweak amplitude.  The other five of INPUT_SCHEME_WCS shift
+# the gluon normalisation, the Higgs quartic and the Yukawas, which are couplings the same
+# operators also produce as vertices of their own (g g h, h h h, h f fbar), so wherever that
+# shift matters the vertex test above already lists the operator.
+INPUT_RELATION_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
+                      "c8l2H4Dx2", "c8l2H4Dx4"]
 
 
-def _input_scheme_blocks():
+def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
     idx = json.load(open(os.path.join(ROOT, "docs/block_index.json")))
     by_wc = {w: b["block"] for b in idx for w in b["wcs"]}
-    missing = [w for w in INPUT_SCHEME_WCS if w not in by_wc]
+    missing = [w for w in wcs if w not in by_wc]
     if missing:
         sys.exit(f"input-scheme coefficients not in the catalogue: {missing}")
-    return {by_wc[w] for w in INPUT_SCHEME_WCS}
+    return {by_wc[w] for w in wcs}
 
 
 def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
@@ -164,18 +174,40 @@ def cmd_select(a):
     slots = P.parse_process(a.process, collapse=not a.all_flavours)
     print(f"process : {a.process}")
     print(f"external: {'  '.join('|'.join(s) for s in slots)}   (FeynRules all-incoming convention)")
-    cached = {f[:-3] for f in os.listdir(VDIR) if f.endswith(".mx") and not f.startswith(".")} if os.path.isdir(VDIR) else set()
-    print(f"selected: {len(hits)} of {len(vi)} indexed operators")
-    # This is a LOWER BOUND on the operators that affect the process.  The test is tree
-    # reachability over the model's vertices, so an operator that acts only through the
-    # electroweak input relations, having no vertex among the external legs, is not listed and
-    # still changes the answer: in p p > w+ w- the muon-decay operators Q_{l^2H^4D}^{(2,4)} carry
-    # a third of the dimension-eight interference through their shift of gw, vev and MW, with no
-    # vertex in any diagram (the development log, not shipped, 2026-09-07).  Add the input-relation operators
-    # to whatever this prints: classes 3 and 6, and the l^2H^4D operators of class 13.
-    print("note    : a lower bound. Operators acting only through the {alpha, MZ, GF} input")
-    print("          relations have no vertex here and are not listed, yet they contribute:")
-    print("          add classes 3 and 6 and the l^2H^4D operators of class 13 (see examples/14).")
+    # DIM8_VDIR may name several cache directories separated by ";", as the writer and the index
+    # dumper allow, and base_<hash>.mx is the cached base-model vertex list rather than a block.
+    cached = set()
+    for _d in VDIR.split(";"):
+        _d = _d.strip()
+        if os.path.isdir(_d):
+            cached |= {f[:-3] for f in os.listdir(_d)
+                       if f.endswith(".mx") and not f.startswith(".") and not f.startswith("base_")}
+    # dimension-eight operators and dimension-six classes are different units, so they are counted
+    # separately: "101 of 685 operators" for p p > w+ w- was 96 operators plus 5 classes
+    n8 = sum(1 for b in hits if b.startswith("L8op"))
+    n6 = len(hits) - n8
+    # The vertex test alone is a LOWER BOUND on the operators that affect the process: an
+    # operator that acts through the electroweak input relations shifts gw, g1, the vev and MW
+    # in every amplitude whether or not it has a vertex among the external legs.  In
+    # p p > w+ w- the muon-decay operators Q_{l^2H^4D}^{(2,4)} carry a third of the
+    # dimension-eight interference that way, with no vertex in any diagram (2026-09-07).  Until
+    # 2026-10-05 this command printed a note telling the user to add those operators by hand,
+    # which read as "the list is incomplete and you have to find the rest yourself".  Now they are
+    # part of the answer, listed under their own heading and written into the block list, so the
+    # selection is complete at tree level with one insertion.
+    def _bkey(b):
+        """Sort L8op<n> numerically and anything else (L6cl1, L6cl8a) by name, after them.
+        int(b[4:]) alone raises on L6cl8a, which would crash select on any process a
+        dimension-six four-fermion class can reach."""
+        return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
+
+    extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey)
+    print(f"selected: {n8} of the 674 dimension-eight operators through a vertex of the process"
+          + (f", and {n6} of the dimension-six classes" if n6 else "")
+          + f", plus {len(extra)} that enter through the {{alpha, MZ, GF}} input relations")
+    print("          (complete at tree level with one insertion: nothing else can change the")
+    print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
+    print("           the couplings and the W mass of every electroweak amplitude)")
     # The selector can only see blocks that are in build/vertex_index.json.  If the cache has
     # grown since the index was written, every count below is an UNDERCOUNT.  This happened
     # silently for a whole session (index at 73 blocks, cache at 400+).  Compare names against
@@ -185,28 +217,35 @@ def cmd_select(a):
         full_index = set(json.load(open(os.path.join(ROOT, "build/vertex_index.json"))))
     except Exception:
         full_index = set()
-    missing = sorted(cached - full_index, key=lambda x: int(x[4:]) if x[4:].isdigit() else 0)
+    missing = sorted(cached - full_index, key=_bkey)
     if missing:
         print(f"WARNING: {len(missing)} cached blocks are not in the vertex index ({', '.join(missing[:6])}"
               f"{', ...' if len(missing) > 6 else ''}); the selection is incomplete. Run ./dim8 index to regenerate it.")
     print()
     byclass = {}
-    for b in sorted(hits, key=lambda x: int(x[4:])):
+    for b in sorted(hits, key=_bkey):
         meta = idx.get(b, {})
-        byclass.setdefault(meta.get("cls", 0), []).append((meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b]))
-    for cls in sorted(byclass):
-        print(f"class {cls}:")
+        # the dimension-six blocks have no entry in the dimension-eight catalogue, so they would
+        # otherwise land in a nameless "class 0"
+        cls = "dim6" if b.startswith("L6cl") else meta.get("cls", 0)
+        byclass.setdefault(cls, []).append((meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b]))
+    for cls in sorted(byclass, key=lambda c: (1, 0) if c == "dim6" else (0, c)):
+        print("dimension six:" if cls == "dim6" else f"class {cls}:")
         for name, wc, legs in byclass[cls]:
             print(f"  {name:34s} {wc:16s} via {' '.join(legs)}")
+    if extra:
+        print("through the input relations, with no vertex in this process:")
+        for b in extra:
+            meta = idx.get(b, {})
+            print(f"  {meta.get('ops', [b])[0]:34s} {meta.get('wcs', [''])[0]:16s} class {meta.get('cls', '?')}")
     if a.out:
         p = os.path.join(ROOT, "build", a.out + ".blocks")
-        open(p, "w").write("\n".join(sorted(hits, key=lambda x: int(x[4:]))) + "\n")
-        print(f"\nwrote {os.path.relpath(p, ROOT)}")
+        open(p, "w").write("\n".join(sorted(set(hits) | set(extra), key=_bkey)) + "\n")
+        print(f"\nwrote {os.path.relpath(p, ROOT)}  ({len(hits) + len(extra)} blocks, both groups)")
 
 
 def cmd_model(a):
     """Emit a FeynRules model holding only the operators the process can see."""
-    import build_catalogue as BC  # noqa
     from emit_fr import emit_model_fragment
 
     hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
@@ -249,28 +288,11 @@ def cmd_ufo(a):
 
 
 def _parse_all():
-    """The catalogue, in the same order the blocks were numbered."""
-    import glob
-    import re
+    """The operators in block order, OPS[i] being the operator of L8op{i+1}: the released encoding
+    gen/operators.py, which gen/emit_fr.py turns into the Lagrangian the models are built from."""
+    from operators import OPS
 
-    from build_catalogue import all_rows
-    from hermiticity import apply_convention
-    from murphy_patches import apply_patches, patch_label
-    from parse_murphy import parse_operator, wc_name
-
-    ops = []
-    for lab, ex, hc, header, fn in all_rows():
-            lab = patch_label(lab)
-            m = re.match(r"\s*(\d+)", header)
-            cls = int(m.group(1)) if m else 0
-            try:
-                op = parse_operator(apply_patches(lab, ex, []), lab, wc_name(lab), cls,
-                                    plus_hc=hc, hermitian=(not hc))
-            except Exception:
-                continue
-            apply_convention(op)
-            ops.append(op)
-    return ops
+    return list(OPS)
 
 
 def cmd_count(a):
@@ -284,6 +306,7 @@ def cmd_count(a):
             print()
         return 0
     name, args = E.resolve(a.spec)
+    lead = []
     for n in a.n:
         t = E.tower(*args, n, target=a.target)
         if isinstance(t, str):
@@ -291,8 +314,24 @@ def cmd_count(a):
             continue
         rows = t if isinstance(t, list) else t.Results
         Dop = E.op_dimension(*args)
-        print(f"{name} (D,H,psi,F)={args} n={n}:  p_min={max(args[1]+args[2]+args[3]-n,0)}  "
-              + "  ".join(f"k={r['k']}: (p,q)=({r['p']},{r['q']}) lambda^{3*Dop-2*r['q']-r['p']}" for r in rows))
+        if getattr(a, "verbose", False):
+            # the full tower: p powers of the vev, q of the energy, k derivatives traded for vevs
+            print(f"{name} (D,H,psi,F)={args} n={n}:  p_min={max(args[1]+args[2]+args[3]-n,0)}  "
+                  + "  ".join(f"k={r['k']}: (p,q)=({r['p']},{r['q']}) lambda^{3*Dop-2*r['q']-r['p']}" for r in rows))
+            continue
+        # One number per leg count is what a user needs: the leading power of lambda, with
+        # (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1), so a SMALLER power is a LARGER
+        # contribution and lambda^4 is the steepest a dimension-eight operator can be.
+        lead.append((n, min(3*Dop - 2*r['q'] - r['p'] for r in rows)))
+    if not getattr(a, "verbose", False) and lead:
+        legs = {4: "four", 5: "five", 6: "six"}
+        print(f"{name:12s} leading power of the class's vertex, by its number of legs: "
+              + ", ".join(f"lambda^{l} at {legs.get(n, n)} legs" for n, l in lead))
+        print("             (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) in the regime Lambda >> E >> v, so a")
+        print("             smaller power grows faster with energy, lambda^4 being the fastest a dimension-eight")
+        print("             operator can; every subleading term of the same vertex trades one power of E for one")
+        print("             of v and is one power of lambda higher.  --verbose prints the whole tower, as (p, q):")
+        print("             p powers of the vev, q of the energy, k derivatives traded for vevs.")
     return 0
 
 
@@ -352,6 +391,7 @@ def main():
     k.add_argument("spec", help='e.g. "psi^2H^2D^3", "3,2,2,0", or all')
     k.add_argument("-n", nargs="+", type=int, default=[4, 5, 6], help="vertex multiplicities")
     k.add_argument("--target", type=int, default=None, help="only report if this lambda exponent appears")
+    k.add_argument("--verbose", action="store_true", help="the full (p, q) tower instead of the leading power")
     k.set_defaults(func=cmd_count)
 
     c = sub.add_parser("check", help="symbolic validation gates")

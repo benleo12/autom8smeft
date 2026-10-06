@@ -9,6 +9,8 @@ Selectors, mixed freely:
     L8op593  or  593       a block number
     cls:6                  every operator of a class number (Murphy's class numbering)
     all                    every dimension-eight operator (a card that keeps everything)
+    dim6                   every dimension-six coefficient, if the model ships them
+    dim6:cHq1              one named dimension-six coefficient
 
 Writes <UFO dir>/restrict_<card name>.dat.  Importing the model as
     import model <UFO dir>-<card name>
@@ -43,8 +45,13 @@ def main(argv):
     ufo_names = {n for n, _ in ufo_dim8}
     if not ufo_names:
         print("no DIM8 external parameters found in", ufo); return 2
+    # The dimension-six sector, when the model carries it.  Lam6 is the scale and shares the
+    # block, so it is never a coefficient to keep or zero.
+    ufo_dim6 = [n for n in re.findall(
+        r"name = '(\w+)',\s*nature = 'external',\s*type = '\w+',\s*value = [^,]*,"
+        r"(?:\s*texname = '[^']*',)?\s*lhablock = 'DIM6'", params) if n != "Lam6"]
 
-    wanted_wcs, blocks = set(), []
+    wanted_wcs, blocks, keep6 = set(), [], set()
     for s in selectors:
         if s == "all":
             for e in index: wanted_wcs |= set(e["wcs"]); blocks.append(e["block"])
@@ -52,6 +59,14 @@ def main(argv):
             hits = [e for e in index if e["cls"] == int(s[4:])]
             if not hits: print("no operators in class", s[4:]); return 2
             for e in hits: wanted_wcs |= set(e["wcs"]); blocks.append(e["block"])
+        elif s == "dim6":
+            if not ufo_dim6:
+                print("this model has no DIM6 coefficients"); return 2
+            keep6 |= set(ufo_dim6)
+        elif s.startswith("dim6:"):
+            if s[5:] not in ufo_dim6:
+                print("not a DIM6 coefficient of this model:", s[5:]); return 2
+            keep6.add(s[5:])
         elif s in by_op:
             wanted_wcs |= set(by_op[s]["wcs"]); blocks.append(by_op[s]["block"])
         elif s in by_wc:
@@ -66,7 +81,7 @@ def main(argv):
     not_in_ufo = sorted(w for w in wanted_wcs if w not in ufo_names and w + "Re" not in ufo_names)
     if not_in_ufo:
         print("WARNING: not present in this UFO (its operator blocks were not included when the UFO was written):", ", ".join(not_in_ufo))
-    if not keep:
+    if not keep and not keep6:
         print("nothing to keep"); return 2
 
     # A partial UFO still carries the whole basis in parameters.py, so a coefficient being there
@@ -77,12 +92,12 @@ def main(argv):
     # from the external <name>Re and <name>Im, so the parts are checked through the base.
     used = set(re.findall(r"\bc8\w+\b", open(os.path.join(ufo, "couplings.py")).read()))
     live = [n for n in keep if n in used or re.sub(r"(Re|Im)$", "", n) in used]
-    if not live:
+    if not live and not keep6:
         print("WARNING: none of the kept coefficients appears in any vertex of this UFO, so the")
         print("         restricted model will have no NP coupling order at all and orders like")
         print("         NP^2==2 will be rejected.  Write the UFO with these operator blocks first.")
         return 2
-    if len(live) < len(keep):
+    if keep and len(live) < len(keep):
         # Coefficients with no vertex are set to zero like the rest: a placeholder value would
         # change nothing in MadGraph and would make the card's "kept" count a lie.  The usual
         # reasons are the baryon-number-violating blocks (675 to 734, not in the shipped model)
@@ -98,7 +113,7 @@ def main(argv):
     ext = re.findall(r"(\w+) = Parameter\(name = '(\w+)',\s*nature = 'external',\s*type = '\w+',\s*value = ([^,]*),\s*texname = '[^']*',\s*lhablock = '(\w+)',\s*lhacode = \[ ([\d, ]+) \]", params)
     blocks_order = ["SMINPUTS", "MASS", "CKMBLOCK", "DIM6", "DIM8", "YUKAWA"]
     seen = [b for b in blocks_order if any(e[3] == b for e in ext)] + sorted({e[3] for e in ext} - set(blocks_order) - {"DECAY"})
-    out, k, kept, zeroed = [], 0, 0, 0
+    out, k, kept, kept6, zeroed = [], 0, 0, 0, 0
     def num(v):
         try: return float(eval(v, {"__builtins__": {}}, {"cmath": __import__("cmath")}))
         except Exception: return 0.0
@@ -111,6 +126,9 @@ def main(argv):
             if b == "DIM8" and pname.startswith("c8"):   # the scale Lam shares the block and must stay
                 if pname in keep: v = 0.1 + 0.001 * k; k += 1; kept += 1
                 else: v = 0.0; zeroed += 1
+            elif b == "DIM6" and pname in ufo_dim6:      # Lam6 shares the block and must stay
+                if pname in keep6: v = 0.1 + 0.001 * k; k += 1; kept6 += 1
+                else: v = 0.0; zeroed += 1
             out.append(f"  {code} {v:.6e} # {pname} ")
     for _, pname, value, blk, codes in ext:
         if blk == "DECAY":
@@ -118,13 +136,15 @@ def main(argv):
     dest = os.path.join(ufo, f"restrict_{name}.dat")
     header = [f"# restriction card '{name}' written by validate/make_restriction.py",
               f"# keeps {kept} dimension-eight coefficient(s) from {len(set(blocks))} operator block(s): " + " ".join(sorted(set(blocks), key=lambda b: int(b[4:]))),
+              f"# keeps {kept6} dimension-six coefficient(s)",
               "# kept coefficients carry placeholder values; set the physical values in the run's param_card.dat",
               # release_model.sh builds into <name>.new and swaps at the end, so the basename
               # during a release is "dim8_is.new" and the printed import line was unusable.
               "# import with:  import model "
               + re.sub(r"\.new$", "", os.path.basename(ufo)) + "-" + name]
     open(dest, "w").write("\n".join(header + out))
-    print(f"wrote {dest}: kept {kept} coefficients ({', '.join(keep)}), zeroed {zeroed}")
+    print(f"wrote {dest}: kept {kept} dim-8 and {kept6} dim-6 coefficients, zeroed {zeroed}"
+)
     return 0
 
 

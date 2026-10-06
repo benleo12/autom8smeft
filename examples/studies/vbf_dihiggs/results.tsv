@@ -1,3 +1,38 @@
 process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
-p p > h h j j QCD=0 	dim8_is-bosonic	NP=0	0.000973	8.13e-06	2000	79.824	dim8_all=0 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_is_bosonic_NP_0.lhe.gz
-p p > h h j j QCD=0 	dim8_is-bosonic	NP^2==2	4.871e-05	1.882e-06	2000	79.325	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_is_bosonic_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-bosonic	NP=0	0.000973	8.13e-06	2000	79.824	dim8_all=0 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0.lhe.gz
+p p > h h j j QCD=0	dim8_is-bosonic	NP^2==2	2.079e-05	1.802e-06	2000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls2	NP^2==2	3.882e-05	2.231e-07	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls2_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls2	NP<=2 NP^2==4	2.033e-06	1.2e-08	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls2_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls3	NP^2==2	-1.938e-05	1.15e-07	2000	79.719	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls3_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls3	NP<=2 NP^2==4	4.649e-07	5.425e-09	1000	79.719	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls3_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls4	NP^2==2	7.695e-05	4.759e-07	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls4_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls4	NP<=2 NP^2==4	6.601e-05	7.039e-07	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls4_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls6	NP^2==2	-0.0001349	1.554e-06	2000	79.561	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls6_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls6	NP<=2 NP^2==4	0.0004428	1.756e-06	1000	79.561	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls6_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls7	NP^2==2	5.979e-05	1.702e-06	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls7_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls7	NP<=2 NP^2==4	0.03045	0.0003807	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls7_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls8	NP^2==2	-3.422e-06	9.929e-08	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls8_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls8	NP<=2 NP^2==4	2.788e-06	1.544e-08	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls8_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls10	NP^2==2	7.137e-08	1.048e-09	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls10_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls11	NP^2==2	-1.898e-05	6.065e-07	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls11_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls11	NP<=2 NP^2==4	0.001975	8.802e-06	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls11_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls12	NP^2==2	3.019e-10	1.18e-10	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls12_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls12	NP<=2 NP^2==4	4.022e-06	1.258e-08	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls12_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls13	NP<=2 NP^2==4	0.001137	6.628e-06	1000	79.696	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls13_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls15	NP^2==2	8.442e-05	9.009e-07	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls15_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls15	NP<=2 NP^2==4	0.02798	0.0001742	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls15_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls16	NP^2==2	6.538e-08	1.436e-09	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls16_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls16	NP<=2 NP^2==4	0.03599	0.0002136	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls16_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls17	NP^2==2	2.387e-08	4.017e-10	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls17_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls17	NP<=2 NP^2==4	0.002479	1.233e-05	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls17_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls1	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls13	NP^2==2	9.382e-05	1.763e-06	2000	79.696	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls13_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_is-cls14	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls18	NP^2==2	NOT_INTEGRATED	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls19	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls20	NP^2==2	NOT_INTEGRATED	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls21	NP^2==2	NOT_INTEGRATED	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls5	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-cls9	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
+p p > h h j j QCD=0	dim8_is-bosonic	NP=0 on	0.001026	8.019e-06	2000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0_on.lhe.gz
+p p > h h j j QCD=0	dim8_is-bosonic	NP<=2 NP^2==4	0.02688	0.0001305	1000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP__2_NP_2__4.lhe.gz

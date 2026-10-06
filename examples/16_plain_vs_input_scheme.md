@@ -18,7 +18,7 @@ pass on the plain model too), while
 ones (`u u~ > a a`, `a z`, `h a`, `w+ w-`, `z h`, `u d~ > w+ a`, `e+ e- > a a`).
 
 `dim8_is` corrects the input relations to O(1/Lambda^4) (SMEFTsim conventions, formulae in
-`docs/input_scheme_dim8.md`), rotates the fields to canonical kinetic terms, and removes the
+the input-scheme section of the paper), rotates the fields to canonical kinetic terms, and removes the
 gluon kinetic shift by a form factor, so that every gauge coupling in every vertex is the one
 defined by the inputs. It passes the same checks at machine precision. It is the model to use;
 `dim8_plain` is kept for cross-checks of operators that touch none of these terms (four-fermion,

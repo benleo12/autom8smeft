@@ -1,5 +1,6 @@
 # restriction card 'cls7' written by validate/make_restriction.py
 # keeps 18 dimension-eight coefficient(s) from 18 operator block(s): L8op603 L8op604 L8op605 L8op606 L8op607 L8op608 L8op609 L8op610 L8op611 L8op612 L8op613 L8op614 L8op615 L8op616 L8op617 L8op618 L8op619 L8op620
+# keeps 0 dimension-six coefficient(s)
 # kept coefficients carry placeholder values; set the physical values in the run's param_card.dat
 # import with:  import model dim8_is-cls7
 Block SMINPUTS 

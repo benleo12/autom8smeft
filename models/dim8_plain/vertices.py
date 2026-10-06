@@ -42,8 +42,8 @@ V_5 = Vertex(name = 'V_5',
 V_6 = Vertex(name = 'V_6',
              particles = [ P.g, P.g, P.g ],
              color = [ 'f(1,2,3)' ],
-             lorentz = [ L.VVV10, L.VVV11, L.VVV15, L.VVV5 ],
-             couplings = {(0,3):C.GC_10824,(0,2):C.GC_10407,(0,1):C.GC_10406,(0,0):C.GC_7})
+             lorentz = [ L.VVV10, L.VVV11, L.VVV15 ],
+             couplings = {(0,2):C.GC_10407,(0,1):C.GC_10406,(0,0):C.GC_7})
 
 V_7 = Vertex(name = 'V_7',
              particles = [ P.g, P.g, P.g ],
@@ -150,8 +150,8 @@ V_23 = Vertex(name = 'V_23',
 V_24 = Vertex(name = 'V_24',
               particles = [ P.a, P.W__minus__, P.W__plus__ ],
               color = [ '1' ],
-              lorentz = [ L.VVV1, L.VVV10, L.VVV11, L.VVV12, L.VVV13, L.VVV5, L.VVV6 ],
-              couplings = {(0,5):C.GC_10819,(0,0):C.GC_12367,(0,3):C.GC_10426,(0,4):C.GC_10745,(0,2):C.GC_12065,(0,1):C.GC_3,(0,6):C.GC_12366})
+              lorentz = [ L.VVV1, L.VVV10, L.VVV11, L.VVV12, L.VVV13, L.VVV6 ],
+              couplings = {(0,0):C.GC_12367,(0,3):C.GC_10426,(0,4):C.GC_10745,(0,2):C.GC_12065,(0,1):C.GC_3,(0,5):C.GC_12366})
 
 V_25 = Vertex(name = 'V_25',
               particles = [ P.a, P.W__minus__, P.W__plus__ ],
@@ -162,8 +162,8 @@ V_25 = Vertex(name = 'V_25',
 V_26 = Vertex(name = 'V_26',
               particles = [ P.W__minus__, P.W__plus__, P.H, P.H ],
               color = [ '1' ],
-              lorentz = [ L.VVSS1, L.VVSS10, L.VVSS14, L.VVSS15, L.VVSS16, L.VVSS17, L.VVSS19, L.VVSS20, L.VVSS22, L.VVSS23, L.VVSS3, L.VVSS4, L.VVSS7 ],
-              couplings = {(0,0):C.GC_10424,(0,5):C.GC_10423,(0,12):C.GC_10624,(0,1):C.GC_10622,(0,6):C.GC_10621,(0,7):C.GC_10623,(0,2):C.GC_816,(0,10):C.GC_11753,(0,3):C.GC_4467,(0,8):C.GC_813,(0,11):C.GC_815,(0,9):C.GC_814,(0,4):C.GC_10542})
+              lorentz = [ L.VVSS1, L.VVSS10, L.VVSS14, L.VVSS15, L.VVSS16, L.VVSS17, L.VVSS19, L.VVSS20, L.VVSS22, L.VVSS23, L.VVSS3, L.VVSS4 ],
+              couplings = {(0,0):C.GC_10424,(0,5):C.GC_10423,(0,1):C.GC_10622,(0,6):C.GC_10621,(0,7):C.GC_10623,(0,2):C.GC_816,(0,10):C.GC_11753,(0,3):C.GC_4467,(0,8):C.GC_813,(0,11):C.GC_815,(0,9):C.GC_814,(0,4):C.GC_10542})
 
 V_27 = Vertex(name = 'V_27',
               particles = [ P.W__minus__, P.W__plus__, P.H, P.H ],
@@ -174,8 +174,8 @@ V_27 = Vertex(name = 'V_27',
 V_28 = Vertex(name = 'V_28',
               particles = [ P.W__minus__, P.W__plus__, P.H ],
               color = [ '1' ],
-              lorentz = [ L.VVS1, L.VVS11, L.VVS12, L.VVS5, L.VVS7, L.VVS8, L.VVS9 ],
-              couplings = {(0,0):C.GC_10779,(0,6):C.GC_10778,(0,3):C.GC_10804,(0,4):C.GC_10802,(0,1):C.GC_10801,(0,2):C.GC_10803,(0,5):C.GC_9848})
+              lorentz = [ L.VVS1, L.VVS11, L.VVS12, L.VVS7, L.VVS8, L.VVS9 ],
+              couplings = {(0,0):C.GC_10779,(0,5):C.GC_10778,(0,3):C.GC_10802,(0,1):C.GC_10801,(0,2):C.GC_10803,(0,4):C.GC_9848})
 
 V_29 = Vertex(name = 'V_29',
               particles = [ P.W__minus__, P.W__plus__, P.H ],
@@ -198,14 +198,14 @@ V_31 = Vertex(name = 'V_31',
 V_32 = Vertex(name = 'V_32',
               particles = [ P.W__minus__, P.W__plus__, P.Z ],
               color = [ '1' ],
-              lorentz = [ L.VVV10, L.VVV11, L.VVV13, L.VVV14, L.VVV2, L.VVV3, L.VVV4, L.VVV5, L.VVV7, L.VVV8, L.VVV9 ],
-              couplings = {(0,4):C.GC_12347,(0,7):C.GC_10829,(0,5):C.GC_10822,(0,6):C.GC_12365,(0,2):C.GC_10427,(0,3):C.GC_10744,(0,1):C.GC_12064,(0,0):C.GC_4826,(0,9):C.GC_10821,(0,8):C.GC_12346,(0,10):C.GC_12364})
+              lorentz = [ L.VVV10, L.VVV11, L.VVV13, L.VVV14, L.VVV2, L.VVV3, L.VVV4, L.VVV7, L.VVV8, L.VVV9 ],
+              couplings = {(0,4):C.GC_12347,(0,5):C.GC_10822,(0,6):C.GC_12365,(0,2):C.GC_10427,(0,3):C.GC_10744,(0,1):C.GC_12064,(0,0):C.GC_4826,(0,8):C.GC_10821,(0,7):C.GC_12346,(0,9):C.GC_12364})
 
 V_33 = Vertex(name = 'V_33',
               particles = [ P.W__minus__, P.W__plus__, P.Z ],
               color = [ '1' ],
-              lorentz = [ L.VVV10, L.VVV4, L.VVV5, L.VVV9 ],
-              couplings = {(0,2):C.GC_10833,(0,1):C.GC_10835,(0,0):C.GC_10828,(0,3):C.GC_10834})
+              lorentz = [ L.VVV10, L.VVV4, L.VVV9 ],
+              couplings = {(0,1):C.GC_10835,(0,0):C.GC_10828,(0,2):C.GC_10834})
 
 V_34 = Vertex(name = 'V_34',
               particles = [ P.W__minus__, P.W__plus__, P.Z ],
@@ -1194,20 +1194,20 @@ V_197 = Vertex(name = 'V_197',
 V_198 = Vertex(name = 'V_198',
                particles = [ P.e__plus__, P.e__minus__, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,8):C.GC_7050,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,20):C.GC_12195,(0,14):C.GC_12221,(0,18):C.GC_12194,(0,5):C.GC_9148,(0,21):C.GC_9132,(0,9):C.GC_14672,(0,6):C.GC_13169,(0,11):C.GC_11579,(0,10):C.GC_12340,(0,2):C.GC_14726,(0,17):C.GC_11580,(0,1):C.GC_14633,(0,15):C.GC_11578,(0,16):C.GC_14528,(0,19):C.GC_14507,(0,12):C.GC_11541,(0,13):C.GC_11540})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,19):C.GC_12195,(0,13):C.GC_12221,(0,17):C.GC_12194,(0,5):C.GC_9148,(0,20):C.GC_9132,(0,8):C.GC_14672,(0,6):C.GC_13169,(0,10):C.GC_11579,(0,9):C.GC_12340,(0,2):C.GC_14726,(0,16):C.GC_11580,(0,1):C.GC_14633,(0,14):C.GC_11578,(0,15):C.GC_14528,(0,18):C.GC_14507,(0,11):C.GC_11541,(0,12):C.GC_11540})
 
 V_199 = Vertex(name = 'V_199',
                particles = [ P.mu__plus__, P.mu__minus__, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,8):C.GC_7050,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,20):C.GC_12195,(0,14):C.GC_12221,(0,18):C.GC_12194,(0,5):C.GC_9148,(0,21):C.GC_9132,(0,9):C.GC_14672,(0,6):C.GC_13169,(0,11):C.GC_11579,(0,10):C.GC_12340,(0,2):C.GC_14726,(0,17):C.GC_11580,(0,1):C.GC_14633,(0,15):C.GC_11578,(0,16):C.GC_14528,(0,19):C.GC_14507,(0,12):C.GC_11541,(0,13):C.GC_11540})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,19):C.GC_12195,(0,13):C.GC_12221,(0,17):C.GC_12194,(0,5):C.GC_9148,(0,20):C.GC_9132,(0,8):C.GC_14672,(0,6):C.GC_13169,(0,10):C.GC_11579,(0,9):C.GC_12340,(0,2):C.GC_14726,(0,16):C.GC_11580,(0,1):C.GC_14633,(0,14):C.GC_11578,(0,15):C.GC_14528,(0,18):C.GC_14507,(0,11):C.GC_11541,(0,12):C.GC_11540})
 
 V_200 = Vertex(name = 'V_200',
                particles = [ P.ta__plus__, P.ta__minus__, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,8):C.GC_7050,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,20):C.GC_12195,(0,14):C.GC_12221,(0,18):C.GC_12194,(0,5):C.GC_9148,(0,21):C.GC_9132,(0,9):C.GC_14672,(0,6):C.GC_13169,(0,11):C.GC_11579,(0,10):C.GC_12340,(0,2):C.GC_14726,(0,17):C.GC_11580,(0,1):C.GC_14633,(0,15):C.GC_11578,(0,16):C.GC_14528,(0,19):C.GC_14507,(0,12):C.GC_11541,(0,13):C.GC_11540})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12201,(0,7):C.GC_7053,(0,0):C.GC_12229,(0,3):C.GC_12199,(0,19):C.GC_12195,(0,13):C.GC_12221,(0,17):C.GC_12194,(0,5):C.GC_9148,(0,20):C.GC_9132,(0,8):C.GC_14672,(0,6):C.GC_13169,(0,10):C.GC_11579,(0,9):C.GC_12340,(0,2):C.GC_14726,(0,16):C.GC_11580,(0,1):C.GC_14633,(0,14):C.GC_11578,(0,15):C.GC_14528,(0,18):C.GC_14507,(0,11):C.GC_11541,(0,12):C.GC_11540})
 
 V_201 = Vertex(name = 'V_201',
                particles = [ P.e__plus__, P.e__minus__, P.W__minus__, P.W__plus__, P.Z, P.H, P.H ],
@@ -2634,20 +2634,20 @@ V_437 = Vertex(name = 'V_437',
 V_438 = Vertex(name = 'V_438',
                particles = [ P.u__tilde__, P.u, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12208,(0,8):C.GC_7055,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,20):C.GC_12215,(0,14):C.GC_12234,(0,18):C.GC_12214,(0,5):C.GC_9164,(0,21):C.GC_9178,(0,9):C.GC_24731,(0,6):C.GC_23412,(0,11):C.GC_11593,(0,10):C.GC_12341,(0,2):C.GC_25004,(0,17):C.GC_11594,(0,1):C.GC_24468,(0,15):C.GC_11592,(0,16):C.GC_23807,(0,19):C.GC_23688,(0,12):C.GC_11548,(0,13):C.GC_11547})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12208,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,19):C.GC_12215,(0,13):C.GC_12234,(0,17):C.GC_12214,(0,5):C.GC_9164,(0,20):C.GC_9178,(0,8):C.GC_24731,(0,6):C.GC_23412,(0,10):C.GC_11593,(0,9):C.GC_12341,(0,2):C.GC_25004,(0,16):C.GC_11594,(0,1):C.GC_24468,(0,14):C.GC_11592,(0,15):C.GC_23807,(0,18):C.GC_23688,(0,11):C.GC_11548,(0,12):C.GC_11547})
 
 V_439 = Vertex(name = 'V_439',
                particles = [ P.c__tilde__, P.c, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12208,(0,8):C.GC_7055,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,20):C.GC_12215,(0,14):C.GC_12234,(0,18):C.GC_12214,(0,5):C.GC_9164,(0,21):C.GC_9178,(0,9):C.GC_24731,(0,6):C.GC_23412,(0,11):C.GC_11593,(0,10):C.GC_12341,(0,2):C.GC_25004,(0,17):C.GC_11594,(0,1):C.GC_24468,(0,15):C.GC_11592,(0,16):C.GC_23807,(0,19):C.GC_23688,(0,12):C.GC_11548,(0,13):C.GC_11547})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12208,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,19):C.GC_12215,(0,13):C.GC_12234,(0,17):C.GC_12214,(0,5):C.GC_9164,(0,20):C.GC_9178,(0,8):C.GC_24731,(0,6):C.GC_23412,(0,10):C.GC_11593,(0,9):C.GC_12341,(0,2):C.GC_25004,(0,16):C.GC_11594,(0,1):C.GC_24468,(0,14):C.GC_11592,(0,15):C.GC_23807,(0,18):C.GC_23688,(0,11):C.GC_11548,(0,12):C.GC_11547})
 
 V_440 = Vertex(name = 'V_440',
                particles = [ P.t__tilde__, P.t, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12208,(0,8):C.GC_7055,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,20):C.GC_12215,(0,14):C.GC_12234,(0,18):C.GC_12214,(0,5):C.GC_9164,(0,21):C.GC_9178,(0,9):C.GC_24731,(0,6):C.GC_23412,(0,11):C.GC_11593,(0,10):C.GC_12341,(0,2):C.GC_25004,(0,17):C.GC_11594,(0,1):C.GC_24468,(0,15):C.GC_11592,(0,16):C.GC_23807,(0,19):C.GC_23688,(0,12):C.GC_11548,(0,13):C.GC_11547})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12208,(0,7):C.GC_7056,(0,0):C.GC_12231,(0,3):C.GC_12206,(0,19):C.GC_12215,(0,13):C.GC_12234,(0,17):C.GC_12214,(0,5):C.GC_9164,(0,20):C.GC_9178,(0,8):C.GC_24731,(0,6):C.GC_23412,(0,10):C.GC_11593,(0,9):C.GC_12341,(0,2):C.GC_25004,(0,16):C.GC_11594,(0,1):C.GC_24468,(0,14):C.GC_11592,(0,15):C.GC_23807,(0,18):C.GC_23688,(0,11):C.GC_11548,(0,12):C.GC_11547})
 
 V_441 = Vertex(name = 'V_441',
                particles = [ P.d__tilde__, P.d, P.g, P.H, P.H ],
@@ -3606,8 +3606,8 @@ V_599 = Vertex(name = 'V_599',
 V_600 = Vertex(name = 'V_600',
                particles = [ P.d__tilde__, P.d, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12209,(0,8):C.GC_7054,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,20):C.GC_12191,(0,14):C.GC_12220,(0,18):C.GC_12190,(0,5):C.GC_9163,(0,21):C.GC_9130,(0,9):C.GC_21576,(0,6):C.GC_20008,(0,11):C.GC_27282,(0,10):C.GC_27353,(0,2):C.GC_21873,(0,17):C.GC_27283,(0,1):C.GC_21236,(0,15):C.GC_27281,(0,16):C.GC_20594,(0,19):C.GC_20493,(0,12):C.GC_27275,(0,13):C.GC_27274})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12209,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,19):C.GC_12191,(0,13):C.GC_12220,(0,17):C.GC_12190,(0,5):C.GC_9163,(0,20):C.GC_9130,(0,8):C.GC_21576,(0,6):C.GC_20008,(0,10):C.GC_27282,(0,9):C.GC_27353,(0,2):C.GC_21873,(0,16):C.GC_27283,(0,1):C.GC_21236,(0,14):C.GC_27281,(0,15):C.GC_20594,(0,18):C.GC_20493,(0,11):C.GC_27275,(0,12):C.GC_27274})
 
 V_601 = Vertex(name = 'V_601',
                particles = [ P.s__tilde__, P.d, P.Z, P.Z ],
@@ -3630,8 +3630,8 @@ V_603 = Vertex(name = 'V_603',
 V_604 = Vertex(name = 'V_604',
                particles = [ P.s__tilde__, P.s, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12209,(0,8):C.GC_7054,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,20):C.GC_12191,(0,14):C.GC_12220,(0,18):C.GC_12190,(0,5):C.GC_9163,(0,21):C.GC_9130,(0,9):C.GC_21580,(0,6):C.GC_20012,(0,11):C.GC_37160,(0,10):C.GC_37231,(0,2):C.GC_21877,(0,17):C.GC_37161,(0,1):C.GC_21240,(0,15):C.GC_37159,(0,16):C.GC_20602,(0,19):C.GC_20501,(0,12):C.GC_37153,(0,13):C.GC_37152})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12209,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,19):C.GC_12191,(0,13):C.GC_12220,(0,17):C.GC_12190,(0,5):C.GC_9163,(0,20):C.GC_9130,(0,8):C.GC_21580,(0,6):C.GC_20012,(0,10):C.GC_37160,(0,9):C.GC_37231,(0,2):C.GC_21877,(0,16):C.GC_37161,(0,1):C.GC_21240,(0,14):C.GC_37159,(0,15):C.GC_20602,(0,18):C.GC_20501,(0,11):C.GC_37153,(0,12):C.GC_37152})
 
 V_605 = Vertex(name = 'V_605',
                particles = [ P.b__tilde__, P.s, P.Z, P.Z ],
@@ -3654,8 +3654,8 @@ V_607 = Vertex(name = 'V_607',
 V_608 = Vertex(name = 'V_608',
                particles = [ P.b__tilde__, P.b, P.Z, P.Z ],
                color = [ 'Identity(1,2)' ],
-               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV56, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
-               couplings = {(0,4):C.GC_12209,(0,8):C.GC_7054,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,20):C.GC_12191,(0,14):C.GC_12220,(0,18):C.GC_12190,(0,5):C.GC_9163,(0,21):C.GC_9130,(0,9):C.GC_21584,(0,6):C.GC_20016,(0,11):C.GC_47694,(0,10):C.GC_47765,(0,2):C.GC_21881,(0,17):C.GC_47695,(0,1):C.GC_21244,(0,15):C.GC_47693,(0,16):C.GC_20610,(0,19):C.GC_20509,(0,12):C.GC_47687,(0,13):C.GC_47686})
+               lorentz = [ L.FFVV11, L.FFVV18, L.FFVV21, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV5, L.FFVV55, L.FFVV6, L.FFVV66, L.FFVV67, L.FFVV69, L.FFVV70, L.FFVV71, L.FFVV77, L.FFVV8, L.FFVV80, L.FFVV85, L.FFVV9, L.FFVV92, L.FFVV95 ],
+               couplings = {(0,4):C.GC_12209,(0,7):C.GC_7057,(0,0):C.GC_12232,(0,3):C.GC_12207,(0,19):C.GC_12191,(0,13):C.GC_12220,(0,17):C.GC_12190,(0,5):C.GC_9163,(0,20):C.GC_9130,(0,8):C.GC_21584,(0,6):C.GC_20016,(0,10):C.GC_47694,(0,9):C.GC_47765,(0,2):C.GC_21881,(0,16):C.GC_47695,(0,1):C.GC_21244,(0,14):C.GC_47693,(0,15):C.GC_20610,(0,18):C.GC_20509,(0,11):C.GC_47687,(0,12):C.GC_47686})
 
 V_609 = Vertex(name = 'V_609',
                particles = [ P.e__plus__, P.e__minus__, P.H, P.H ],
@@ -3966,20 +3966,20 @@ V_659 = Vertex(name = 'V_659',
 V_660 = Vertex(name = 'V_660',
                particles = [ P.ve__tilde__, P.ve, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55, L.FFVV56 ],
-               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,5):C.GC_7051,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
+               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55 ],
+               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
 
 V_661 = Vertex(name = 'V_661',
                particles = [ P.vm__tilde__, P.vm, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55, L.FFVV56 ],
-               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,5):C.GC_7051,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
+               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55 ],
+               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
 
 V_662 = Vertex(name = 'V_662',
                particles = [ P.vt__tilde__, P.vt, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55, L.FFVV56 ],
-               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,5):C.GC_7051,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
+               lorentz = [ L.FFVV11, L.FFVV27, L.FFVV46, L.FFVV49, L.FFVV55 ],
+               couplings = {(0,2):C.GC_12200,(0,4):C.GC_7052,(0,0):C.GC_12228,(0,1):C.GC_12198,(0,3):C.GC_9149})
 
 V_663 = Vertex(name = 'V_663',
                particles = [ P.ve__tilde__, P.ve, P.W__minus__, P.W__plus__, P.Z, P.H, P.H ],
@@ -4236,20 +4236,20 @@ V_704 = Vertex(name = 'V_704',
 V_705 = Vertex(name = 'V_705',
                particles = [ P.e__plus__, P.e__minus__, P.a, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV347, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
-               couplings = {(0,2):C.GC_5816,(0,7):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,6):C.GC_7296,(0,5):C.GC_8099,(0,22):C.GC_9465,(0,0):C.GC_9203,(0,23):C.GC_9464,(0,8):C.GC_12240,(0,17):C.GC_7882,(0,15):C.GC_7883,(0,16):C.GC_1962,(0,10):C.GC_12239,(0,21):C.GC_13076,(0,19):C.GC_14618,(0,18):C.GC_14622,(0,20):C.GC_14614,(0,1):C.GC_14673,(0,14):C.GC_11623,(0,12):C.GC_10358,(0,11):C.GC_10397,(0,13):C.GC_10239,(0,9):C.GC_11624})
+               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
+               couplings = {(0,2):C.GC_5816,(0,6):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,5):C.GC_8099,(0,21):C.GC_9465,(0,0):C.GC_9203,(0,22):C.GC_9464,(0,7):C.GC_12240,(0,16):C.GC_7882,(0,14):C.GC_7883,(0,15):C.GC_1962,(0,9):C.GC_12239,(0,20):C.GC_13076,(0,18):C.GC_14618,(0,17):C.GC_14622,(0,19):C.GC_14614,(0,1):C.GC_14673,(0,13):C.GC_11623,(0,11):C.GC_10358,(0,10):C.GC_10397,(0,12):C.GC_10239,(0,8):C.GC_11624})
 
 V_706 = Vertex(name = 'V_706',
                particles = [ P.mu__plus__, P.mu__minus__, P.a, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV347, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
-               couplings = {(0,2):C.GC_5816,(0,7):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,6):C.GC_7296,(0,5):C.GC_8099,(0,22):C.GC_9465,(0,0):C.GC_9203,(0,23):C.GC_9464,(0,8):C.GC_12240,(0,17):C.GC_7882,(0,15):C.GC_7883,(0,16):C.GC_1962,(0,10):C.GC_12239,(0,21):C.GC_13076,(0,19):C.GC_14618,(0,18):C.GC_14622,(0,20):C.GC_14614,(0,1):C.GC_14673,(0,14):C.GC_11623,(0,12):C.GC_10358,(0,11):C.GC_10397,(0,13):C.GC_10239,(0,9):C.GC_11624})
+               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
+               couplings = {(0,2):C.GC_5816,(0,6):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,5):C.GC_8099,(0,21):C.GC_9465,(0,0):C.GC_9203,(0,22):C.GC_9464,(0,7):C.GC_12240,(0,16):C.GC_7882,(0,14):C.GC_7883,(0,15):C.GC_1962,(0,9):C.GC_12239,(0,20):C.GC_13076,(0,18):C.GC_14618,(0,17):C.GC_14622,(0,19):C.GC_14614,(0,1):C.GC_14673,(0,13):C.GC_11623,(0,11):C.GC_10358,(0,10):C.GC_10397,(0,12):C.GC_10239,(0,8):C.GC_11624})
 
 V_707 = Vertex(name = 'V_707',
                particles = [ P.ta__plus__, P.ta__minus__, P.a, P.Z, P.Z ],
                color = [ '1' ],
-               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV347, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
-               couplings = {(0,2):C.GC_5816,(0,7):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,6):C.GC_7296,(0,5):C.GC_8099,(0,22):C.GC_9465,(0,0):C.GC_9203,(0,23):C.GC_9464,(0,8):C.GC_12240,(0,17):C.GC_7882,(0,15):C.GC_7883,(0,16):C.GC_1962,(0,10):C.GC_12239,(0,21):C.GC_13076,(0,19):C.GC_14618,(0,18):C.GC_14622,(0,20):C.GC_14614,(0,1):C.GC_14673,(0,14):C.GC_11623,(0,12):C.GC_10358,(0,11):C.GC_10397,(0,13):C.GC_10239,(0,9):C.GC_11624})
+               lorentz = [ L.FFVVV106, L.FFVVV15, L.FFVVV241, L.FFVVV242, L.FFVVV315, L.FFVVV316, L.FFVVV348, L.FFVVV35, L.FFVVV368, L.FFVVV387, L.FFVVV407, L.FFVVV415, L.FFVVV419, L.FFVVV421, L.FFVVV428, L.FFVVV434, L.FFVVV437, L.FFVVV66, L.FFVVV73, L.FFVVV77, L.FFVVV79, L.FFVVV90, L.FFVVV92 ],
+               couplings = {(0,2):C.GC_5816,(0,6):C.GC_7298,(0,4):C.GC_8100,(0,3):C.GC_5815,(0,5):C.GC_8099,(0,21):C.GC_9465,(0,0):C.GC_9203,(0,22):C.GC_9464,(0,7):C.GC_12240,(0,16):C.GC_7882,(0,14):C.GC_7883,(0,15):C.GC_1962,(0,9):C.GC_12239,(0,20):C.GC_13076,(0,18):C.GC_14618,(0,17):C.GC_14622,(0,19):C.GC_14614,(0,1):C.GC_14673,(0,13):C.GC_11623,(0,11):C.GC_10358,(0,10):C.GC_10397,(0,12):C.GC_10239,(0,8):C.GC_11624})
 
 V_708 = Vertex(name = 'V_708',
                particles = [ P.ve__tilde__, P.e__minus__, P.W__plus__, P.Z, P.Z, P.H, P.H ],
@@ -46050,8 +46050,8 @@ V_7673 = Vertex(name = 'V_7673',
 V_7678 = Vertex(name = 'V_7678',
                 particles = [ P.d__tilde__, P.d, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7055,(0,1):C.GC_7056,(0,0):C.GC_9166,(0,7):C.GC_9131,(0,5):C.GC_20595,(0,6):C.GC_20492,(0,3):C.GC_27277,(0,4):C.GC_27276})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7056,(0,0):C.GC_9166,(0,6):C.GC_9131,(0,4):C.GC_20595,(0,5):C.GC_20492,(0,2):C.GC_27277,(0,3):C.GC_27276})
 
 V_7679 = Vertex(name = 'V_7679',
                 particles = [ P.s__tilde__, P.d, P.a, P.a ],
@@ -46074,8 +46074,8 @@ V_7681 = Vertex(name = 'V_7681',
 V_7682 = Vertex(name = 'V_7682',
                 particles = [ P.s__tilde__, P.s, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7055,(0,1):C.GC_7056,(0,0):C.GC_9166,(0,7):C.GC_9131,(0,5):C.GC_20603,(0,6):C.GC_20500,(0,3):C.GC_37155,(0,4):C.GC_37154})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7056,(0,0):C.GC_9166,(0,6):C.GC_9131,(0,4):C.GC_20603,(0,5):C.GC_20500,(0,2):C.GC_37155,(0,3):C.GC_37154})
 
 V_7683 = Vertex(name = 'V_7683',
                 particles = [ P.b__tilde__, P.s, P.a, P.a ],
@@ -46098,26 +46098,26 @@ V_7685 = Vertex(name = 'V_7685',
 V_7686 = Vertex(name = 'V_7686',
                 particles = [ P.b__tilde__, P.b, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7055,(0,1):C.GC_7056,(0,0):C.GC_9166,(0,7):C.GC_9131,(0,5):C.GC_20611,(0,6):C.GC_20508,(0,3):C.GC_47689,(0,4):C.GC_47688})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7056,(0,0):C.GC_9166,(0,6):C.GC_9131,(0,4):C.GC_20611,(0,5):C.GC_20508,(0,2):C.GC_47689,(0,3):C.GC_47688})
 
 V_7687 = Vertex(name = 'V_7687',
                 particles = [ P.u__tilde__, P.u, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7054,(0,1):C.GC_7057,(0,0):C.GC_9165,(0,7):C.GC_9179,(0,5):C.GC_23806,(0,6):C.GC_23689,(0,3):C.GC_11550,(0,4):C.GC_11549})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7057,(0,0):C.GC_9165,(0,6):C.GC_9179,(0,4):C.GC_23806,(0,5):C.GC_23689,(0,2):C.GC_11550,(0,3):C.GC_11549})
 
 V_7688 = Vertex(name = 'V_7688',
                 particles = [ P.c__tilde__, P.c, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7054,(0,1):C.GC_7057,(0,0):C.GC_9165,(0,7):C.GC_9179,(0,5):C.GC_23806,(0,6):C.GC_23689,(0,3):C.GC_11550,(0,4):C.GC_11549})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7057,(0,0):C.GC_9165,(0,6):C.GC_9179,(0,4):C.GC_23806,(0,5):C.GC_23689,(0,2):C.GC_11550,(0,3):C.GC_11549})
 
 V_7689 = Vertex(name = 'V_7689',
                 particles = [ P.t__tilde__, P.t, P.a, P.a ],
                 color = [ 'Identity(1,2)' ],
-                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                couplings = {(0,2):C.GC_7054,(0,1):C.GC_7057,(0,0):C.GC_9165,(0,7):C.GC_9179,(0,5):C.GC_23806,(0,6):C.GC_23689,(0,3):C.GC_11550,(0,4):C.GC_11549})
+                lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                couplings = {(0,1):C.GC_7057,(0,0):C.GC_9165,(0,6):C.GC_9179,(0,4):C.GC_23806,(0,5):C.GC_23689,(0,2):C.GC_11550,(0,3):C.GC_11549})
 
 V_7690 = Vertex(name = 'V_7690',
                 particles = [ P.d__tilde__, P.d, P.a, P.a, P.g ],
@@ -47022,14 +47022,14 @@ V_7839 = Vertex(name = 'V_7839',
 V_7840 = Vertex(name = 'V_7840',
                 particles = [ P.W__minus__, P.W__plus__, P.H, P.H, P.H, P.H ],
                 color = [ '1' ],
-                lorentz = [ L.VVSSSS1, L.VVSSSS10, L.VVSSSS12, L.VVSSSS13, L.VVSSSS15, L.VVSSSS3, L.VVSSSS6, L.VVSSSS8, L.VVSSSS9 ],
-                couplings = {(0,0):C.GC_818,(0,1):C.GC_817,(0,6):C.GC_4979,(0,7):C.GC_4977,(0,2):C.GC_4976,(0,3):C.GC_4978,(0,5):C.GC_3599,(0,8):C.GC_11754,(0,4):C.GC_4480})
+                lorentz = [ L.VVSSSS1, L.VVSSSS10, L.VVSSSS12, L.VVSSSS13, L.VVSSSS15, L.VVSSSS3, L.VVSSSS8, L.VVSSSS9 ],
+                couplings = {(0,0):C.GC_818,(0,1):C.GC_817,(0,6):C.GC_4977,(0,2):C.GC_4976,(0,3):C.GC_4978,(0,5):C.GC_3599,(0,7):C.GC_11754,(0,4):C.GC_4480})
 
 V_7841 = Vertex(name = 'V_7841',
                 particles = [ P.W__minus__, P.W__plus__, P.H, P.H, P.H ],
                 color = [ '1' ],
-                lorentz = [ L.VVSSS1, L.VVSSS10, L.VVSSS12, L.VVSSS13, L.VVSSS15, L.VVSSS3, L.VVSSS6, L.VVSSS8, L.VVSSS9 ],
-                couplings = {(0,0):C.GC_9566,(0,1):C.GC_9565,(0,6):C.GC_10016,(0,7):C.GC_10014,(0,2):C.GC_10013,(0,3):C.GC_10015,(0,5):C.GC_10998,(0,8):C.GC_12281,(0,4):C.GC_9852})
+                lorentz = [ L.VVSSS1, L.VVSSS10, L.VVSSS12, L.VVSSS13, L.VVSSS15, L.VVSSS3, L.VVSSS8, L.VVSSS9 ],
+                couplings = {(0,0):C.GC_9566,(0,1):C.GC_9565,(0,6):C.GC_10014,(0,2):C.GC_10013,(0,3):C.GC_10015,(0,5):C.GC_10998,(0,7):C.GC_12281,(0,4):C.GC_9852})
 
 V_7842 = Vertex(name = 'V_7842',
                 particles = [ P.Z, P.Z, P.H, P.H, P.H, P.H, P.H, P.H ],
@@ -64194,20 +64194,20 @@ V_10707 = Vertex(name = 'V_10707',
 V_10708 = Vertex(name = 'V_10708',
                  particles = [ P.e__plus__, P.e__minus__, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                 couplings = {(0,1):C.GC_7052,(0,2):C.GC_7051,(0,0):C.GC_9151,(0,7):C.GC_9133,(0,5):C.GC_14529,(0,6):C.GC_14506,(0,3):C.GC_11543,(0,4):C.GC_11542})
+                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                 couplings = {(0,1):C.GC_7052,(0,0):C.GC_9151,(0,6):C.GC_9133,(0,4):C.GC_14529,(0,5):C.GC_14506,(0,2):C.GC_11543,(0,3):C.GC_11542})
 
 V_10709 = Vertex(name = 'V_10709',
                  particles = [ P.mu__plus__, P.mu__minus__, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                 couplings = {(0,1):C.GC_7052,(0,2):C.GC_7051,(0,0):C.GC_9151,(0,7):C.GC_9133,(0,5):C.GC_14529,(0,6):C.GC_14506,(0,3):C.GC_11543,(0,4):C.GC_11542})
+                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                 couplings = {(0,1):C.GC_7052,(0,0):C.GC_9151,(0,6):C.GC_9133,(0,4):C.GC_14529,(0,5):C.GC_14506,(0,2):C.GC_11543,(0,3):C.GC_11542})
 
 V_10710 = Vertex(name = 'V_10710',
                  particles = [ P.ta__plus__, P.ta__minus__, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
-                 couplings = {(0,1):C.GC_7052,(0,2):C.GC_7051,(0,0):C.GC_9151,(0,7):C.GC_9133,(0,5):C.GC_14529,(0,6):C.GC_14506,(0,3):C.GC_11543,(0,4):C.GC_11542})
+                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV69, L.FFVV70, L.FFVV8, L.FFVV9, L.FFVV95 ],
+                 couplings = {(0,1):C.GC_7052,(0,0):C.GC_9151,(0,6):C.GC_9133,(0,4):C.GC_14529,(0,5):C.GC_14506,(0,2):C.GC_11543,(0,3):C.GC_11542})
 
 V_10711 = Vertex(name = 'V_10711',
                  particles = [ P.u__tilde__, P.u, P.g, P.g, P.g, P.g, P.H ],
@@ -64352,96 +64352,6 @@ V_10734 = Vertex(name = 'V_10734',
                  color = [ 'f(-1,3,4)*T(-1,2,1)' ],
                  lorentz = [ L.FFVVVVS1, L.FFVVVVS2, L.FFVVVVS22, L.FFVVVVS48, L.FFVVVVS49, L.FFVVVVS70 ],
                  couplings = {(0,2):C.GC_19732,(0,5):C.GC_46013,(0,0):C.GC_19612,(0,1):C.GC_19492,(0,3):C.GC_46012,(0,4):C.GC_46011})
-
-V_10735 = Vertex(name = 'V_10735',
-                 particles = [ P.d__tilde__, P.u, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8957})
-
-V_10736 = Vertex(name = 'V_10736',
-                 particles = [ P.s__tilde__, P.u, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8961})
-
-V_10737 = Vertex(name = 'V_10737',
-                 particles = [ P.b__tilde__, P.u, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8965})
-
-V_10738 = Vertex(name = 'V_10738',
-                 particles = [ P.d__tilde__, P.c, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8969})
-
-V_10739 = Vertex(name = 'V_10739',
-                 particles = [ P.s__tilde__, P.c, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8973})
-
-V_10740 = Vertex(name = 'V_10740',
-                 particles = [ P.b__tilde__, P.c, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8977})
-
-V_10741 = Vertex(name = 'V_10741',
-                 particles = [ P.d__tilde__, P.t, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8981})
-
-V_10742 = Vertex(name = 'V_10742',
-                 particles = [ P.s__tilde__, P.t, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8985})
-
-V_10743 = Vertex(name = 'V_10743',
-                 particles = [ P.b__tilde__, P.t, P.a, P.g, P.W__plus__ ],
-                 color = [ 'T(4,2,1)' ],
-                 lorentz = [ L.FFVVV187 ],
-                 couplings = {(0,0):C.GC_8989})
-
-V_10744 = Vertex(name = 'V_10744',
-                 particles = [ P.d__tilde__, P.d, P.g, P.W__minus__, P.W__minus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_509})
-
-V_10745 = Vertex(name = 'V_10745',
-                 particles = [ P.s__tilde__, P.s, P.g, P.W__minus__, P.W__minus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_509})
-
-V_10746 = Vertex(name = 'V_10746',
-                 particles = [ P.b__tilde__, P.b, P.g, P.W__minus__, P.W__minus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_509})
-
-V_10747 = Vertex(name = 'V_10747',
-                 particles = [ P.d__tilde__, P.d, P.g, P.W__plus__, P.W__plus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_510})
-
-V_10748 = Vertex(name = 'V_10748',
-                 particles = [ P.s__tilde__, P.s, P.g, P.W__plus__, P.W__plus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_510})
-
-V_10749 = Vertex(name = 'V_10749',
-                 particles = [ P.b__tilde__, P.b, P.g, P.W__plus__, P.W__plus__ ],
-                 color = [ 'T(3,2,1)' ],
-                 lorentz = [ L.FFVVV188 ],
-                 couplings = {(0,0):C.GC_510})
 
 V_10750 = Vertex(name = 'V_10750',
                  particles = [ P.ve__tilde__, P.ve, P.g, P.g ],
@@ -64770,20 +64680,20 @@ V_10803 = Vertex(name = 'V_10803',
 V_10804 = Vertex(name = 'V_10804',
                  particles = [ P.ve__tilde__, P.ve, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56 ],
-                 couplings = {(0,1):C.GC_7053,(0,2):C.GC_7050,(0,0):C.GC_9150})
+                 lorentz = [ L.FFVV49, L.FFVV55 ],
+                 couplings = {(0,1):C.GC_7053,(0,0):C.GC_9150})
 
 V_10805 = Vertex(name = 'V_10805',
                  particles = [ P.vm__tilde__, P.vm, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56 ],
-                 couplings = {(0,1):C.GC_7053,(0,2):C.GC_7050,(0,0):C.GC_9150})
+                 lorentz = [ L.FFVV49, L.FFVV55 ],
+                 couplings = {(0,1):C.GC_7053,(0,0):C.GC_9150})
 
 V_10806 = Vertex(name = 'V_10806',
                  particles = [ P.vt__tilde__, P.vt, P.a, P.a ],
                  color = [ '1' ],
-                 lorentz = [ L.FFVV49, L.FFVV55, L.FFVV56 ],
-                 couplings = {(0,1):C.GC_7053,(0,2):C.GC_7050,(0,0):C.GC_9150})
+                 lorentz = [ L.FFVV49, L.FFVV55 ],
+                 couplings = {(0,1):C.GC_7053,(0,0):C.GC_9150})
 
 V_10807 = Vertex(name = 'V_10807',
                  particles = [ P.ve__tilde__, P.ve, P.a, P.a, P.W__minus__, P.W__plus__ ],

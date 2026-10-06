@@ -50,12 +50,14 @@ HIDDEN = {"hel_recycling"}
 def edit_run(path, asg):
     keys = {norm(k): k for k in asg}
     lines, hits = open(path).read().split("\n"), {}
-    present = {norm(m.group(1)) for l in lines for m in [re.match(r"^\s*\S+\s*=\s*(\w+)", l)] if m}
+    # the value may hold spaces once MadGraph has rewritten the card ({'23': 1.1, '25': 1.1} for
+    # eta_max_pdg), so it is "everything before the = sign", not one token
+    present = {norm(m.group(1)) for l in lines for m in [re.match(r"^\s*[^=!]+?\s*=\s*(\w+)", l)] if m}
     for k in asg:
         if norm(k) in HIDDEN and norm(k) not in present:
             lines.append(f" {asg[k]} = {norm(k)} ! appended by set_cards.py"); hits[k] = asg[k]
     for i, l in enumerate(lines):
-        m = re.match(r"^(\s*)(\S+)(\s*=\s*)(\w+)(\s.*)?$", l)
+        m = re.match(r"^(\s*)([^=!]+?)(\s*=\s*)(\w+)(\s.*)?$", l)
         if not m or norm(m.group(4)) not in keys:
             continue
         name, val = keys[norm(m.group(4))], asg[keys[norm(m.group(4))]]

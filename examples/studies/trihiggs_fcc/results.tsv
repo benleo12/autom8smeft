@@ -1,0 +1,9 @@
+process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
+p p > h h h 	dim8_is	NP=0	2.82e-08	1.67e-10	5000	-	dim8_all=0 Lam=1000	lhe/p_p___h_h_h__dim8_is_NP_0.lhe.gz
+p p > h h h 	dim8_is	NP=0 on	2.82e-08	1.67e-10	5000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_is_NP_0_on.lhe.gz
+p p > h h h 	dim8_is	NP^2==2	9.925e-10	5.872e-12	5000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_is_NP_2__2.lhe.gz
+p p > h h h 	dim8_is	NP<=2 NP^2==4	0.0001112	7.309e-07	1000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_is_NP__2_NP_2__4.lhe.gz
+p p > h h h 	dim8_is-cls6	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=10000 	-
+p p > h h h 	dim8_is-cls6	NP<=2 NP^2==4	1.149e-06	1.375e-08	1000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_ismcls6_NP__2_NP_2__4.lhe.gz
+p p > h h h 	dim8_is-cls12	NP^2==2	-7.543e-10	2.113e-12	5000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_ismcls12_NP_2__2.lhe.gz
+p p > h h h 	dim8_is-cls12	NP<=2 NP^2==4	9.664e-10	6.757e-12	1000	-	dim8_all=1 Lam=10000 	lhe/p_p___h_h_h__dim8_ismcls12_NP__2_NP_2__4.lhe.gz

@@ -27,15 +27,17 @@ RUNS=${DIM8_RUNS:-$HOME/dim8auto_build/mg5runs}; CORES=${DIM8_CORES:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p $RUNS $ST/lhe
 OUT=$ST/results.tsv; [ -f $OUT ] || printf "process\tmodel\torder\tsigma_pb\terror_pb\tnevents\tMW_GeV\tsettings\tlhe\n" > $OUT
-# "NP=0 on" is the Standard-Model bin run with the coefficients switched ON.  It is not a
-# duplicate: fourteen couplings of the model carry a Wilson coefficient with no NP tag (the Higgs
-# self-couplings, hVV and the nine h f fbar, through vevT, lam and the Yukawas) and the W mass
-# shift carries none either and cannot, since MadGraph counts orders on couplings and a mass is
-# not one.  So NP=0 moves when the coefficients move, by +1.35 +- 0.115 pb on p p > w+ w- with all
-# 1030 at 1 and Lambda at 1 TeV, and that shift is a genuine O(1/Lambda^4) term that NP^2==2 does
-# not contain.  The complete 1/Lambda^4 prediction is
+# "NP=0 on" is the Standard-Model bin run with the coefficients switched ON.  Since 2026-10-03
+# every shift of a Lagrangian parameter by the input scheme enters the Lagrangian as a tagged
+# series, so this row differs from "NP=0" through ONE thing only: the W mass, which the
+# {alpha, MZ, GF} scheme derives, which moves with the coefficients, and which sits in a
+# propagator and not in a coupling, so MadGraph cannot tag it.  The complete 1/Lambda^4 prediction
+# is
 #     sigma_int = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
-# and the bracket is what this row measures.  See docs/HOW_TO_BREAK_IT.md.
+# and the bracket is what this row measures; it is zero in a process in which no W is produced or
+# exchanged (VBF di-Higgs exchanges two and leaks 6.8 per cent).  (Before
+# 2026-10-03 the vev, the Yukawas and the Higgs quartic were untagged too and the bracket was
+# nonzero wherever a Higgs coupling entered.)  See docs/HOW_TO_BREAK_IT.md.
 ORDERS=("NP=0" "NP=0 on" "NP^2==2" "NP<=2 NP^2==4")
 SETS="dim8_all=1 Lam=1000"; [ -f $ST/coefficients.txt ] && SETS=$(grep -v "^#" $ST/coefficients.txt | tr '\n' ' ')
 
@@ -87,10 +89,20 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
     mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} b=="DIM8" && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")" Lam=1000"
     [[ "$sets" == *dim8_all=0* ]] && mwsets="dim8_all=0 Lam=1000"
   fi
-  local mw=$($PY $HERE/../../validate/eval_ufo_params.py $MODEL $mwsets $extra --show=MW 2>/dev/null | awk '$1=="MW" && $2=="="{printf "%.3f", $3; exit}')
+  # only NAME=number settings can be model parameters; a run-card cut such as pt_min_pdg={25:100}
+  # is not one, and passing it made the evaluation fail and the column read "-"
+  local mwextra=""; for tok in $extra; do [[ "$tok" =~ ^[A-Za-z_0-9]+=[-+0-9.eE]+$ ]] && mwextra="$mwextra $tok"; done
+  local mw=$($PY $HERE/../../validate/eval_ufo_params.py $MODEL $mwsets $mwextra --show=MW 2>/dev/null | awk '$1=="MW" && $2=="="{printf "%.3f", $3; exit}')
   local lhe="-"
   if [ -f $d/Events/run_01/unweighted_events.lhe.gz ]; then
     cp $d/Events/run_01/unweighted_events.lhe.gz $ST/lhe/$tag.lhe.gz; lhe=lhe/$tag.lhe.gz
+  fi
+  # An amplitude that integrates to exactly zero is a physics answer, not a failure: class 11
+  # (psi^2H^2D^3) does that in p p > e+ e-, where MadGraph generates the diagrams and the survey
+  # returns nothing.  Recording it as FAILED makes a real result look like breakage and hides it
+  # among rows that really did break.
+  if [ -z "$xs" ] && grep -q "Survey return zero cross section" $RUNS/$tag.log 2>/dev/null; then
+    xs=$'ZERO\t-'
   fi
   [ -z "$xs" ] && xs=$'FAILED\t-'
   printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" "$proc" "${2##*/}" "$3" "$xs" "$nev" "${mw:--}" "$sets" "$lhe" >> $OUT
@@ -109,7 +121,9 @@ for line in "${PROCS[@]}"; do
   # failed); a card field of "-" skips them for that process alone (its full rows already exist
   # from an earlier pass, or the unrestricted process is too heavy to be worth it)
   if [ "${DIM8_SKIP_FULL:-0}" != 1 ] && [ "$card" != "-" ]; then for o in "${ORDERS[@]}"; do run_one "$line" "$full" "$o"; done; fi
-  for c in "${CLASSES[@]}"; do
+  # the +"${CLASSES[@]}" form is for this machine's bash 3.2, where an empty array is "unbound"
+  # under set -u and a study with no class rows died after its full rows
+  for c in ${CLASSES[@]+"${CLASSES[@]}"}; do
     for o in "NP^2==2" "NP<=2 NP^2==4"; do run_one "$line" "$MODEL-$c" "$o"; done
   done
 done

@@ -36,5 +36,5 @@ files under models/ carry the FeynRules boilerplate header that every UFO
 carries. Neither FeynRules nor MadGraph is included; install them yourself.
 
 The Standard Model FeynRules file the generator builds on, and the SmeftFR and
-SMEFTsim models used for cross-checks, are not included. docs/EXTERNAL.md says
-what to fetch and where the generator expects it.
+SMEFTsim models used for cross-checks, are not included. The README (section "What you
+need") says what to fetch and where the generator expects it.

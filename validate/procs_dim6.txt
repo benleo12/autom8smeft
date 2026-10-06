@@ -1,0 +1,36 @@
+# Ward-identity processes for the dimension-six sector, for validate/mg5_gluon_check.sh with
+# WARD_ON=dim6 and WARD_ORDER="NP<=1" or "NP<=2".  The gluonic ones test O_HG (its vacuum piece
+# rescales the three-gluon vertex unless it is removed), the photon ones the products of an
+# operator with the input-scheme shifts (a photon coupled to the neutral current, a W-W-photon
+# coupling that is not e), and the last seven carry no massless vector and test Lorentz
+# covariance of the massive sector.
+u u~ > g g
+g g > h g
+g g > g g
+g g > g g g
+g g > t t~
+u u~ > t t~ g
+g g > h h
+t t~ > h g
+u u~ > a a
+u u~ > a z
+u d~ > w+ a
+u u~ > h a
+e+ e- > a a
+e+ e- > h a
+ve ve~ > a z
+ve ve~ > h a
+e+ ve > w+ a
+u u~ > w+ w- a
+e+ e- > w+ w- a
+u d~ > w+ a h
+u u~ > a g
+t t~ > a h
+u u~ > t t~ a
+u u~ > w+ w-
+e+ e- > w+ w-
+u d~ > w+ z
+u u~ > z h
+u u~ > z z
+u d~ > w+ h
+e+ e- > z h h

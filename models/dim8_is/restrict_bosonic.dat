@@ -1,5 +1,6 @@
 # restriction card 'bosonic' written by validate/make_restriction.py
 # keeps 89 dimension-eight coefficient(s) from 89 operator block(s): L8op425 L8op426 L8op427 L8op428 L8op429 L8op430 L8op431 L8op432 L8op433 L8op434 L8op435 L8op436 L8op437 L8op438 L8op439 L8op440 L8op441 L8op442 L8op443 L8op444 L8op445 L8op446 L8op447 L8op448 L8op449 L8op450 L8op451 L8op452 L8op453 L8op454 L8op455 L8op456 L8op457 L8op458 L8op459 L8op460 L8op461 L8op462 L8op463 L8op464 L8op465 L8op466 L8op467 L8op468 L8op469 L8op470 L8op471 L8op472 L8op473 L8op587 L8op588 L8op589 L8op590 L8op591 L8op592 L8op593 L8op594 L8op595 L8op596 L8op597 L8op598 L8op599 L8op600 L8op601 L8op602 L8op603 L8op604 L8op605 L8op606 L8op607 L8op608 L8op609 L8op610 L8op611 L8op612 L8op613 L8op614 L8op615 L8op616 L8op617 L8op618 L8op619 L8op620 L8op621 L8op622 L8op623 L8op624 L8op625 L8op626
+# keeps 0 dimension-six coefficient(s)
 # kept coefficients carry placeholder values; set the physical values in the run's param_card.dat
 # import with:  import model dim8_is-bosonic
 Block SMINPUTS 

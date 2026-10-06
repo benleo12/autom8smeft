@@ -4,7 +4,12 @@ From a process to cross sections. Needs MadGraph5_aMC@NLO 3.5 and Python 3.11.
 
 ## 1. Install
 
-    ln -s /path/to/autom8smeft/models/dim8_is  /path/to/MG5_aMC/models/dim8_is
+    ln -s /path/to/autom8smeft/models/dim68_is  /path/to/MG5_aMC/models/dim68_is
+    ln -s /path/to/autom8smeft/models/dim8_is   /path/to/MG5_aMC/models/dim8_is
+
+`dim68_is` carries both sectors, `dim8_is` the dimension-eight one alone and so generates far
+fewer diagrams. Everything below works with either; the examples name `dim8_is` because its
+numbers are the checked ones.
     export MG5_DIR=/path/to/MG5_aMC
 
 ## 2. Which operators enter
@@ -12,8 +17,10 @@ From a process to cross sections. Needs MadGraph5_aMC@NLO 3.5 and Python 3.11.
     ./dim8 select "u c > u c h"
 
 prints the classes and operators with a tree-level vertex in that process, and the diagram
-counts. It is a lower bound: operators acting only through the {alpha, MZ, GF} input relations
-have no vertex and still contribute. Thirteen coefficients do that.
+counts. It is a LOWER BOUND. Eight dimension-eight coefficients enter the {alpha, MZ, GF}
+relations (c8B2H4x1, c8H6x1, c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4) and
+so move every amplitude whether or not they have a vertex in the process you asked about. On
+p p > w+ w- the last two have no vertex in any diagram and carry a third of the effect.
 
 ## 3. Set up a study
 
@@ -35,8 +42,9 @@ diagrams, hours of code generation.
     cls15
     cls18
 
-27 cards ship, one per class plus `bosonic`, `cpeven`, `all`, `ten`, `only_q2H4D`,
-`only_W2H2D2`. Any other selection, by operator name, coefficient, block number or class:
+29 cards ship, one per class plus `bosonic`, `cpeven`, `cpodd`, `all`, `ten`, `only_q2H4D`,
+`only_W2H2D2`, `l2H4D24`. `cpeven` and `cpodd` use the derived C x P parity of `gen/cp_parity.py`, which is
+not the same as counting dual field strengths: see the README. Any other selection, by operator name, coefficient, block number or class:
 
     validate/make_restriction.py models/dim8_is mine Q_{q^2W^2D}^{(1)} c8q2WH2Dx1 cls:18
 
@@ -66,8 +74,10 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
 
     sigma(1/Lambda^4) = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.35 pb against
-an interference of -3.998. It vanishes for processes with no W and no Higgs coupling.
+On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.40 pb against
+an interference of -3.998. It vanishes for every process in which no W is produced or exchanged.
+It does not vanish in vector-boson fusion, where the W sits in the t-channel propagators: 6.8 per
+cent of the cross section in `p p > h h j j QCD=0`.
 
 ## 5. Output
 

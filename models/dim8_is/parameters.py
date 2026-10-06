@@ -1,6 +1,6 @@
 # This file was automatically created by FeynRules 2.3.49
-# Mathematica version: 13.0.1 for Linux x86 (64-bit) (January 29, 2022)
-# Date: Mon 7 Sep 2026 00:36:41
+# Mathematica version: 14.2.1 for Mac OS X ARM (64-bit) (March 16, 2025)
+# Date: Sun 4 Oct 2026 05:45:47
 
 
 
@@ -10559,17 +10559,107 @@ gwSM = Parameter(name = 'gwSM',
                  value = '(2*cmath.sqrt(aEW)*cmath.sqrt(cmath.pi))/cmath.sqrt(sw2SM)',
                  texname = '\\text{gwSM}')
 
+lam = Parameter(name = 'lam',
+                nature = 'internal',
+                type = 'real',
+                value = 'MH**2/(2.*vev**2)',
+                texname = '\\text{lam}')
+
+lamr1 = Parameter(name = 'lamr1',
+                  nature = 'internal',
+                  type = 'real',
+                  value = '-2*vev1 - 2*cHbox*L6*vevSM**2 + (cHDD*L6*vevSM**2)/2. + (3*cH*L6*vevSM**4)/MH**2',
+                  texname = '\\text{lamr1}')
+
+lamr2 = Parameter(name = 'lamr2',
+                  nature = 'internal',
+                  type = 'real',
+                  value = '3*vev1**2 - 2*vev2 + (c8H6x1*L8*vevSM**4)/4. + (c8H6x2*L8*vevSM**4)/4. + (6*cH*L6*vev1*vevSM**4)/MH**2 + (3*c8H8*L8*vevSM**6)/MH**2',
+                  texname = '\\text{lamr2}')
+
 vevT = Parameter(name = 'vevT',
                  nature = 'internal',
                  type = 'real',
                  value = '(1 + vev1 + vev2)*vevSM',
                  texname = '\\text{vevT}')
 
+yb = Parameter(name = 'yb',
+               nature = 'internal',
+               type = 'real',
+               value = '(ymb*cmath.sqrt(2))/vev',
+               texname = '\\text{yb}')
+
+yc = Parameter(name = 'yc',
+               nature = 'internal',
+               type = 'real',
+               value = '(ymc*cmath.sqrt(2))/vev',
+               texname = '\\text{yc}')
+
+ydo = Parameter(name = 'ydo',
+                nature = 'internal',
+                type = 'real',
+                value = '(ymdo*cmath.sqrt(2))/vev',
+                texname = '\\text{ydo}')
+
+ye = Parameter(name = 'ye',
+               nature = 'internal',
+               type = 'real',
+               value = '(yme*cmath.sqrt(2))/vev',
+               texname = '\\text{ye}')
+
+ym = Parameter(name = 'ym',
+               nature = 'internal',
+               type = 'real',
+               value = '(ymm*cmath.sqrt(2))/vev',
+               texname = '\\text{ym}')
+
+yr1 = Parameter(name = 'yr1',
+                nature = 'internal',
+                type = 'real',
+                value = '-vev1',
+                texname = '\\text{yr1}')
+
+yr2 = Parameter(name = 'yr2',
+                nature = 'internal',
+                type = 'real',
+                value = 'vev1**2 - vev2',
+                texname = '\\text{yr2}')
+
+ys = Parameter(name = 'ys',
+               nature = 'internal',
+               type = 'real',
+               value = '(yms*cmath.sqrt(2))/vev',
+               texname = '\\text{ys}')
+
+yt = Parameter(name = 'yt',
+               nature = 'internal',
+               type = 'real',
+               value = '(ymt*cmath.sqrt(2))/vev',
+               texname = '\\text{yt}')
+
+ytau = Parameter(name = 'ytau',
+                 nature = 'internal',
+                 type = 'real',
+                 value = '(ymtau*cmath.sqrt(2))/vev',
+                 texname = '\\text{ytau}')
+
+yup = Parameter(name = 'yup',
+                nature = 'internal',
+                type = 'real',
+                value = '(ymup*cmath.sqrt(2))/vev',
+                texname = '\\text{yup}')
+
 cw = Parameter(name = 'cw',
                nature = 'internal',
                type = 'real',
                value = 'cmath.sqrt(1 - sw2)',
                texname = 'c_w')
+
+muH = Parameter(name = 'muH',
+                nature = 'internal',
+                type = 'real',
+                value = 'cmath.sqrt(lam*vev**2)',
+                texname = '\\mu')
 
 MW2SM = Parameter(name = 'MW2SM',
                   nature = 'internal',
@@ -10606,12 +10696,6 @@ gw2 = Parameter(name = 'gw2',
                 type = 'real',
                 value = '(-64*cHl3*cHW*g1SM**6*L6**2*vevSM**4 - 16*cHW**2*g1SM**6*L6**2*vevSM**4 + 32*cHW*cll1*g1SM**6*L6**2*vevSM**4 + 32*cHB*cHWB*g1SM**5*gwSM*L6**2*vevSM**4 + 8*cHDD*cHWB*g1SM**5*gwSM*L6**2*vevSM**4 + 96*cHl3*cHWB*g1SM**5*gwSM*L6**2*vevSM**4 - 48*cHWB*cll1*g1SM**5*gwSM*L6**2*vevSM**4 + 32*cHDD*cHl3*g1SM**4*gwSM**2*L6**2*vevSM**4 + 80*cHl3**2*g1SM**4*gwSM**2*L6**2*vevSM**4 - 8*cHDD*cHW*g1SM**4*gwSM**2*L6**2*vevSM**4 + 160*cHl3*cHW*g1SM**4*gwSM**2*L6**2*vevSM**4 + 48*cHW**2*g1SM**4*gwSM**2*L6**2*vevSM**4 + 64*cHWB**2*g1SM**4*gwSM**2*L6**2*vevSM**4 - 16*cHDD*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4 - 64*cHl3*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4 - 80*cHW*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4 + 16*cll1**2*g1SM**4*gwSM**2*L6**2*vevSM**4 - 64*cHB*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4 + 24*cHDD*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4 - 32*cHl3*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4 + 16*cHWB*cll1*g1SM**3*gwSM**3*L6**2*vevSM**4 + 7*cHDD**2*g1SM**2*gwSM**4*L6**2*vevSM**4 - 8*cHDD*cHl3*g1SM**2*gwSM**4*L6**2*vevSM**4 - 48*cHl3**2*g1SM**2*gwSM**4*L6**2*vevSM**4 + 16*cHDD*cHW*g1SM**2*gwSM**4*L6**2*vevSM**4 - 128*cHl3*cHW*g1SM**2*gwSM**4*L6**2*vevSM**4 - 48*cHW**2*g1SM**2*gwSM**4*L6**2*vevSM**4 - 16*cHWB**2*g1SM**2*gwSM**4*L6**2*vevSM**4 + 4*cHDD*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4 + 16*cHl3*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4 + 64*cHW*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4 - 4*cll1**2*g1SM**2*gwSM**4*L6**2*vevSM**4 + 32*cHB*cHWB*g1SM*gwSM**5*L6**2*vevSM**4 + 64*cHl3*cHWB*g1SM*gwSM**5*L6**2*vevSM**4 - 32*cHWB*cll1*g1SM*gwSM**5*L6**2*vevSM**4 - 3*cHDD**2*gwSM**6*L6**2*vevSM**4 + 8*cHDD*cHl3*gwSM**6*L6**2*vevSM**4 + 32*cHl3**2*gwSM**6*L6**2*vevSM**4 - 8*cHDD*cHW*gwSM**6*L6**2*vevSM**4 + 32*cHl3*cHW*gwSM**6*L6**2*vevSM**4 + 16*cHW**2*gwSM**6*L6**2*vevSM**4 + 16*cHWB**2*gwSM**6*L6**2*vevSM**4 - 4*cHDD*cll1*gwSM**6*L6**2*vevSM**4 - 16*cHl3*cll1*gwSM**6*L6**2*vevSM**4 - 16*cHW*cll1*gwSM**6*L6**2*vevSM**4 + 4*cll1**2*gwSM**6*L6**2*vevSM**4 - 16*c8W2H4x1*g1SM**6*L8*vevSM**4 - 16*c8W2H4x3*g1SM**6*L8*vevSM**4 + 16*c8WBH4x1*g1SM**5*gwSM*L8*vevSM**4 + 8*c8H6x2*g1SM**4*gwSM**2*L8*vevSM**4 + 16*c8l2H4Dx2*g1SM**4*gwSM**2*L8*vevSM**4 + 16*c8l2H4Dx4*g1SM**4*gwSM**2*L8*vevSM**4 + 48*c8W2H4x1*g1SM**4*gwSM**2*L8*vevSM**4 + 48*c8W2H4x3*g1SM**4*gwSM**2*L8*vevSM**4 - 32*c8WBH4x1*g1SM**3*gwSM**3*L8*vevSM**4 - 16*c8H6x2*g1SM**2*gwSM**4*L8*vevSM**4 - 32*c8l2H4Dx2*g1SM**2*gwSM**4*L8*vevSM**4 - 32*c8l2H4Dx4*g1SM**2*gwSM**4*L8*vevSM**4 - 48*c8W2H4x1*g1SM**2*gwSM**4*L8*vevSM**4 - 48*c8W2H4x3*g1SM**2*gwSM**4*L8*vevSM**4 + 16*c8WBH4x1*g1SM*gwSM**5*L8*vevSM**4 + 8*c8H6x2*gwSM**6*L8*vevSM**4 + 16*c8l2H4Dx2*gwSM**6*L8*vevSM**4 + 16*c8l2H4Dx4*gwSM**6*L8*vevSM**4 + 16*c8W2H4x1*gwSM**6*L8*vevSM**4 + 16*c8W2H4x3*gwSM**6*L8*vevSM**4)/(32*g1SM**6 - 96*g1SM**4*gwSM**2 + 96*g1SM**2*gwSM**4 - 32*gwSM**6)',
                 texname = '\\text{gw2}')
-
-lam = Parameter(name = 'lam',
-                nature = 'internal',
-                type = 'real',
-                value = '(3*cH*L6*vevT**2 + 3*c8H8*L8*vevT**4 + (MH**2*Zh2)/vevT**2)/2.',
-                texname = '\\text{lam}')
 
 MW21 = Parameter(name = 'MW21',
                  nature = 'internal',
@@ -10672,66 +10756,6 @@ TZZ2 = Parameter(name = 'TZZ2',
                  type = 'real',
                  value = '(48*cHB**2*g1SM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHB*cHl3*g1SM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*cHWB**2*g1SM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHB*cll1*g1SM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (32*cHB*cHWB*g1SM**5*gwSM*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHl3*cHWB*g1SM**5*gwSM*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHW*cHWB*g1SM**5*gwSM*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHWB*cll1*g1SM**5*gwSM*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (96*cHB**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (8*cHB*cHDD*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (cHDD**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (160*cHB*cHl3*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (8*cHDD*cHl3*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (16*cHl3**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (8*cHDD*cHW*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (96*cHl3*cHW*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (48*cHW**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHWB**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (80*cHB*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (4*cHDD*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*cHl3*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (48*cHW*cll1*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (4*cll1**2*g1SM**4*gwSM**2*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (96*cHB*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (16*cHDD*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (192*cHl3*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (96*cHW*cHWB*g1SM**3*gwSM**3*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (96*cHWB*cll1*g1SM**3*gwSM**3*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (48*cHB**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (8*cHB*cHDD*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (cHDD**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (96*cHB*cHl3*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (8*cHDD*cHl3*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (16*cHl3**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (8*cHDD*cHW*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (160*cHl3*cHW*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (96*cHW**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHWB**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (48*cHB*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (4*cHDD*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*cHl3*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (80*cHW*cll1*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (4*cll1**2*g1SM**2*gwSM**4*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHB*cHWB*g1SM*gwSM**5*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHl3*cHWB*g1SM*gwSM**5*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (32*cHW*cHWB*g1SM*gwSM**5*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHWB*cll1*g1SM*gwSM**5*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (64*cHl3*cHW*gwSM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (48*cHW**2*gwSM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*cHWB**2*gwSM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*cHW*cll1*gwSM**6*L6**2*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8B2H4x1*g1SM**6*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8WBH4x1*g1SM**5*gwSM*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*c8B2H4x1*g1SM**4*gwSM**2*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8W2H4x1*g1SM**4*gwSM**2*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8W2H4x3*g1SM**4*gwSM**2*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*c8WBH4x1*g1SM**3*gwSM**3*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8B2H4x1*g1SM**2*gwSM**4*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*c8W2H4x1*g1SM**2*gwSM**4*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) - (32*c8W2H4x3*g1SM**2*gwSM**4*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8WBH4x1*g1SM*gwSM**5*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8W2H4x1*gwSM**6*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6) + (16*c8W2H4x3*gwSM**6*L8*vevSM**4)/(32*g1SM**6 - 32*g1SM**4*gwSM**2 - 32*g1SM**2*gwSM**4 + 32*gwSM**6)',
                  texname = '\\text{TZZ2}')
-
-yb = Parameter(name = 'yb',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8qdH5*L8*vevT**4)/4. + (ymb*cmath.sqrt(2))/vevT',
-               texname = '\\text{yb}')
-
-yc = Parameter(name = 'yc',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8quH5*L8*vevT**4)/4. + (ymc*cmath.sqrt(2))/vevT',
-               texname = '\\text{yc}')
-
-ydo = Parameter(name = 'ydo',
-                nature = 'internal',
-                type = 'real',
-                value = '(c8qdH5*L8*vevT**4)/4. + (ymdo*cmath.sqrt(2))/vevT',
-                texname = '\\text{ydo}')
-
-ye = Parameter(name = 'ye',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8leH5*L8*vevT**4)/4. + (yme*cmath.sqrt(2))/vevT',
-               texname = '\\text{ye}')
-
-ym = Parameter(name = 'ym',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8leH5*L8*vevT**4)/4. + (ymm*cmath.sqrt(2))/vevT',
-               texname = '\\text{ym}')
-
-ys = Parameter(name = 'ys',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8qdH5*L8*vevT**4)/4. + (yms*cmath.sqrt(2))/vevT',
-               texname = '\\text{ys}')
-
-yt = Parameter(name = 'yt',
-               nature = 'internal',
-               type = 'real',
-               value = '(c8quH5*L8*vevT**4)/4. + (ymt*cmath.sqrt(2))/vevT',
-               texname = '\\text{yt}')
-
-ytau = Parameter(name = 'ytau',
-                 nature = 'internal',
-                 type = 'real',
-                 value = '(c8leH5*L8*vevT**4)/4. + (ymtau*cmath.sqrt(2))/vevT',
-                 texname = '\\text{ytau}')
-
-yup = Parameter(name = 'yup',
-                nature = 'internal',
-                type = 'real',
-                value = '(c8quH5*L8*vevT**4)/4. + (ymup*cmath.sqrt(2))/vevT',
-                texname = '\\text{yup}')
-
-muH = Parameter(name = 'muH',
-                nature = 'internal',
-                type = 'real',
-                value = 'cmath.sqrt(lam*vevT**2 - (3*cH*L6*vevT**4)/4. - (c8H8*L8*vevT**6)/2.)',
-                texname = '\\mu')
 
 MW = Parameter(name = 'MW',
                nature = 'internal',

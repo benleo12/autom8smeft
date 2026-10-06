@@ -5,8 +5,22 @@ message: >-
   tabulation it implements and the tools that write and read it. The authors of
   those references have no involvement in this work.
 type: software
+authors:
+  - family-names: Assi
+    given-names: Beno\^it
+    affiliation: "Perimeter Institute for Theoretical Physics, University of Toronto, and Vector Institute"
+  - family-names: Martin
+    given-names: Adam
+    affiliation: "University of Notre Dame"
 repository-code: "https://github.com/benleo12/autom8smeft"
 license: MIT
+keywords:
+  - SMEFT
+  - dimension eight
+  - effective field theory
+  - UFO
+  - FeynRules
+  - MadGraph
 references:
   - type: article
     title: "Dimension-8 operators in the Standard Model Effective Field Theory"
@@ -20,13 +34,28 @@ references:
     volume: "10"
     year: 2020
     start: 174
+    notes: "the operator tabulation this model implements"
   - type: article
     title: "FeynRules 2.0 - A complete toolbox for tree-level phenomenology"
     identifiers:
       - type: other
         value: "arXiv:1310.1921"
+    notes: "the model files are written with it"
   - type: article
     title: "The automated computation of tree-level and next-to-leading order differential cross sections"
     identifiers:
       - type: other
         value: "arXiv:1405.0301"
+    notes: "the UFO is read by it"
+  - type: article
+    title: "SMEFTsim 3.0 - a practical guide"
+    identifiers:
+      - type: other
+        value: "arXiv:2012.11343"
+    notes: "the dimension-six sector of models/dim68_is is SMEFTsim's, in its U(3)^5 framework"
+  - type: article
+    title: "The Standard Model as an Effective Field Theory"
+    identifiers:
+      - type: other
+        value: "arXiv:1709.06492"
+    notes: "SMEFTsim, cited with the flavour framework above"

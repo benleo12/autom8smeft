@@ -116,10 +116,6 @@ VVS4 = Lorentz(name = 'VVS4',
                spins = [ 3, 3, 1 ],
                structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3)')
 
-VVS5 = Lorentz(name = 'VVS5',
-               spins = [ 3, 3, 1 ],
-               structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3)')
-
 VVS6 = Lorentz(name = 'VVS6',
                spins = [ 3, 3, 1 ],
                structure = '-(Epsilon(1,2,-1,-2)*P(-2,3)*P(-1,1)) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3)')
@@ -163,10 +159,6 @@ VVV3 = Lorentz(name = 'VVV3',
 VVV4 = Lorentz(name = 'VVV4',
                spins = [ 3, 3, 3 ],
                structure = '-(Epsilon(1,2,3,-1)*P(-1,3))')
-
-VVV5 = Lorentz(name = 'VVV5',
-               spins = [ 3, 3, 3 ],
-               structure = '-(Epsilon(1,2,3,-1)*P(-1,1)) - Epsilon(1,2,3,-1)*P(-1,2) - Epsilon(1,2,3,-1)*P(-1,3)')
 
 VVV6 = Lorentz(name = 'VVV6',
                spins = [ 3, 3, 3 ],
@@ -1028,10 +1020,6 @@ FFVV55 = Lorentz(name = 'FFVV55',
                  spins = [ 2, 2, 3, 3 ],
                  structure = '2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,1)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,2)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,1)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,2)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1)')
 
-FFVV56 = Lorentz(name = 'FFVV56',
-                 spins = [ 2, 2, 3, 3 ],
-                 structure = '2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,1)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,2)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,1)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,2)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1)')
-
 FFVV57 = Lorentz(name = 'FFVV57',
                  spins = [ 2, 2, 3, 3 ],
                  structure = '2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,1)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,4)*P(-1,2)*P(-1,3)*Gamma(-3,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,1)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-2,3)*P(-1,2)*P(-1,4)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,3)*P(-1,4)*P(3,2)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,1)*Gamma(-3,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-2,3)*P(-1,4)*P(4,2)*Gamma(-3,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(-1,2,-4)*ProjM(-4,1) + 2*Epsilon(3,4,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) - 2*Epsilon(3,4,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(3,2,-4)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(3,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,4)*P(-1,3)*Gamma(4,2,-4)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1) + Epsilon(3,-1,-2,-3)*P(-3,2)*P(-2,3)*P(-1,4)*Gamma(4,2,-4)*ProjM(-4,1)')
@@ -1239,10 +1227,6 @@ VVSS5 = Lorentz(name = 'VVSS5',
 VVSS6 = Lorentz(name = 'VVSS6',
                 spins = [ 3, 3, 1, 1 ],
                 structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4)')
-
-VVSS7 = Lorentz(name = 'VVSS7',
-                spins = [ 3, 3, 1, 1 ],
-                structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4)')
 
 VVSS8 = Lorentz(name = 'VVSS8',
                 spins = [ 3, 3, 1, 1 ],
@@ -4540,14 +4524,6 @@ FFVVV186 = Lorentz(name = 'FFVVV186',
                    spins = [ 2, 2, 3, 3, 3 ],
                    structure = 'Epsilon(4,5,-1,-2)*P(-2,2)*P(-1,4)*Gamma(3,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,2)*P(-1,4)*Gamma(5,2,-3)*ProjM(-3,1)')
 
-FFVVV187 = Lorentz(name = 'FFVVV187',
-                   spins = [ 2, 2, 3, 3, 3 ],
-                   structure = 'Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,3)*Gamma(5,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,3)*P(-1,5)*Gamma(5,2,-3)*ProjM(-3,1)')
-
-FFVVV188 = Lorentz(name = 'FFVVV188',
-                   spins = [ 2, 2, 3, 3, 3 ],
-                   structure = 'Epsilon(3,5,-1,-2)*P(-2,5)*P(-1,4)*Gamma(4,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,5)*Gamma(4,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,4)*Gamma(5,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,4)*P(-1,5)*Gamma(5,2,-3)*ProjM(-3,1)')
-
 FFVVV189 = Lorentz(name = 'FFVVV189',
                    spins = [ 2, 2, 3, 3, 3 ],
                    structure = '-4*Epsilon(3,4,5,-2)*P(-2,5)*P(-1,3)*Gamma(-1,2,-3)*ProjM(-3,1) - 4*Epsilon(3,4,5,-2)*P(-2,3)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) - 3*Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,3)*Gamma(5,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,3)*P(-1,5)*Gamma(5,2,-3)*ProjM(-3,1)')
@@ -5180,10 +5156,6 @@ FFVVV346 = Lorentz(name = 'FFVVV346',
                    spins = [ 2, 2, 3, 3, 3 ],
                    structure = '-(Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1)) - Epsilon(3,-1,-2,-3)*P(-2,5)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1) - Epsilon(3,5,-1,-2)*P(-1,3)*P(4,5)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-1,3)*P(5,4)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,4,5,-2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(3,4,5,-2)*P(-2,3)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,3)*Gamma(4,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,3)*Gamma(5,2,-3)*ProjM(-3,1)')
 
-FFVVV347 = Lorentz(name = 'FFVVV347',
-                   spins = [ 2, 2, 3, 3, 3 ],
-                   structure = 'Epsilon(5,-1,-2,-3)*P(-2,5)*P(-1,3)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) + Epsilon(5,-1,-2,-3)*P(-2,5)*P(-1,4)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) - Epsilon(5,-1,-2,-3)*P(-2,4)*P(-1,5)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,5)*P(-1,4)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,5)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,5)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1) + 2*Epsilon(4,5,-1,-2)*P(-1,5)*P(3,4)*Gamma(-2,2,-3)*ProjM(-3,1) - 2*Epsilon(4,5,-1,-2)*P(-1,4)*P(3,5)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-1,5)*P(4,3)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-1,3)*P(4,5)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-1,4)*P(5,3)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-1,3)*P(5,4)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,4,5,-2)*P(-2,4)*P(-1,3)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(3,4,5,-2)*P(-2,5)*P(-1,3)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(3,4,5,-2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-3)*ProjM(-3,1) + 2*Epsilon(3,4,5,-2)*P(-2,5)*P(-1,4)*Gamma(-1,2,-3)*ProjM(-3,1) + Epsilon(3,4,5,-2)*P(-2,3)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) - 2*Epsilon(3,4,5,-2)*P(-2,4)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(4,5,-1,-2)*P(-2,4)*P(-1,3)*Gamma(3,2,-3)*ProjM(-3,1) + Epsilon(4,5,-1,-2)*P(-2,5)*P(-1,3)*Gamma(3,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,3)*Gamma(4,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-2,5)*P(-1,4)*Gamma(4,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,5)*Gamma(4,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,3)*Gamma(5,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,4)*Gamma(5,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,4)*P(-1,5)*Gamma(5,2,-3)*ProjM(-3,1)')
-
 FFVVV348 = Lorentz(name = 'FFVVV348',
                    spins = [ 2, 2, 3, 3, 3 ],
                    structure = 'Epsilon(5,-1,-2,-3)*P(-2,5)*P(-1,3)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) + Epsilon(5,-1,-2,-3)*P(-2,5)*P(-1,4)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) - Epsilon(5,-1,-2,-3)*P(-2,4)*P(-1,5)*Gamma(-3,2,-4)*Metric(3,4)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,3)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) - Epsilon(4,-1,-2,-3)*P(-2,5)*P(-1,4)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) + Epsilon(4,-1,-2,-3)*P(-2,4)*P(-1,5)*Gamma(-3,2,-4)*Metric(3,5)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,4)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1) - Epsilon(3,-1,-2,-3)*P(-2,5)*P(-1,3)*Gamma(-3,2,-4)*Metric(4,5)*ProjM(-4,1) + 2*Epsilon(4,5,-1,-2)*P(-1,5)*P(3,4)*Gamma(-2,2,-3)*ProjM(-3,1) - 2*Epsilon(4,5,-1,-2)*P(-1,4)*P(3,5)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-1,5)*P(4,3)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-1,3)*P(4,5)*Gamma(-2,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-1,4)*P(5,3)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-1,3)*P(5,4)*Gamma(-2,2,-3)*ProjM(-3,1) - Epsilon(3,4,5,-2)*P(-2,4)*P(-1,3)*Gamma(-1,2,-3)*ProjM(-3,1) + Epsilon(3,4,5,-2)*P(-2,5)*P(-1,3)*Gamma(-1,2,-3)*ProjM(-3,1) + Epsilon(3,4,5,-2)*P(-2,3)*P(-1,4)*Gamma(-1,2,-3)*ProjM(-3,1) - 2*Epsilon(3,4,5,-2)*P(-2,5)*P(-1,4)*Gamma(-1,2,-3)*ProjM(-3,1) - Epsilon(3,4,5,-2)*P(-2,3)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) + 2*Epsilon(3,4,5,-2)*P(-2,4)*P(-1,5)*Gamma(-1,2,-3)*ProjM(-3,1) + Epsilon(4,5,-1,-2)*P(-2,4)*P(-1,3)*Gamma(3,2,-3)*ProjM(-3,1) - Epsilon(4,5,-1,-2)*P(-2,5)*P(-1,3)*Gamma(3,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,3)*Gamma(4,2,-3)*ProjM(-3,1) - Epsilon(3,5,-1,-2)*P(-2,5)*P(-1,4)*Gamma(4,2,-3)*ProjM(-3,1) + Epsilon(3,5,-1,-2)*P(-2,4)*P(-1,5)*Gamma(4,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,3)*Gamma(5,2,-3)*ProjM(-3,1) + Epsilon(3,4,-1,-2)*P(-2,5)*P(-1,4)*Gamma(5,2,-3)*ProjM(-3,1) - Epsilon(3,4,-1,-2)*P(-2,4)*P(-1,5)*Gamma(5,2,-3)*ProjM(-3,1)')
@@ -5791,10 +5763,6 @@ VVSSS4 = Lorentz(name = 'VVSSS4',
 VVSSS5 = Lorentz(name = 'VVSSS5',
                  spins = [ 3, 3, 1, 1, 1 ],
                  structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,5) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,5)')
-
-VVSSS6 = Lorentz(name = 'VVSSS6',
-                 spins = [ 3, 3, 1, 1, 1 ],
-                 structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,5) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,5)')
 
 VVSSS7 = Lorentz(name = 'VVSSS7',
                  spins = [ 3, 3, 1, 1, 1 ],
@@ -11947,10 +11915,6 @@ VVSSSS4 = Lorentz(name = 'VVSSSS4',
 VVSSSS5 = Lorentz(name = 'VVSSSS5',
                   spins = [ 3, 3, 1, 1, 1, 1 ],
                   structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,5) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,5) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,6) - Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,6)')
-
-VVSSSS6 = Lorentz(name = 'VVSSSS6',
-                  spins = [ 3, 3, 1, 1, 1, 1 ],
-                  structure = 'Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,3) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,4) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,5) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,5) + Epsilon(1,2,-1,-2)*P(-2,1)*P(-1,6) + Epsilon(1,2,-1,-2)*P(-2,2)*P(-1,6)')
 
 VVSSSS7 = Lorentz(name = 'VVSSSS7',
                   spins = [ 3, 3, 1, 1, 1, 1 ],

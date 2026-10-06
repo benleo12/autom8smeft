@@ -6,7 +6,7 @@ __pycache__/
 # MadGraph process directories and event files: large, regenerable, and not the deliverable
 examples/studies/*/lhe/
 .quicktest/
-# the model source and the operator tables are third-party, see docs/EXTERNAL.md
+# third-party inputs the generator reads but does not carry, see the README (What you need)
 models/base/
 murphy_src/
 external/

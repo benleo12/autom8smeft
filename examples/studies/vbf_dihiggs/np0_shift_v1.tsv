@@ -1,0 +1,3 @@
+process	set	sigma_pb	error_pb	nevents
+p p > h h j j QCD=0	off	0.0009755	5.056e-06	5000
+p p > h h j j QCD=0	on	0.001054	5.331e-06	5000

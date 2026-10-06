@@ -1,0 +1,3 @@
+# every dimension-eight coefficient at 1, the scale at 10 TeV
+dim8_all=1
+Lam=10000
