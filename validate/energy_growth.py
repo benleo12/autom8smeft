@@ -323,7 +323,7 @@ def report(tex=None) -> int:
 """ + "\n".join(body) + r"""
 \bottomrule
 \end{tabular}
-\caption{The exponent of the energy growth of the dimension-eight interference,
+\caption{The $\lambda$ power of a class bounds the energy growth of its interference and does not predict it: the bound is reached exactly when the process uses the class's own contact term ($\psi^4D^2$ and $\psi^4H^2$ in the fermion pairs, $\psi^2X^2D$ in $W^+W^-$) and is missed otherwise, and a class with no vertex in the process tracks the Standard Model. The table lists the fitted exponent of the dimension-eight interference,
 $\sigma_{1/\Lambda^4} \propto E^{\,s}$, at a lepton collider at fixed $\sqrt{s}$ with
 $|\eta| < 1.1$ on the final state, fitted over $\sqrt{s} = 0.5$ to $4$~TeV with unit
 coefficients and $\Lambda = 1$~TeV. The ``bound'' column is what the class's four-leg $\lambda$ power implies, $2-k$ for
