@@ -2,8 +2,8 @@
 dim8auto.gen.emit_fr
 ====================
 
-Emit FeynRules model code from DSL operators, in the dialect used by the collaborators'
-hand-typed files (dim8_geosmeftVBF.fr): every operator is one ``ExpandIndices[...]`` block
+Emit FeynRules model code from DSL operators, in the dialect of our earlier dimension-eight
+FeynRules models: every operator is one ``ExpandIndices[...]`` block
 with ``FlavorExpand->{SU2W,SU2D}``, Goldstones zeroed in unitary gauge, Levi-Civita
 canonicalised, and the block cached.
 
@@ -442,7 +442,7 @@ def emit_operator_expr(op: Operator, wc: Optional[str] = None, lam: str = "Lam",
 
 
 # --------------------------------------------------------------------------------------
-# Lagrangian block (hand-typed dialect)
+# Lagrangian block (one ExpandIndices block per operator)
 # --------------------------------------------------------------------------------------
 
 BLOCK_LOCALS = ",".join(["z8lagH", "z8lagN", "z8lagS", "z8fmgr"] + ALL_INDEX_NAMES)

@@ -6,7 +6,7 @@
 
    Derived from the working file of Hays, Martin, Setford and Sanz by removing
    everything that is not the Standard Model: the partial dimension-six block (L6, seven
-   Warsaw operators) and the hand-typed dimension-eight blocks named L8contact, L8contactZ,
+   Warsaw operators) and the dimension-eight blocks named L8contact, L8contactZ,
    L8testtest and newL8geo, together with their 43 Wilson coefficients.
 
    Nothing dimension-six ships here.  A model with one dimension-eight insertion has a

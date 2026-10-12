@@ -1,7 +1,7 @@
 # Model source
 
 The FeynRules source the UFOs in `models/` are built from. Everything here is generated or
-maintained by the code in `gen/` and `validate/`; nothing is typed by hand.
+maintained by the code in `gen/` and `validate/`; nothing here is edited by hand.
 
 | file | what it is |
 |---|---|

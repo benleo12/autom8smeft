@@ -2,7 +2,7 @@
 gen/input_scheme.py  --  electroweak input-scheme corrections for the {alpha, MZ, GF} scheme.
 
 ``base.fr`` derives gw, g1, vev and MW from {alpha, MZ, GF} by the ordinary Standard Model
-relations with no SMEFT corrections, as do the hand-typed reference files.  That is wrong as
+relations with no SMEFT corrections, as did the earlier reference files.  That is wrong as
 soon as an operator that shifts one of the three input observables is switched on.
 
 WHICH OPERATORS.  The input-scheme section of the paper works through all 21 dimension-eight classes:

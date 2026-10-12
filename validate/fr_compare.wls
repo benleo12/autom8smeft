@@ -1,11 +1,11 @@
 #!/usr/bin/env wolframscript
 (* ======================================================================================
-   validate/fr_compare.wls  --  V7: vertex-by-vertex equality of generated vs hand-typed
+   validate/fr_compare.wls  --  V7: vertex-by-vertex equality of generated vs reference
    ======================================================================================
    Usage:
      wolframscript -file validate/fr_compare.wls <base.fr> <generated.fr> <pairs.m> [nkernels]
 
-   <base.fr>      : the hand-typed model (SM + hand-typed blocks), e.g.
+   <base.fr>      : the reference model (SM + reference blocks), e.g.
                     prior_work/hand_typed/dim8_geosmeftVBF.fr
    <generated.fr> : fragment written by gen/emit_fr.py (M$Parameters Join + L8blk blocks)
    <pairs.m>      : a Mathematica list of
@@ -128,7 +128,7 @@ Do[
   {hBlk, hWC, gBlk, gWC, norm} = pr;
   Print["\n=== ", hBlk, " (", hWC, ")  vs  ", gBlk, " (", gWC, ")  x ", norm, " ==="];
   t0 = AbsoluteTime[];
-  lh = Symbol[hBlk];                                (* the hand-typed blocks are SetDelayed: evaluates *)
+  lh = Symbol[hBlk];                                (* the reference blocks are SetDelayed: evaluates *)
   lg = Symbol[gBlk] /. {gWC -> hWC, Lam -> 1};
   (* keep only the terms proportional to this WC in each block *)
   lh = Coefficient[lh, hWC] hWC;
