@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""The power of lambda of every dimension-eight class in a process, by its cheapest tree.
+"""The power of lambda of every dimension-six and dimension-eight class in a process, by its cheapest tree.
 
     gen/lambda_routes.py "p p > w+ w-" [--n 4]
 
 A tree is the product of its vertices and propagators.  In the energy-enhanced counting of the
 paper (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1): a Standard Model three-point vertex
 carries a momentum and counts lambda^-2 or a vev and counts lambda^-1, a four-point vertex
-counts lambda^0, a propagator lambda^4, and a dimension-eight vertex with m legs and p vacuum
-insertions lambda^(2m-4+p).  The Standard Model amplitude of an n-point process is lambda^(2n-8),
-so a class entering at lambda^(2n-8+Delta) has M8/MSM ~ E^(8-Delta) v^(Delta-4) / Lambda^4.
+counts lambda^0, a propagator lambda^4, and a vertex of an operator of mass dimension d with
+m legs and p vacuum insertions lambda^(d-12+2m+p), that is lambda^(2m-4+p) at dimension eight
+and lambda^(2m-6+p) at dimension six.  The Standard Model amplitude of an n-point process is
+lambda^(2n-8), so a dimension-eight class entering at lambda^(2n-8+Delta) has
+M8/MSM ~ E^(8-Delta) v^(Delta-4) / Lambda^4 and a dimension-six class M6/MSM ~ E^(4-Delta) v^(Delta-2) / Lambda^2.
+The route printed beside each class is its cheapest tree: the operator vertex, its vacuum
+insertions, and the Standard Model vertices the tree uses, which are the coupling factors that
+multiply the term.
 
 For every operator of a class, every vertex in the selector's list (build/vertex_index.json)
 and every way of hanging the external particles on it through Standard Model vertices (the
@@ -30,6 +35,9 @@ import process as P  # noqa: E402
 
 INF = 10 ** 6
 BOSONS = {"A", "Z", "W", "Wbar", "G", "H"}
+DIM6 = {"L6cl1": ("X^3", 0), "L6cl2": ("H^6", 6), "L6cl3": ("H^4D^2", 4), "L6cl4": ("X^2H^2", 2),
+        "L6cl5": ("psi^2H^3", 3), "L6cl6": ("psi^2XH", 1), "L6cl7": ("psi^2H^2D", 2),
+        "L6cl8a": ("psi^4", 0), "L6cl8b": ("psi^4", 0), "L6cl8c": ("psi^4", 0), "L6cl8d": ("psi^4", 0)}
 CLASSES = {1: "X^4", 2: "H^8", 3: "H^6D^2", 4: "H^4D^4", 5: "X^3H^2", 6: "X^2H^4", 7: "X^2H^2D^2",
            8: "XH^4D^2", 9: "psi^2X^2H", 10: "psi^2XH^3", 11: "psi^2H^2D^3", 12: "psi^2H^5",
            13: "psi^2H^4D", 14: "psi^2X^2D", 15: "psi^2XH^2D", 16: "psi^2XHD^2", 17: "psi^2H^3D^2",
@@ -67,13 +75,14 @@ class Cheapest:
         return 0
 
     def reach(self, f, group):
+        """(cost, SM vertices used) for leg f to reach exactly the externals in group."""
         if len(group) == 1 and P._same_field(f, group[0]):
-            return 0
+            return (0, ())
         key = (f, group)
         if key in self.cache:
             return self.cache[key]
-        self.cache[key] = INF
-        best, af = INF, P.anti(f)
+        self.cache[key] = (INF, ())
+        best, af = (INF, ()), P.anti(f)
         for v in self._cands(af):
             w = self.weight(v)
             if w is None:
@@ -88,48 +97,59 @@ class Cheapest:
             if len(rest) < 2 or len(rest) > len(group):
                 continue
             for parts in P._partitions(group, len(rest)):
-                c = w + 4
+                c, used = w + 4, (v,)
                 for i in range(len(rest)):
-                    c += self.reach(rest[i], parts[i])
+                    ci, ui = self.reach(rest[i], parts[i])
+                    c += ci
+                    used += ui
                     if c >= INF:
                         break
-                best = min(best, c)
+                if c < best[0]:
+                    best = (c, used)
         self.cache[key] = best
         return best
 
     def vertex(self, legs, externals):
-        best = INF
+        best = (INF, ())
         for parts in P._partitions(externals, len(legs)):
-            c = 0
+            c, used = 0, ()
             for i in range(len(legs)):
-                c += self.reach(legs[i], parts[i])
+                ci, ui = self.reach(legs[i], parts[i])
+                c += ci
+                used += ui
                 if c >= INF:
                     break
-            best = min(best, c)
+            if c < best[0]:
+                best = (c, used)
         return best
 
 
 def routes(proc, vertex_index, base_vertices, catalogue):
-    """class -> (lambda power, p, operator label, vertex legs) of the cheapest tree."""
+    """(dim, class name) -> (lambda power, p, operator label, vertex legs, SM vertices) of the cheapest tree."""
     slots = P.parse_process(proc, collapse=True)
     assignments = {tuple(sorted(a)) for a in P._product(slots)}
     cheap = Cheapest(P.standard_model_vertices(base_vertices))
     best = {}
     for block, verts in vertex_index.items():
-        e = catalogue.get(block)
-        if not e or int(block[4:]) >= 675:
+        if block.startswith("L8op"):
+            e = catalogue.get(block)
+            if not e or int(block[4:]) >= 675:
+                continue
+            dim, key, n_higgs, label = 8, (8, e["cls"]), e["fields"]["N_H"], e["label"]
+        elif block in DIM6:
+            dim, (name, n_higgs), label = 6, DIM6[block], block
+            key = (6, name)
+        else:
             continue
-        n_higgs = e["fields"]["N_H"]
         for legs in verts:
             p = n_higgs - legs.count("H")
-            w8 = 2 * len(legs) - 4 + p
+            w = dim - 12 + 2 * len(legs) + p      # lambda^(2m-4+p) at dimension eight, lambda^(2m-6+p) at six
             for ext in assignments:
-                c = cheap.vertex(list(legs), ext)
+                c, used = cheap.vertex(list(legs), ext)
                 if c >= INF:
                     continue
-                k = e["cls"]
-                if k not in best or w8 + c < best[k][0]:
-                    best[k] = (w8 + c, p, e["label"], list(legs))
+                if key not in best or w + c < best[key][0]:
+                    best[key] = (w + c, p, label, list(legs), used)
     return best, len(slots)
 
 
@@ -143,14 +163,19 @@ def main(argv):
     best, n = routes(proc, vi, base, cat)
     if "--n" in argv:
         n = int(argv[argv.index("--n") + 1])
-    print(f"{proc}: {n} external legs, Standard Model amplitude ~ lambda^{2 * n - 8}")
-    for k in sorted(best, key=lambda k: (best[k][0], k)):
-        tot, p, lab, legs = best[k]
-        d = tot - (2 * n - 8)
-        print(f"  lambda^{tot:<2d}  M8/MSM ~ E^{8 - d} v^{d - 4}/Lambda^4   class {k:2d} {CLASSES[k]:12s}"
-              f" via {lab:26s} [{' '.join(legs)}]  p={p}")
-    rest = [CLASSES[k] for k in CLASSES if k not in best]
-    print("  no tree with Standard Model internal lines (input relations only, or not reached):", ", ".join(rest))
+    sm = 2 * n - 8
+    print(f"{proc}: {n} external legs, Standard Model amplitude ~ lambda^{sm}")
+    for dim in (6, 8):
+        print(f" dimension {dim}:")
+        for key in sorted((k for k in best if k[0] == dim), key=lambda k: (best[k][0], str(k[1]))):
+            tot, p, lab, legs, used = best[key]
+            d = tot - sm
+            name = key[1] if dim == 6 else CLASSES[key[1]]
+            ratio = (f"E^{4 - d} v^{d - 2}/Lambda^2" if dim == 6 else f"E^{8 - d} v^{d - 4}/Lambda^4")
+            smv = " + ".join("[" + " ".join(v) + "]" for v in used) or "contact"
+            print(f"  lambda^{tot:<2d}  M/MSM ~ {ratio:18s} {name:12s} via {lab:24s} [{' '.join(legs)}] p={p}   SM vertices: {smv}")
+    rest = [CLASSES[k] for k in CLASSES if (8, k) not in best]
+    print("  dimension-eight classes with no tree (input relations only, or not reached):", ", ".join(rest))
     return 0
 
 
