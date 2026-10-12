@@ -53,7 +53,10 @@ Print["[blocks] wrote ", Length[idx], " blocks to build/vertex_index.json"];
    second dimension-six vertex to close the diagram would then be dropped by a
    Standard-Model-only internal set, and dropping an operator that can contribute is the one
    failure mode worth spending a slightly larger model to avoid.  So when dimension-six blocks
-   are in the index, their vertices join the internal set. *)
+   are in the index, their vertices join the internal set.  The Python side (gen/process.py,
+   standard_model_vertices) restricts the internal lines of a DIMENSION-EIGHT block to the
+   Standard Model subset of this list, since a dimension-six vertex beside a dimension-eight one
+   is 1/Lambda^6; the full set is used for the dimension-six blocks only. *)
 z8d6 = Select[Keys[idx], StringStartsQ[#, "L6cl"] &];
 z8int = DeleteDuplicates[fields /@ smv];
 If[z8d6 =!= {},

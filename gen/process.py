@@ -400,15 +400,45 @@ def _partitions(items: Tuple[str, ...], n: int) -> Tuple[Tuple[Tuple[str, ...], 
 # --------------------------------------------------------------------------------------
 
 
+# The Standard Model's own vertices in unitary gauge, by field content.  The base model the
+# vertex lists are dumped from carries the dimension-six operators of the input scheme as well,
+# so FeynRules' list of the base vertices holds h-gamma-gamma, four-fermion contacts and the
+# like, which are dimension six.  A diagram with one dimension-eight vertex and one of those is
+# order 1/Lambda^6, so for a dimension-eight block the internal lines are restricted to this set,
+# which is checked against FeynRules' list at load time (every entry must be in it).  For a
+# dimension-six block the full base set stays, since two dimension-six insertions are 1/Lambda^4.
+# On the processes of the paper the restriction changes no selection (2026-10-12).
+_SM_BOSONIC = ["A W Wbar", "W Wbar Z", "G G G", "H H H", "H W Wbar", "H Z Z",
+               "A A W Wbar", "A W Wbar Z", "W W Wbar Wbar", "W Wbar Z Z", "G G G G", "H H H H",
+               "H H W Wbar", "H H Z Z"]
+_SM_CURRENTS = [("uq", "AZGH"), ("dq", "AZGH"), ("l", "AZH"), ("vl", "Z")]
+_SM_CHARGED = ["uqbar dq W", "dqbar uq Wbar", "vlbar l W", "lbar vl Wbar"]
+
+
+def standard_model_vertices(base_vertices: Sequence[Sequence[str]]) -> List[List[str]]:
+    """The subset of the base model's vertex contents that the Standard Model has."""
+    sm = {tuple(sorted(v.split())) for v in _SM_BOSONIC + _SM_CHARGED}
+    for f, bosons in _SM_CURRENTS:
+        for b in bosons:
+            sm.add(tuple(sorted([f + "bar", f, b])))
+    have = {tuple(sorted(v)) for v in base_vertices}
+    missing = [" ".join(v) for v in sorted(sm) if v not in have]
+    if missing:
+        raise ValueError("Standard Model vertices absent from the base vertex list: " + ", ".join(missing))
+    return [list(v) for v in sorted(sm)]
+
+
 def select(proc: str, vertex_index: Dict[str, List[List[str]]], sm_vertices: Sequence[Sequence[str]],
            collapse: bool = True, two_insertions: bool = False) -> Dict[str, List[str]]:
     """Block name -> the vertex that lets it contribute, for every block that can."""
     slots = parse_process(proc, collapse=collapse)
-    sel = Selector(sm_vertices)
+    sel6 = Selector(sm_vertices)                                  # dimension-six blocks
+    sel8 = Selector(standard_model_vertices(sm_vertices))         # dimension-eight blocks
     # every concrete assignment of the multiparticle slots, deduplicated as multisets
     assignments = {tuple(sorted(a)) for a in _product(slots)}
     hits: Dict[str, List[str]] = {}
     for block, verts in vertex_index.items():
+        sel = sel8 if block.startswith("L8op") else sel6
         for ext in assignments:
             got = sel.block_fits(verts, ext)
             if got is not None:
@@ -416,6 +446,7 @@ def select(proc: str, vertex_index: Dict[str, List[List[str]]], sm_vertices: Seq
                 break
     if not two_insertions:
         return hits
+    sel = sel8
     # Second pass: operators that can only appear alongside a second dimension-eight
     # vertex.  Order 1/Lambda^8, so this is opt in; see Selector.pair_fits.
     all_dim8 = tuple(sorted({tuple(sorted(v)) for vs in vertex_index.values() for v in vs}))
