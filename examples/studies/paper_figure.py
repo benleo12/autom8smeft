@@ -35,6 +35,12 @@ analyses apply to the dimension-eight square they fit.  It is kept out of the up
 a 1/Lambda^8 curve above the Standard Model reads as a prediction of a large effect, which it is
 not.  A dotted line marks m = Lambda (--lambda GeV), the a priori expectation the crossing
 confirms.
+
+The samples are generated at Lambda = 1 TeV with unit coefficients, and a genuine 1/Lambda^4
+term is exactly linear in C/Lambda^4, so a figure at another Lambda needs no new events: with
+--lambda L every interference column is multiplied by (1000/L)^4 and every squared column by
+(1000/L)^8 (--sample-lambda changes the 1000), the reference column being the Standard Model.
+The W-mass term of the paper's eq. (np0) is not in these columns, so the rescaling is exact.
 """
 from __future__ import annotations
 
@@ -170,12 +176,18 @@ def main(argv) -> int:
     rmin = opt("--ratio-min", 1e-3)
     edges_opt = opt("--edges", None, str)
     lam = opt("--lambda", None)
+    lam0 = opt("--sample-lambda", 1000.0)
 
     lo, hi, cols = read(src)
     squares = {k: v for k, v in cols.items() if k.strip().endswith("squared")}
     cols = {k: v for k, v in cols.items() if k not in squares}
     names = list(cols)
     ref = names[0]
+    if lam is not None and lam != lam0:
+        # exact at fixed kinematics: the interference is linear in C/Lambda^4, the square quadratic
+        f4, f8 = (lam0 / lam) ** 4, (lam0 / lam) ** 8
+        cols = {k: (v if k == ref else [x * f4 for x in v]) for k, v in cols.items()}
+        squares = {k: [x * f8 for x in v] for k, v in squares.items()}
     first = min((i for i, v in enumerate(cols[ref]) if v != 0), default=0)
     start = lo[first]
     if xmax is None:
