@@ -143,8 +143,11 @@ def main(argv):
               "# import with:  import model "
               + re.sub(r"\.new$", "", os.path.basename(ufo)) + "-" + name]
     open(dest, "w").write("\n".join(header + out))
-    print(f"wrote {dest}: kept {kept} dim-8 and {kept6} dim-6 coefficients, zeroed {zeroed}"
-)
+    shown = os.path.relpath(dest)
+    if shown.startswith(".."):
+        shown = dest
+    print(f"wrote {shown}: kept {kept} dim-8" + (f" and {kept6} dim-6" if kept6 else "")
+          + f" coefficients, zeroed {zeroed}")
     return 0
 
 

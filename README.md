@@ -136,7 +136,13 @@ difference as a 1.2 pb interference on `p p > w+ w-` where a CP-odd set must giv
     import model dim68_is-dim6
 
 `validate/make_restriction.py` writes any other selection. `./dim8 select "p p > w+ w-"` lists
-which dimension-eight operators can enter a process.
+which dimension-eight operators can enter a process, in two groups: those with a vertex in some
+tree diagram, and those with none that enter through the input relations. With `--card ww` it
+writes `restrict_ww.dat` into the model, keeping both groups, for `import model dim8_is-ww`.
+FeynRules has already been run and the shipped model carries every vertex of every operator,
+so a selection is a restriction card that MadGraph applies at import, never a rebuild.
+`validate/select_complement.py` checks a selection by keeping its complement instead, which
+must generate no diagram.
 
 ## Try it
 

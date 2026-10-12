@@ -15,12 +15,26 @@ numbers are the checked ones.
 ## 2. Which operators enter
 
     ./dim8 select "u c > u c h"
+    ./dim8 select "u c > u c h" --card vbfh
 
-prints the classes and operators with a tree-level vertex in that process, and the diagram
-counts. It is a LOWER BOUND. Eight dimension-eight coefficients enter the {alpha, MZ, GF}
-relations (c8B2H4x1, c8H6x1, c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4) and
-so move every amplitude whether or not they have a vertex in the process you asked about. On
-p p > w+ w- the last two have no vertex in any diagram and carry a third of the effect.
+prints the operators with a tree-level vertex in that process, by class and with the vertex
+each enters through, and then a second group: the operators with no vertex in the process that
+still move its prediction because they enter the {alpha, MZ, GF} relations (c8B2H4x1, c8H6x1,
+c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4 are the eight that can). On
+p p > w+ w- two of them have no vertex in any diagram and carry a third of the effect. The two
+groups together are complete at tree level with one insertion.
+
+`--card NAME` writes `restrict_NAME.dat` into the model (`--model`, default `models/dim8_is`),
+keeping both groups, and `import model dim8_is-NAME` applies it. Nothing is rebuilt at this
+step: FeynRules has already been run, the shipped model carries every vertex of every operator,
+and MadGraph drops the zeroed coefficients and the vertices whose couplings vanish at import.
+The dimension-six coefficients are zeroed unless you add `--with-dim6`, as in the class cards,
+and the kept coefficients carry placeholder values until the param card sets them (section 4).
+`validate/select_complement.py "p p > w+ w-"` checks the selection with MadGraph as the judge:
+a card keeping the complement of the selection generates no diagram. Do not compare diagram
+COUNTS between the full and a restricted model instead: MadGraph drops from a restricted model
+every vertex whose couplings evaluate to zero with the card (the u-b-W vertex with the
+Cabibbo-only CKM, for one), and keeps such vertices, and their vanishing diagrams, in the full model.
 
 ## 3. Set up a study
 

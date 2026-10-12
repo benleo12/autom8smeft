@@ -5,6 +5,7 @@ dim8  --  dimension-eight SMEFT models for MadGraph, one process at a time.
     ./dim8 build                       compute and cache the vertices (slow, once)
     ./dim8 index                       export the vertex field content for the selector
     ./dim8 select "p p > h j j"        which operators can contribute, and why
+    ./dim8 select "p p > h j j" --card vbf   ... and write restrict_vbf.dat into the model
     ./dim8 model  "p p > h j j" -o vbf write the FeynRules model for just those
     ./dim8 ufo    "p p > h j j" -o vbf write the UFO for just those
     ./dim8 check                       run the symbolic validation gates
@@ -242,6 +243,27 @@ def cmd_select(a):
         p = os.path.join(ROOT, "build", a.out + ".blocks")
         open(p, "w").write("\n".join(sorted(set(hits) | set(extra), key=_bkey)) + "\n")
         print(f"\nwrote {os.path.relpath(p, ROOT)}  ({len(hits) + len(extra)} blocks, both groups)")
+    if getattr(a, "card", None):
+        # The selection is applied to a released model with no rebuild.  FeynRules has already
+        # been run, the model carries every vertex of every operator, and the selection is a
+        # restriction card that MadGraph applies at import, dropping the zeroed coefficients and
+        # every vertex whose couplings then vanish.  Both groups go into the card.  The
+        # dimension-six sector is zeroed unless --with-dim6 asks for it, as in the released class
+        # cards: a kept coefficient is a placeholder value in the restricted model's defaults, and
+        # a dimension-six sector kept by accident would enter NP^2==2 through its square.
+        import make_restriction as MR
+
+        model = os.path.abspath(a.model)
+        if not os.path.isfile(os.path.join(model, "parameters.py")):
+            sys.exit(f"{a.model} is not a UFO directory (no parameters.py)")
+        sels = [b for b in sorted(set(hits) | set(extra), key=_bkey) if b.startswith("L8op")]
+        if getattr(a, "with_dim6", False):
+            sels.append("dim6")
+        print()
+        rc = MR.main(["make_restriction", model, a.card] + sels)
+        if rc:
+            sys.exit(rc)
+        print(f"import with:  import model {os.path.basename(model)}-{a.card}")
 
 
 def cmd_model(a):
@@ -385,6 +407,18 @@ def main():
                             "tree amplitudes with at least n external legs); also honoured by the worker")
         p.add_argument("--with-bviol", action="store_true",
                        help="include the B-violating classes 18-21 (MadGraph/ALOHA cannot use their 4-fermion vertices)")
+        if name == "select":
+            p.add_argument("--card", metavar="NAME",
+                           help="also write restrict_NAME.dat into the model named by --model, keeping both "
+                                "groups, and import it as  import model <model>-NAME.  Nothing is rebuilt: "
+                                "FeynRules has already been run, the released model carries every vertex "
+                                "of every operator, and MadGraph applies the card at import")
+            p.add_argument("--model", default="models/dim8_is", metavar="DIR",
+                           help="the released UFO the card is written into (default models/dim8_is)")
+            p.add_argument("--with-dim6", action="store_true",
+                           help="also keep the model's dimension-six coefficients in the card. Without it "
+                                "they are zeroed, like in the released class cards, so that NP^2==2 is the "
+                                "dimension-eight interference alone")
         p.set_defaults(func=fn)
 
     k = sub.add_parser("count", help="lambda power counting for a class or (D,H,psi,F), or 'all'")
