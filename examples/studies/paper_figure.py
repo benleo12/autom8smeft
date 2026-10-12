@@ -2,7 +2,7 @@
 """Publication figures from the .tsv files plot_study.py writes.
 
     examples/studies/paper_figure.py <in.tsv> <out.pdf> [--xmax GeV] [--xlabel TEXT]
-                                     [--title TEXT] [--ratio-max R] [--ratio-min R]
+                                     [--title TEXT] [--ratio-max R] [--ratio-min R] [--ymin pb]
                                      [--edges a,b,c,...]
 
 plot_study.py produces a diagnostic: every 100 GeV bin it filled, a 6 TeV axis and a ratio panel
@@ -174,6 +174,7 @@ def main(argv) -> int:
     title = opt("--title", "", str)
     rmax = opt("--ratio-max", None)
     rmin = opt("--ratio-min", 1e-3)
+    ymin = opt("--ymin", None)   # lower edge of the cross-section panel, default from the data
     edges_opt = opt("--edges", None, str)
     lam = opt("--lambda", None)
     lam0 = opt("--sample-lambda", 1000.0)
@@ -223,7 +224,7 @@ def main(argv) -> int:
     ax.set_yscale("log")
     ax.set_ylabel(r"$|\sigma|$ per 100 GeV [pb]")
     pos = [v for _, _, ys in top for v in ys if v == v]
-    ax.set_ylim(max(min(pos) * 0.4, max(pos) * 1e-6), max(pos) * 4)
+    ax.set_ylim(ymin if ymin else max(min(pos) * 0.4, max(pos) * 1e-6), max(pos) * 4)
     ax.yaxis.set_major_locator(LogLocator(base=10, numticks=8))
     ax.yaxis.set_minor_locator(LogLocator(base=10, subs=range(2, 10), numticks=12))
     ax.yaxis.set_minor_formatter(NullFormatter())
