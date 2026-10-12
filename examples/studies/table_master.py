@@ -168,25 +168,23 @@ def main():
 
     head = (r"\begin{table}[!htbp]" "\n" r"\centering" "\n" r"\footnotesize" "\n"
             r"\setlength{\tabcolsep}{3.2pt}" "\n"
-            r"\begin{tabular}{@{}r l c " + " ".join(["r r"] * 4) + r"@{}}" "\n" r"\toprule" "\n"
-            + r" & & & " + " & ".join(r"\multicolumn{2}{c}{" + h + "}" for _, _, h in COLS) + r" \\" + "\n"
-            + "".join(f"\\cmidrule(lr){{{4+2*i}-{5+2*i}}}" for i in range(4)) + "\n"
-            + r" & class & $\lambda$ & " + " & ".join([r"$\delta\%$ & $\Lambda_{\min}$"] * 4) + r" \\" + "\n"
+            r"\begin{tabular}{@{}r l " + " ".join(["r r"] * 4) + r"@{}}" "\n" r"\toprule" "\n"
+            + r" & & " + " & ".join(r"\multicolumn{2}{c}{" + h + "}" for _, _, h in COLS) + r" \\" + "\n"
+            + "".join(f"\\cmidrule(lr){{{3+2*i}-{4+2*i}}}" for i in range(4)) + "\n"
+            + r" & class & " + " & ".join([r"$\delta\%$ & $\Lambda_{\min}$"] * 4) + r" \\" + "\n"
             r"\midrule")
     body = []
     for c, cells in rows:
-        body.append(label(c) + f" & {tex_q(c)} & " + " & ".join(cells) + r" \\")
+        body.append(label(c) + " & " + " & ".join(cells) + r" \\")
     tail = (r"\bottomrule" "\n" r"\end{tabular}" "\n"
-            r"\caption{Every dimension-eight class in four processes, as the term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}, against the power of $\lambda$ the "
-            r"counting assigns it. The $\lambda$ column is the leading power the class's fastest "
-            r"four-point vertex can reach, with $(\Lambda, E, v) \sim (\lambda^{-3}, \lambda^{-2}, \lambda^{-1})$, so $\lambda^4$ is the steepest and a larger power more suppressed. A dash there means four legs cannot be made from the "
-            r"class's fields at all. $\delta\%$ is the interference with the Standard Model as a "
-            r"percentage of it, an open circle where the interference is below $0.01$, and a dagger where "
-            r"the process was too expensive to run that entry. $\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample: the ratio $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ scales as $\Lambda^{-4}$ at fixed kinematics, so $\Lambda_{\min}$ is its fourth root at the $1$~TeV runs, and below it the $1/\Lambda^4$ truncation is not self-consistent for that class. An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference. The bracketed number beside it is then the scale above which that square is smaller than the Standard-Model rate. A dash in either column means the class "
-            r"produces no diagram in that process. All at $13.6$~TeV with every "
-            r"coefficient of the class at one, the interference quoted at $\Lambda=1$~TeV. \cref{tab:grid} extends the interference column "
-            r"to all twelve processes of the four studies. The shaded rows are the classes the text discusses: the three that set $\Lambda_{\min}$ in "
-            r"diboson, vector boson fusion and Drell-Yan production, and $X^4$.}" "\n"
+            r"\caption{Every dimension-eight class in four processes, as the term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}. "
+            r"$\delta\%$ is the interference with the Standard Model as a percentage of its rate, with an open circle where it is below $0.01$ and a dagger where the entry was too expensive to run. "
+            r"$\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample, which is a self-consistency scale of the $1/\Lambda^4$ truncation and not a validity bound. "
+            r"It is the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ at the $1$~TeV runs, since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
+            r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "
+            r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one and $\Lambda=1$~TeV, and every interference scales as $(1~\mathrm{TeV}/\Lambda)^4$ and every square as $(1~\mathrm{TeV}/\Lambda)^8$. "
+            r"The power counting of each class at four, five and six legs is in \cref{tab:catalogue-summary}, and \cref{sec:routes} explains which of its vertices a process uses. "
+            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses, the three that set $\Lambda_{\min}$ in diboson, vector boson fusion and Drell-Yan production, and $X^4$.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")
     print(head)
     print("\n".join(body))
