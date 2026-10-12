@@ -13,11 +13,16 @@ is the only arrangement in which the counting's three predictions are visible as
   * and the ordering of the four processes by how badly the expansion fails is the ordering of
     their leading class's q.
 
-Columns per process are the interference as a percentage of the Standard Model and Lambda_min,
-the scale above which the class's square is smaller than its interference at unit coefficient in
-the inclusive sample.  The ratio R = sigma_{1/Lambda^8}/|sigma_{1/Lambda^4}| scales as 1/Lambda^4
-at fixed kinematics, so Lambda_min = R^{1/4} TeV from the runs at 1 TeV, and it is the scale below
-which the 1/Lambda^4 truncation is not self-consistent for that class in that sample.  A raw R of
+Columns per process are the interference in units of 1e-4 of the Standard Model at the paper's
+scale, Lambda = 3 TeV, and Lambda_min, the scale above which the class's square is smaller than
+its interference at unit coefficient in the inclusive sample.  The samples are generated at
+Lambda = 1 TeV and rescaled exactly, the interference by (1/3)^4 and the square by (1/3)^8, since
+a genuine 1/Lambda^4 term is linear in C/Lambda^4 (the paper's figures do the same, and the
+W-mass bracket, which is not rescaled here, is not in these tables).  The ratio
+R = sigma_{1/Lambda^8}/|sigma_{1/Lambda^4}| scales as 1/Lambda^4 at fixed kinematics, so
+Lambda_min = R^{1/4} TeV from the runs at 1 TeV whatever scale the table is printed at, and it is
+the scale below which the 1/Lambda^4 truncation is not self-consistent for that class in that
+sample.  A raw R of
 61 at Lambda = 1 TeV is not a prediction of a large effect; it says the expansion has failed there,
 and 2.8 TeV is the number a reader can use (2026-10-04, after a reader asked what the point of a
 square larger than its interference was).  For a class with no interference the bracketed entry
@@ -46,6 +51,10 @@ COLS = [("diboson",    "p p > w+ w-",         r"$pp\to W^+W^-$"),
         ("drellyan",   "p p > e+ e-",         r"$pp\to e^+e^-$")]
 
 INT, SQ = "NP^2==2", "NP<=2 NP^2==4"
+LAM_SAMPLE = 1000.0   # the scale the studies were run at
+LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at
+F4 = (LAM_SAMPLE / LAM_PAPER) ** 4   # a 1/Lambda^4 term from the sample scale to the paper's
+UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Standard Model
 
 
 def read(study):
@@ -151,7 +160,7 @@ def main():
                 # the same three-way encoding as the appendix grid: an open circle is a class that
                 # produces a diagram but interferes negligibly, which is not the same statement as
                 # a dash, and the two must not look alike
-                x = 100 * i[0] / s0
+                x = i[0] * F4 / s0 / UNIT
                 pct = (r"$\circ$" if abs(x) < 0.005 else f"${x:+.0f}$" if abs(x) >= 100
                        else f"${x:+.1f}$" if abs(x) >= 10 else f"${x:+.2f}$")
             else:
@@ -171,18 +180,18 @@ def main():
             r"\begin{tabular}{@{}r l " + " ".join(["r r"] * 4) + r"@{}}" "\n" r"\toprule" "\n"
             + r" & & " + " & ".join(r"\multicolumn{2}{c}{" + h + "}" for _, _, h in COLS) + r" \\" + "\n"
             + "".join(f"\\cmidrule(lr){{{3+2*i}-{4+2*i}}}" for i in range(4)) + "\n"
-            + r" & class & " + " & ".join([r"$\delta\%$ & $\Lambda_{\min}$"] * 4) + r" \\" + "\n"
+            + r" & class & " + " & ".join([r"$\delta\,[10^{-4}]$ & $\Lambda_{\min}$"] * 4) + r" \\" + "\n"
             r"\midrule")
     body = []
     for c, cells in rows:
         body.append(label(c) + " & " + " & ".join(cells) + r" \\")
     tail = (r"\bottomrule" "\n" r"\end{tabular}" "\n"
             r"\caption{Every dimension-eight class in four processes, as the term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}. "
-            r"$\delta\%$ is the interference with the Standard Model as a percentage of its rate, with an open circle where it is below $0.01$ and a dagger where the entry was too expensive to run. "
+            r"$\delta$ is the interference with the Standard Model in units of $10^{-4}$ of its rate, at $\Lambda = 3$~TeV and unit coefficients, with an open circle where it is below $0.01$ in these units and a dagger where the entry was too expensive to run. "
             r"$\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample, which is a self-consistency scale of the $1/\Lambda^4$ truncation and not a validity bound. "
-            r"It is the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ at the $1$~TeV runs, since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
+            r"It is $\Lambda$ times the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$, which does not depend on $\Lambda$ since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
             r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "
-            r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one and $\Lambda=1$~TeV, and every interference scales as $(1~\mathrm{TeV}/\Lambda)^4$ and every square as $(1~\mathrm{TeV}/\Lambda)^8$. "
+            r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one. The samples are generated at $\Lambda = 1$~TeV and rescaled exactly to $3$~TeV, the interference by $(1/3)^4$ and the square by $(1/3)^8$, and an entry at another $\Lambda$ follows by multiplying $\delta$ by $(3~\mathrm{TeV}/\Lambda)^4$. "
             r"The power counting of each class at four, five and six legs is in \cref{tab:catalogue-summary}, and \cref{sec:routes} explains which of its vertices a process uses. "
             r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses, the three that set $\Lambda_{\min}$ in diboson, vector boson fusion and Drell-Yan production, and $X^4$.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")

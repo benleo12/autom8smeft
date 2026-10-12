@@ -42,6 +42,10 @@ CLASSES = {1: "X^4", 2: "H^8", 3: "H^6D^2", 4: "H^4D^4", 5: "X^3H^2", 6: "X^2H^4
            20: "psi^4HD", 21: "psi^4D^2"}
 
 INT = "NP^2==2"
+LAM_SAMPLE = 1000.0   # the scale the studies were run at
+LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at
+F4 = (LAM_SAMPLE / LAM_PAPER) ** 4   # a 1/Lambda^4 term from the sample scale to the paper's
+UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Standard Model
 
 
 def read(study):
@@ -76,9 +80,10 @@ def sm_of(data, study, proc):
 def cell(sig, err, sm, square=None):
     """One entry, on a three-way encoding that makes the shape of the table readable at a glance:
     a dash where the class produces no diagram, an open circle where it produces one whose
-    interference is below a hundredth of a per cent of the Standard Model, and otherwise the
-    number.  Parentheses mark a Monte Carlo error above a tenth of the entry.  Writing the
-    negligible entries out as numbers instead buries the pattern of dashes, which is the result."""
+    interference is below 1e-6 of the Standard Model at Lambda = 3 TeV, and otherwise the
+    number, in units of 1e-4 of the Standard Model at 3 TeV, rescaled exactly from the 1 TeV
+    samples by (1/3)^4.  Parentheses mark a Monte Carlo error above a tenth of the entry.  Writing
+    the negligible entries out as numbers instead buries the pattern of dashes, which is the result."""
     if sig is None or not sm:
         return "--"
     if isinstance(sig, str):
@@ -89,7 +94,7 @@ def cell(sig, err, sm, square=None):
         # no interference but a square: the class reaches the process through a channel with
         # no tree-level Standard-Model amplitude, which is not the same as not reaching it
         return r"$\ast$" if isinstance(square, float) else "--"
-    pct = 100 * sig / sm
+    pct = sig * F4 / sm / UNIT
     if abs(pct) < 0.005:
         return r"$\circ$"
     t = f"{pct:+.0f}" if abs(pct) >= 100 else f"{pct:+.1f}" if abs(pct) >= 10 else f"{pct:+.2f}"
@@ -140,12 +145,12 @@ def main():
         out.append(label(c) + " & " + " & ".join(cells) + r" \\")
     out += [r"\bottomrule", r"\end{tabular}}",
             r"\caption{The term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}, for every class in every process of "
-            r"\cref{sec:pheno}, as a percentage of that process's Standard-Model rate, at "
-            r"$13.6$~TeV with $\Lambda=1$~TeV and every coefficient of the class at one. A dash "
+            r"\cref{sec:pheno}, in units of $10^{-4}$ of that process's Standard-Model rate, at "
+            r"$13.6$~TeV, $\Lambda = 3$~TeV and every coefficient of the class at one, rescaled exactly by $(1/3)^4$ from the samples generated at $1$~TeV. A dash "
             r"is no diagram rather than a small number, and the pattern of dashes is the "
             r"reachability prediction of \cref{eq:reach} together with the field content of the vertex, "
             r"as \cref{sec:routes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
-            r"diagram but interferes below a hundredth of a per cent, a dagger one that produces "
+            r"diagram but interferes below $10^{-6}$ of the Standard-Model rate, a dagger one that produces "
             r"diagrams whose cross section was not run because the process was too expensive, and "
             r"parentheses mark a Monte Carlo error above a tenth of the entry. "
             r"The Drell-Yan processes carry $m_{ee}>200$~GeV, the photon channel additionally "
