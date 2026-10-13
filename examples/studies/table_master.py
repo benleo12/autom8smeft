@@ -193,7 +193,7 @@ def main():
             r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "
             r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one. The samples are generated at $\Lambda = 1$~TeV and rescaled exactly to $3$~TeV, the interference by $(1/3)^4$ and the square by $(1/3)^8$, and an entry at another $\Lambda$ follows by multiplying $\delta$ by $(3~\mathrm{TeV}/\Lambda)^4$. "
             r"The power counting of each class at four, five and six legs is in \cref{tab:catalogue-summary}, and \cref{sec:routes} explains which of its vertices a process uses. "
-            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses, the three that set $\Lambda_{\min}$ in diboson, vector boson fusion and Drell-Yan production, and $X^4$.}" "\n"
+            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")
     print(head)
     print("\n".join(body))
