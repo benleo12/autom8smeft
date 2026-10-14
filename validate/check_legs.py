@@ -5,13 +5,16 @@
 
 A vertex of a class with field content (N_D, N_H, N_psi, N_X) has
 
-    max(N_psi + N_X + N_HD, 2) <= n <= N_psi + N_H + 2 N_X + N_D
+    max(N_psi + N_X, 2) <= n <= N_psi + N_H + 2 N_X + N_D
 
+legs (eq. 5.2 of the paper).  The two-point terms shift masses and field normalisations, which the
+input relations absorb, so the vertices of the released model start at three legs.  The largest
+vertex of every class sits on the upper bound, and the smallest has max(N_psi + N_X + N_HD, 3)
 legs, N_HD being the number of Higgs fields that carry a derivative, smallest over the terms of
-the class.  The two-point terms shift masses and field normalisations, which the input relations
-absorb, so the vertices of the released model start at three legs.  The test recomputes N_HD from
-gen/operators.py, checks it against epower.DIM8_HD, and checks that the smallest and largest
-vertex of every class in the model sit exactly on the two bounds.  In a model with the
+the class, since a covariant derivative of the vacuum is a gauge boson.  That is the lower bound
+of eq. 5.2 in every class but five, whose smallest vertex has four legs.  The test recomputes N_HD
+from gen/operators.py, checks it against epower.DIM8_HD, and checks both statements on the
+vertices of the model.  In a model with the
 dimension-six sector (dim68_is) the eight dimension-six classes are checked the same way.
 """
 import collections
