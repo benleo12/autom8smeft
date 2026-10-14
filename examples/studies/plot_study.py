@@ -18,15 +18,15 @@ section only statistically.  With a signed sample the integral is a difference o
 numbers, the effective statistics is the excess of positive over negative events, and at 1000
 events the raw event sum can sit tens of per cent from the integrated weight; the rescaling
 factor is printed whenever it exceeds a per mille so that a sample with too few events is
-visible rather than silently misnormalised.  Needs python3.13 on this machine for the plots
-(the other interpreters have no matplotlib); the tables are written either way.
+visible rather than silently misnormalised.  The plots need matplotlib, and the tables are
+written either way.
 Writes <out prefix>_mVV.tsv and <out prefix>_pT.tsv (bin edges in GeV, one column per label) and,
 if matplotlib is importable, <out prefix>_mVV.png and <out prefix>_pT.png with the same content.
 Bins: 100 GeV in mass up to 6 TeV, 50 GeV in p_T up to 3 TeV; the overflow goes in the last bin,
 which the plots label as such (the squared samples of the gluon-initiated contact terms put much
 of their cross section there).  The plots have two panels: the cross section per bin on a
-symmetric log scale, and the ratio of each sample to the first one given, which is the panel
-the paper uses.
+symmetric log scale, and the ratio of each sample to the first one given.  They are diagnostics,
+and paper_figure.py draws the figures of the paper from the .tsv files.
 """
 import gzip, math, re, sys
 

@@ -5,8 +5,9 @@
    random integer momenta, inert tensor heads, term-by-term dummy sums).  Unlike
    compare_vertex_mx.wls, which proves equality symbolically after canonicalisation, this sees
    through algebraically different but equal forms, e.g. a Levi-Civita pair against its
-   metric-determinant expansion (2026-09-04).  The numeric block below is a verbatim copy of
-   fr_compare.wls lines between "zEta =" and the end of zVanishesQ; keep them in step. *)
+   metric-determinant expansion.  The numeric block below is that of fr_compare.wls, from
+   "zEta =" to the end of zVanishesQ, except that the colour cap is fixed at 4096 and a vertex
+   above it counts as differing; keep the two in step. *)
 $root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]]; FR$NKernels = 0;
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"]; LoadModel["base.fr", "gen.fr"];
@@ -17,25 +18,24 @@ zGell = {{{0,1,0},{1,0,0},{0,0,0}}, {{0,-I,0},{I,0,0},{0,0,0}}, {{1,0,0},{0,-1,0
 zfN = Table[-2 I Tr[(zGell[[za]].zGell[[zb]] - zGell[[zb]].zGell[[za]]).zGell[[zc]]]/8, {za,8},{zb,8},{zc,8}] // Simplify;
 zdN = Table[ 2 Tr[(zGell[[za]].zGell[[zb]] + zGell[[zb]].zGell[[za]]).zGell[[zc]]]/8, {za,8},{zb,8},{zc,8}] // Simplify;
 
-(* Evaluate BOTH the colour and the Lorentz algebra numerically.  Colour first (random
-   external colour/gluon indices, dummies summed, T/f/d/delta and the colour Eps replaced by
-   numbers), then Lorentz (explicit momenta summing to zero, free indices assigned, dummies
-   summed against the Minkowski metric, the Lorentz Eps replaced by the Levi-Civita symbol).
-   The two Eps are told apart by the type of their indices. *)
-(* zvals: one explicit value per external colour index (Union order).  The first version drew
-   them at random for eight seeds, which is unsound for sparse tensors: two gluon externals
-   hit a nonzero delta one time in eight, so a genuinely nonzero gluonic difference vertex
-   was declared zero with probability 0.34 (found 2026-09-03, together with the same flaw in
-   the worker).  zVanishesQ now enumerates every colour assignment, early exit at the first
-   nonzero one; the momenta stay random (a nonzero polynomial in them is caught with
+(* Evaluate BOTH the colour and the Lorentz algebra numerically.  Colour first (one
+   assignment of the external colour/gluon indices, dummies summed, T/f/d/delta and the colour
+   Eps replaced by numbers), then Lorentz (explicit momenta summing to zero, free indices
+   assigned, dummies summed against the Minkowski metric, the Lorentz Eps replaced by the
+   Levi-Civita symbol).  The two Eps are told apart by the type of their indices. *)
+(* zvals: one explicit value per external colour index (Union order).  zVanishesQ enumerates
+   every colour assignment and stops at the first nonzero one.  Random values are unsound for
+   sparse tensors: two gluon externals hit a nonzero delta one time in eight, so with eight
+   random draws a nonzero gluonic difference vertex would still be declared zero with
+   probability 0.34.  The momenta stay random (a nonzero polynomial in them is caught with
    probability one), with two seeds per assignment. *)
 (* Every FeynRules tensor head is swapped for an inert private head BEFORE any integer is
    substituted: FeynRules' own contraction rules fire on equal integers as if they were a
-   summed pair (Eps[a,b,2,4] Eps[c,d,2,4] auto-reduces to metrics), which corrupted the
-   evaluation whenever two external indices drew the same value (2026-09-04).  Dummies are
-   summed TERM BY TERM: summing a dummy over the whole expression multiplies every term that
-   does not contain it by the metric trace (-2 for Lorentz, 3 or 8 for colour), so a
-   difference of two expressions with differently named dummies could never cancel. *)
+   summed pair (Eps[a,b,2,4] Eps[c,d,2,4] auto-reduces to metrics), which would corrupt the
+   evaluation whenever two external indices take the same value.  Dummies are summed TERM BY
+   TERM: summing a dummy over the whole expression multiplies every term that does not contain
+   it by the metric trace (-2 for Lorentz, 3 or 8 for colour), so a difference of two
+   expressions with differently named dummies could never cancel. *)
 zInert = {Eps -> zEPS, ME -> zME, FV -> zFV, SP -> zSP, T -> zT, f -> zF, dSUN -> zD, IndexDelta -> zDEL};
 zSumDummies[ze_, zdumsOf_, zdim_, zweight_] := Module[{zterms = If[Head[Expand[ze]] === Plus, List @@ Expand[ze], {Expand[ze]}]},
   Total[Function[zt, Module[{zt2 = zt, zds = zdumsOf[zt]},

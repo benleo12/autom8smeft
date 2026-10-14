@@ -3,7 +3,7 @@
 
     examples/studies/paper_figure.py <in.tsv> <out.pdf> [--xmax GeV] [--xlabel TEXT]
                                      [--title TEXT] [--ratio-max R] [--ratio-min R] [--ymin pb]
-                                     [--edges a,b,c,...]
+                                     [--edges a,b,c,...] [--lambda GeV] [--sample-lambda GeV]
 
 plot_study.py produces a diagnostic: every 100 GeV bin it filled, a 6 TeV axis and a ratio panel
 that carries the statistical noise of the empty tail.  This produces the figure that goes in the
@@ -26,10 +26,10 @@ classes at high mass, which is the point of the figure, is read without a lookup
 a class is fixed by its label, so the same class is the same colour in every figure of the
 paper.
 
-The squared term of the leading class is drawn as a VALIDITY MARKER and nothing else
-(2026-10-04): grey, dashed, in the ratio panel only.  Where it crosses the interference the
-1/Lambda^4 truncation has failed at this Lambda, which is the clipping energy an analysis would
-use, and nothing above that crossing is a prediction.  That is the dimension-eight form of the
+The squared term of the leading class is drawn as a VALIDITY MARKER and nothing else: grey,
+dashed, in the ratio panel only.  Where it crosses the interference the 1/Lambda^4 truncation
+has failed at this Lambda, which is the clipping energy an analysis would use, and nothing above
+that crossing is a prediction.  That is the dimension-eight form of the
 linear-against-quadratic comparison dimension-six fits make, and of the clipping that VBS
 analyses apply to the dimension-eight square they fit.  It is kept out of the upper panel, where
 a 1/Lambda^8 curve above the Standard Model reads as a prediction of a large effect, which it is
@@ -40,7 +40,8 @@ The samples are generated at Lambda = 1 TeV with unit coefficients, and a genuin
 term is exactly linear in C/Lambda^4, so a figure at another Lambda needs no new events: with
 --lambda L every interference column is multiplied by (1000/L)^4 and every squared column by
 (1000/L)^8 (--sample-lambda changes the 1000), the reference column being the Standard Model.
-The W-mass term of the paper's eq. (np0) is not in these columns, so the rescaling is exact.
+The W-mass bracket sigma(NP=0, c) - sigma(NP=0, 0) is not in these columns, so the rescaling is
+exact.
 """
 from __future__ import annotations
 

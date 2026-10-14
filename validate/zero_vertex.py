@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Find UFO vertices that are identically zero, Dirac structures included.
 
-    validate/zero_vertex.py <UFO dir> [--structures] [--wcs]   (needs numpy: python3.13 here)
+    validate/zero_vertex.py <UFO dir> [--structures] [--wcs]   (needs numpy)
 
 validate/zero_lorentz.py tests each Lorentz structure on its own and skips anything carrying a
-Gamma, on the assumption, written into its docstring, that no zero structure has one.  That
-assumption is false: Q_{q^4B}^{(4)} reaches the shipped model with FFFFV200, a four-fermion
-structure that ALOHA reduces to zero and then writes as a Fortran routine whose arguments it
-never declares, so `u u~ > d d~ a` dies with "A compilation Error occurs" and the real message,
-"Symbol 'f1' has no IMPLICIT type", appears only if you run make in Source/DHELAS by hand.
+Gamma.  Structures with a Gamma can vanish too.  In the UFO as FeynRules writes it,
+Q_{q^4B}^{(4)} carries FFFFV200, a four-fermion structure that ALOHA reduces to zero and then
+writes as a Fortran routine whose arguments it never declares.  `u u~ > d d~ a` then stops with
+"A compilation Error occurs", and the underlying message, "Symbol 'f1' has no IMPLICIT type",
+appears only when make is run directly in Source/DHELAS.
 
 Two things are tested here that zero_lorentz.py cannot reach.
 
@@ -20,10 +20,11 @@ Two things are tested here that zero_lorentz.py cannot reach.
 
   --wcs          the whole vertex, sum over (colour, Lorentz) of coupling times structure, per
                  Wilson coefficient.  This is the test that catches a coefficient whose every
-                 vertex cancels between two live structures, which is how six of the psi^4 B
-                 operators come to be presented as live and give exactly zero: their two
-                 surviving structures differ by a swap of two dummy indices inside one Epsilon
-                 and carry the same coupling, so they sum to nothing.
+                 vertex cancels between two live structures.  Three of the psi^4 B operators,
+                 six card entries since their coefficients are complex, are such a case: they
+                 look live and give exactly zero, because their two surviving structures differ
+                 by a swap of two dummy indices inside one Epsilon and carry the same coupling,
+                 so they sum to nothing.
 
 Default runs both.  A structure or coefficient is reported when it vanishes at every random
 point to 1e-9 of the size of its own terms, which for a multilinear form is proof.
@@ -168,8 +169,8 @@ def evaluate(parsed, rng, nlegs=None):
             legs |= {i for i in li if i > 0} | {i for i in si if i > 0}
             if n == "P": plegs.add(li[1] if len(li) > 1 else li[0])
     # The leg count must come from the vertex's own spins list, not from the indices that happen
-    # to appear.  Inferring it made a three-point V V S look like a two-point one and imposed
-    # p1 = -p2, which turns the CP-odd Epsilon(1,2,a,b) p1^a p2^b of VVS2 into a false zero.
+    # to appear.  Inferring it would make a three-point V V S look like a two-point one and
+    # impose p1 = -p2, which turns the CP-odd Epsilon(1,2,a,b) p1^a p2^b of VVS2 into a false zero.
     nmax = max(nlegs or 0, max(legs | plegs | {2}))
     mom = {i: rng.normal(size=4) for i in range(1, nmax + 1)}
     mom[nmax] = -sum(mom[i] for i in range(1, nmax))   # ALOHA imposes momentum conservation
@@ -213,8 +214,8 @@ def evaluate(parsed, rng, nlegs=None):
         # test compares the total with the scale, and a scale built only from the terms' own
         # values is rounding noise when every term vanishes by itself: VSS1 of Q_{BH^4D^2}^{(2)},
         # Epsilon p1 p2 p3 at three legs, is zero term by term under momentum conservation and
-        # read as 1e-16 against 3e-16, so it was kept and ALOHA wrote an empty routine
-        # (2026-10-04).  The scale is therefore the larger of the two.
+        # reads 1e-16 against 3e-16, which would keep it, and ALOHA then writes an empty routine.
+        # The scale is therefore the larger of the two.
         nat = abs(coef)
         for arr in arrays:
             nat *= float(np.linalg.norm(np.asarray(arr).ravel()))
@@ -303,10 +304,10 @@ def dead_coefficients(ufo, zeros, verbose=True):
                         st = struct.get(vx.lorentz[li].name)
                         if st is None: continue
                         if st.strip() in ("0", ""): continue
-                        # Same trap evaluate() warns about: the leg count is the vertex's,
-                        # not whatever indices the structure happens to mention.  Inferring
-                        # it imposed three-leg momentum conservation on the four-leg g g g H
-                        # of VVVS4 and reported c8G2H4x2 dead when it is not.
+                        # As in evaluate(), the leg count is the vertex's, not whatever
+                        # indices the structure happens to mention.  Inferring it would impose
+                        # three-leg momentum conservation on the four-leg g g g H of VVVS4 and
+                        # report c8G2H4x2 dead when it is not.
                         e = evaluate(parse(st), rng, len(vx.particles))
                         if e is None: alive = True; break
                         tot += g * e[0]; scale += abs(g) * e[1]

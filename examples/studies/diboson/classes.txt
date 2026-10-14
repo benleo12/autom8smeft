@@ -1,4 +1,4 @@
-# one restriction card per Murphy class (cls<N>), written with make_restriction.py cls:<N>
+# one restriction card per class of the Murphy basis (cls<N>), as make_restriction.py cls:<N> writes it
 cls1   # B^4, G^2B^2, G^2W^2, G^3B, G^4, W^2B^2 ...
 cls2   # H^8
 cls3   # H^6

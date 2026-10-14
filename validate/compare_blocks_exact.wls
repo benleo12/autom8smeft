@@ -7,8 +7,9 @@
    compared exactly too (compare_vertex_numeric.wls gives up above 4096 colour assignments).
    Exit code 0 when the blocks agree, 1 otherwise. *)
 $root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
-(* resolve the two files BEFORE the model load changes the working directory: relative paths
-   silently failed to open afterwards and the script compared two empty lists as "EQUAL" (2026-09-05) *)
+(* resolve the two files BEFORE the model load changes the working directory, since a relative
+   path no longer opens afterwards; an unreadable file or an empty vertex list stops the script
+   (loadVerts) instead of comparing as equal *)
 {fA, fB} = AbsoluteFileName /@ $ScriptCommandLine[[2 ;; 3]];
 If[MemberQ[{fA, fB}, $Failed], Print["COMPARE FAILED: file not found ", $ScriptCommandLine[[2 ;; 3]]]; Quit[2]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current"; FR$NKernels = 0;

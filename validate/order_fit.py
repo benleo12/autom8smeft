@@ -4,14 +4,14 @@ validate/order_fit.py  --  get the EFT orders out of MadGraph without trusting c
 
 Why this exists.  MadGraph decides which order bin a term belongs to by the coupling orders it
 was given, and it tags couplings, not masses.  In the {alpha, M_Z, G_F} scheme M_W is derived, so
-it moves when a Wilson coefficient moves, and so do the vev, the Yukawas and the Higgs
-normalisation.  None of that can carry an NP tag, so a tagged bin such as NP^2==1 is not the
-complete interference: on p p > w+ w- the missing piece measured +1.35 +- 0.115 pb, which is 11.7
-sigma.  Adding the dimension-six sector makes it worse, not better, because more internal
-parameters become coefficient-dependent.
+it moves when a Wilson coefficient moves, and as a mass it cannot carry an NP tag.  The models of
+this release write every coupling shift (gauge couplings, vev, Yukawas, Higgs quartic) as a
+tagged series, so the shifted W mass is the one piece that a tagged bin such as NP^2==2 does not
+contain, and validate/np0_shift.py measures it.  This tool uses no tag at all, so it checks both
+together.
 
 What is exact is the TOTAL.  Ask MadGraph for every diagram up to the truncation you want, with
-no NP^2 constraint, and it computes the honest cross section of the Lagrangian it was given,
+no NP^2 constraint, and it computes the full cross section of the Lagrangian it was given,
 masses and all.  Scan one coefficient, fit a polynomial in it, and the fit coefficients are the
 orders:
 
@@ -21,17 +21,16 @@ sigma_0 is the Standard Model, sigma_1 the interference (1/Lambda^4 for a dimens
 coefficient, 1/Lambda^2 for a dimension-six one) and sigma_2 the square.  No tag is involved.
 
 sigma(c) is not exactly polynomial, since M_W(c) is a square root of a linear expression, but the
-departure is beyond the truncation: every coefficient-dependent internal parameter was measured
-linear in c to 1.8e-5 relative (validate/truncation_check.py).  The tool fits one degree above
-what you ask for and reports the extra coefficient, so you can see the contamination rather than
-assume it away.
+departure is beyond the truncation (validate/truncation_check.py measures how far each internal
+parameter departs from linear in c).  The tool fits one degree above what you ask for and reports
+the extra coefficient, so you can see the contamination rather than assume it away.
 
     validate/order_fit.py <UFO dir or model name> "p p > w+ w-" --coeff c8q2W2Dx1
     validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale6 1000 --degree 2
     validate/order_fit.py dim8_is "p p > w+ w-" --coeff c8q2W2Dx1 --compare-tagged "NP^2==2"
 
-With --compare-tagged it also runs the tagged bin and prints both, which is how the size of the
-tagging defect gets measured instead of argued about.
+With --compare-tagged it also runs the tagged bin at c = delta and prints it beside what the fit
+says that order contributes there, so the part that no coupling tag can see is measured.
 """
 
 from __future__ import annotations

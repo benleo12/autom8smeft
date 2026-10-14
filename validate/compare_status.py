@@ -3,8 +3,8 @@
 
 usage: validate/compare_status.py <backup .tgz or directory of .status> <cache directory>
 
-Written for the 2026-09-03 rebuild after the unsound colour zero test: it lists every block
-whose vertex count changed, so the damage the test did is quantified rather than assumed.
+It lists every block whose vertex count differs between the two, so the effect of a change to
+the vertex computation is measured on every block rather than assumed.
 Status lines look like  'L8op455 | vertices 6 | rawvertices 6 | nonhermitian -1 | ...'.
 """
 import os, re, sys, tarfile, glob
@@ -35,11 +35,11 @@ def main():
     common = sorted(set(old) & set(new), key=lambda b: int(b[4:]))
     changed = [(b, old[b], new[b]) for b in common if old[b][0] != new[b][0]]
     lost = sum(n[0] - o[0] for b, o, n in changed)
-    print(f"blocks in both: {len(common)}, changed vertex count: {len(changed)}, net vertices recovered: {lost}")
+    print(f"blocks in both: {len(common)}, changed vertex count: {len(changed)}, net change in vertex count: {lost}")
     for b, o, n in changed:
         print(f"{b}: {o[0]} -> {n[0]} vertices (raw {o[1]} -> {n[1]})")
     missing = sorted(set(old) - set(new), key=lambda b: int(b[4:]))
-    if missing: print(f"not yet rebuilt: {len(missing)}: {' '.join(missing[:20])}{' ...' if len(missing) > 20 else ''}")
+    if missing: print(f"missing from the new cache: {len(missing)}: {' '.join(missing[:20])}{' ...' if len(missing) > 20 else ''}")
 
 if __name__ == '__main__':
     main()

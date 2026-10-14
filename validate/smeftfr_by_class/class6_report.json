@@ -1,7 +1,7 @@
 [
 	{
-		"hand":"LQG2phi4n1",
-		"handWC":"cG2phi4n1",
+		"ref":"LQG2phi4n1",
+		"refWC":"cG2phi4n1",
 		"gen":"L8op593",
 		"genWC":"c8G2H4x1",
 		"norm":"1",
@@ -9,8 +9,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi4n1",
-		"handWC":"cG2phi4n1",
+		"ref":"LQG2phi4n1",
+		"refWC":"cG2phi4n1",
 		"gen":"L8op593",
 		"genWC":"c8G2H4x1",
 		"norm":"1",
@@ -18,8 +18,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi4n2",
-		"handWC":"cG2phi4n2",
+		"ref":"LQG2phi4n2",
+		"refWC":"cG2phi4n2",
 		"gen":"L8op594",
 		"genWC":"c8G2H4x2",
 		"norm":"1",
@@ -27,8 +27,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi4n2",
-		"handWC":"cG2phi4n2",
+		"ref":"LQG2phi4n2",
+		"refWC":"cG2phi4n2",
 		"gen":"L8op594",
 		"genWC":"c8G2H4x2",
 		"norm":"1",
@@ -36,8 +36,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n1",
-		"handWC":"cW2phi4n1",
+		"ref":"LQW2phi4n1",
+		"refWC":"cW2phi4n1",
 		"gen":"L8op595",
 		"genWC":"c8W2H4x1",
 		"norm":"1",
@@ -45,8 +45,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n1",
-		"handWC":"cW2phi4n1",
+		"ref":"LQW2phi4n1",
+		"refWC":"cW2phi4n1",
 		"gen":"L8op595",
 		"genWC":"c8W2H4x1",
 		"norm":"1",
@@ -54,8 +54,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n2",
-		"handWC":"cW2phi4n2",
+		"ref":"LQW2phi4n2",
+		"refWC":"cW2phi4n2",
 		"gen":"L8op596",
 		"genWC":"c8W2H4x2",
 		"norm":"1",
@@ -63,8 +63,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n2",
-		"handWC":"cW2phi4n2",
+		"ref":"LQW2phi4n2",
+		"refWC":"cW2phi4n2",
 		"gen":"L8op596",
 		"genWC":"c8W2H4x2",
 		"norm":"1",
@@ -72,8 +72,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n3",
-		"handWC":"cW2phi4n3",
+		"ref":"LQW2phi4n3",
+		"refWC":"cW2phi4n3",
 		"gen":"L8op597",
 		"genWC":"c8W2H4x3",
 		"norm":"1",
@@ -81,8 +81,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n3",
-		"handWC":"cW2phi4n3",
+		"ref":"LQW2phi4n3",
+		"refWC":"cW2phi4n3",
 		"gen":"L8op597",
 		"genWC":"c8W2H4x3",
 		"norm":"1",
@@ -90,8 +90,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n4",
-		"handWC":"cW2phi4n4",
+		"ref":"LQW2phi4n4",
+		"refWC":"cW2phi4n4",
 		"gen":"L8op598",
 		"genWC":"c8W2H4x4",
 		"norm":"1",
@@ -99,8 +99,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQW2phi4n4",
-		"handWC":"cW2phi4n4",
+		"ref":"LQW2phi4n4",
+		"refWC":"cW2phi4n4",
 		"gen":"L8op598",
 		"genWC":"c8W2H4x4",
 		"norm":"1",
@@ -108,8 +108,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWBphi4n1",
-		"handWC":"cWBphi4n1",
+		"ref":"LQWBphi4n1",
+		"refWC":"cWBphi4n1",
 		"gen":"L8op599",
 		"genWC":"c8WBH4x1",
 		"norm":"1",
@@ -117,8 +117,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWBphi4n1",
-		"handWC":"cWBphi4n1",
+		"ref":"LQWBphi4n1",
+		"refWC":"cWBphi4n1",
 		"gen":"L8op599",
 		"genWC":"c8WBH4x1",
 		"norm":"1",
@@ -126,8 +126,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWBphi4n2",
-		"handWC":"cWBphi4n2",
+		"ref":"LQWBphi4n2",
+		"refWC":"cWBphi4n2",
 		"gen":"L8op600",
 		"genWC":"c8WBH4x2",
 		"norm":"1",
@@ -135,8 +135,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWBphi4n2",
-		"handWC":"cWBphi4n2",
+		"ref":"LQWBphi4n2",
+		"refWC":"cWBphi4n2",
 		"gen":"L8op600",
 		"genWC":"c8WBH4x2",
 		"norm":"1",
@@ -144,8 +144,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQB2phi4n1",
-		"handWC":"cB2phi4n1",
+		"ref":"LQB2phi4n1",
+		"refWC":"cB2phi4n1",
 		"gen":"L8op601",
 		"genWC":"c8B2H4x1",
 		"norm":"1",
@@ -153,8 +153,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQB2phi4n1",
-		"handWC":"cB2phi4n1",
+		"ref":"LQB2phi4n1",
+		"refWC":"cB2phi4n1",
 		"gen":"L8op601",
 		"genWC":"c8B2H4x1",
 		"norm":"1",
@@ -162,8 +162,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQB2phi4n2",
-		"handWC":"cB2phi4n2",
+		"ref":"LQB2phi4n2",
+		"refWC":"cB2phi4n2",
 		"gen":"L8op602",
 		"genWC":"c8B2H4x2",
 		"norm":"1",
@@ -171,8 +171,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQB2phi4n2",
-		"handWC":"cB2phi4n2",
+		"ref":"LQB2phi4n2",
+		"refWC":"cB2phi4n2",
 		"gen":"L8op602",
 		"genWC":"c8B2H4x2",
 		"norm":"1",

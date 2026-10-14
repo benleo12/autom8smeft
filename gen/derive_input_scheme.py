@@ -11,7 +11,7 @@ Bookkeeping: L6 = 1/Lambda_6^2 carries one power of t, L8 = 1/Lambda^4 carries t
 solution is taken to O(t^2).  The base symbols are the Standard Model Lagrangian couplings
 g0, gp0, v0 (base.fr's gw, g1, vev with every coefficient zero), so all three input
 relations are RATIONAL and the t-coefficients are extracted by differentiation at t = 0.
-A first version used sp.series on nested square roots and reached 7 GB without finishing.
+This avoids sp.series on nested square roots, which does not finish in reasonable memory.
 
 Conventions, checked against SMEFTsim's rotateGaugeB and SmeftFR's Z-factors:
   L_kin = -(1/4)[(1-fW)(W1^2+W2^2) + (1-fW3) W3^2 + (1-fB) B^2 + 2 m W3.B]
@@ -32,8 +32,8 @@ import sys
 
 import sympy as sp
 
-# Which three measurements are imposed.  "alpha" is {alpha, M_Z, G_F}, the scheme this file was
-# written for and the one models/dim68_is uses.  "mw" is {M_W, M_Z, G_F}, where BOTH masses are
+# Which three measurements are imposed.  "alpha" is {alpha, M_Z, G_F}, the default, which
+# models/dim8_is and models/dim68_is use.  "mw" is {M_W, M_Z, G_F}, where BOTH masses are
 # inputs and therefore carry no Wilson-coefficient dependence at all.  That is the whole point of
 # having it: MadGraph tags couplings and not masses, so in the alpha scheme the shift of M_W is
 # invisible to every order constraint and NP^2==1 is not the complete interference.  With M_W an
@@ -158,13 +158,13 @@ for k, (x1, _) in out.items():
     print(f"  {k:4s} ours {ours:+.12f}  SMEFTsim {targets[k]:+.12f}  diff {diff:+.1e}")
 print("  (b)", "PASS" if ok_b else "FAIL")
 
-print("=== (c) dim-8 only vs the by-hand derivation, step 2 (L8 = 1) ===")
+print("=== (c) dim-8 only vs the independent derivation (L8 = 1) ===")
 wc8 = {c8W2H4x1: 0.5, c8W2H4x3: -0.3, c8B2H4x1: 0.4, c8WBH4x1: 0.6, c8H6x1: 0.8, c8H6x2: -0.2,
        c8l2H4Dx2: 0.35, c8l2H4Dx4: 0.15}
 v4 = v0n**4
 d8gWl = (wc8[c8l2H4Dx2] + wc8[c8l2H4Dx4])/2*v4; d8mW = (wc8[c8H6x1] - wc8[c8H6x2])/4*v4
 vev2_ours = 2*float(out['vev'][1].subs({L6: 0, L8: 1}).subs(wc8).subs(num))
-print(f"  vev^2: ours {vev2_ours:+.12f}   doc 2 d8gWl - d8mW = {2*d8gWl - d8mW:+.12f}   diff {vev2_ours-(2*d8gWl-d8mW):+.1e}")
+print(f"  vev^2: ours {vev2_ours:+.12f}   independent 2 d8gWl - d8mW = {2*d8gWl - d8mW:+.12f}   diff {vev2_ours-(2*d8gWl-d8mW):+.1e}")
 
 print("=== (e) truncation self-test: residuals of the EXACT relations at the O(t^2) solution ===")
 allwc = {**wc6, **wc8, L6: 1e-6, L8: 1e-12}
@@ -184,11 +184,10 @@ for k, (x1, x2) in out.items():
     print(f"{k}2 = {mc(x2.subs(t, 1))}")
 import json, os
 # GUARD.  This script derives gw, g1, vev and MW2 (or aEW).  The formulae file it writes ALSO
-# holds the canonical field-rotation entries TZZ, TZA, TAZ, TAA, rW and rh, which come from a
-# separate step and are NOT regenerated here.  Rerunning this as a regression test on 2026-09-21
-# therefore silently deleted twelve of the twenty keys, the base lost its whole rotation block,
-# and MadGraph died at output with "Unable to evaluate mdl_rh1__exp__2 = rh1**2".  Merge into
-# whatever is already there instead of replacing it.
+# holds the canonical field-rotation entries TZZ, TZA, TAZ, TAA, rW and rh of
+# gen/derive_rotation.py, which are NOT regenerated here.  Replacing the file would delete them,
+# the base would lose its whole rotation block, and MadGraph would stop at output on an undefined
+# rotation parameter, so the new entries are merged into whatever is already there.
 _dest = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                      "input_scheme_formulae.json" if SCHEME == "alpha" else "input_scheme_formulae_mw.json")
 _old = json.load(open(_dest)) if os.path.exists(_dest) else {}

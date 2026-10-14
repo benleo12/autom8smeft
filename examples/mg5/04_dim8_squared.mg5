@@ -1,10 +1,7 @@
 # 04: the dimension-eight squared term, 1/Lambda^8 (one insertion in each amplitude, NP<=2 NP^2==4).
-# Positive definite; formally the same order as dimension-six-squared and dimension-eight
-# interference from a dimension-six model, which this model does not contain.
-# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
-# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
-# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
-# an operator that does contribute; see examples/studies/diboson/table.md.
+# It is positive definite.  The 1/Lambda^8 order also receives contributions from operators above
+# dimension eight, which no model here contains, so this term estimates the truncation uncertainty
+# and is not the 1/Lambda^8 prediction.  The two operators are those of example 03.
 import model dim8_is
 generate p p > w+ w- NP<=2 NP^2==4
 output runs/04_ww_sq

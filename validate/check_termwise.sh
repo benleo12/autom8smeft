@@ -1,9 +1,9 @@
 #!/bin/bash
 # Two-path equivalence check of the worker: the term-wise (chunked) evaluation must give the
 # same vertices, coupling by coupling, as the whole-block FeynmanRules call, for a Hermitian
-# row (real WC), a "+ h.c." row (complex WC) and a symmetrised row (sym).  The first term-wise
-# validation used three Hermitian rows only and missed that the h.c. branch expanded
-# generations differently (the development log, not shipped, 2026-09-03).  Blocks: 286 (real, class 18),
+# operator (real WC), a "+ h.c." operator (complex WC) and a symmetrised operator (sym).  Each
+# kind takes its own branch of the worker, so all three are tested: the h.c. branch, for one,
+# must expand the generations exactly as the direct branch does.  Blocks: 286 (real, class 18),
 # 402 (complex, class 19), 12 (sym, class 2), all seconds to a minute each.
 # usage: validate/check_termwise.sh [wolframscript]      writes to a scratch directory only
 set -e

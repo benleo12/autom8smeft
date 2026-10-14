@@ -6,20 +6,20 @@
 # as "ptj=20 mmjj=500", and after a second '|' optionally the restriction card to use for the
 # "full model" rows of that process: p p > h h j j QCD=0 NP<=2 on the unrestricted model is
 # 298888 diagrams in 166 subprocesses, hours of code generation per order, so the VBF study
-# runs its full rows on the bosonic card) and classes.txt (one restriction-card name per line, cards written
-# beforehand with validate/make_restriction.py into the model directory).  Optionally
-# coefficients.txt gives "NAME=VALUE" assignments applied at every launch; the default is every
-# dimension-eight coefficient at 1 with Lam at 1000 GeV, which is what the study means by "the
-# full model switched on".
+# runs its full rows on the bosonic card) and classes.txt (one restriction-card name per line,
+# for cards that ship with the model or that validate/make_restriction.py writes into the model
+# directory).  Optionally coefficients.txt gives "NAME=VALUE" assignments applied at every launch.
+# The default is every dimension-eight coefficient at 1 with Lam at 1000 GeV, which is what the
+# study means by "the full model switched on".
 #
 # The flow is generate, `output`, edit the cards with set_cards.py, then bin/generate_events,
 # rather than MadGraph's interactive `launch` prompt.  Two reasons.  A `set` typed at that prompt
 # for a name the model does not have is accepted silently and the run then uses the default, so
-# a restricted model quietly produced Standard-Model numbers; set_cards.py makes that an error.
-# And the LHE files are needed for the distributions, so they are copied to <study dir>/lhe/
-# before the process directory is deleted.  Process directories live in $DIM8_RUNS (default
-# ~/dim8auto_build/mg5runs, outside Dropbox).  $DIM8_CORES (default 2) caps the cores, since this
-# machine is shared.  Results append to <study dir>/results.tsv.
+# a restricted model would give Standard-Model numbers.  set_cards.py makes that an error.  And
+# the LHE files are needed for the distributions, so they are copied to <study dir>/lhe/ before
+# the process directory is deleted.  Process directories live in $DIM8_RUNS (default
+# ~/dim8auto_build/mg5runs).  $DIM8_CORES (default 2) caps the number of cores.  Results append
+# to <study dir>/results.tsv.
 set -u
 ST=$(cd "${1:?study dir}" && pwd); MODEL=$(cd "${2:-models/dim8_is}" && pwd); NEV=${3:-5000}
 MG=${MG5_DIR:-${MG5_DIR:-/path/to/MG5_aMC}}; PY=$(command -v python3.11 || command -v python3)
@@ -27,26 +27,23 @@ RUNS=${DIM8_RUNS:-$HOME/dim8auto_build/mg5runs}; CORES=${DIM8_CORES:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p $RUNS $ST/lhe
 OUT=$ST/results.tsv; [ -f $OUT ] || printf "process\tmodel\torder\tsigma_pb\terror_pb\tnevents\tMW_GeV\tsettings\tlhe\n" > $OUT
-# "NP=0 on" is the Standard-Model bin run with the coefficients switched ON.  Since 2026-10-03
-# every shift of a Lagrangian parameter by the input scheme enters the Lagrangian as a tagged
-# series, so this row differs from "NP=0" through ONE thing only: the W mass, which the
-# {alpha, MZ, GF} scheme derives, which moves with the coefficients, and which sits in a
-# propagator and not in a coupling, so MadGraph cannot tag it.  The complete 1/Lambda^4 prediction
-# is
+# "NP=0 on" is the Standard-Model bin run with the coefficients switched ON.  Every shift of a
+# Lagrangian parameter by the input scheme enters the Lagrangian as a tagged series, so this row
+# differs from "NP=0" through ONE thing only: the W mass.  The {alpha, MZ, GF} scheme derives it,
+# it moves with the coefficients, and it sits in a propagator and not in a coupling, so MadGraph
+# cannot tag it.  The complete 1/Lambda^4 prediction is
 #     sigma_int = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
-# and the bracket is what this row measures; it is zero in a process in which no W is produced or
-# exchanged (VBF di-Higgs exchanges two and leaks 6.8 per cent).  (Before
-# 2026-10-03 the vev, the Yukawas and the Higgs quartic were untagged too and the bracket was
-# nonzero wherever a Higgs coupling entered.)  See docs/HOW_TO_BREAK_IT.md.
+# and the bracket is what this row measures.  It is zero in a process in which no W is produced
+# or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 6.8 per cent with every
+# coefficient at 1 and Lam at 1 TeV).  See docs/HOW_TO_BREAK_IT.md.
 ORDERS=("NP=0" "NP=0 on" "NP^2==2" "NP<=2 NP^2==4")
 SETS="dim8_all=1 Lam=1000"; [ -f $ST/coefficients.txt ] && SETS=$(grep -v "^#" $ST/coefficients.txt | tr '\n' ' ')
 
 run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   local proc=${1%%|*}; local rest=""; [[ "$1" == *"|"* ]] && rest=${1#*|}
   local extra=${rest%%|*}
-  # '+' and '-' are spelled out before the sanitising, or "w+ z" and "w- z" (and w+ w- w+ against
-  # w+ w- w-) share one tag: the runs were sequential so the cross sections were right, but the
-  # second process's event files overwrote the first's.
+  # '+' and '-' are spelled out before the sanitising, since otherwise "w+ z" and "w- z" (and
+  # w+ w- w+ and w+ w- w-) share one tag and the second process's event files overwrite the first's.
   local tag=$(echo "${proc}_${2##*/}_$3" | sed 's/+/p/g; s/-/m/g' | tr -c 'A-Za-z0-9_\n' '_'); local d=$RUNS/$tag
   # "NP=0 on" generates the same NP=0 amplitude and runs it with the coefficients on.
   local gen="$3"; local sets="$SETS"
@@ -89,8 +86,8 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
     mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} b=="DIM8" && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")" Lam=1000"
     [[ "$sets" == *dim8_all=0* ]] && mwsets="dim8_all=0 Lam=1000"
   fi
-  # only NAME=number settings can be model parameters; a run-card cut such as pt_min_pdg={25:100}
-  # is not one, and passing it made the evaluation fail and the column read "-"
+  # only NAME=number settings can be model parameters.  A run-card cut such as pt_min_pdg={25:100}
+  # is not one, and passing it would make the evaluation fail and the column read "-".
   local mwextra=""; for tok in $extra; do [[ "$tok" =~ ^[A-Za-z_0-9]+=[-+0-9.eE]+$ ]] && mwextra="$mwextra $tok"; done
   local mw=$($PY $HERE/../../validate/eval_ufo_params.py $MODEL $mwsets $mwextra --show=MW 2>/dev/null | awk '$1=="MW" && $2=="="{printf "%.3f", $3; exit}')
   local lhe="-"
@@ -99,8 +96,8 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   fi
   # An amplitude that integrates to exactly zero is a physics answer, not a failure: class 11
   # (psi^2H^2D^3) does that in p p > e+ e-, where MadGraph generates the diagrams and the survey
-  # returns nothing.  Recording it as FAILED makes a real result look like breakage and hides it
-  # among rows that really did break.
+  # returns nothing.  It is recorded as ZERO, since FAILED would make a real result look like
+  # breakage and hide it among rows that really did break.
   if [ -z "$xs" ] && grep -q "Survey return zero cross section" $RUNS/$tag.log 2>/dev/null; then
     xs=$'ZERO\t-'
   fi
@@ -111,18 +108,18 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   if [[ "$xs" == FAILED* ]]; then rm -rf $d.failed; mv $d $d.failed; echo "   kept $d.failed"; else rm -rf $d; fi
 }
 
-# Both lists are read into arrays first: MadGraph reads standard input after its script file and
-# would otherwise swallow the rest of processes.txt, so only the first line ever ran.
+# Both lists are read into arrays first.  MadGraph reads standard input after its script file and
+# would otherwise swallow the rest of processes.txt, so that only the first line would run.
 PROCS=(); while IFS= read -r line; do line=${line%%$'\r'}; case ${line// /} in ""|\#*) continue;; esac; PROCS+=("$line"); done < $ST/processes.txt
 CLASSES=(); [ -f $ST/classes.txt ] && while IFS= read -r c; do c=${c%%#*}; c=$(echo $c); [ -z "$c" ] && continue; CLASSES+=("$c"); done < $ST/classes.txt
 for line in "${PROCS[@]}"; do
   full=$MODEL; card=""; [[ "$line" == *"|"*"|"* ]] && card=${line##*|} && card=${card// /}; [ -n "$card" ] && full=$MODEL-$card
   # DIM8_SKIP_FULL=1 skips the three full-model rows everywhere (rerunning class rows that
-  # failed); a card field of "-" skips them for that process alone (its full rows already exist
-  # from an earlier pass, or the unrestricted process is too heavy to be worth it)
+  # failed); a card field of "-" skips them for that process alone (its full rows are already in
+  # results.tsv, or the unrestricted process is too heavy to be worth it)
   if [ "${DIM8_SKIP_FULL:-0}" != 1 ] && [ "$card" != "-" ]; then for o in "${ORDERS[@]}"; do run_one "$line" "$full" "$o"; done; fi
-  # the +"${CLASSES[@]}" form is for this machine's bash 3.2, where an empty array is "unbound"
-  # under set -u and a study with no class rows died after its full rows
+  # the +"${CLASSES[@]}" form is for bash 3.2, where an empty array is "unbound" under set -u
+  # and a study with no class rows would stop after its full rows
   for c in ${CLASSES[@]+"${CLASSES[@]}"}; do
     for o in "NP^2==2" "NP<=2 NP^2==4"; do run_one "$line" "$MODEL-$c" "$o"; done
   done

@@ -2,10 +2,12 @@
 validate/check_input_scheme.py  --  the corrected input relations must reduce to the SM.
 
 Evaluates the derived formulae of gen/input_scheme_formulae.json numerically (Mathematica
-syntax is arithmetic here, so ^ -> ** is the only translation) and checks the property that
-is not negotiable: with every Wilson coefficient zero, gw, g1, vev and MW are the base.fr
-values to machine precision.  Then checks that a nonzero coefficient actually moves them.
-Needs neither Mathematica nor sympy.
+syntax is arithmetic here, so ^ -> ** is the only translation) and checks that with every
+Wilson coefficient zero, gw, g1, vev and MW are the base.fr values to machine precision.  It
+then checks that the field-rotation pieces vanish at the SM point and respond to cHWB, that the
+Higgs potential has the SM limit, SMEFTsim's Higgs-mass shift at O(1/Lambda^2) and no tadpole,
+that the Yukawa compensation reproduces the input fermion mass, and that a nonzero coefficient
+actually moves vev.  Needs neither Mathematica nor sympy.
 """
 from __future__ import annotations
 import json, math, os, sys
@@ -55,7 +57,8 @@ def main() -> int:
         print(f"rotation: {len(rot)} field-rotation pieces, |value| at zero coefficients {worst:.1e}, Z-A mixing with cHWB=1 {moved:.3e}")
         if worst > 1e-15 or moved < 1e-12:
             print("  MISMATCH: rotation pieces do not vanish at the SM point, or do not respond to cHWB"); bad = True
-    # step 4, the potential: SM limit, SMEFTsim's dMH2 at O(1/Lambda^2), and the tadpole
+    # the Higgs potential as gen/input_scheme.py writes it: SM limit, SMEFTsim's dMH2 at O(1/Lambda^2),
+    # and the tadpole
     MH = 125.0; vv = env["vevSM"]; lamSM = MH**2/(2*vv**2)
     def lam_mu(cH=0.0, cHbox=0.0, cHDD=0.0, c8H8=0.0, c8H6=0.0, L6=1e-6, L8=1e-12):
         Zh2 = 1 + cHDD*vv**2*L6/2 - 2*cHbox*vv**2*L6 + c8H6/4*vv**4*L8
@@ -71,7 +74,7 @@ def main() -> int:
     okp &= abs(Vp)/(lam*vv**3) < 1e-12
     print(f"potential: SM limit {'ok' if abs(l0-lamSM)/lamSM < 1e-14 else 'MISMATCH'}, dMH2 vs SMEFTsim diff {(l1/lamSM-1)-target:+.1e}, tadpole {abs(Vp)/(lam*vv**3):.1e}")
     bad |= not okp
-    # step 5, the Yukawas: with y = sqrt2 m/v + c8 v^4 L8/4 the mass term of
+    # the Yukawas as gen/input_scheme.py writes them: with y = sqrt2 m/v + c8 v^4 L8/4 the mass term of
     # -y v/sqrt2 + c8 v^5/(4 sqrt2) is exactly m for any c8
     mt, c8, L8 = 172.0, 0.8, 1e-12
     y = math.sqrt(2)*mt/vv + c8*vv**4*L8/4

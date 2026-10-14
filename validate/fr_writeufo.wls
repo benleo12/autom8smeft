@@ -27,8 +27,8 @@ Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"];
 
 t0 = AbsoluteTime[];
-(* DIM8_BASE may name several files, separated by ";", so that a base built from somebody else's
-   model (SMEFTsim, say) can be loaded as the set of files it ships as.  DIM8_LSM names the
+(* DIM8_BASE may name several files, separated by ";", so that a base that includes another
+   model (SMEFTsim's dimension-six sector) can be loaded as the set of files it ships as.  DIM8_LSM names the
    Lagrangian symbol to take the Standard-Model-side vertices from, since SMEFTsim calls its
    dimension-six-inclusive one LSMEFT and reserves LSM for the pure Standard Model. *)
 z8base = If[Environment["DIM8_BASE"] === $Failed, "base.fr", Environment["DIM8_BASE"]];
@@ -48,7 +48,7 @@ Print["[cfg] base ", z8base, "  caches ", vdirs, "  FeynmanGauge ", FeynmanGauge
 files = Flatten[FileNames["*.mx", #] & /@ vdirs];
 files = Select[files, ! StringStartsQ[FileBaseName[#], "base_"] &];   (* base-vertex caches are not blocks *)
 (* nor is anything else a worker leaves beside a block: <block>.herm.mx holds the residual of a
-   Hermiticity check, not a vertex list (see the load loop below for what loading one did) *)
+   Hermiticity check, not a vertex list (the load loop below explains what loading one would do) *)
 files = Select[files, ! StringContainsQ[FileBaseName[#], "."] &];
 Module[{dup = Select[Tally[FileBaseName /@ files], #[[2]] > 1 &]},
   If[dup =!= {}, Print["[abort] the same block name is cached in more than one directory: ",
@@ -63,7 +63,7 @@ Print["[load] ", Length[files], " cached vertex lists"];
 
 (* The base model's own vertices.  For our Standard Model file this is seconds and caching it
    would be pointless.  For a base that carries a dimension-six sector it is not: SMEFTsim's
-   LSMEFT ran past two hours and twenty minutes here without finishing, and it is the same
+   LSMEFT takes more than two hours and twenty minutes here, and it is the same
    computation on every invocation, whether the run merges three dimension-eight blocks or all
    674.  So it is cached beside the operator blocks, keyed on the base file list and the
    Lagrangian symbol, and computed once.  DIM8_NOSMCACHE=1 forces a recompute. *)
@@ -72,14 +72,14 @@ tt = AbsoluteTime[];
    printing it gives a different key every run and megabytes of output *)
 (* DIM8_LSM may be a '+'-separated LIST of Lagrangian symbols, computed one at a time and merged.
    FeynRules is fine to a few hundred expanded terms and then blows up, so a single call on
-   SMEFTsim's whole LSMEFT ran seven hours without finishing while its eleven named class blocks
+   SMEFTsim's whole LSMEFT does not finish in seven hours while its eleven named class blocks
    are each tractable.  This is the same chunking validate/fr_worker.wls uses on our own
-   dimension-eight blocks, applied to somebody else's dimension-six sector. *)
+   dimension-eight blocks, applied to SMEFTsim's dimension-six sector. *)
 z8lsmname = If[Environment["DIM8_LSM"] === $Failed, "LSM", Environment["DIM8_LSM"]];
 z8lsmparts = StringTrim /@ StringSplit[z8lsmname, "+"];
-(* keyed on the CONTENT of the base files as well as their names: on 2026-10-03 the input-scheme
-   base changed its Higgs sector with the file name unchanged, and a key on the name alone would
-   have handed every later run the old vertices *)
+(* keyed on the CONTENT of the base files as well as their names: a base file can change with
+   its name unchanged, and a key on the name alone would then hand every later run the old
+   vertices *)
 z8smkey = IntegerString[Hash[{z8base, z8lsmname, FeynmanGauge,
     Import[FileNameJoin[{$root, "tests/gen_smoke", #}], "Text"] & /@ z8bases}, "SHA256"], 16];
 z8smfile = FileNameJoin[{vdir, "base_" <> z8smkey <> ".mx"}];
@@ -101,13 +101,11 @@ Print["[time] base (", z8lsmname, ") vertices: ", Length[smVerts],
       " (", Round[AbsoluteTime[] - tt, 0.1], " s)"];
 
 all = {smVerts};
-(* Every file must define FR$Vert, and the loop checks that it did.  It did not use to.  A file
-   that defines something else leaves FR$Vert without a value, AppendTo then stores the SYMBOL in
-   the list, and the next file's Get gives that symbol a value before the list is next evaluated:
-   the next block is in the model twice.  L6cl5.herm.mx, the dump of a Hermiticity check, sat
-   beside L6cl5.mx in the dimension-six cache, and the dim68_is written on 2026-10-04 carried
-   every dimension-six Yukawa operator at twice its strength, in a model whose earlier builds had
-   agreed with SMEFTsim on exactly those vertices. *)
+(* Every file must define FR$Vert, and the loop checks that it does.  A file that defines
+   something else leaves FR$Vert without a value, AppendTo then stores the SYMBOL in the list,
+   and the next file's Get gives that symbol a value before the list is next evaluated, so the
+   next block would enter the model twice.  A Hermiticity dump such as L6cl5.herm.mx beside
+   L6cl5.mx is such a file; the selection above already leaves it out. *)
 Do[
   Module[{},
     ClearAll[FR$Vert];
@@ -174,11 +172,10 @@ If[Environment["DIM8_MAXLEGS"] =!= $Failed,
    that is never summed.  The evaluation is terminated, WriteUFO prints one message among
    thousands of lines and carries on, and what it writes into vertices.py for that structure is
    the text "C." <> TerminatedEvaluation[IterationLimit]: the coupling is lost at every order and
-   the file no longer imports.  The g^{mu nu} photon-Z-Higgs coefficient reached 5810 terms once
-   the vev, the gauge couplings and the field rotation were all written as tagged sums, and two
-   models were written that way on 2026-10-04 before the cause was found.  The limit is lifted,
-   and the written file is read back, because a limit nobody knew about is exactly the kind of
-   thing that comes back. *)
+   the file no longer imports.  The g^{mu nu} photon-Z-Higgs coefficient reaches 5810 terms when
+   the vev, the gauge couplings and the field rotation are all written as tagged sums.  So the
+   limit is lifted, and the written files are read back and rejected if they hold an
+   unevaluated Mathematica expression. *)
 $IterationLimit = Infinity;
 If[FR$NKernels > 0, ParallelEvaluate[$IterationLimit = Infinity]];
 Print["[cfg] IterationLimit ", $IterationLimit, "  largest vertex: ",

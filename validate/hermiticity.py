@@ -2,15 +2,15 @@
 validate/hermiticity.py  --  derived conjugacy, the symbolic half.
 
 Decide, from the symbolic term algebra alone and before any Mathematica is involved,
-whether each parsed operator is Hermitian, anti-Hermitian, or neither.  The published
-tables do not say: Murphy marks "+ h.c." on the rows whose Wilson coefficient is complex,
-but a row can still be anti-Hermitian *as typeset* because his Hermitian derivative
+whether each encoded operator is Hermitian, anti-Hermitian, or neither.  The Murphy basis
+marks "+ h.c." on the operators whose Wilson coefficient is complex, but an operator can
+still be anti-Hermitian as written, because the Hermitian derivative of the basis
 
-    i H^dag Dlr_mu H = i H^dag (D_mu H) - i (D_mu H^dag) H          (conventions_v2.tex:87)
+    i H^dag Dlr_mu H = i H^dag (D_mu H) - i (D_mu H^dag) H
 
-carries the factor i outside the Dlr symbol, and many table rows write the bare
-Dlr without a leading i.  Those rows need the i restored before they are Hermitian.
-This module finds them automatically instead of trusting the typesetting.
+carries the factor i outside the Dlr symbol, and many operators are written with the bare
+Dlr and no leading i.  Those operators need the i restored before they are Hermitian.
+This module finds them from the term algebra.
 
 Method
 ------
@@ -37,7 +37,8 @@ Public entry points
 -------------------
 match_terms(a, b)      -> sign (+1/-1) or None
 classify(op)           -> Verdict(kind, gen_perm, detail)
-apply_i_convention(op) -> the same operator, made Hermitian (mutates coefficients)
+apply_convention(op)   -> Verdict, after fixing how op enters the Lagrangian (mutates op)
+apply_i_convention     the same function as apply_convention, under a second name
 """
 
 from __future__ import annotations
@@ -295,12 +296,12 @@ def apply_convention(op: Operator, verdict: Optional[Verdict] = None) -> Verdict
     """Fix how ``op`` enters the Lagrangian, from its derived conjugacy.  Mutates ``op``.
 
     hermitian      -> L = C Q, C real.
-    antihermitian  -> restore the factor i that Murphy's typesetting drops on the bare
-                      Dlr rows (his definition puts the i outside the symbol), so that
-                      L = C (i Q) with C real.  68 rows, classes 8, 14 and 15.
-    complex        -> if Murphy marks + h.c., L = C Q + h.c. with C complex.  If he does
-                      not (the 14 class-11 psi^2H^2D^3 rows, Hermitian only after
-                      integration by parts), L = (C/2)(Q + Q^dag) with C real: the
+    antihermitian  -> restore the factor i on the operators written with the bare Dlr
+                      (the definition of the basis puts the i outside the symbol), so that
+                      L = C (i Q) with C real.  68 operators, classes 8, 14 and 15.
+    complex        -> if the Murphy basis marks + h.c., L = C Q + h.c. with C complex.  If
+                      it does not (the 14 class-11 psi^2H^2D^3 operators, Hermitian only
+                      after integration by parts), L = (C/2)(Q + Q^dag) with C real: the
                       Hermitian part, which coincides with C Q whenever Q is Hermitian.
     """
     v = verdict or classify(op)
@@ -309,14 +310,14 @@ def apply_convention(op: Operator, verdict: Optional[Verdict] = None) -> Verdict
     elif v.kind == "antihermitian":
         op.terms = [Term(I * t.coeff, t.factors) for t in op.terms]
         op.hermitian, op.plus_hc, op.hc_mode = True, False, "real"
-        op.notes = (op.notes + "; " if op.notes else "") + "factor i inserted (row anti-Hermitian as typeset)"
+        op.notes = (op.notes + "; " if op.notes else "") + "factor i inserted (anti-Hermitian as written in the Murphy basis)"
     elif op.plus_hc:
         op.hermitian, op.hc_mode = False, "complex"
     else:
         op.hermitian, op.plus_hc, op.hc_mode = False, True, "sym"
-        op.notes = (op.notes + "; " if op.notes else "") + "Hermitian only up to IBP: emitted as (C/2)(Q + h.c.), C real"
+        op.notes = (op.notes + "; " if op.notes else "") + "Hermitian only up to IBP: written as (C/2)(Q + h.c.), C real"
     return v
 
 
-# backwards-compatible alias
+# a second name for apply_convention
 apply_i_convention = apply_convention

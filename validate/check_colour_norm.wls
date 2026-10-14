@@ -1,8 +1,8 @@
 (* validate/check_colour_norm.wls -- the numeric colour tensors of fr_worker.wls must satisfy their
    defining identities: f^{123} = 1, f^{147} = 1/2, d^{118} = 1/Sqrt[3], [T^a,T^b] = i f^{abc} T^c,
-   {T^a,T^b} = delta^{ab}/3 + d^{abc} T^c, with T = lambda/2.  Added 2026-09-04 after the tables
-   were found twice too large.  Run: DIM8_ROOT=<repo> wolframscript -file validate/check_colour_norm.wls *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]]; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the 2.3.34 fallback of the init file *)
+   {T^a,T^b} = delta^{ab}/3 + d^{abc} T^c, with T = lambda/2.
+   Run: DIM8_ROOT=<repo> wolframscript -file validate/check_colour_norm.wls *)
+$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]]; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the default path of the init file *)
 FR$NKernels = 0; Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"]; LoadModel["base.fr", "gen.fr"];
 z8w = Import[$root <> "/validate/fr_worker.wls", "Text"];

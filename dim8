@@ -10,10 +10,11 @@ dim8  --  dimension-eight SMEFT models for MadGraph, one process at a time.
     ./dim8 ufo    "p p > h j j" -o vbf write the UFO for just those
     ./dim8 check                       run the symbolic validation gates
 
-The point of the process argument is that nobody should import a 1220-coupling model to
-study one final state.  The selection is not a hand-maintained table: an operator is kept
-exactly when one of its Feynman rules can sit in a tree diagram whose external legs are
-the process, decided against the Standard Model's own vertices.  See gen/process.py.
+The point of the process argument is that nobody should import every vertex of 674
+operators to study one final state.  The selection is not a hand-maintained table: an
+operator is kept exactly when one of its Feynman rules can sit in a tree diagram whose
+external legs are the process, decided against the Standard Model's own vertices.  See
+gen/process.py.
 """
 
 from __future__ import annotations
@@ -25,8 +26,8 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-# vertex cache: DIM8_VDIR overrides build/vertices (the Dropbox copy of build/ gets evicted to the
-# cloud when the disk fills, and evicted files read back empty; keep the live cache outside Dropbox)
+# vertex cache: DIM8_VDIR overrides build/vertices.  A cloud-synced folder can evict files when the
+# disk fills, and an evicted file reads back empty, so keep the live cache on local storage.
 VDIR = os.environ.get("DIM8_VDIR", os.path.join(ROOT, "build/vertices"))
 sys.path.insert(0, os.path.join(ROOT, "gen"))
 sys.path.insert(0, os.path.join(ROOT, "validate"))
@@ -46,8 +47,8 @@ def cmd_build(a):
     """Fan the 734 blocks out over N external FeynRules processes and cache each one."""
     from emit_fr import emit_model_fragment
 
-    # the Lagrangian the workers load is emitted from the encoding, so that a corrected operator
-    # cannot be built from a stale file
+    # the Lagrangian the workers load is written from the encoding at every build, so that no
+    # operator can be built from a stale file
     txt, index = emit_model_fragment(_parse_all(), per_block=1)
     if index != json.load(open(os.path.join(ROOT, "docs/block_index.json"))):
         sys.exit("gen/operators.py and docs/block_index.json disagree on the block order; "
@@ -74,8 +75,7 @@ def cmd_status(a):
     if not os.path.isdir(vd):
         sys.exit("nothing built yet, run ./dim8 build")
     # errors="replace": a status file written by a Wolfram kernel on another platform can
-    # carry a non-UTF-8 byte (seen from Perlmutter's Mathematica 13), and one such file must
-    # not take the whole status report down
+    # carry a non-UTF-8 byte, and one such file must not take the whole status report down
     st = [open(os.path.join(vd, f), errors="replace").read().strip() for f in sorted(os.listdir(vd)) if f.endswith(".status") and not f.startswith(".")]
     total = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
     # "nonhermitian -1" means the check was DEFERRED (built with DIM8_HERM=0), not that it
@@ -100,8 +100,8 @@ def cmd_status(a):
     for f in glob.glob(os.path.join(ROOT, "build/logs/worker_*_num.log")):
         pending = 0
         for line in open(f, errors="replace"):
-            # only electric charge: the B-violating blocks (675-734) legitimately violate
-            # FeynRules' baryon and lepton numbers, and so do their warnings
+            # only electric charge: the B-violating blocks (675-734) violate FeynRules'
+            # baryon and lepton numbers by construction, so those warnings carry no information
             if "Quantum number Q not conserved" in line:
                 pending += 1
             m = re.search(r"\[done\] (L8op\d+)", line)
@@ -125,8 +125,8 @@ def cmd_index(a):
 # With --input-scheme their blocks are ALWAYS included: the canonical field rotation cancels
 # against the kinetic and mass terms these operators induce, so a model that shifted the
 # couplings without carrying the operators would be inconsistent as soon as a coefficient
-# is nonzero (the writer's truncation test showed an uncancelled Lambda^-4 {A,A,H} exactly
-# when they were missing).  Resolved by coefficient name so the list cannot go stale.
+# is nonzero: without them the writer's truncation test finds an uncancelled Lambda^-4
+# {A,A,H} vertex.  Resolved by coefficient name so the list cannot go stale.
 INPUT_SCHEME_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
                     "c8l2H4Dx2", "c8l2H4Dx4", "c8G2H4x1", "c8H8", "c8quH5", "c8qdH5", "c8leH5"]
 # The eight of those that act with NO vertex of their own in a process: they shift gw, g1, the
@@ -151,8 +151,8 @@ def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
 def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
     """Operators the process can see.  The B-violating classes 18-21 are dropped unless
     asked for: their four-fermion vertices violate fermion flow, and MadGraph's ALOHA
-    refuses helicity routines for 4-point flow-violating interactions (verified on
-    u u > e+ d~ from Q_{eu^2dH^2}: diagrams generated, ALOHAERROR at the check).  They are
+    refuses helicity routines for 4-point flow-violating interactions (for u u > e+ d~ from
+    Q_{eu^2dH^2} the diagrams are generated and the check stops with ALOHAERROR).  They are
     still generated, cached and Hermitian, for tools that can use them."""
     import process as P
 
@@ -184,22 +184,20 @@ def cmd_select(a):
             cached |= {f[:-3] for f in os.listdir(_d)
                        if f.endswith(".mx") and not f.startswith(".") and not f.startswith("base_")}
     # dimension-eight operators and dimension-six classes are different units, so they are counted
-    # separately: "101 of 685 operators" for p p > w+ w- was 96 operators plus 5 classes
+    # separately
     n8 = sum(1 for b in hits if b.startswith("L8op"))
     n6 = len(hits) - n8
     # The vertex test alone is a LOWER BOUND on the operators that affect the process: an
     # operator that acts through the electroweak input relations shifts gw, g1, the vev and MW
     # in every amplitude whether or not it has a vertex among the external legs.  In
     # p p > w+ w- the muon-decay operators Q_{l^2H^4D}^{(2,4)} carry a third of the
-    # dimension-eight interference that way, with no vertex in any diagram (2026-09-07).  Until
-    # 2026-10-05 this command printed a note telling the user to add those operators by hand,
-    # which read as "the list is incomplete and you have to find the rest yourself".  Now they are
+    # dimension-eight interference that way, with no vertex in any diagram.  These operators are
     # part of the answer, listed under their own heading and written into the block list, so the
     # selection is complete at tree level with one insertion.
     def _bkey(b):
         """Sort L8op<n> numerically and anything else (L6cl1, L6cl8a) by name, after them.
-        int(b[4:]) alone raises on L6cl8a, which would crash select on any process a
-        dimension-six four-fermion class can reach."""
+        int(b[4:]) alone would raise on L6cl8a, the name of a dimension-six four-fermion
+        class, so the names that are not L8op<n> sort by name."""
         return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
 
     extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey)
@@ -210,10 +208,9 @@ def cmd_select(a):
     print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
     print("           the couplings and the W mass of every electroweak amplitude)")
     # The selector can only see blocks that are in build/vertex_index.json.  If the cache has
-    # grown since the index was written, every count below is an UNDERCOUNT.  This happened
-    # silently for a whole session (index at 73 blocks, cache at 400+).  Compare names against
-    # the FULL index, not counts against the B-conserving view: the nine B-violating blocks in
-    # the cache made the count comparison cry wolf on a complete index (2026-09-05).
+    # grown since the index was written, every count below is an UNDERCOUNT.  The test compares
+    # names against the FULL index, not counts against the B-conserving view, because the
+    # B-violating blocks in the cache would make a count comparison flag a complete index.
     try:
         full_index = set(json.load(open(os.path.join(ROOT, "build/vertex_index.json"))))
     except Exception:
@@ -267,12 +264,13 @@ def cmd_select(a):
 
 
 def cmd_model(a):
-    """Emit a FeynRules model holding only the operators the process can see."""
+    """Write a FeynRules model holding only the operators the process can see."""
     from emit_fr import emit_model_fragment
 
     hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
     ops = _parse_all()
-    keep = {int(b[4:]) - 1 for b in hits}
+    # the dimension-six classes the selector also returns live in the base model, not in OPS
+    keep = {int(b[4:]) - 1 for b in hits if b.startswith("L8op")}
     sub = [o for i, o in enumerate(ops) if i in keep]
     txt, index = emit_model_fragment(sub, per_block=1)
     out = os.path.join(ROOT, "models", a.out)
@@ -294,7 +292,8 @@ def cmd_ufo(a):
             hits[b] = ["input scheme"]
         print(f"input scheme: {len(extra)} operator blocks added so the rotation has its partners")
     sel = os.path.join(ROOT, "build", a.out + ".blocks")
-    open(sel, "w").write("\n".join(sorted(hits, key=lambda x: int(x[4:]))) + "\n")
+    order = lambda b: (0, int(b[4:]), "") if b.startswith("L8op") else (1, 0, b)
+    open(sel, "w").write("\n".join(sorted(hits, key=order)) + "\n")
     print(f"{len(hits)} operators selected, writing UFO {a.out}")
     env = dict(os.environ)
     if getattr(a, "input_scheme", False):
@@ -318,7 +317,7 @@ def _parse_all():
 
 
 def cmd_count(a):
-    """The lambda power counting, from Epower_count.nb, without Mathematica."""
+    """The lambda power counting of gen/epower.py, without Mathematica."""
     import epower as E
 
     if a.spec == "all":
@@ -378,7 +377,7 @@ def main():
     b.add_argument("-k", "--kernels", type=int, default=2)
     b.set_defaults(func=cmd_build)
 
-    s = sub.add_parser("status", help="how much of the cache exists, and V5 results")
+    s = sub.add_parser("status", help="how much of the cache exists, and the Hermiticity verdicts")
     s.set_defaults(func=cmd_status)
 
     i = sub.add_parser("index", help="export vertex field content for the selector")

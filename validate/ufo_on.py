@@ -4,12 +4,13 @@
     validate/ufo_on.py <UFO dir> [value]
 
 MadGraph's `check lorentz` / `check gauge` evaluate the model at the DEFAULT parameter values in
-parameters.py: the optional param-card argument of `check` leaves the couplings untouched (tested
-on MG5_aMC 3.5.3: g g > h g stays "not checked" with a card that switches Q_{G^2H^4}^{(1)} on),
-and `set c8... 0.7` at the top level sets MG5 options, not parameters.  So a check with the
-operators on needs a copy of the model whose defaults are on.  This edits parameters.py value
-line by value line (a blanket sed once turned "c8l2WH2Dx1 ... 1" into "c8l2WH2Dx10.7"); the scale
-Lam keeps its default.  Pure Python.
+parameters.py.  The optional param-card argument of `check` leaves the couplings untouched (on
+MG5_aMC 3.5.3, g g > h g stays "not checked" with a card that switches Q_{G^2H^4}^{(1)} on), and
+`set c8... 0.7` at the top level sets MG5 options, not parameters.  So a check with the operators
+on needs a copy of the model whose defaults are on.  This edits only the value line of each c8
+parameter whose default is 0, because a blanket text substitution would also match inside names
+and other numbers (it turns "c8l2WH2Dx1 ... 1" into "c8l2WH2Dx10.7").  The scale Lam keeps its
+default.  Pure Python.
 """
 import os, re, shutil, sys
 

@@ -2,10 +2,12 @@
 gen/process.py  --  "give me a process, get the dimension-eight operators that can
 contribute to it".
 
-This is the front end of the public model.  A user writes a MadGraph process string and
-gets back the subset of the basis that can appear in a tree diagram for that process,
-which is then emitted as a small FeynRules model and a small UFO.  The point is that
-nobody should have to import a 1220-coupling model to study one final state.
+This is the selector behind ``./dim8 select``.  A user writes a MadGraph process string and
+gets back the subset of the basis that can appear in a tree diagram for that process.
+``./dim8 select --card`` writes it as a restriction card for a released model, and
+``./dim8 model`` and ``./dim8 ufo`` write it as a small FeynRules model or UFO.  The vertex
+index also holds the dimension-six classes, which are selected the same way.  The point is
+that nobody should have to import every vertex of 674 operators to study one final state.
 
 How the selection is decided
 ----------------------------
@@ -33,9 +35,9 @@ removing the leg that carries the incoming propagator always leaves at least two
 group of externals is split among them into strictly smaller non-empty parts.  The
 recursion therefore terminates on its own, after at most ``len(G)`` nested vertices,
 which is the standard bound for a tree whose internal nodes all have degree three or
-more.  An arbitrary cutoff would have silently dropped long decay chains.
+more.  An arbitrary cutoff would silently drop long decay chains.
 
-Vev insertions need no special handling.  FeynRules already emits the reduced vertices
+Vev insertions need no special handling.  FeynRules already produces the reduced vertices
 that a Higgs leg replaced by its vacuum expectation value produces, as separate lower
 point entries in the same list.
 
@@ -125,7 +127,7 @@ def _same_field(a: str, b: str) -> bool:
 
 
 # --------------------------------------------------------------------------------------
-# process parsing
+# process strings
 # --------------------------------------------------------------------------------------
 
 
@@ -211,15 +213,15 @@ class Selector:
 
         self.sm = [tuple(sorted(v)) for v in sm_vertices if usable(v)]
         self.dropped = [tuple(sorted(v)) for v in sm_vertices if not usable(v)]
-        # index the SM vertices by each field they contain, so reach() does not rescan
+        # index the SM vertices by each field they contain, so reach() does not rescan.
         # Index by BOTH the class name and its generation members.  The dimension-eight
         # vertex index names fermion legs by class (uq, uqbar, dq, l, ...), and _reach looks
-        # the SM vertices up under anti(leg), so the class name must be a key: indexing by
-        # members alone left every fermion-class lookup empty, and any diagram in which a
-        # dimension-eight fermion leg continued as an internal line into an SM vertex was
-        # silently never found (caught on Q_{quH^5} for p p > z h, whose u ubar -> Z h
-        # diagram through an SM ubar u Z vertex is a perfectly good tree).  Boson legs were
-        # unaffected only because their class name is their member name.
+        # the SM vertices up under anti(leg), so the class name must be a key.  Indexed by
+        # members alone, every fermion-class lookup would be empty, and no diagram in which a
+        # dimension-eight fermion leg continues as an internal line into an SM vertex would be
+        # found (for example the u ubar -> Z h diagram of Q_{quH^5} in p p > z h, through an
+        # SM ubar u Z vertex).  Boson legs need no such care because their class name is
+        # their member name.
         self.by_field: Dict[str, List[Tuple[str, ...]]] = {}
         for v in self.sm:
             for f in set(v):
@@ -407,7 +409,7 @@ def _partitions(items: Tuple[str, ...], n: int) -> Tuple[Tuple[Tuple[str, ...], 
 # order 1/Lambda^6, so for a dimension-eight block the internal lines are restricted to this set,
 # which is checked against FeynRules' list at load time (every entry must be in it).  For a
 # dimension-six block the full base set stays, since two dimension-six insertions are 1/Lambda^4.
-# On the processes of the paper the restriction changes no selection (2026-10-12).
+# On the processes of the paper the restriction changes no selection.
 _SM_BOSONIC = ["A W Wbar", "W Wbar Z", "G G G", "H H H", "H W Wbar", "H Z Z",
                "A A W Wbar", "A W Wbar Z", "W W Wbar Wbar", "W Wbar Z Z", "G G G G", "H H H H",
                "H H W Wbar", "H H Z Z"]
@@ -473,12 +475,14 @@ def _product(slots: List[List[str]]):
 
 
 def load_data(root: str = ROOT, with_dim6: bool = False):
-    """The dimension-eight vertex index and the vertices allowed on internal lines.
+    """The vertex index and the base model's vertices, from which select() takes the
+    internal lines.
 
-    Internal lines are Standard Model only.  A diagram with one dimension-eight vertex
-    and one dimension-six vertex is order 1/Lambda^6, so including the dimension-six
-    vertices here would select operators that cannot contribute at 1/Lambda^4.  Pass
-    with_dim6=True only when selecting for the dimension-six squared piece.
+    The base vertex list carries the dimension-six operators of the input scheme as well.
+    A diagram with one dimension-eight vertex and one dimension-six vertex is order
+    1/Lambda^6, so select() restricts the internal lines of a dimension-eight block to the
+    Standard Model subset (standard_model_vertices).  Pass with_dim6=True only when
+    selecting for the dimension-six squared piece.
     """
     vi = os.path.join(root, "build", "vertex_index.json")
     sm = os.path.join(root, "build", "sm_vertices.json")

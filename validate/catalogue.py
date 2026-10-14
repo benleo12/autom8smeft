@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Where the catalogue comes from, and what to say when a file is not there.
+"""Where the catalogue lives, and what a script says when a file is absent.
 
-``docs/catalogue.json`` is the catalogue: one entry per operator of the Murphy basis, in block
-order, with the label, the coefficient name, the class, the baryon number, the conjugacy, the CP
-parity and the field content.  ``gen/operators.py`` is the same list as objects of gen/dsl.py,
-which is the form the generation chain reads.  Both ship, and a script that needs only the
-classification calls ``derived()``.
+``docs/catalogue.json`` is the catalogue: one entry per operator of the Murphy basis, with the
+label, the coefficient name, the name of its FeynRules Lagrangian, the class, the baryon number,
+the conjugacy, the CP parity and the field content.  ``gen/operators.py`` holds the same operators
+as objects of gen/dsl.py, which is the form the generation chain reads.  Both ship, and a script
+that needs only the classification calls ``derived()``.
 
-``docs/murphy_parsed.json`` is a working file of the authors that additionally carries the
-typeset form of each operator.  It is not distributed.  A script that needs it calls
-``parsed()``, which exits with that statement rather than a traceback when the file is absent.
+``docs/murphy_parsed.json`` is a working file of the authors that also carries the LaTeX form of
+each operator.  It is not distributed.  A script that needs it calls ``parsed()``, which exits
+with that statement rather than a traceback when the file is absent.
 """
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ def derived():
 
 
 def parsed():
-    """The authors' working file, with the typeset form of each operator.  Exits with a
+    """The authors' working file, with the LaTeX form of each operator.  Exits with a
     statement if it is absent, which is the normal state of a clone."""
     if os.path.exists(PARSED):
         return json.load(open(PARSED))

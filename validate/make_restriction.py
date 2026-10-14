@@ -9,7 +9,7 @@ Selectors, mixed freely:
     L8op593  or  593       a block number
     cls:6                  every operator of a class number (Murphy's class numbering)
     all                    every dimension-eight operator (a card that keeps everything)
-    dim6                   every dimension-six coefficient, if the model ships them
+    dim6                   every dimension-six coefficient, if the model has them
     dim6:cHq1              one named dimension-six coefficient
 
 Writes <UFO dir>/restrict_<card name>.dat.  Importing the model as
@@ -21,10 +21,10 @@ Standard Model, whatever process is generated afterwards.  Pure Python: no Mathe
 MadGraph's rules for the card: a parameter set to 0 is removed from the model, one set to
 exactly 1 is frozen at 1, and external parameters with identical values are merged into one.
 The kept coefficients are therefore given distinct placeholder values 0.100, 0.101, ... which
-carry no meaning: set the physical values in the run's param_card.dat as usual.  Everything
-that is not a dimension-eight coefficient (masses, inputs, dimension-six coefficients, which
-default to zero and are removed too unless the model ships a dimension-six Lagrangian) is
-copied from the UFO's defaults.
+carry no meaning: set the physical values in the run's param_card.dat as usual.  The
+dimension-six coefficients of a model that has them are set to zero in the same way unless they
+are selected with dim6 or dim6:<name>, and the selected ones get placeholder values too.
+Everything else (masses, inputs, the scales Lam and Lam6) is copied from the UFO's defaults.
 """
 import json, os, re, subprocess, sys
 
@@ -87,7 +87,8 @@ def main(argv):
     # A partial UFO still carries the whole basis in parameters.py, so a coefficient being there
     # does not mean any vertex uses it.  Restricting to operators with no vertices leaves a model
     # whose couplings never carry NP, and MadGraph then rejects "NP^2==2" with "model order NP^2
-    # not valid for this model", which is a confusing way to learn that the block was not built.
+    # not valid for this model".  That message does not say that the block was not built, so this
+    # case is reported here with its reason.
     # A complex coefficient reaches the couplings as its base name, an internal parameter built
     # from the external <name>Re and <name>Im, so the parts are checked through the base.
     used = set(re.findall(r"\bc8\w+\b", open(os.path.join(ufo, "couplings.py")).read()))
@@ -138,10 +139,10 @@ def main(argv):
               f"# keeps {kept} dimension-eight coefficient(s) from {len(set(blocks))} operator block(s): " + " ".join(sorted(set(blocks), key=lambda b: int(b[4:]))),
               f"# keeps {kept6} dimension-six coefficient(s)",
               "# kept coefficients carry placeholder values; set the physical values in the run's param_card.dat",
-              # release_model.sh builds into <name>.new and swaps at the end, so the basename
-              # during a release is "dim8_is.new" and the printed import line was unusable.
+              # a staging suffix .new is stripped from the directory name, so that the printed
+              # import line names the released model
               "# import with:  import model "
-              + re.sub(r"\.new$", "", os.path.basename(ufo)) + "-" + name]
+              + re.sub(r"[._]new$", "", os.path.basename(ufo)) + "-" + name]
     open(dest, "w").write("\n".join(header + out))
     shown = os.path.relpath(dest)
     if shown.startswith(".."):

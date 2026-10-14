@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""CP parity of every row of the catalogue, in one place.
+"""CP parity of every operator of the catalogue, in one place.
 
     gen/cp_parity.py [--json out.json] [--compare]
 
-The published tables do not label CP, and the rule everyone reaches for, "CP odd when the number
-of dual tensors is odd", is not safe at dimension eight.  The parity used here is the one derived
-field by field when the catalogue was built, C times P with
+The Murphy basis does not label CP, and the rule everyone reaches for, "CP odd when the number
+of dual tensors is odd", is not safe at dimension eight.  The parity used here is derived field
+by field and recorded in the catalogue, C times P with
 
     B_mu -> -B_mu,   W^I -> -s_I W^I,   G^A -> -s_A G^A,   H -> H^*,
 
@@ -16,16 +16,16 @@ matrices) and s = -1 for an antisymmetric one (tau^2 and lambda^{2,5,7}), and P 
 +s_I while its antisymmetric part carries -s_I, and that epsilon^{IJK} and f^{ABC} contribute
 s_I s_J s_K = -1 while d^{ABC} contributes +1.  It reproduces the textbook assignment for every
 operator built only from singlet contractions, and for Q_W, Q_G, Q_{HWB} and the HISZ structure
-and their duals.  The derivation is recorded per class in docs/catalogue_*_report.md.
+and their duals.  The parity of every operator is recorded in docs/catalogue.json.
 
-Where it differs from dual counting, and it does on 170 of the 438 rows with a real coefficient,
+Where it differs from dual counting, and it does on 170 of the 438 operators with a real coefficient,
 the difference is real and the counting rule is what is wrong.  The sharpest case is the
 psi^2 X^2 D family with identical field strengths: for Q_{q^2W^2D} the derivation gives
 (1) even, (2) ODD, (3) even, (4) even, so the member that carries no dual is the CP-odd one and
-the two that do carry one are not.  Counting duals gets that family exactly backwards, and
-running the counted set through the CP test of validate/cp_rates.py is how it was caught.
+the two that do carry one are not.  Counting duals gets that family exactly backwards, and the
+CP test of validate/cp_rates.py fails on the set that dual counting calls odd.
 
-A row with a complex coefficient is not assigned a parity here.  Its real part multiplies the
+An operator with a complex coefficient is not assigned a parity here.  Its real part multiplies the
 CP-even combination Q + Q^dagger and its imaginary part the CP-odd i(Q - Q^dagger), so both
 parities are present and the parameter card carries them as separate entries.
 
@@ -71,8 +71,8 @@ def table():
         if e["label"] in cp:
             out[e["label"]] = cp[e["label"]]
         else:
-            # the one label the parser corrects, Q_{q^2H^2D^2}^{(4)} -> Q_{q^2H^2D^3}^{(4)}:
-            # the catalogue files predate the correction and carry the published spelling
+            # the per-class catalogue files spell Q_{q^2H^2D^3}^{(4)} as Q_{q^2H^2D^2}^{(4)},
+            # as the Murphy paper prints it; the operator belongs to the class psi^2H^2D^3
             alt = e["label"].replace("D^3", "D^2")
             out[e["label"]] = cp.get(alt)
             if out[e["label"]] is None:
@@ -113,7 +113,7 @@ def coefficient_sets():
 
 def main(argv) -> int:
     cp = table()
-    print("CP parity of the 734 rows:", dict(collections.Counter(cp.values())))
+    print("CP parity of the 734 operators:", dict(collections.Counter(cp.values())))
     odd, even = coefficient_sets()
     print(f"coefficients in blocks that are uniformly CP odd: {len(odd)}, "
           f"uniformly CP even: {len(even)}")

@@ -1,13 +1,16 @@
 """
-gen/derive_rotation.py  --  canonical field rotation for the input-scheme model (step 3).
+gen/derive_rotation.py  --  canonical field rotation for the input-scheme model.
+
+It runs after the input relations of gen/derive_input_scheme.py, which it imports.
 
 After the input relations shift g, g' and v, the neutral gauge kinetic matrix
 K = [[1-fW3, m],[m, 1-fB]] and the mass matrix (v^2/4)(1+dmZ) n n^T, n = (g,-g'), are no
 longer diagonalised by the Standard Model rotation with the SM mixing angle that base.fr
 keeps.  Without the compensating field rotation the Lagrangian carries spurious vertices
-whose couplings vanish at the SM point and not otherwise (the FeynRules check found 36 LSM
-vertices against base.fr's 31).  This is exactly what SMEFTsim's rotateGaugeB does at
-O(1/Lambda^2); here it is derived to O(1/Lambda^4) with the same exact-then-expand method.
+whose couplings vanish at the SM point and not otherwise (FeynRules then finds 36 vertices in
+the Standard Model Lagrangian against base.fr's 31).  This is exactly what SMEFTsim's
+rotateGaugeB does at O(1/Lambda^2); here it is derived to O(1/Lambda^4) with the same
+exact-then-expand method.
 
 Construction.  V = (W3, B) = S (Z', A') with S^T K S = 1 and S^T M^2 S = diag(MZ^2, 0):
 S = K^{-1/2} [z a], z = K^{-1/2} n / |K^{-1/2} n|, a = z rotated by 90 degrees.  base.fr
@@ -74,13 +77,10 @@ rW = trunc((1 + fW/2 + sp.Rational(3, 8)*fW**2))            # W -> rW W
 rh = trunc((1 - zh/2 + sp.Rational(3, 8)*zh**2))            # h -> rh h
 
 # ---- validation against SMEFTsim rotateGaugeB at O(t) --------------------------------------
-# The rotation depends on the input scheme, because the shifted g and g' that feed n do.  This
-# file was written for {alpha, M_Z, G_F} and until 2026-10-05 computed its numerical point and
-# SMEFTsim's dg1, dgw from that scheme's formulae whatever scheme the imported derivation had
-# solved, and wrote the result into the alpha file whatever the scheme.  The {M_W, M_Z, G_F}
-# formulae file therefore carried a copy of the alpha rotation, and the one model built from it
-# had a photon coupled to neutrinos at 1/Lambda^4.  Everything scheme-dependent is now taken
-# from the derivation that was actually run: the point, the first-order shifts, the file.
+# The rotation depends on the input scheme, because the shifted g and g' that feed n do.  The
+# rotation of one scheme in a model of the other couples the photon to neutrinos at 1/Lambda^4,
+# so everything scheme-dependent is taken from the derivation that was run: the numerical
+# point, SMEFTsim's first-order shifts and the formulae file written.
 SCHEME = dis.SCHEME
 num = dis.num
 s, c = dis.sth, dis.cth

@@ -1,7 +1,7 @@
-(* Every pair the class sweep failed, with its normalisation SIGN FLIPPED.
-   All 19 contain a dual field strength; all 25 pairs without one already passed,
-   with zero counterexamples. If these now pass, our Xtilde and SmeftFR's differ by
-   an overall sign and nothing else. *)
+(* The 19 pairs of classes 2 to 8 of validate/smeftfr_pairs.m whose operator contains a dual
+   field strength, each with its normalisation SIGN FLIPPED.  If our Xtilde and SmeftFR's
+   differed by an overall sign and nothing else, these would pass and the entries of
+   smeftfr_pairs.m would fail.  A run writes validate/smeftfr_dual_diag_report.json. *)
 {
   {"LQB2phi2D2n3", cB2phi2D2n3, "L8op620", c8B2H2D2x3, -1},
   {"LQB2phi4n2", cB2phi4n2, "L8op602", c8B2H4x2, -1},

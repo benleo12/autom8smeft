@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Remove identically vanishing Lorentz structures from a written UFO, in place.
 
-    validate/drop_zero_structures.py <UFO dir> [--dry-run]     (needs numpy: python3.13 here)
+    validate/drop_zero_structures.py <UFO dir> [--dry-run]     (zero_vertex.py needs numpy)
 
 The structures come from validate/zero_vertex.py, which evaluates every structure at random
 momenta obeying momentum conservation, with random polarisations for the vector legs and generic
@@ -9,18 +9,14 @@ four-component wavefunctions for the fermion legs.  Generic rather than on-shell
 structure ALOHA will reduce to zero is one that vanishes as an expression, not one that happens
 to vanish on shell.
 
-Why this exists as its own step rather than as a few lines inside the release script.  The release
-script used validate/zero_lorentz.py, which tests each structure alone and skips anything carrying
-a Gamma matrix.  That reports nothing on the released model while nine structures in it are zero,
-on fifty vertices, and it also assumed the vertices carrying them are pure, i.e. that every
-structure of the vertex is zero so the whole vertex can go.  Thirty-five of the fifty are mixed,
-and dropping a mixed vertex would delete live physics while leaving it in place keeps the dead
-structure referenced, which is the case that matters: ALOHA reduces the routine to zero, omits the
-declarations of the arguments it no longer uses, and the generated Fortran fails to compile with
-"Symbol 'f1' at (1) has no IMPLICIT type" on any process reaching that vertex.  So a mixed vertex
-has to be edited rather than dropped, and the edit is not a deletion of one list entry: a UFO
-vertex keys its couplings by position in its own lorentz list, {(colour, lorentz): coupling}, so
-removing an entry renumbers every index above it.
+A vertex that carries a zero structure is often mixed: some of its structures are zero and others
+are not.  Dropping a mixed vertex would delete live physics.  Leaving it as it is keeps the dead
+structure referenced, and then ALOHA reduces the routine to zero, omits the declarations of the
+arguments it no longer uses, and the generated Fortran fails to compile with "Symbol 'f1' at (1)
+has no IMPLICIT type" on any process reaching that vertex.  So a vertex whose structures are all
+zero is deleted, and a mixed vertex is edited.  The edit is not a deletion of one list entry: a
+UFO vertex keys its couplings by position in its own lorentz list, {(colour, lorentz): coupling},
+so removing an entry renumbers every index above it.
 """
 from __future__ import annotations
 
@@ -40,7 +36,7 @@ def zero_structures(ufo: str) -> set[str]:
                        capture_output=True, text=True)
     m = re.search(r"identically zero (\d+)\s*\n\s*(.*)", r.stdout)
     if not m:
-        raise SystemExit("zero_vertex.py did not run (needs numpy, python3.13 here):\n"
+        raise SystemExit("zero_vertex.py did not run (needs numpy):\n"
                          + (r.stdout + r.stderr)[-800:])
     names = m.group(2).split()
     if len(names) != int(m.group(1)):
@@ -94,7 +90,7 @@ def main(argv) -> int:
     ufo = os.path.abspath(argv[1])
     dry = "--dry-run" in argv
     zero = zero_structures(ufo)
-    # FeynRules can also emit the literal structure '0', which no numerical test is needed for.
+    # FeynRules can also write the literal structure '0', which needs no numerical test.
     L = open(os.path.join(ufo, "lorentz.py")).read()
     zero |= set(re.findall(
         r"(\w+) = Lorentz\(name = '\w+',\s*spins = \[[^\]]*\],\s*structure = '0'\)", L))

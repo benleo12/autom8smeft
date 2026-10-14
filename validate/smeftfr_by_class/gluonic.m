@@ -1,5 +1,6 @@
-(* the five SmeftFR pairs with gluons (classes 6 and 7), rerun 2026-09-03 with the exhaustive
-   colour zero test after the sampled one was found unsound; see the development log, not shipped *)
+(* the five SmeftFR pairs with gluons (classes 6 and 7) of validate/smeftfr_pairs.m, as a list
+   of their own for validate/fr_compare.wls; their vertices carry external gluons, so they
+   exercise its exhaustive colour test *)
 {
   {"LQG2phi4n1",   cG2phi4n1,     "L8op593", c8G2H4x1,      1}   (* Q_{G^2H^4}^{(1)} *),
   {"LQG2phi4n2",   cG2phi4n2,     "L8op594", c8G2H4x2,      1}   (* Q_{G^2H^4}^{(2)} *),

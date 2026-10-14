@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The linearity check the paper quotes, recomputed from the study data.
+"""The linearity check of the studies, recomputed from the study data.
 
     examples/studies/linearity.py
 
@@ -8,7 +8,7 @@ must reproduce the run with every coefficient of that card switched on at once. 
 cross-section level statement that the restriction cards keep exactly what they should and that
 the all-on run has nothing the class rows miss.
 
-The card has to match: the triboson and vector-boson-fusion all-on rows were run on the bosonic
+The card has to match.  The triboson and vector-boson-fusion all-on rows are run on the bosonic
 card, so they are compared against classes 1 to 8 and not against all 21.  Comparing all 21
 against a bosonic all-on row gives a 200 sigma "failure" that is entirely the mismatch.  A class
 row that was never integrated makes the check incomplete rather than failed, and is reported so.

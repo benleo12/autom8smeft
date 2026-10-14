@@ -1,9 +1,10 @@
 """
 gen/epower.py  --  the energy-enhanced (lambda) power counting, as a user-facing tool.
 
-A faithful port of ``Epower_count.nb`` (B. Assi, geosmeft VBF folder), the notebook used
-for the Assi-Martin counting paper, so that the same numbers are available from
-``./dim8 count`` and from Python without Mathematica.  The two notebook functions are
+A port of ``Epower_count.nb``, the Mathematica notebook of the Assi-Martin counting paper,
+so that the same numbers are available from ``./dim8 count`` and from Python without
+Mathematica.  It reproduces every evaluated call of the notebook.  The two notebook
+functions are
 
     CalculatePowersRegime1[D, H, psi, F, n]                 -> leading (p, q, lambdaExp)
     CalculateSubleadingPowersRegime1[D, H, psi, F, n]       -> the whole tower in k
@@ -24,9 +25,8 @@ Two rules from the notebook are reproduced exactly and are worth knowing about.
 * Reachability is  psi + F <= n <= psi + H + 2F + D.  The leading function only checks
   the lower bound, the subleading one checks both; this port does the same.
 * ``If[pMin == kMax, kMax = 0]``: when every Higgs that could be traded for a vev is
-  already vev'd at leading order, the subleading tower is empty.  This is the correct
-  rule (confirmed BA 2026-08-28); gen/lambda_counting.py now applies it too.  It changes
-  the subleading towers of 16 (class, n) combinations at dimension eight and no
+  already vev'd at leading order, the subleading tower is empty.  The rule empties the
+  subleading towers of 16 (class, n) combinations at dimension eight and changes no
   leading-order result.
 """
 
@@ -42,16 +42,13 @@ DIM8_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "X^3H^2": (0, 2, 0, 3), "X^2H^4": (0, 4, 0, 2), "X^2H^2D^2": (2, 2, 0, 2), "XH^4D^2": (2, 4, 0, 1),
     "psi^2X^2H": (0, 1, 2, 2), "psi^2XH^3": (0, 3, 2, 1), "psi^2H^2D^3": (3, 2, 2, 0),
     "psi^2H^5": (0, 5, 2, 0), "psi^2H^4D": (1, 4, 2, 0),
-    # Murphy's class 14.  It was missing from the port until 2026-09-26, so `./dim8 count`
-    # printed 20 classes and `resolve("psi^2X^2D")` failed; the per-term evaluation, which
-    # reads the field content out of the catalogue rather than this table, was unaffected.
     "psi^2X^2D": (1, 0, 2, 2), "psi^2XH^2D": (1, 2, 2, 1),
     "psi^2XHD^2": (2, 1, 2, 1), "psi^2H^3D^2": (2, 3, 2, 0), "psi^4H^2": (0, 2, 4, 0),
     "psi^4X": (0, 0, 4, 1), "psi^4HD": (1, 1, 4, 0), "psi^4D^2": (2, 0, 4, 0),
 }
-# The notebook listed psi^4H^2 with the field content of psi^2H^4, (0,4,2,0); corrected
-# here to (0,2,4,0) (confirmed typo, BA 2026-08-28).  tests/test_epower.py still
-# re-evaluates the notebook's own call with its original arguments.
+# psi^4H^2 has the field content (0,2,4,0).  The notebook's call for this class passes
+# (0,4,2,0), the field content of psi^2H^4, so a comparison with the notebook's output uses
+# the notebook's own arguments.
 
 DIM6_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "H^6": (0, 6, 0, 0), "H^4D^2": (2, 4, 0, 0), "X^2H^2": (0, 2, 0, 2), "psi^2H^3": (0, 3, 2, 0),

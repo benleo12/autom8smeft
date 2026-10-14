@@ -1,9 +1,9 @@
 """
-gen/input_scheme.py  --  electroweak input-scheme corrections for the {alpha, MZ, GF} scheme.
+gen/input_scheme.py  --  electroweak input-scheme corrections, {alpha, MZ, GF} and {MW, MZ, GF}.
 
 ``base.fr`` derives gw, g1, vev and MW from {alpha, MZ, GF} by the ordinary Standard Model
-relations with no SMEFT corrections, as did the earlier reference files.  That is wrong as
-soon as an operator that shifts one of the three input observables is switched on.
+relations with no SMEFT corrections.  Those relations fail as soon as an operator that shifts
+one of the three input observables is switched on.
 
 WHICH OPERATORS.  The input-scheme section of the paper works through all 21 dimension-eight classes:
 only eight operators enter.  Four class-6 operators correct the gauge kinetic terms
@@ -19,9 +19,9 @@ therefore derived, not guessed.  It is validated three ways: the dim-6 linear li
 reproduces SMEFTsim's alphaShifts for gw, g1, vev and MW to 1e-11; the dim-8 limit
 reproduces the documented delta_G = 2 delta_gWl - delta_mW; and the residuals of the exact
 relations at the truncated solution scale as (1/Lambda^2)^3.  The result is stored in
-gen/input_scheme_formulae.json and read here, so nothing is transcribed by hand.
+gen/input_scheme_formulae.json and read here, so the model carries the derived formulae.
 
-WHAT IS EMITTED.  The Standard Model values gwSM, g1SM, vevSM, MW2SM from the inputs, the
+WHAT IS WRITTEN.  The Standard Model values gwSM, g1SM, vevSM, MW2SM from the inputs, the
 dimension-six coefficients as External parameters in SMEFTsim's names (so a SMEFTsim fit can
 be used unchanged), and gw = gwSM (1 + gw1 + gw2) etc.  Every shift enters the Lagrangian as
 such a sum, the gauge couplings through their Definitions, the vev in the doublet, the Higgs
@@ -34,9 +34,11 @@ FLAVOUR CAVEAT.  Our flavour-universal contraction is C delta_pr delta_st.  With
 dimension-eight four-lepton operators contain no mu -> e nu nu structure and do not shift
 GF; SMEFTsim's crossed delta_pt delta_sr would.  A convention choice, not physics.
 
-NOT DONE HERE.  These are the parameter relations only.  The canonical normalisation of the
-gauge and Higgs fields (SMEFTsim's rotateGaugeB), the tadpole for muH and the Yukawa
-re-derivation multiply every vertex and are steps 3 to 5 of the plan in the doc.
+THE OTHER INGREDIENTS.  The canonical normalisation of the gauge and Higgs fields (SMEFTsim's
+rotateGaugeB) comes from gen/derive_rotation.py, and the Higgs quartic and the Yukawas as series
+from gen/derive_higgs_yukawa.py.  Both write into the same formulae file, and write_variant()
+applies them to base.fr.  muH keeps its Standard Model value: it multiplies only the tadpole
+and the h mass term, neither of which is a vertex.
 """
 
 from __future__ import annotations
@@ -49,10 +51,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 
 # The dimension-six coefficients below make the shift formulae complete, but the SHIFTS ALONE
 # are not a consistent model: the rotation and the coupling shifts cancel against the kinetic
-# and mass terms that the OPERATORS themselves induce, and this project ships no
-# dimension-six Lagrangian.  With only our dimension-eight blocks loaded, leave every dim-6
-# coefficient at zero; to use them, load a dimension-six Lagrangian in SMEFTsim conventions
-# (which is what the names follow) alongside.
+# and mass terms that the OPERATORS themselves induce.  In a model with only the
+# dimension-eight blocks (dim8_is, dim8_mw) every dim-6 coefficient stays at zero.
+# models/dim68_is carries the dimension-six Lagrangian in SMEFTsim conventions, which the names
+# follow, and is the model in which they may be set.
 DIM6 = [("cHW", "Q_HW"), ("cHB", "Q_HB"), ("cHWB", "Q_HWB"), ("cHDD", "Q_HD"),
         ("cHl3", "Q_Hl^(3)"), ("cll1", "Q_ll (universal)"), ("cHbox", "Q_Hbox"), ("cH", "Q_H")]
 
@@ -92,8 +94,7 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
         + f' Description -> "{desc}" }}')
     # Every parameter that carries a power of a gauge coupling or of the vev needs its
     # InteractionOrder, otherwise FeynRules gives the couplings built from it the placeholder
-    # order {'1': 1} and MadGraph refuses the model ("Some couplings have '1' order",
-    # 2026-09-06; the SM couplings of both input-scheme UFOs were affected).
+    # order {'1': 1} and MadGraph refuses the model ("Some couplings have '1' order").
     rows = ["(* " + "=" * 84,
             "   Electroweak input scheme " + ("{alpha, MZ, GF}" if scheme == "alpha" else "{MW, MZ, GF}")
             + " to O(1/Lambda^4): dim-6 (SMEFTsim conventions),",
@@ -138,12 +139,12 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
         for k, desc in ROT:
             row = P(f"{k}1", F[f"{k}1"], f"O(1/Lambda^2) piece: {desc}", 1)
             if first:   # comment rides on the first row; a bare comment row would sit between two commas
-                row = ("  (* canonical field rotation (step 3), applied to the expanded SM Lagrangian; first- and\n"
+                row = ("  (* canonical field rotation, applied to the expanded SM Lagrangian; first- and\n"
                        "     second-order pieces are separate parameters so MadGraph can count NP orders *)\n" + row)
                 first = False
             rows.append(row)
             rows.append(P(f"{k}2", F[f"{k}2"], f"O(1/Lambda^4) piece: {desc}", 2))
-    # Step 4, the Higgs potential.  base.fr has V = -muH^2 |H|^2 + lam |H|^4; with Q_H, Q_H8 in
+    # The Higgs potential.  base.fr has V = -muH^2 |H|^2 + lam |H|^4; with Q_H, Q_H8 in
     # the Lagrangian as + cH |H|^6/Lam6^2 + c8H8 |H|^8/Lam^4 and a canonically normalised h,
     # the minimum and the curvature at the actual vev vevT give
     #     2 lam = Zh^2 MH^2/vevT^2 + 3 cH vevT^2 L6 + 3 c8H8 vevT^4 L8
@@ -155,11 +156,11 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
                   "Higgs kinetic normalisation Zh^2 (dim-6 and dim-8), for reference"))
     rows.append(P("vevT", "vevSM (1 + vev1 + vev2)",
                   "the corrected vev, exact, for reference: the Lagrangian carries vevSM (1 + vev1 + vev2)", io="{QED,-1}"))
-    # Steps 4 and 5 as SERIES.  The quartic and the Yukawas used to be exact functions of vevT,
-    # which hid their coefficient dependence from the order tags (the NP=0 amplitude moved with
-    # the coefficients, and NP^2==2 held terms quadratic in them).  They now enter the Lagrangian
-    # as lam (1 + lamr1 + lamr2) and y_f (1 + yr1 + yr2) + c8fH5 vevSM^4 L8/4, the form gw already
-    # had, so FeynRules splits every coupling by order.  gen/derive_higgs_yukawa.py derives the
+    # The quartic and the Yukawas as SERIES.  As exact functions of vevT they would hide their
+    # coefficient dependence from the order tags (the NP=0 amplitude would move with the
+    # coefficients, and NP^2==2 would hold terms quadratic in them).  They enter the Lagrangian
+    # as lam (1 + lamr1 + lamr2) and y_f (1 + yr1 + yr2) + c8fH5 vevSM^4 L8/4, the form gw has,
+    # so FeynRules splits every coupling by order.  gen/derive_higgs_yukawa.py derives the
     # four series from the exact relations and writes them into the formulae file.
     for k, desc in (("lamr", "relative shift of the Higgs quartic"), ("yr", "relative shift of every Yukawa")):
         rows.append(P(f"{k}1", F[f"{k}1"], f"O(1/Lambda^2) {desc}", 1))
@@ -168,15 +169,14 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
     # + c vev^4/(4 Lam^4) G^A_{mn} G^{A mn} from the doublet's vev, the FULL non-abelian field
     # strength squared, so its two-, three- and four-gluon pieces all appear; the UFO writer
     # drops the two-point one, and the surviving three- and four-gluon pieces then break the
-    # gluon Ward identity at O(v^4/Lambda^4) (MadGraph check lorentz, 2026-09-06).  The gluon
+    # gluon Ward identity at O(v^4/Lambda^4) (MadGraph check lorentz).  The gluon
     # does not mix, so no field rotation is needed: LGauge carries -1/4 (1 + d8fG) FS[G]^2 and
     # the merged Lagrangian is exactly -1/4 FS[G]^2 with gs = Sqrt[4 Pi aS] in every vertex,
     # i.e. alpha_s is the coupling of the canonical field; the operator survives only through
     # its Higgs-dependent pieces.  It MUST be written with vev (= vevSM), the symbol the cached
     # operator vertices carry (the cache is built from base.fr), so that the cancellation is
-    # symbol for symbol; vevT^4 = vev^4 (1 + vev2)^4 left an untruncated O((v^4/Lambda^4)^2)
-    # mismatch whenever the H^6 partners shift the vev (Lorentz check residual 1e-6 to 1e-5
-    # with every coefficient on, zero family by family, 2026-09-06).
+    # symbol for symbol; vevT^4 = vev^4 (1 + vev2)^4 would leave an untruncated
+    # O((v^4/Lambda^4)^2) mismatch whenever the H^6 partners shift the vev.
     rows.append(P("d8fG", "c8G2H4x1 vev^4/Lam^4", "dim-8 form factor: gluon kinetic term, cancelled in LGauge", 2))
     if not helpers_only:
         rows.append(P("gw",  "gwSM (1 + gw1 + gw2)",  "SU(2) coupling, corrected"))
@@ -195,10 +195,11 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     Definitions, so the Lagrangian sees gwSM (1 + gw1 + gw2) and the NP content is tracked
     through gw1 (NP 1) and gw2 (NP 2).  The shifted vev enters where SMEFTsim's redefVev
     puts it, in the Higgs doublet, while the parameter vev keeps the SM value that lam, muH
-    and the Yukawas are built from until the tadpole and Yukawas are redone (steps 4, 5).
-    MW is shifted as the pole mass.  sw2 stays the SM mixing angle from the inputs, as
-    SMEFTsim keeps sth: the field rotation to canonical kinetic terms is step 3.  With every
-    coefficient zero every substitution is the identity and the model is base.fr."""
+    and the Yukawas are built from; the quartic and the Yukawas carry their shifts as the
+    tagged series lamr and yr.  In the alpha scheme MW is shifted as the pole mass, and in
+    the mw scheme it is an input.  sw2 stays the SM mixing angle from the inputs, as SMEFTsim
+    keeps sth, and the canonical field rotation is applied to the expanded SM Lagrangian.
+    With every coefficient zero every substitution is the identity and the model is base.fr."""
     scheme = scheme or SCHEME
     s = open(base).read()
     if scheme == "alpha":
@@ -224,13 +225,13 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
             # alpha itself, and with it ee = Sqrt[4 Pi aEW], must stay at the SM value derived from
             # the inputs.  The shift of alpha enters the Lagrangian through the tagged series of gw
             # and g1 and nowhere else, whereas ee is an untagged parameter that 33334 couplings of
-            # the dimension-eight sector carry (the vertex cache was computed against the alpha
-            # base, where ee is an input and FeynRules writes gwSM sw as ee).  With ee following
-            # the shifted alpha, every one of those couplings picked up a factor (1 + aEW2/2), a
-            # product of two coefficients tagged as one, and `check lorentz u d~ > w+ a` failed at
-            # 1e-5 with c8W2H4x1 and c8W2H4x3 on together while passing with each alone
-            # (2026-10-05).  aEWM1 above keeps the shifted value, as the number a user reads off
-            # the parameter block; nothing in the Lagrangian uses it.
+            # the dimension-eight sector carry (the vertex cache is computed against the alpha
+            # base, where ee is an input and FeynRules writes gwSM sw as ee).  If ee followed the
+            # shifted alpha, every one of those couplings would pick up a factor (1 + aEW2/2), a
+            # product of two coefficients tagged as one, and `check lorentz u d~ > w+ a` would
+            # fail with c8W2H4x1 and c8W2H4x3 on together while passing with each alone.  aEWM1
+            # above keeps the shifted value, as the number a user reads off the parameter block;
+            # nothing in the Lagrangian uses it.
             ("""  aEW == {
     ParameterType    -> Internal,
     Value            -> 1/aEWM1,""",
@@ -261,8 +262,7 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
         # the Yukawas: the Standard-Model y_f = Sqrt[2] m_f/vevSM stays in the parameter, the
         # vev shift multiplies it as a tagged series, and the class-12 compensation that keeps
         # the input mass fixed is its own tagged term (c8 vevSM^4 rather than vevT^4, the
-        # difference being O(1/Lambda^8)).  The IndexDelta keeps it diagonal, which is what the
-        # old yl[i,i] substitution did.
+        # difference being O(1/Lambda^8)).  The IndexDelta keeps it diagonal in flavour.
         ("-yd[ff2, ff3] CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -",
          "-(yd[ff2, ff3] (1 + yr1 + yr2) + c8qdH5 vevSM^4 L8/4 IndexDelta[ff2, ff3]) CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -"),
         ("    yl[ff1, ff3] LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] -",
@@ -270,27 +270,22 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
         ("    yu[ff1, ff2] QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj]",
          "    (yu[ff1, ff2] (1 + yr1 + yr2) + c8quH5 vevSM^4 L8/4 IndexDelta[ff1, ff2]) QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj]"),
     ]
-    # Step 5, the Yukawas.  base.fr has -y fbar f Phi (mass m = y v/sqrt2) and the class-12
+    # The Yukawas.  base.fr has -y fbar f Phi (mass m = y v/sqrt2) and the class-12
     # operators enter as + c8fH5 (H^dag H)^2 (fbar f H) / Lam^4, whose mass-giving term is
     # + c8 v^5/(4 sqrt2) fbar f.  Keeping the input masses fixed therefore needs
     #     y_f = sqrt2 m_f/vevT + c8fH5 vevT^4/(4 Lam^4)
-    # with c8quH5 for up-type, c8qdH5 for down-type and c8leH5 for the charged leptons.  Since
-    # 2026-10-03 that relation is written into LYukawa as the series y_f (1 + yr1 + yr2) +
-    # c8fH5 vevSM^4 L8/4 (edits list above), so that the shift is tagged; the parameter y_f
-    # itself keeps its Standard-Model value.
+    # with c8quH5 for up-type, c8qdH5 for down-type and c8leH5 for the charged leptons.  That
+    # relation is written into LYukawa as the series y_f (1 + yr1 + yr2) + c8fH5 vevSM^4 L8/4
+    # (edits list above), so that the shift is tagged; the parameter y_f itself keeps its
+    # Standard-Model value.
     #
-    # The dimension-six class-5 operators are NOT compensated here, and that is deliberate after
-    # 2026-09-22.  They are SMEFTsim's operators verbatim, which is what makes them checkable
-    # against SMEFTsim's own UFO, and they carry the Yukawa as an explicit factor
-    # (Conjugate[yd[ff2,ff1]] in OdH).  A compensating shift of y_f therefore scales the operator
-    # term and the Standard Model term together and cannot convert one basis into the other; two
-    # attempts, additive and multiplicative, made the disagreement worse and then left it
-    # unchanged.  Converting to the mass basis means using the vev-subtracted operator
-    # (H^dag H - v^2/2)(qbar d H), which is a change to the operators themselves.
-    #
-    # So this model is the MASS basis at dimension eight and the YUKAWA basis at dimension six,
-    # and that is a real inconsistency, recorded in docs/DIM6.md, not a bug to paper over.  The
-    # three-number test that tells the bases apart is there too.
+    # The dimension-six class-5 operators are NOT compensated here.  They carry the Yukawa as an
+    # explicit factor (Conjugate[yd[ff2,ff1]] in OdH), so a compensating shift of y_f would
+    # scale the operator term and the Standard Model term together and could not change the
+    # basis.  gen/make_dim6.py writes them vev-subtracted instead, (H^dag H - v^2/2)(qbar d H),
+    # which keeps every fermion mass at its input.  The model is therefore in the MASS basis at
+    # dimension six as at dimension eight; docs/DIM6.md records the three-number test that
+    # tells the two bases apart.
     for old, new in edits:
         assert s.count(old) == 1, f"expected exactly one occurrence of {old!r}, found {s.count(old)}"
         s = s.replace(old, new)
@@ -305,7 +300,7 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
         assert s.count(lsm_old) == 1
         s = s.replace(lsm_old,
             "LSMbare := LGauge + LFermions + LHiggs + LYukawa + LGhost;\n"
-            "(* canonical field rotation, step 3 of the input scheme; see gen/input_scheme.py *)\n"
+            "(* canonical field rotation of the input scheme; see gen/input_scheme.py *)\n"
             "LSM := ExpandIndices[LSMbare, FlavorExpand -> {SU2D, SU2W}] /. {\n"
             "  Z[z9mu_] :> (1 + TZZ1 + TZZ2) Z[z9mu] + (TZA1 + TZA2) A[z9mu],\n"
             "  A[z9mu_] :> (TAZ1 + TAZ2) Z[z9mu] + (1 + TAA1 + TAA2) A[z9mu],\n"
@@ -317,8 +312,8 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     s = s.replace(anchor, emit(helpers_only=True, scheme=scheme) + anchor, 1)
     header = "\n".join([
         "(* GENERATED by gen/input_scheme.py write_variant() from base.fr.  Do not edit; edit",
-        "   base.fr or gen/input_scheme.py and regenerate.  Corrected {alpha, MZ, GF} input",
-        "   relations to O(1/Lambda^4); identical to base.fr when every coefficient is zero. *)", ""])
+        "   base.fr or gen/input_scheme.py and regenerate.  Input relations of this scheme",
+        "   corrected to O(1/Lambda^4); identical to base.fr when every coefficient is zero. *)", ""])
     open(out, "w").write(header + s)
 
 

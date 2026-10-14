@@ -8,10 +8,10 @@ vector, 3/2 for a fermion) and q derivatives, therefore satisfies
 
     -4 (from Lambda^-4)  +  p (from vev^p)  +  sum_i d_i  +  q  =  4,
 
-that is  p + q = 8 - sum_i d_i.  The relation is exact and involves nothing but the emitted
-vertex itself, so it is a direct test of the emitter and of FeynRules' index expansion: a
-dropped derivative, a spurious vev, a Higgs leg that was silently vev'd or a field strength
-that lost its momentum all break it.  It is deliberately NOT the lambda counting of
+that is  p + q = 8 - sum_i d_i.  The relation is exact and involves nothing but the vertex
+itself, so it is a direct test of the generated FeynRules model and of FeynRules' index
+expansion: a dropped derivative, a spurious vev, a Higgs leg replaced by its vev or a field
+strength that lost its momentum all break it.  It is deliberately NOT the lambda counting of
 gen/epower.py, whose q counts powers of E in the amplitude (external spinors contribute
 sqrt(E) for each fermion) rather than derivatives in the Lagrangian.
 
@@ -65,7 +65,7 @@ def momenta(struct: str):
 
 def _vev_power_term(term: str) -> int:
     # vev, vevSM and vevT are the same quantity to this audit: the input-scheme base writes the
-    # class-12 Yukawa compensation with vevSM beside operator terms written with vev (2026-10-03)
+    # class-12 Yukawa compensation with vevSM beside operator terms written with vev
     p = 0
     for m in re.finditer(r"(/?)\s*\b(?:vev|vevSM|vevT)\b(\s*\*\*\s*(\d+))?", term):
         k = int(m.group(3)) if m.group(3) else 1
@@ -119,7 +119,7 @@ def main(ufo: str) -> int:
                                 want=(16 - twice_legs) / 2.0, got=p + q))
 
     print(f"{len(ol.all_vertices)} vertices, {checked} dimension-eight couplings checked, "
-          f"{skipped} skipped (merged or no single WC)")
+          f"{skipped} skipped (no dimension-eight coefficient)")
     for s in inhomog[:10]:
         print(f"  inhomogeneous: {s[0]} {s[1]} {s[2]}")
     if inhomog:

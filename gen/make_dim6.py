@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gen/make_dim6.py  --  emit tests/gen_smoke/dim6_smeftsim.fr
+gen/make_dim6.py  --  write tests/gen_smoke/dim6_smeftsim.fr
 
 The dimension-six sector is not ours.  It is SMEFTsim's, in the U(3)^5 flavour-symmetric
 framework, and the point of this file is to put SMEFTsim's operator definitions on OUR
@@ -16,12 +16,14 @@ coefficients in block DIM6 under SMEFTsim's own names, with the dimension-six-sq
 that the {alpha, MZ, GF} relations need at 1/Lambda^4, so those eight feed the operators and
 the input scheme from the same external parameter.
 
-What this script does NOT do is reinterpret the operators.  SMEFTsim's own truncation rule
-redefCtoZero is applied exactly as SMEFTsim applies it, which keeps the dimension-six
-vertices identical to SMEFTsim's and therefore checkable against SMEFTsim's shipped UFO.
-The consequence is that the dimension-six sector is linear: the product of a dimension-six
-vertex with the dimension-six shift of the vev, a 1/Lambda^4 term, is not in the vertices.
-It is in the input relations, which do carry the squares.  See docs/DIM6.md.
+The operator definitions are SMEFTsim's, with two changes.  The class-5 Yukawa operators and
+O_HG are vev-subtracted, which puts the dimension-six sector in the mass basis with a canonical
+gluon, as SMEFTsim's own UFO is.  And by default (TRUNC_SECOND below) every operator is
+evaluated on the base's corrected couplings and canonical fields to first order, so the
+product of a dimension-six vertex with a first-order shift, a 1/Lambda^4 term, is in the model
+as separate couplings of order NP=2.  The NP=1 vertices stay SMEFTsim's and are checkable
+against SMEFTsim's shipped UFO.  --linear applies SMEFTsim's own truncation instead, with no
+shift and no rotation inside an operator.  See docs/DIM6.md.
 
     python3 gen/make_dim6.py [--smeftsim DIR] [-o tests/gen_smoke/dim6_smeftsim.fr]
 """
@@ -51,12 +53,11 @@ SCALE = "LambdaSMEFT"
 # order, by shifting g, g' and the vev and by rotating and rescaling the fields.  A dimension-six
 # operator multiplied by a first-order shift is a 1/Lambda^4 term like any other, and the second-
 # order relations of the base were derived assuming it is there: the W kinetic term, for one, is
-# canonical only if the vacuum piece of O_HW is evaluated on the rescaled W.  Until 2026-10-05
-# the operators were given the shifted couplings (FeynRules applies a parameter Definition to
-# every term) and the unrotated fields, which is neither SMEFTsim's truncation nor the complete
-# one.  It left a photon coupled to neutrinos at cHl3 x (g11 - gw1), a g^{mu nu} photon-Z-Higgs
-# vertex from cHDD, and a W-W-photon coupling that was not e, all at 1/Lambda^4, and `check
-# lorentz ... NP<=2` with the coefficients on failed on seven of fourteen processes.
+# canonical only if the vacuum piece of O_HW is evaluated on the rescaled W.  Operators given
+# the shifted couplings (FeynRules applies a parameter Definition to every term) but the
+# unrotated fields follow neither SMEFTsim's truncation nor the complete one.  They leave a
+# photon coupled to neutrinos at cHl3 x (g11 - gw1), a g^{mu nu} photon-Z-Higgs vertex from
+# cHDD, and a W-W-photon coupling that is not e, all at 1/Lambda^4.
 #
 # TRUNC_SECOND is the complete version and the default.  Each field and coupling carries its
 # first-order correction, tagged with a bookkeeping symbol so that products of two corrections,
@@ -65,11 +66,10 @@ SCALE = "LambdaSMEFT"
 # DIM6$FirstOrder and is the authority.  The corrections are separate couplings of order NP=2,
 # so the NP=1 vertices stay SMEFTsim's and stay comparable with SMEFTsim's model.
 #
-# TRUNC_LINEAR is SMEFTsim's rule, which our earlier port only believed it was applying: no
-# shift and no rotation inside an operator.  It is gauge invariant at 1/Lambda^2 and its vertices
-# are SMEFTsim's and nothing else.  A model built from it must not be run at NP=2 with the
-# coefficients of the input relations on, because the base's second-order terms then have
-# nothing to cancel against.
+# TRUNC_LINEAR is SMEFTsim's rule: no shift and no rotation inside an operator.  It is gauge
+# invariant at 1/Lambda^2 and its vertices are SMEFTsim's and nothing else.  A model built from
+# it must not be run at NP=2 with the coefficients of the input relations on, because the
+# base's second-order terms then have nothing to cancel against.
 #
 # Both write the coupling rules twice, as the symbol and as its pieces, because a parameter
 # Definition may or may not have been applied by the time the rule sees the expression.
@@ -197,7 +197,7 @@ def rewrite(name: str, body: str, order: int) -> str:
     if kind == "External":
         # SMEFTsim ships every coefficient at Value -> 1.  A user who imports this model and
         # forgets the param card would then get every dimension-six operator switched on at
-        # full strength, which is the trap recorded in reference_smeftsim_traps.  Zero here.
+        # full strength.  Zero here.
         out.append("Value -> 0")
         out.append("BlockName -> DIM6")
         out.append(f"OrderBlock -> {order}")
@@ -241,13 +241,13 @@ def main() -> None:
     mtxt = open(os.path.join(a.smeftsim, "SMEFTsim_A_main.fr")).read()
 
     # Three things the operator file uses that live in SMEFTsim's other files.  They are taken
-    # verbatim rather than retyped, because without them the operators evaluate to something
+    # verbatim from those files, because without them the operators evaluate to something
     # that is neither an error nor right, which is the worst of the three outcomes.
     #   QLm     the quark doublet WITHOUT the CKM rotation.  Our base has only QL, which carries
     #           CKM on its down component, so the operators that must not see CKM need this
     #           field declared.  SMEFTsim's class index F[131] does not collide with our F[1..15].
-    #   sigmaT  sigma^{mu nu} = i/2 [gamma^mu, gamma^nu].  The same convention our own generator
-    #           emits for the dimension-eight operators, so the two sectors agree on the sign.
+    #   sigmaT  sigma^{mu nu} = i/2 [gamma^mu, gamma^nu].  The same convention the
+    #           dimension-eight operators use (gen/dsl.py), so the two sectors agree on the sign.
     #   HDH     the Hermitian Higgs current i H^dag D_mu H - i (D_mu H^dag) H.
     # The SU(2) conventions already agree without any translation: both models declare
     # Ta[a,b,c] -> PauliSigma[a,b,c]/2 and FSU2L[i,j,k] :> I Eps[i,j,k].
@@ -267,9 +267,10 @@ def main() -> None:
         keep.append(rewrite(n, b, order))
         order += 1
 
-    # The operator definitions, verbatim.  Everything above the first operator in SMEFTsim's
-    # file is its own header plus the redefCtoZero line, which is reproduced explicitly below
-    # so that the file reads as what it is rather than depending on load order.
+    # The operator definitions, verbatim apart from the vev subtractions and the truncation step
+    # below.  Everything above the first operator in SMEFTsim's file is its own header plus the
+    # redefCtoZero line, which is reproduced explicitly below so that the file reads as what it
+    # is rather than depending on load order.
     cut = re.search(r"^\(\*+ class 1", otxt, re.M)
     if not cut:
         sys.exit("could not find the start of the operators in SMEFTsim's file")
@@ -279,25 +280,25 @@ def main() -> None:
     # PARAMETER of the same name, L6 = 1/Lam6^2, which the input relations are written in terms
     # of.  Letting SMEFTsim's definition land on that symbol replaces the parameter with a whole
     # Lagrangian: FeynRules then asks for MR$ParameterRules[L6], gets the Lagrangian as the
-    # parameter it is supposed to describe, and the load wedges (25 hours at 1% CPU, 2026-09-16).
+    # parameter it is supposed to describe, and the load hangs.
     # The aggregates are not used by the build, which drives the classes one at a time, so they
     # are renamed rather than dropped.
     ops = re.sub(r"^L6no4f\s*:=", "LD6no4f :=", ops, flags=re.M)
     ops = re.sub(r"^L6\s*:=", "LD6 :=", ops, flags=re.M)
 
-    # The class-5 Yukawa operators, vev-subtracted.  SMEFTsim's shipped UFO uses
+    # The class-5 Yukawa operators, vev-subtracted.  SMEFTsim's shipped UFO is equivalent to
     #     (H^dag H - vhat^2/2)(qbar_L d_R H)
-    # and ours used the operator as the Warsaw basis writes it, which is the same physics in a
-    # different basis but means the fermion mass moves with C_fH while every other observable in
-    # this model is held at its input.  That also made our dimension-six sector Yukawa-basis while
-    # our dimension-eight class-12 operators are compensated in the Yukawas and so mass-basis.
+    # The operator as the Warsaw basis writes it is the same physics in a different basis, but
+    # with it the fermion mass moves with C_fH while every other observable in this model is held
+    # at its input, and the dimension-six sector is in the Yukawa basis while the dimension-eight
+    # class-12 operators, compensated in the Yukawas, are in the mass basis.
     #
-    # Subtracting the vev fixes both at once.  In unitary gauge the factor becomes
+    # Subtracting the vev puts both sectors in the mass basis.  In unitary gauge the factor becomes
     # ((v+h)^2 - vhat^2)/2 = v h + h^2/2 after redefCtoZero sends vevT -> vevhat, and the operator
     # expands to (2 v^2 h + 3 v h^2 + h^3) * (fbar f)/(2 sqrt2), that is h : hh : hhh = 2 : 3 : 1
-    # against the unsubtracted 3 : 3 : 1.  Only the single-Higgs vertex moves, which is exactly
-    # the 3/2 measured against SMEFTsim on b b~ > h, and the fermion mass loses its C_fH
-    # dependence entirely.
+    # against the unsubtracted 3 : 3 : 1.  Only the single-Higgs vertex moves, by the factor 3/2
+    # that separates the two bases on b b~ > h, and the fermion mass loses its C_fH dependence
+    # entirely.
     #
     # SMEFTsim itself gets to the same basis the other way, by compensating in the Yukawa:
     # SMEFTsim_A_parameters.fr defines the Yukawa entering its Standard Model term as
@@ -305,10 +306,10 @@ def main() -> None:
     # which gives the same 2 : 3 : 1 and the same mass.  That route needs TWO Yukawa symbols, one
     # for the Standard Model term and one inside the operator, and these operators carry
     # Conjugate[yd[ff2,ff1]] explicitly, so shifting the single symbol we have would scale the
-    # operator term and the Standard Model term together and leave their ratio alone, which is
-    # what two earlier attempts measured.  Subtracting the vev needs no second symbol, stays
-    # exactly linear in C, and conjugates correctly on its own because HC[L6cl50] generates the
-    # Hermitian conjugate from the subtracted operator.
+    # operator term and the Standard Model term together and leave their ratio alone.
+    # Subtracting the vev needs no second symbol, stays exactly linear in C, and conjugates
+    # correctly on its own because HC[L6cl50] generates the Hermitian conjugate from the
+    # subtracted operator.
     for _o, _hh in (("OeH", "Phibar[jj] Phi[jj]"), ("OuH", "Phibar[kk] Phi[kk]"),
                     ("OdH", "Phibar[jj] Phi[jj]")):
         _i = ops.index(_o + ":=")
@@ -318,18 +319,17 @@ def main() -> None:
         ops = ops[:_j] + ops[_j:].replace(_hh, f"({_hh} - z6vev^2/2)", 1)
     print("  class-5 operators vev-subtracted (mass basis)")
 
-    # O_HG, vev-subtracted for the same reason and found the same way, by a test rather than by
-    # reading.  (H^dag H) G G has a vacuum piece, v^2/2 G G, which is a correction to the gluon
-    # kinetic term.  SMEFTsim removes it by rescaling the gluon field and the strong coupling in
-    # opposite directions, which leaves g_s G, and so every interaction, where it was.  The
-    # operator as the Warsaw basis writes it, on a base that does no such rescaling, keeps the
-    # vacuum piece in the three- and four-gluon vertices and nowhere else: the gluon then couples
-    # to itself with a strength different from the one it couples to quarks with.  With cHG on,
-    # `check lorentz` failed on five of six gluonic processes at 1/Lambda^2 (u u~ > g g at 1e-2,
-    # 2026-10-05), in a model whose g g > h cross section agreed with SMEFTsim's to four digits,
-    # because that vertex is the part of the operator that was right.  Subtracting the vacuum
-    # piece is the rescaling carried out: -1/4 (1 - x) G G with x = 2 cHG v^2/Lambda^2 becomes
-    # canonical in G' = Sqrt[1 - x] G with g' = g/Sqrt[1 - x], and what is left of the operator is
+    # O_HG, vev-subtracted for the same reason.  (H^dag H) G G has a vacuum piece, v^2/2 G G,
+    # which is a correction to the gluon kinetic term.  SMEFTsim removes it by rescaling the
+    # gluon field and the strong coupling in opposite directions, which leaves g_s G, and so
+    # every interaction, where it was.  The operator as the Warsaw basis writes it, on a base
+    # that does no such rescaling, keeps the vacuum piece in the three- and four-gluon vertices
+    # and nowhere else: the gluon then couples to itself with a strength different from the one
+    # it couples to quarks with.  With cHG on, that breaks the gluon Ward identity of MadGraph's
+    # `check lorentz` at 1/Lambda^2 in gluonic processes, while the g g > h vertex, which the
+    # vacuum piece does not touch, is unaffected.  Subtracting the vacuum piece is the rescaling
+    # carried out: -1/4 (1 - x) G G with x = 2 cHG v^2/Lambda^2 becomes canonical in
+    # G' = Sqrt[1 - x] G with g' = g/Sqrt[1 - x], and what is left of the operator is
     # cHG (H^dag H - v^2/2) G' G'/(1 - x).  The 1/(1 - x) is a product of two coefficients and is
     # supplied below, to first order, as the rescaling of G inside the operators.
     _i = ops.index("OHG:=")
@@ -349,9 +349,9 @@ def main() -> None:
     classes = [c for c in classes if c != "L6cl8"]            # the sum of 8a..8d
 
     # Every symbol this file defines, checked against every name the base already declares.
-    # One such collision (L6) cost a day, so it is a hard error rather than a warning.
-    # the base lives in tests/gen_smoke in the development tree and in models/src in the
-    # released one, which ships the FeynRules source but not the build directory
+    # A collision such as L6 (above) hangs the FeynRules load, so it is a hard error rather than
+    # a warning.  The base is read from tests/gen_smoke, where the build reads it, or from
+    # models/src, the readable copy of the FeynRules source.
     base = next((q for q in (os.path.join(ROOT, "tests/gen_smoke/base_inputscheme.fr"),
                              os.path.join(ROOT, "models/src/base_inputscheme.fr"))
                  if os.path.exists(q)), None)

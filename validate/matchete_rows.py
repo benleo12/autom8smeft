@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Row-level comparison of our catalogue against Matchete's dimension-eight model file.
+"""Operator counts of our catalogue against Matchete's dimension-eight model file.
 
     validate/matchete_rows.py /path/to/Matchete/Models/SMEFT_D8.m
 
-Matchete~[arXiv:2212.04510] ships ``SMEFT_D8.m``, its own transcription of the same published
-basis, written in a different language, for a different purpose (functional matching rather than
-event generation) and by different people.  That makes its coupling list an independent reading
-of the source tables, and comparing the two is a check no amount of internal consistency can
-give: a row we dropped, duplicated or attributed to the wrong class shows up as a count that
-differs, and a row THEY dropped shows up the same way.
+Matchete [arXiv:2212.04510] ships ``SMEFT_D8.m``, its own implementation of the Murphy basis,
+written in a different language, for a different purpose (functional matching rather than event
+generation) and by different people.  That makes its coupling list an independent encoding of
+the same operators, and comparing the two is a check no amount of internal consistency can give:
+an operator we dropped, duplicated or attributed to the wrong class shows up as a count that
+differs, and an operator missing from their file shows up the same way.
 
-The comparison is at the level of rows per (class, baryon number), which is what the two files
-can be compared on without translating conventions: their couplings carry flavour indices and
-ours are flavour universal, their labels are Mathematica ``NiceForm`` strings and ours are the
-published labels, but both have exactly one coupling per row of the published tables.
+The comparison is at the level of operators per (class, baryon number), which is what the two
+files can be compared on without translating conventions: their couplings carry flavour indices
+and ours are flavour universal, their labels are Mathematica ``NiceForm`` strings and ours are
+the labels of the Murphy basis, but both have exactly one coupling per operator.
 
 The file is not redistributed here.  Obtain Matchete from its authors.
 """
@@ -32,9 +32,10 @@ def theirs(path):
     """Couplings per (class, baryon-violating), read from the section comments of the file.
 
     Their headers are not bare class numbers: class 15 is split into ``(* 15 RR *)`` and
-    ``(* 15 LL *)``, class 18 into six chirality blocks and class 19 into five, so a regular
-    expression anchored on ``(* N *)`` alone silently folds the whole of class 15 into class 14.
-    Take the leading integer of the header and look for the words ``B-violating`` in the rest."""
+    ``(* 15 LL *)``, class 18 into six chirality sections and class 19 into five, so a regular
+    expression anchored on ``(* N *)`` alone would fold the whole of class 15 into class 14,
+    with no error.  This takes the leading integer of the header and looks for the word
+    ``B-violating`` in the rest."""
     lines = open(path).read().split("\n")
     start = next(i for i, l in enumerate(lines) if l.strip() == "(* Dimension 8 *)")
     end = next(i for i, l in enumerate(lines) if i > start and "Subsubsection" in l)
@@ -71,9 +72,9 @@ def main(argv) -> int:
         bad += x != y
         print(f"{k[0]:>6d} {'yes' if k[1] else 'no':>7s} {x:>6d} {y:>9d}"
               + ("   <-- differs" if x != y else ""))
-    print(f"\ntotals: ours {sum(a.values())} rows, Matchete {sum(b.values())} couplings, "
+    print(f"\ntotals: ours {sum(a.values())} operators, Matchete {sum(b.values())} couplings, "
           f"{len(set(a) | set(b))} buckets, {bad} differing")
-    print("Matchete rows", "PASS" if bad == 0 else "FAIL")
+    print("Matchete counts", "PASS" if bad == 0 else "FAIL")
     return 0 if bad == 0 else 1
 
 

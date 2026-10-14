@@ -24,6 +24,10 @@ No event generator is needed for this step.
     $ ./dim8 count "X^2H^4"
     X^2H^4       lambda^6 at four legs, lambda^7 at five legs, lambda^8 at six legs
 
+The summary line of `select`, shortened above, also counts the six operators that enter through
+the input relations with no vertex in this process, and the full output lists them under their
+own heading.
+
 A smaller power of lambda is a larger contribution, so the classes with derivatives are the ones
 that grow fastest with energy.
 

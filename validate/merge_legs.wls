@@ -4,8 +4,8 @@
    seven or eight legs (DIM8_MINLEGS=7, checkpointed).  FeynmanRules' MaxParticles/MinParticles
    partition the vertex list by leg count, so the union is the full block; MergeVertices adds
    nothing across the two (no vertex has both at most six and at least seven legs), it only sorts.
-   Writes build/vertices/<block>.mx and .status (nonhermitian -1: the finish pass checks it) and
-   refuses to overwrite a cache entry that is not itself a capped one.
+   Writes build/vertices/<block>.mx and .status (nonhermitian -1: a DIM8_HERMONLY=1 pass of
+   fr_worker.wls checks it) and refuses to overwrite a cache entry that is not itself a capped one.
    Run: DIM8_ROOT=<repo> [DIM8_VDIR=<cache>] wolframscript -file validate/merge_legs.wls 426 *)
 $root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current"; FR$NKernels = 0;

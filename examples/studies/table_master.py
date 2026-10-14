@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
-"""One table for the whole phenomenology section, organised by the energy counting.
+"""One table for the whole phenomenology section: the 21 classes in four processes.
 
     examples/studies/table_master.py > paper/tables/master.tex
 
 The per-process tables say what each class does in one process.  This one says what the 21
-classes do across four processes at once, next to the exponent the counting assigns them, which
-is the only arrangement in which the counting's three predictions are visible as predictions:
-
-  * a class with no four-point vertex reachable in the process has no diagram at all, and the
-    table shows that as a dash rather than as a small number,
-  * the classes with the largest q are the ones whose square overruns their interference first,
-  * and the ordering of the four processes by how badly the expansion fails is the ordering of
-    their leading class's q.
+classes do across four processes at once.  A class with no vertex reachable in the process has
+no diagram at all, and the table shows that as a dash rather than as a small number.  The energy
+counting of each class is tabulated separately, in the catalogue summary of the paper.
 
 Columns per process are the interference in units of 1e-4 of the Standard Model at the paper's
 scale, Lambda = 3 TeV, and Lambda_min, the scale above which the class's square is smaller than
@@ -22,11 +17,10 @@ W-mass bracket, which is not rescaled here, is not in these tables).  The ratio
 R = sigma_{1/Lambda^8}/|sigma_{1/Lambda^4}| scales as 1/Lambda^4 at fixed kinematics, so
 Lambda_min = R^{1/4} TeV from the runs at 1 TeV whatever scale the table is printed at, and it is
 the scale below which the 1/Lambda^4 truncation is not self-consistent for that class in that
-sample.  A raw R of
-61 at Lambda = 1 TeV is not a prediction of a large effect; it says the expansion has failed there,
-and 2.8 TeV is the number a reader can use (2026-10-04, after a reader asked what the point of a
-square larger than its interference was).  For a class with no interference the bracketed entry
-is the scale above which the square is smaller than the Standard-Model rate, (sq/SM)^{1/8} TeV.
+sample.  A raw R of 61 at Lambda = 1 TeV is not a prediction of a large effect.  It says the
+expansion has failed there, and 2.8 TeV is the number a reader can use.  For a class with no
+interference the bracketed entry is the scale above which the square is smaller than the
+Standard-Model rate, (sq/SM)^{1/8} TeV.
 Pure Python, reads each study's results.tsv.
 """
 import os
@@ -94,8 +88,8 @@ def sq_over_sm(x):
 
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
 # find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 set Lambda_min in diboson, VBF and Drell-Yan
-# (the energy-growth subsection), and X^4 carries the asterisk discussion and the +13.3% in
-# W+W-W+ (the reachability subsection).  Keep this set in step with paper/sections/pheno.tex.
+# (the energy-growth subsection), and X^4 carries the asterisk discussion and its large entry in
+# W+W-W+ (the reachability subsection).  Keep this set in step with the phenomenology section of the paper.
 HIGHLIGHT = {1, 7, 14, 21}
 
 
@@ -108,9 +102,8 @@ def label(c):
 
 
 def tex_q(cls):
-    """The counting's leading lambda power for this class at four legs, or a dash when four legs
-    cannot be made at all.  One number rather than a (q, p) pair, and it is the column the
-    reachability prediction lives in: a dash is a class that cannot reach a four-point vertex."""
+    """The counting's leading lambda power for this class at four legs, or a dash when the class
+    has no four-point vertex.  One number rather than a (q, p) pair."""
     r = epower.leading(*epower.DIM8_CLASSES[CLASSES[cls]], 4)
     return "--" if isinstance(r, str) else "$\\lambda^{%d}$" % r.lambdaExp
 
@@ -136,8 +129,8 @@ def main():
             # No interference is not the same statement as no diagram.  A class reached only
             # through a channel with no tree-level Standard-Model amplitude, gg > W+ W- through
             # G^2W^2 being the plainest case, has diagrams, a square, and nothing to interfere
-            # with.  Rendering that as a dash told the reader the class was absent from a process
-            # where its square is 53 times the Standard Model.  It gets an asterisk, and in the
+            # with.  A dash would tell the reader the class is absent from a process where its
+            # square is 53 times the Standard Model.  It gets an asterisk, and in the
             # Lambda_min column, since there is no interference to divide by, the scale at which
             # the square falls below the Standard Model, in brackets.
             if i[0] == "ZERO":
@@ -187,7 +180,7 @@ def main():
         body.append(label(c) + " & " + " & ".join(cells) + r" \\")
     tail = (r"\bottomrule" "\n" r"\end{tabular}" "\n"
             r"\caption{Every dimension-eight class in four processes, as the term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}. "
-            r"$\delta$ is the interference with the Standard Model in units of $10^{-4}$ of its rate, at $\Lambda = 3$~TeV and unit coefficients, with an open circle where it is below $0.01$ in these units and a dagger where the entry was too expensive to run. "
+            r"$\delta$ is the interference with the Standard Model in units of $10^{-4}$ of its rate, at $\Lambda = 3$~TeV and unit coefficients, with an open circle where it is below $0.01$ in these units and a dagger where the class produces diagrams but was not run in these studies. "
             r"$\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample, which is a self-consistency scale of the $1/\Lambda^4$ truncation and not a validity bound. "
             r"It is $\Lambda$ times the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$, which does not depend on $\Lambda$ since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
             r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "

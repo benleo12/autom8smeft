@@ -1,16 +1,17 @@
 #!/usr/bin/env wolframscript
 (* ======================================================================================
-   validate/fr_compare.wls  --  V7: vertex-by-vertex equality of generated vs reference
+   validate/fr_compare.wls  --  vertex-by-vertex equality of generated vs reference
    ======================================================================================
    Usage:
      wolframscript -file validate/fr_compare.wls <base.fr> <generated.fr> <pairs.m> [nkernels]
 
-   <base.fr>      : the reference model (SM + reference blocks), e.g.
-                    prior_work/hand_typed/dim8_geosmeftVBF.fr
-   <generated.fr> : fragment written by gen/emit_fr.py (M$Parameters Join + L8blk blocks)
+   <base.fr>      : the base model, e.g. tests/gen_smoke/base.fr.  The reference blocks are
+                    defined by this file or by a shim listed with <generated.fr> (for the
+                    SmeftFR comparison validate/smeftfr_shim.fr, see validate/smeftfr_pairs.m)
+   <generated.fr> : fragment written by gen/emit_fr.py (M$Parameters Join + L8op blocks)
    <pairs.m>      : a Mathematica list of
-                    { {handBlock, handWC, genBlock, genWC, normalisation}, ... }
-                    meaning   handBlock|_{handWC}  ==  normalisation * genBlock|_{genWC -> handWC, Lam -> 1}
+                    { {refBlock, refWC, genBlock, genWC, normalisation}, ... }
+                    meaning   refBlock|_{refWC}  ==  normalisation * genBlock|_{genWC -> refWC, Lam -> 1}
    For every pair we evaluate both blocks, form the difference and compute the Feynman
    rules of the difference.  The test passes when no vertex survives.
    Exit code 0 on success, 1 on any failure; a JSON report is written next to pairs.m.
@@ -22,8 +23,7 @@ If[Length[args] < 3, Print["usage: fr_compare.wls base.fr generated.fr pairs.m [
 FR$NKernels = If[Length[args] >= 4, ToExpression[args[[4]]], 0];
 
 (* the init script needs FR$PathOverride to find FeynRules; without it the load only works
-   on a machine where FeynRules happens to be installed under the user's Mathematica
-   directory, which is why this failed on an HPC system *)
+   on a machine where FeynRules is installed under the user's Mathematica directory *)
 z9root = If[Environment["DIM8_ROOT"] === $Failed,
   ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$PathOverride = FileNameJoin[{z9root, "external", "feynrules", "feynrules-current"}];
@@ -39,7 +39,7 @@ genAbsList = ExpandFileName /@ StringSplit[genFile, ","];
 pairsAbs = ExpandFileName[pairsFile];
 Do[If[! FileExistsQ[z9f], Print["[abort] file not found: ", z9f]; Exit[1]], {z9f, Join[{baseAbs}, genAbsList, {pairsAbs}]}];
 SetDirectory[DirectoryName[baseAbs]];
-Print["[v7] loading ", Length[genAbsList] + 1, " model files"];
+Print["[compare] loading ", Length[genAbsList] + 1, " model files"];
 LoadModel @@ Join[{baseAbs}, genAbsList];
 
 $HistoryLength = 0;   (* do not retain every intermediate expression *)
@@ -50,13 +50,12 @@ $HistoryLength = 0;   (* do not retain every intermediate expression *)
    PossibleZeroQ[Simplify[...]] is far too weak here.  The difference of two correct
    implementations of the same CP-odd operator is built from Eps and momenta and vanishes
    only through momentum conservation and Schouten identities, which Simplify does not
-   apply.  On Q_{G^2H^4}^{(2)} that produced 9 raw "surviving" vertices, of which 4 survived
-   even the build worker's canonicalisation, yet all 4 are identically zero.
+   apply.  On Q_{G^2H^4}^{(2)}, for example, 9 raw vertices survive Simplify and 4 of them
+   survive even the build worker's canonicalisation, yet all 4 are identically zero.
 
-   So evaluate the Lorentz algebra numerically, the way the worker already evaluates colour:
-   give the legs explicit momenta that sum to zero, assign the free Lorentz indices explicit
-   values, sum every dummy index over 0..3 against the Minkowski metric, and turn Eps into
-   the Levi-Civita symbol.  A structure that is not identically zero survives random momenta
+   So evaluate the Lorentz algebra numerically: give the legs explicit momenta that sum to
+   zero, assign the free Lorentz indices explicit values, sum every dummy index over 0..3
+   against the Minkowski metric, and turn Eps into the Levi-Civita symbol.  A structure that is not identically zero survives random momenta
    with probability one.
    -------------------------------------------------------------------------------------- *)
 zEta = DiagonalMatrix[{1, -1, -1, -1}];
@@ -66,25 +65,24 @@ zGell = {{{0,1,0},{1,0,0},{0,0,0}}, {{0,-I,0},{I,0,0},{0,0,0}}, {{1,0,0},{0,-1,0
 zfN = Table[-2 I Tr[(zGell[[za]].zGell[[zb]] - zGell[[zb]].zGell[[za]]).zGell[[zc]]]/8, {za,8},{zb,8},{zc,8}] // Simplify;
 zdN = Table[ 2 Tr[(zGell[[za]].zGell[[zb]] + zGell[[zb]].zGell[[za]]).zGell[[zc]]]/8, {za,8},{zb,8},{zc,8}] // Simplify;
 
-(* Evaluate BOTH the colour and the Lorentz algebra numerically.  Colour first (random
-   external colour/gluon indices, dummies summed, T/f/d/delta and the colour Eps replaced by
-   numbers), then Lorentz (explicit momenta summing to zero, free indices assigned, dummies
-   summed against the Minkowski metric, the Lorentz Eps replaced by the Levi-Civita symbol).
-   The two Eps are told apart by the type of their indices. *)
-(* zvals: one explicit value per external colour index (Union order).  The first version drew
-   them at random for eight seeds, which is unsound for sparse tensors: two gluon externals
-   hit a nonzero delta one time in eight, so a genuinely nonzero gluonic difference vertex
-   was declared zero with probability 0.34 (found 2026-09-03, together with the same flaw in
-   the worker).  zVanishesQ now enumerates every colour assignment, early exit at the first
-   nonzero one; the momenta stay random (a nonzero polynomial in them is caught with
+(* Evaluate BOTH the colour and the Lorentz algebra numerically.  Colour first (one
+   assignment of the external colour/gluon indices, dummies summed, T/f/d/delta and the colour
+   Eps replaced by numbers), then Lorentz (explicit momenta summing to zero, free indices
+   assigned, dummies summed against the Minkowski metric, the Lorentz Eps replaced by the
+   Levi-Civita symbol).  The two Eps are told apart by the type of their indices. *)
+(* zvals: one explicit value per external colour index (Union order).  zVanishesQ enumerates
+   every colour assignment and stops at the first nonzero one.  Random values are unsound for
+   sparse tensors: two gluon externals hit a nonzero delta one time in eight, so with eight
+   random draws a nonzero gluonic difference vertex would still be declared zero with
+   probability 0.34.  The momenta stay random (a nonzero polynomial in them is caught with
    probability one), with two seeds per assignment. *)
 (* Every FeynRules tensor head is swapped for an inert private head BEFORE any integer is
    substituted: FeynRules' own contraction rules fire on equal integers as if they were a
-   summed pair (Eps[a,b,2,4] Eps[c,d,2,4] auto-reduces to metrics), which corrupted the
-   evaluation whenever two external indices drew the same value (2026-09-04).  Dummies are
-   summed TERM BY TERM: summing a dummy over the whole expression multiplies every term that
-   does not contain it by the metric trace (-2 for Lorentz, 3 or 8 for colour), so a
-   difference of two expressions with differently named dummies could never cancel. *)
+   summed pair (Eps[a,b,2,4] Eps[c,d,2,4] auto-reduces to metrics), which would corrupt the
+   evaluation whenever two external indices take the same value.  Dummies are summed TERM BY
+   TERM: summing a dummy over the whole expression multiplies every term that does not contain
+   it by the metric trace (-2 for Lorentz, 3 or 8 for colour), so a difference of two
+   expressions with differently named dummies could never cancel. *)
 zInert = {Eps -> zEPS, ME -> zME, FV -> zFV, SP -> zSP, T -> zT, f -> zF, dSUN -> zD, IndexDelta -> zDEL};
 zSumDummies[ze_, zdumsOf_, zdim_, zweight_] := Module[{zterms = If[Head[Expand[ze]] === Plus, List @@ Expand[ze], {Expand[ze]}]},
   Total[Function[zt, Module[{zt2 = zt, zds = zdumsOf[zt]},
@@ -102,11 +100,10 @@ zNumeric[zc_, zn_Integer, zseed_, zvals_List] := Module[{ze = zc /. zInert, zp, 
   ze = ze /. {zME[zi_Integer, zj_Integer] :> zEta[[zi, zj]], zSP[zi_Integer, zj_Integer] :> zp[[zi]].zEta.zp[[zj]]};
   ze = ze /. {zFV[zi_, zm_Integer] :> zp[[zi, zm]], zEPS[za_Integer, zb_Integer, zc2_Integer, zd2_Integer] :> Signature[{za, zb, zc2, zd2}], zEPS[za_Integer, zb_Integer, zc2_Integer] :> Signature[{za, zb, zc2}]};
   Simplify[ze]];
-(* The cap on how many external colour assignments are enumerated.  A vertex above it is
-   reported as differing WITHOUT being tested, so a pair can "fail" purely on size: that is
-   what happened to Q_{q^2G^2D}^{(2),(3)} on 2026-09-11, where every surviving vertex was an
-   untested one.  DIM8_MAXCOMBOS raises the cap.  Enumeration stays exhaustive; drawing the
-   assignments at random is unsound here, as 2026-09-03 showed. *)
+(* The cap on how many external colour assignments are enumerated.  A vertex above it is not
+   evaluated: zVanishesQ returns zUntested and the vertex is reported as untested, never as
+   differing.  DIM8_MAXCOMBOS raises the cap.  Enumeration stays exhaustive, since drawing the
+   assignments at random is unsound for sparse colour tensors. *)
 zMaxCombos = If[Environment["DIM8_MAXCOMBOS"] === $Failed, 4096, ToExpression[Environment["DIM8_MAXCOMBOS"]]];
 zVanishesQ[zvert_] := Module[{zc = zvert[[2]], zn = Length[zvert[[1]]], zext, zdims},
   If[PossibleZeroQ[Simplify[zc]], Return[True]];
@@ -119,7 +116,7 @@ zVanishesQ[zvert_] := Module[{zc = zvert[[2]], zn = Length[zvert[[1]]], zext, zd
 
 pairs = Get[pairsAbs];
 If[! ListQ[pairs] || pairs === {}, Print["[abort] pairs file did not give a non-empty list: ", pairsAbs]; Exit[1]];
-Print["[v7] ", Length[pairs], " pairs loaded"];
+Print["[compare] ", Length[pairs], " pairs loaded"];
 report = {};
 allok = True;
 anyuntested = False;
@@ -134,13 +131,13 @@ Do[
   lh = Coefficient[lh, hWC] hWC;
   lg = Coefficient[lg, hWC] hWC;
   (* Cap the memory of one pair.  The class-1 X^4 operators expand enormously (four field
-     strengths, eight gluon indices) and one of them took a kernel to 18 GB and the machine
-     into swap.  MemoryConstrained aborts that pair and returns $Aborted, so the run
-     continues and reports the pair as SKIPPED rather than taking the box down.
+     strengths, eight gluon indices), and one of them can take a kernel to 18 GB and the
+     machine into swap.  MemoryConstrained aborts that pair and returns $Aborted, so the run
+     continues and reports the pair as SKIPPED rather than taking the machine down.
      DIM8_MAXMEM overrides the cap, in bytes. *)
   memcap = If[Environment["DIM8_MAXMEM"] === $Failed, 6*1024^3, ToExpression[Environment["DIM8_MAXMEM"]]];
   (* FeynmanRules collects vertices across the whole expanded Lagrangian and its cost blows
-     up with the number of terms: Q_{G^4}^{(2)} ran 13 h on five vertices.  Feynman rules
+     up with the number of terms: in one call Q_{G^4}^{(2)} takes 13 h on five vertices.  Feynman rules
      are linear in L, so evaluate the difference monomial by monomial in chunks and merge,
      exactly as validate/fr_worker.wls does for the build.  DIM8_CMPCHUNK sets the chunk
      size; 0 restores the whole-difference path. *)
@@ -157,12 +154,10 @@ Do[
     memcap, $Aborted];
   If[verts === $Aborted,
     Print["SKIPPED  exceeded the ", N[memcap/1024^3, 3], " GB cap"];
-    AppendTo[report, <|"hand" -> hBlk, "gen" -> gBlk, "result" -> "skipped-memory"|>];
+    AppendTo[report, <|"ref" -> hBlk, "gen" -> gBlk, "result" -> "skipped-memory"|>];
     Continue[]];
-  (* A vertex whose colour space is above the cap is UNTESTED, not differing.  Folding the two
-     together is what made Q_{q^2G^2D}^{(2),(3)} read as FAIL on 2026-09-11 when every one of
-     their 78 and 42 "surviving" vertices had never been evaluated.  Keep the two tallies
-     apart, so a size limit can never again be reported as a disagreement. *)
+  (* A vertex whose colour space is above the cap is UNTESTED, not differing.  The two tallies
+     are kept apart, so a size limit is never reported as a disagreement. *)
   zver = zVanishesQ /@ verts;
   nz = Pick[verts, zver, False];
   unt = Pick[verts, zver, zUntested];
@@ -174,7 +169,7 @@ Do[
     Length[verts] - Length[nz] - Length[unt], "   (", Round[AbsoluteTime[] - t0, 0.1], " s)"];
   If[! ok, Print["  first differing vertex: ", nz[[1, 1]], "\n  coefficient: ", Simplify[nz[[1, 2]]]]];
   If[Length[unt] > 0, Print["  untested vertices: ", DeleteDuplicates[unt[[All, 1, All, 1]]]]];
-  AppendTo[report, <|"hand" -> hBlk, "handWC" -> ToString[hWC], "gen" -> gBlk, "genWC" -> ToString[gWC],
+  AppendTo[report, <|"ref" -> hBlk, "refWC" -> ToString[hWC], "gen" -> gBlk, "genWC" -> ToString[gWC],
                      "norm" -> ToString[norm], "pass" -> ok, "surviving" -> Length[nz],
                      "untested" -> Length[unt], "verified" -> Length[verts] - Length[nz] - Length[unt]|>];
   , {pr, pairs}];

@@ -1,10 +1,6 @@
 # 06: everything at 1/Lambda^8 from dimension eight alone, including two insertions in one amplitude
 # interfering with the SM (NP<=4 NP^2<=4).  Needs expansion_order = 4 for NP in coupling_orders.py
-# (the shipped dim8_is has it).  Compare with 04: the difference is the double-insertion piece.
-# NOTE: this script used to set c8W2H2D2x1, which is class 7 and has NO diagram in
-# p p > w+ w- (its lowest vertex is four-point and bosonic, so one insertion cannot
-# enter a two-to-two diboson process).  It contributed exactly nothing.  Replaced with
-# an operator that does contribute; see examples/studies/diboson/table.md.
+# (the shipped dim8_is has it).  Compare with 05 (NP<=2): the difference is the double-insertion piece.
 import model dim8_is
 generate p p > w+ w- NP<=4 NP^2<=4
 output runs/06_ww_double

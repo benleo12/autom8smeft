@@ -1,7 +1,7 @@
 [
 	{
-		"hand":"LQWphi4D2n1",
-		"handWC":"cWphi4D2n1",
+		"ref":"LQWphi4D2n1",
+		"refWC":"cWphi4D2n1",
 		"gen":"L8op621",
 		"genWC":"c8WH4D2x1",
 		"norm":"-I",
@@ -9,8 +9,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n1",
-		"handWC":"cWphi4D2n1",
+		"ref":"LQWphi4D2n1",
+		"refWC":"cWphi4D2n1",
 		"gen":"L8op621",
 		"genWC":"c8WH4D2x1",
 		"norm":"-I",
@@ -18,8 +18,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n2",
-		"handWC":"cWphi4D2n2",
+		"ref":"LQWphi4D2n2",
+		"refWC":"cWphi4D2n2",
 		"gen":"L8op622",
 		"genWC":"c8WH4D2x2",
 		"norm":"-I",
@@ -27,8 +27,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n2",
-		"handWC":"cWphi4D2n2",
+		"ref":"LQWphi4D2n2",
+		"refWC":"cWphi4D2n2",
 		"gen":"L8op622",
 		"genWC":"c8WH4D2x2",
 		"norm":"-I",
@@ -36,8 +36,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n3",
-		"handWC":"cWphi4D2n3",
+		"ref":"LQWphi4D2n3",
+		"refWC":"cWphi4D2n3",
 		"gen":"L8op623",
 		"genWC":"c8WH4D2x3",
 		"norm":"-I",
@@ -45,8 +45,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n3",
-		"handWC":"cWphi4D2n3",
+		"ref":"LQWphi4D2n3",
+		"refWC":"cWphi4D2n3",
 		"gen":"L8op623",
 		"genWC":"c8WH4D2x3",
 		"norm":"-I",
@@ -54,8 +54,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n4",
-		"handWC":"cWphi4D2n4",
+		"ref":"LQWphi4D2n4",
+		"refWC":"cWphi4D2n4",
 		"gen":"L8op624",
 		"genWC":"c8WH4D2x4",
 		"norm":"-I",
@@ -63,8 +63,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQWphi4D2n4",
-		"handWC":"cWphi4D2n4",
+		"ref":"LQWphi4D2n4",
+		"refWC":"cWphi4D2n4",
 		"gen":"L8op624",
 		"genWC":"c8WH4D2x4",
 		"norm":"-I",
@@ -72,8 +72,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQBphi4D2n1",
-		"handWC":"cBphi4D2n1",
+		"ref":"LQBphi4D2n1",
+		"refWC":"cBphi4D2n1",
 		"gen":"L8op625",
 		"genWC":"c8BH4D2x1",
 		"norm":"-I",
@@ -81,8 +81,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQBphi4D2n1",
-		"handWC":"cBphi4D2n1",
+		"ref":"LQBphi4D2n1",
+		"refWC":"cBphi4D2n1",
 		"gen":"L8op625",
 		"genWC":"c8BH4D2x1",
 		"norm":"-I",
@@ -90,8 +90,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQBphi4D2n2",
-		"handWC":"cBphi4D2n2",
+		"ref":"LQBphi4D2n2",
+		"refWC":"cBphi4D2n2",
 		"gen":"L8op626",
 		"genWC":"c8BH4D2x2",
 		"norm":"-I",

@@ -2,7 +2,7 @@
 M$Parameters = {
   Lam == { ParameterType -> External, BlockName -> DIM8, OrderBlock -> 0, Value -> 1000.0,
     TeX -> \[CapitalLambda], Description -> "EFT cutoff scale [GeV]" },
-  epsLorSign == { ParameterType -> Internal, Value -> 1, Description -> "sign relating eps_(0123)=+1 to FeynRules Eps; fixed by validate/levi_civita" },
+  epsLorSign == { ParameterType -> Internal, Value -> 1, Description -> "sign relating eps_(0123)=+1 to FeynRules Eps, see validate/conventions.md" },
   c8leWH3x1Re == { ParameterType -> External, BlockName -> DIM8, OrderBlock -> 1,
     Value -> 0, InteractionOrder -> {NP,2}, Description -> "Re Q_{leWH^3}^{(1)}" },
   c8leWH3x1Im == { ParameterType -> External, BlockName -> DIM8, OrderBlock -> 2,

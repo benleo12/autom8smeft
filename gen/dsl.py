@@ -12,10 +12,11 @@ implicit: an index name that appears twice in a term is summed over.
 
 The design goals are
 
-* the encoding should read like the published operator (Murphy, arXiv:2005.00059),
+* the encoding should read like the operator of the Murphy basis (arXiv:2005.00059),
 * every factor knows how to render itself to FeynRules and to LaTeX, so that the same
-  object can be (i) emitted as a model file and (ii) diffed against the source table,
-* composite objects that the paper writes compactly (Hermitian derivatives, dual field
+  object is (i) written into the model file and (ii) rendered in LaTeX for comparison
+  with the operator as the Murphy basis writes it,
+* composite objects that the Murphy basis writes compactly (Hermitian derivatives, dual field
   strengths, derivatives of products, H-tilde) are expanded here, *once*, under test.
 
 Index types
@@ -148,7 +149,7 @@ class Factor:
 
     def identities(self) -> List[Tuple[str, str]]:
         """Pairs of indices this factor identifies (Kronecker deltas).  Processed by the
-        emitter before any index is named."""
+        FeynRules writer (gen/emit_fr.py) before any index is named."""
         return []
 
 
@@ -277,8 +278,8 @@ class Psi(Factor):
     # classes 18-21).  cc=True, bar=False is the transposed left field psi^T C, which is
     # \overline{psi^c} and is written CC[psibar] in FeynRules; cc=True, bar=True is the
     # conjugate psi^c = C psibar^T on the right of a bilinear, FeynRules' CC[psi].
-    # tests/gen_smoke/cctest.wls: FeynRules' TreatMajoranasAndCC accepts CC[psibar].G.chi
-    # chains with explicit spinor indices and its HC[] of them is consistent.
+    # FeynRules' TreatMajoranasAndCC accepts CC[psibar].G.chi chains with explicit spinor
+    # indices, and its HC[] of them is consistent.
     cc: bool = False
     grassmann = True
 
@@ -378,10 +379,10 @@ class Gamma(Factor):
         if self.kind == "ga":
             return f"Ga[{ctx.name(self.lor[0])},{a},{b}]"
         if self.kind == "sig":
-            # FeynRules' Sig with explicit spinor indices silently yields ZERO vertices for
-            # same-chirality projector sandwiches (TensDot[ProjP, Sig, ProjP]); verified on
-            # FR 2.3.34 and 2.3.49 (tests/gen_smoke/hcdiag*.log).  Emit the definition
-            # sigma^{mu nu} = I/2 (Ga^mu Ga^nu - Ga^nu Ga^mu) instead, which works.
+            # FeynRules' Sig with explicit spinor indices yields ZERO vertices, without an
+            # error, for same-chirality projector sandwiches (TensDot[ProjP, Sig, ProjP]) in
+            # FeynRules 2.3.34 and 2.3.49, so the definition
+            # sigma^{mu nu} = I/2 (Ga^mu Ga^nu - Ga^nu Ga^mu) is written out instead.
             x = ctx.fresh("sp")
             mu_, nu_ = ctx.name(self.lor[0]), ctx.name(self.lor[1])
             return f"(I/2) (Ga[{mu_},{a},{x}] Ga[{nu_},{x},{b}] - Ga[{nu_},{a},{x}] Ga[{mu_},{x},{b}])"
@@ -477,7 +478,7 @@ class Tensor(Factor):
             return f"Eps[{','.join(n)}]"
         if self.kind == "epsLor":
             # FeynRules' Eps[mu,nu,rho,sig] for Lorentz indices: the sign relative to
-            # eps_{0123}=+1 is fixed by EPS_LOR_SIGN below (see validate/levi_civita.md).
+            # eps_{0123}=+1 is the parameter EPS_LOR_SIGN below (see validate/conventions.md).
             return f"({EPS_LOR_SIGN}) Eps[{','.join(n)}]"
         if self.kind in ("delSU2", "delSU3", "delA", "g"):
             return ""  # handled by identities()
@@ -490,10 +491,10 @@ class Tensor(Factor):
         raise ValueError(self.kind)
 
 
-# Sign relating Murphy's eps_{0123}=+1 (so eps^{0123} = -1) to FeynRules' Eps.
-# FeynRules defines Eps[0,1,2,3] with lower-index convention eps_{0123} = +1 ... this is
-# verified numerically by validate/levi_civita.wls; until then we keep it symbolic so the
-# generated file is self-documenting.
+# Sign relating the Murphy basis convention eps_{0123}=+1 (so eps^{0123} = -1) to FeynRules'
+# Eps.  It is a symbolic parameter, set to +1 in the model (gen/emit_fr.py), so that the
+# generated file states the convention it uses; validate/conventions.md records how
+# FeynRules and ALOHA place the indices of Epsilon.
 EPS_LOR_SIGN = "epsLorSign"
 
 
@@ -570,10 +571,10 @@ class Operator:
     plus_hc: bool = False  # Murphy marks + h.c.
     # how the operator enters the Lagrangian, set by validate/hermiticity.apply_convention:
     #   "real"    L = C Q          C real, Q Hermitian (the factor i is already in Q if the
-    #                              published row was anti-Hermitian as typeset)
+    #                              operator as the Murphy basis writes it is anti-Hermitian)
     #   "complex" L = C Q + h.c.   C complex, Murphy marks + h.c.
     #   "sym"     L = (C/2)(Q + Q^dag)  C real, Q Hermitian only up to integration by parts
-    #                              (the 14 class-11 psi^2H^2D^3 rows)
+    #                              (the 14 class-11 psi^2H^2D^3 operators)
     hc_mode: str = "real"
     cp: str = "even"
     notes: str = ""
@@ -610,7 +611,7 @@ class Operator:
 
 
 # --------------------------------------------------------------------------------------
-# Composite builders (the paper's shorthand, expanded once here)
+# Composite builders (the shorthand of the Murphy basis, expanded once here)
 # --------------------------------------------------------------------------------------
 
 _fresh = count(1)
@@ -726,12 +727,11 @@ def FSdual(group: str, mu: str, nu: str, adj: Optional[str] = None, derivs=()) -
 # --------------------------------------------------------------------------------------
 
 # Index-name pools.  Every name is prefixed so that it CANNOT collide with a symbol the
-# model defines.  This is not cosmetic: the emitted blocks scope these names, and a
-# collision silently corrupts the model.  Two real cases found this way, on top of the
-# single-letter "b" that clobbered the b quark in session 1:
-#   "ee" is the electromagnetic coupling, and "mu" is the muon (ClassMembers -> {e,mu,ta}).
+# model defines.  This is not cosmetic: the generated blocks scope these names, and a
+# collision corrupts the model without an error.  Short names do collide: "b" is the
+# b quark, "ee" the electromagnetic coupling and "mu" the muon (ClassMembers -> {e,mu,ta}).
 # validate/check_symbol_clash.py re-derives the model's symbol list and asserts the pools
-# are disjoint from it, so this can never silently regress.
+# are disjoint from it.
 FR_POOLS = {
     "lor": ["z8mu", "z8nu", "z8rho", "z8sig", "z8ka", "z8la", "z8om", "z8th", "z8mu2", "z8nu2", "z8rho2", "z8sig2"],
     "su2f": ["z8i", "z8j", "z8k", "z8l", "z8m", "z8n", "z8o", "z8p", "z8q", "z8r"],

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tables for the paper from a study's results.tsv.
+"""Tables from a study's results.tsv.
 
     examples/studies/table_study.py <study dir> [model dir]
 
@@ -7,9 +7,8 @@ Writes <study dir>/table.md and <study dir>/table.tex: one block per process wit
 Standard-Model cross section, the full-model interference and squared rows, and one line per
 operator class with its interference (1/Lambda^4) and squared (1/Lambda^8) cross sections in pb,
 the ratio of interference to the SM, and where a class gives no diagram at an order.  The W mass
-of each row is recomputed from the model at the row's settings with validate/eval_ufo_params.py
-(the early diboson rows carried a wrong value from a first version of the driver), so a row whose
-vacuum differs from the Standard Model's is visible in the table.  Pure Python.
+of each row is recomputed from the model at the row's settings with validate/eval_ufo_params.py,
+so a row whose vacuum differs from the Standard Model's is visible in the table.  Pure Python.
 """
 import os, re, subprocess, sys
 
@@ -122,14 +121,14 @@ def main(argv):
             def val(r, tex=False):
                 if r is None: return "not run"   # no row at all, which is not the same as zero
                 v = r[col["sigma_pb"]]
-                if v == "NO_OUTPUT":   # rows from the first driver: tell no-diagram from a real failure by the log
+                if v == "NO_OUTPUT":   # a NO_OUTPUT row: tell no-diagram from a real failure by the log
                     tag = re.sub(r"[^A-Za-z0-9_]", "_", f"{r[col['process']]}_{r[col['model']]}_{r[col['order']]}")
                     log = os.path.join(os.environ.get("DIM8_RUNS", os.path.expanduser("~/dim8auto_build/mg5runs")), tag + ".log")
                     if os.path.exists(log) and "NoDiagramException" in open(log).read(): v = "NO_DIAGRAMS"
                 return {"NO_DIAGRAMS": "no diagram", "NO_OUTPUT": "no output", "FAILED": "failed", "BAD_SETTING": "bad setting"}.get(v, tex_num(v) if tex else fmt(v))
             ratio = ""
             if i and re.match(r"^-?[\d.]", i[col["sigma_pb"]]) and sm_x == sm_x and sm_x:
-                dev = 100 * float(i[col["sigma_pb"]]) / sm_x   # the VBF paper's "SM deviation (%)" column
+                dev = 100 * float(i[col["sigma_pb"]]) / sm_x   # the "SM deviation (%)" column of arXiv:2410.21563
                 # "-5.7e-03" typesets as "-5.7e - 03" in math mode; use a power of ten
                 if abs(dev) >= 0.01:
                     ratio = f"{dev:+.2f}"
@@ -166,7 +165,7 @@ def main(argv):
         tex.append("\\hline\\end{tabular}\n\\caption{" + tex_proc(proc) + " at 13.6 TeV: interference of one dimension-eight insertion with the Standard Model, its size relative to the Standard Model, the dimension-eight square, and the $W$ mass the input scheme derives with that class on.}\\label{tab:" + os.path.basename(st) + "-" + slug(proc) + "}\\end{table}\n")
     # per-operator rows (model tag "<model>-op_<coefficient>", from a scan over single-operator
     # cards): a second table, the operators ranked by the size of their interference, with the
-    # class and the ratio to the Standard Model, in the style of the VBF paper's tables
+    # class and the ratio to the Standard Model, in the style of the tables of arXiv:2410.21563
     import json
     idx = json.load(open(os.path.join(ROOT, "docs", "block_index.json")))
     by_wc = {w: e for e in idx for w in e["wcs"]}
@@ -200,11 +199,9 @@ def main(argv):
         tex.append("\\hline\\end{tabular}\n\\caption{" + tex_proc(proc) + " at 13.6 TeV, one operator at a time: the operators that can enter the process, ranked by the size of their interference with the Standard Model.}\\label{tab:" + os.path.basename(st) + "-" + slug(proc) + "-operators}\\end{table}\n")
     open(os.path.join(st, "table.md"), "w").write("# " + os.path.basename(st) + " study\n" + "\n".join(md) + "\n")
     open(os.path.join(st, "table.tex"), "w").write("\n".join(tex))
-    # These stay in the study directory.  They used to be copied into paper/tables as well, one
-    # per process, and the paper printed all twelve; it now prints the class-by-process grid
-    # instead, which says the same thing once rather than repeating the class column twelve times
-    # and the derived W mass in every row of each.  Pass an output directory to place them
-    # elsewhere.
+    # These stay in the study directory.  The paper prints the class-by-process grid of
+    # table_appendix.py instead, which says the same thing once.  Pass an output directory as the
+    # third argument to write a copy there as well.
     if len(sys.argv) > 3:
         pt = os.path.abspath(sys.argv[3]); os.makedirs(pt, exist_ok=True)
         open(os.path.join(pt, os.path.basename(st) + ".tex"), "w").write(

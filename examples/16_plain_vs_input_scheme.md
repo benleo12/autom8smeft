@@ -9,13 +9,13 @@ vertices: an operator such as `Q_{G^2H^4}^{(1)}`, whose vev shifts the gluon kin
 its three- and four-gluon pieces while the compensating two-point piece is dropped, and gauge
 invariance is broken at O(v^4/Lambda^4). MadGraph's `check lorentz` shows it on the shipped
 models themselves, with every coefficient at 0.7 and Lam at 1 TeV (`validate/ufo_on.py` makes
-the coefficients-on copies): `dim8_plain` fails on `u u~ > g g` at 4.9e-4, `g g > g g` at 6.1e-5
-and `g g > g g g` at 1.0e-4, and on `u d~ > w+ a` at 5.2e-4, the W analogue of the same shift
-(`Q_{W^2H^4}^{(1)}` rescales the W kinetic term), and passes at 1e-15 as soon as the coefficients
-are off or on processes that no kinetic shift reaches (`u u~ > a a`, `a z`, `h a`, `w+ w-`, `z h`
-pass on the plain model too), while
-`dim8_is` passes at 1e-14 or better with them on, on those processes and on seven electroweak
-ones (`u u~ > a a`, `a z`, `h a`, `w+ w-`, `z h`, `u d~ > w+ a`, `e+ e- > a a`).
+the coefficients-on copies). `dim8_plain` fails on `u u~ > g g` at 4.9e-4, `g g > g g` at 6.1e-5
+and `g g > g g g` at 1.0e-4. It also fails on `u d~ > w+ a` at 5.2e-4, the W analogue of the same
+shift (`Q_{W^2H^4}^{(1)}` rescales the W kinetic term). It passes at 1e-15 as soon as the
+coefficients are off, and on processes that no kinetic shift reaches (`u u~ > a a`, `a z`, `h a`,
+`w+ w-`, `z h`). `dim8_is` passes at 1e-14 or better with the coefficients on, on the gluonic
+processes and on seven electroweak ones (`u u~ > a a`, `a z`, `h a`, `w+ w-`, `z h`,
+`u d~ > w+ a`, `e+ e- > a a`).
 
 `dim8_is` corrects the input relations to O(1/Lambda^4) (SMEFTsim conventions, formulae in
 the input-scheme section of the paper), rotates the fields to canonical kinetic terms, and removes the

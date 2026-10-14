@@ -6,13 +6,13 @@
 Each assignment is looked up in Cards/param_card.dat (matched on the parameter name in the
 trailing comment, which is how the UFO writes it) and then in Cards/run_card.dat (matched on the
 "= name" field).  Names are matched up to case and up to the "__2" suffix MadGraph appends when
-a parameter name collides with one it already has: the scale Lam is written into the card as
-"lam__2" because the dimension-six block already carries a Lam6, so a literal match would miss
-it.  The name "dim8_all" is special: it sets every dimension-eight Wilson
+a parameter name collides with one it already has.  MadGraph compares names without case, and the
+Higgs quartic is already lam, so the scale Lam is written into the card as "lam__2" and a literal
+match would miss it.  The name "dim8_all" is special: it sets every dimension-eight Wilson
 coefficient of block DIM8 except the scale Lam, which is what the studies mean by "every
-coefficient at 1".  Unknown names are an error, not a warning: MadGraph's interactive `set`
-accepts a misspelt parameter silently and the run then quietly uses the default, which has cost
-this project a day before.  Prints one line per card entry it changed.
+coefficient at 1".  Unknown names are an error, not a warning, because MadGraph's interactive
+`set` accepts a misspelt parameter silently and the run then uses the default.  Prints one line
+per card entry it changed.
 """
 import re, sys, os
 

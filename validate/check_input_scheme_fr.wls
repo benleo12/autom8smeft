@@ -1,13 +1,13 @@
-(* Input-scheme acceptance test v6.
+(* Input-scheme acceptance test.
    (1) WC = 0: the variant must equal base.fr numerically and its LSM vertex CONTENTS must be
        base.fr's 31 plus, at most, entries whose couplings are numerically zero.
    (2) dim-6 = 0, dim-8 on, Lam = 3 TeV: in the MERGED Lagrangian LSM + the class-3 and class-6
        blocks that carry the input-scheme coefficients, the spurious photon couplings
        {A,A,H}, {A,H,Z}, {A,nu,nubar} must be O((v^4/Lam^4)^2) ~ 1e-9 relative, while a genuine
        dim-8 shift (the h W W coupling) is O(v^4/Lam^4) ~ 4.5e-5, and the photon-fermion
-       ratio A l lbar / A uq uqbar stays -3/2.  Testing LSM alone is wrong: the rotation
+       ratio A l lbar / A uq uqbar stays -3/2.  LSM alone does not test this: the rotation
        cancels against terms that live in the OPERATOR blocks, not in LSM.
-   (3) step 5: the top two-point term of LYukawa + Q_{quH^5} stays at ymt with c8quH5 = 1. *)
+   (3) the Yukawa compensation: the top two-point term of LYukawa + Q_{quH^5} stays at ymt with c8quH5Re = 5. *)
 $root = Environment["DIM8_ROOT"];
 FR$NKernels = 0; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
@@ -46,15 +46,15 @@ If[StringContainsQ[z9base, "inputscheme"],
   Print["[physical] merged |coupling|: {H,W,Wbar} ", z9mag[z9all, {H, W, Wbar}], "  SM value ", z9mag[z9v, {H, W, Wbar}], "   (dim-8 shift expected at relative O(v^4/Lam^4) ~ 4.5e-5)"];
   z9e = z9find[z9all, {A, l, lbar}]; z9u = z9find[z9all, {A, uq, uqbar}];
   If[z9e =!= {} && z9u =!= {}, Print["[ward] merged ratio (A l lbar)/(A uq uqbar) = ", ToString[Simplify[(z9e[[1, 2]] /. z9rules)/(z9u[[1, 2]] /. z9rules)], InputForm], "   (must be -3/2 x deltas)"]];
-  (* step 5: c8quH5 is COMPLEX, split into c8quH5Re/Im externals, so set the Re part.
+  (* the Yukawa compensation: c8quH5 is COMPLEX, split into c8quH5Re/Im externals, so set the Re part.
      CheckMassSpectrum only flags disagreements above 0.1 percent and the shift at c8 = 1,
      Lam = 1 TeV is v^4/(4 Lam^4) = 0.092 percent, so use c8 = 5 (0.46 percent): an
      uncorrected Yukawa would be flagged, the corrected one must not.  FeynmanRules drops
      two-point terms, so GetMassSpectrum supplies the numbers. *)
   UpdateParameters[c8W2H4x1 -> 0, c8W2H4x3 -> 0, c8B2H4x1 -> 0, c8WBH4x1 -> 0, c8H6x1 -> 0, c8H6x2 -> 0, c8quH5Re -> 5, Lam -> 1000];
-  (* since 2026-10-03 the Yukawa parameter keeps its Standard-Model value and the compensation of
-     Q_{quH^5} is written out in LYukawa, so the two numbers printed here must now be EQUAL; what
-     tests the compensation is the mass spectrum below *)
+  (* the Yukawa parameter keeps its Standard-Model value and the compensation of Q_{quH^5} is
+     written out in LYukawa, so the two numbers printed here must be EQUAL; what tests the
+     compensation is the mass spectrum below *)
   Print["[mass] c8quH5Re=5, Lam=1 TeV: yt=", z9sf[yu[3, 3]], " vs SM Sqrt2 ymt/vev=", z9sf[Sqrt[2] ymt/vev], "   (equal: the compensation, ", z9sf[5 vevSM^4/4/Lam^4], ", is a separate term of LYukawa)"];
   Print["[mass] GetMassSpectrum[LYukawa + Q_{quH^5}]: ", ToString[InputForm[GetMassSpectrum[LYukawa + L8op28]]]];
   Print["[mass] CheckMassSpectrum (must report no disagreement despite c8quH5 = 5):"];

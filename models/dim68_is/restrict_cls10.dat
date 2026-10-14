@@ -2,7 +2,7 @@
 # keeps 22 dimension-eight coefficient(s) from 11 operator block(s): L8op1 L8op2 L8op3 L8op4 L8op5 L8op6 L8op7 L8op8 L8op9 L8op10 L8op11
 # keeps 0 dimension-six coefficient(s)
 # kept coefficients carry placeholder values; set the physical values in the run's param_card.dat
-# import with:  import model dim68_is_new-cls10
+# import with:  import model dim68_is-cls10
 Block SMINPUTS 
   1 1.279000e+02 # aEWM1 
   2 1.166370e-05 # Gf 

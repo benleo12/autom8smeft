@@ -1,16 +1,15 @@
-(* Regression test for the worker's colour zero test (validate/fr_worker.wls).  History: the
-   first version sampled one random value per external colour index for six fixed seeds and
-   deleted every bare f^{ABC} / d^{ABC} three-gluon vertex and every f T quark-gluon-gluon
-   structure from the cache (2026-09-03); the second enumerated every external assignment
-   (exact, but hours on five-leg residuals and untested above a cap); the third (2026-09-04)
-   contracts the colour tensors as exact arrays.  This test runs the exact tensor test
-   (colourZeroQ) AND the enumeration (colourZeroQEnum) on every case, requires the two to
-   agree, requires every nonzero structure to be KEPT and every identity to be DROPPED, and
-   times both.  With a cached block given as DIM8_BLOCK=L8opNN (from DIM8_VDIR) it also runs
+(* Test of the worker's colour zero test (validate/fr_worker.wls).  The worker contracts the
+   colour tensors as exact arrays (colourZeroQ).  The alternative, colourZeroQEnum, enumerates
+   every assignment of the external colour indices: it is exact too, but takes hours on five-leg
+   residuals and does not test above a cap.  This test runs both on every case, requires the two
+   to agree, requires every nonzero structure to be KEPT and every identity to be DROPPED, and
+   times both.  The kept cases include the bare f^{ABC} and d^{ABC} three-gluon vertices and the
+   f T quark-gluon-gluon structure, which a test that samples one random value per external
+   colour index wrongly finds zero.  With a cached block given as DIM8_BLOCK=L8opNN (from DIM8_VDIR) it also runs
    both tests on every coupling of that block and on the differences between couplings.
    Run: DIM8_ROOT=<repo> wolframscript -file validate/check_colour_test.wls *)
 $root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
-FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the 2.3.34 fallback of the init file *)
+FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the default path of the init file *)
 FR$NKernels = 0;   (* serial: no subkernels on a shared laptop *)
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];   (* loads FeynRules with the headless fixes, as the worker does *)
 SetDirectory[$root <> "/tests/gen_smoke"]; LoadModel["base.fr", "gen.fr"];

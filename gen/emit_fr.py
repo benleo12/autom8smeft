@@ -2,9 +2,8 @@
 dim8auto.gen.emit_fr
 ====================
 
-Emit FeynRules model code from DSL operators, in the dialect of our earlier dimension-eight
-FeynRules models: every operator is one ``ExpandIndices[...]`` block
-with ``FlavorExpand->{SU2W,SU2D}``, Goldstones zeroed in unitary gauge, Levi-Civita
+Write FeynRules model code from DSL operators.  Every operator is one ``ExpandIndices[...]``
+block with ``FlavorExpand->{SU2W,SU2D}``, Goldstones zeroed in unitary gauge, Levi-Civita
 canonicalised, and the block cached.
 
 Public entry points
@@ -184,19 +183,13 @@ _FERM_FIELD = re.compile(r"\b(QLbar|QL|LLbar|LL)\[([^\]]*)\]")
 
 
 def sub_su2_index(t: str, n: str, v: int) -> str:
-    """Substitute SU(2) index ``n`` by the literal ``v`` everywhere EXCEPT inside fermion
-    doublet fields, where the component is selected with IndexDelta instead.
+    """Substitute SU(2) index ``n`` by the literal ``v`` everywhere, fermion doublet fields
+    included.
 
-    The model defines QL[sp,1,ff,cc] :> Module[{sp2}, ProjM[sp,sp2] uq[sp2,ff,cc]]; with a
-    literal index that definition fires before ExpandIndices and plants an explicit-index
-    ProjM inside the Dot chain, corrupting the spin indices (Part::pkspec1 and a
-    charge-violating vertex on Q_{quWHD^2}^{(1)}).  IndexDelta is resolved by
-    FlavorExpand -> {SU2D} inside ExpandIndices, where Dot chains are handled correctly.
-    Higgs components are safe as literals (control Q_{leWH^3}^{(1)}: 36 vertices)."""
-    # NOTE (2026-08-28): the IndexDelta variant was tried and is WORSE: the control
-    # Q_{leWH^3}^{(1)} went from 36 clean vertices to 32 with 9 gauge-free ones and its own
-    # spin-index warnings.  Literal indices on fermions are fine for that control
-    # (36 vertices, no warnings), so literals are used everywhere.
+    The model defines QL[sp,1,ff,cc] :> Module[{sp2}, ProjM[sp,sp2] uq[sp2,ff,cc]], so a
+    literal index on a doublet selects its component directly.  With literal indices on the
+    Higgs and on the fermion doublets the control Q_{leWH^3}^{(1)} gives its 36 vertices and
+    no spin-index warnings."""
     return re.sub(rf"\b{n}\b", str(v), t)
 
 _SU2A_EPS = re.compile(r"Eps\[(z8[A-F]),(z8[A-F]),(z8[A-F])\] ")
@@ -210,9 +203,8 @@ def expand_eps_su2a(term_str: str) -> str:
     mis-expanded under ``FlavorExpand -> {SU2W}``: on Q_{l^2H^4D}^{(3)} it yields 272
     terms, 60 vertices, 180 non-Hermitian ones and vertices with no W at all, which the
     epsilon forbids.  The identical operator with the epsilon written out gives 40 terms,
-    10 vertices and CheckHermiticity = 0 (tests/gen_smoke/bisect13b.log, 2026-08-28).
-    Numeric adjoint indices are legal in Ta[1,i,j] and FS[Wi,mu,nu,1], so the expansion
-    is a textual substitution on the emitted term."""
+    10 vertices and CheckHermiticity = 0.  Numeric adjoint indices are legal in Ta[1,i,j]
+    and FS[Wi,mu,nu,1], so the expansion is a textual substitution on the generated term."""
     m = _SU2A_EPS.search(term_str)
     if not m:
         return term_str
@@ -232,9 +224,10 @@ _SU2F_EPS = re.compile(r"Eps\[(z8[i-r]),(z8[i-r])\] ")
 
 def expand_eps_su2f(term_str: str) -> str:
     """epsilon_{jk} on SU(2)_w fundamental indices as its two explicit terms,
-    eps_{12} = +1.  Same FeynRules failure family as the adjoint case: Q_{udWH^2}^{(1,2)},
-    which vanish identically, were producing 108 and 60 charge-violating vertices, and the
-    three Q_{quWHD^2} blocks (Ta . Eps[j,k] . DC[Phibar[k]]) never finished expanding."""
+    eps_{12} = +1.  FeynRules fails here as in the adjoint case: under its own expansion
+    Q_{udWH^2}^{(1,2)}, which vanish identically, produce 108 and 60 charge-violating
+    vertices, and the three Q_{quWHD^2} blocks (Ta . Eps[j,k] . DC[Phibar[k]]) do not
+    finish expanding."""
     out = term_str
     while True:
         m = _SU2F_EPS.search(out)
@@ -260,11 +253,11 @@ def expand_su2_all(term_str: str) -> str:
     Phi[i], QL[s,i,f,c] and FS[Wi,mu,nu,a] all accept numeric indices and evaluate to
     numbers or components, and FlavorExpand has nothing left to do.
 
-    Motivation: FeynRules' own SU(2) expansion is the source of every failure found so far
-    (Eps[A,B,C] with Ta's, Eps[j,k] with Ta and DC, Ta with a numeric fundamental and a
-    symbolic adjoint index).  Doing the expansion here, exactly and visibly, removes that
-    machinery from the trust chain.  Terms that vanish by antisymmetry (Eps with a repeated
-    numeric index) are dropped before emission."""
+    FeynRules' own SU(2) expansion fails on several structures (Eps[A,B,C] with Ta's,
+    Eps[j,k] with Ta and DC, Ta with a numeric fundamental and a symbolic adjoint index).
+    Doing the expansion here, exactly and visibly, removes that machinery from the trust
+    chain.  Terms that vanish by antisymmetry (Eps with a repeated numeric index) are
+    dropped before the term is written."""
     fund = sorted(set(_SU2F_IDX.findall(term_str)))
     adj = sorted(set(_SU2A_IDX.findall(term_str)))
     if not fund and not adj:
@@ -294,8 +287,7 @@ def expand_su2_all(term_str: str) -> str:
 
 
 # (sigma^a)_{ij}: FeynRules leaves Ta[a,i,j] with numeric indices UNEVALUATED (Ta[3,1,1] +
-# Ta[3,2,2] stays symbolic, tests/gen_smoke/look133.log), so the emitter must supply the
-# numbers itself.  tau^a = 2 Ta = sigma^a.
+# Ta[3,2,2] stays symbolic), so the numbers are supplied here.  tau^a = 2 Ta = sigma^a.
 _SIGMA = {
     (1, 1, 1): "0", (1, 1, 2): "1", (1, 2, 1): "1", (1, 2, 2): "0",
     (2, 1, 1): "0", (2, 1, 2): "(-I)", (2, 2, 1): "I", (2, 2, 2): "0",
@@ -357,8 +349,9 @@ def _cstr(c) -> str:
 def _factor_tokens(m: str) -> List[str]:
     """Split a monomial into factors at spaces that are outside every ( ) and [ ].
     A factor such as "(I/2) (Ga[..] Ga[..] - Ga[..] Ga[..])" must stay one token: splitting
-    it on inner spaces and re-sorting scrambled every sigma^{mu nu} operator (control
-    Q_{leWH^3}^{(1)}: 36 clean vertices became 32 with 9 gauge-free ones)."""
+    it on inner spaces and re-sorting would scramble every sigma^{mu nu} operator (on the
+    control Q_{leWH^3}^{(1)} it turns 36 clean vertices into 32, 9 of them without a gauge
+    field)."""
     out, cur, depth = [], "", 0
     for ch in m:
         if ch in "([":
@@ -380,10 +373,10 @@ def combine_monomials(monos: List[str]) -> List[str]:
     """Sum coefficients of identical products and drop the zeros.
 
     FeynRules' ExpandIndices is not linear on sums of numeric-component monomials: the
-    emitted Q_{udWH^2}^{(1)} is a polynomial that cancels to zero exactly, and FeynRules
-    still produced 38 terms and 18 vertices from it (tests/gen_smoke/mono133.log).  So the
-    cancellation is done here, where it is exact, and FeynRules only ever sees a
-    polynomial with nothing left to cancel."""
+    generated Q_{udWH^2}^{(1)} is a polynomial that cancels to zero exactly, and FeynRules
+    still produces 38 terms and 18 vertices from it.  So the cancellation is done here,
+    where it is exact, and FeynRules only ever sees a polynomial with nothing left to
+    cancel."""
     acc: Dict[tuple, tuple] = {}
     order: List[List[str]] = []
     for m in monos:
@@ -411,7 +404,7 @@ def combine_monomials(monos: List[str]) -> List[str]:
 
 
 def emit_operator_expr(op: Operator, wc: Optional[str] = None, lam: str = "Lam", flavor: str = "universal") -> str:
-    """``wc/Lam^4 * (Q)``.  The Hermitian conjugate for +h.c. operators is NOT emitted here:
+    """``wc/Lam^4 * (Q)``.  The Hermitian conjugate for +h.c. operators is NOT added here:
     FeynRules' HC[] must be applied to the *expanded* Lagrangian (emit_block does that), since
     HC inside ExpandIndices on the explicit-spinor-index dialect loses vertices."""
     wc = wc or op.wc
@@ -451,12 +444,12 @@ BLOCK_LOCALS = ",".join(["z8lagH", "z8lagN", "z8lagS", "z8fmgr"] + ALL_INDEX_NAM
 def emit_block(ops: Iterable[Operator], name: str, comment: str = "", flavor: str = "universal") -> str:
     """One FeynRules Lagrangian block.  Operators are bucketed by ``hc_mode``:
 
-      "real"    Hermitian as emitted, real WC          -> z8lagH, no HC
-      "complex" Murphy's "+ h.c." rows, complex WC     -> z8lagN, plus HC[z8lagN]
+      "real"    Hermitian as written, real WC          -> z8lagH, no HC
+      "complex" Murphy's "+ h.c." operators, complex WC -> z8lagN, plus HC[z8lagN]
       "sym"     Hermitian only up to IBP, real WC      -> z8lagS with a 1/2, plus HC[z8lagS]
 
     HC is applied AFTER index expansion and canonicalisation, the only reliable order
-    (inside ExpandIndices it silently drops vertices, see tests/gen_smoke/hcdiag4.log).
+    (inside ExpandIndices it drops vertices without an error).
     """
     ops = list(ops)
     herm = [o for o in ops if o.hc_mode == "real"]
@@ -489,7 +482,7 @@ def emit_block(ops: Iterable[Operator], name: str, comment: str = "", flavor: st
 
 
 def emit_parameters(ops: Iterable[Operator], block_name: str = "DIM8", start: int = 1, order: str = "NP", order_power: int = 2) -> str:
-    """External real (or complex) Wilson coefficients.  Complex ones are emitted as two real
+    """External real (or complex) Wilson coefficients.  Complex ones are written as two real
     externals (Re, Im) plus an internal complex parameter, the usual FeynRules pattern."""
     out = []
     n = start
@@ -526,7 +519,7 @@ def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block
     resumable: each block is an independent unit of work whose expanded Lagrangian and
     vertex list can be computed in a separate process, cached to disk, and merged into a
     single ``WriteUFO[..., Input -> vertices]`` call at the end.  It also means a
-    Hermiticity failure names one operator rather than a group of six.
+    Hermiticity failure names one operator.
 
     Returns (text, index) where index is a list of {block, ops, wcs} for the drivers.
     """
@@ -543,7 +536,7 @@ def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block
     params = emit_parameters(ops)
     lam = f"""  Lam == {{ ParameterType -> External, BlockName -> DIM8, OrderBlock -> 0, Value -> {lam_value},
     TeX -> \\[CapitalLambda], Description -> "EFT cutoff scale [GeV]" }}"""
-    eps = f"""  {EPS_LOR_SIGN} == {{ ParameterType -> Internal, Value -> 1, Description -> "sign relating eps_(0123)=+1 to FeynRules Eps; fixed by validate/levi_civita" }}"""
+    eps = f"""  {EPS_LOR_SIGN} == {{ ParameterType -> Internal, Value -> 1, Description -> "sign relating eps_(0123)=+1 to FeynRules Eps, see validate/conventions.md" }}"""
     txt = (
         "(* ===== generated by dim8auto: Wilson coefficients (FeynRules merges M$Parameters across model files) ===== *)\nM$Parameters = {\n"
         + lam + ",\n" + eps + ",\n" + params + "\n};\n\n"

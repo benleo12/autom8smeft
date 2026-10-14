@@ -1,24 +1,27 @@
 """
 validate/audit_ufo.py  --  structural audit of a generated UFO, no Mathematica needed.
 
-Reads a UFO directory the way MadGraph does (importing its python modules) and checks
-the things a wrong Feynman rule would most likely break:
+Reads the python files of a UFO directory as text (load_ufo says why) and checks the things
+a wrong Feynman rule would most likely break:
 
-  1. every dimension-eight coupling carries exactly one Wilson coefficient and the
-     coupling order NP = 2, and every vertex mixes at most one operator per coupling;
+  1. every coupling that carries a Wilson coefficient has the coupling order NP = 2.  The one
+     exception is the product of an operator term with a tagged input-scheme shift, which is
+     NP = 3 or 4.  MergeVertices can put several operators on one coupling, and every one of
+     them is audited.
   2. chirality: for every coupling that depends on a WC, the Lorentz structure it
      multiplies must carry the projector of that operator's fermion bilinear, ProjP for
      right-handed (u, d, e), ProjM for left-handed (q, l).  The expected chirality comes
-     from the DSL, so this ties the UFO back to the parsed operator, through FeynRules;
-  3. the fermion content of every dim-8 vertex matches the operator's field content
-     (number of fermion legs), and B-violating operators appear only in vertices with the
-     matching fermion-number violation;
+     from the operator's encoding in gen/operators.py, so this ties the UFO back to the
+     encoded operator through FeynRules.  Operators with a charge-conjugated bilinear are
+     not audited for chirality.
+  3. the number of fermion legs of every dim-8 vertex matches the operator's field content.
   4. no coupling without an NP order depends on a Wilson coefficient, directly or through any
-     chain of internal parameters.  This is the check that was missing when the first input-scheme
-     model shipped with the shifted vev, Yukawas and Higgs quartic inside untagged couplings
-     (2026-10-03): the NP=0 amplitude then moves with the coefficients and NP^2==2 holds terms
-     quadratic in them.  A MASS that depends on a coefficient is reported but is not a problem,
-     since a generator counts orders on couplings and the {alpha, M_Z, G_F} scheme derives M_W.
+     chain of internal parameters.  If such a coupling carried the shifted vev, Yukawas or
+     Higgs quartic, the NP=0 amplitude would move with the coefficients and NP^2==2 would hold
+     terms quadratic in them.  A MASS that depends on a coefficient is reported but is not a
+     problem, since a generator counts orders on couplings and the {alpha, M_Z, G_F} scheme
+     derives M_W.
+  5. the files are what MadGraph can read: no Mathematica residue, every vertex well formed.
 
 Usage:  python3 validate/audit_ufo.py <ufo_dir>
 """
@@ -45,8 +48,8 @@ class _V:
 
 
 def load_ufo(path: str):
-    """Parse the UFO text files (FeynRules writes python 2 syntax, so importing is not an
-    option).  Returns an object with all_vertices, each with .name, .particles (objects
+    """Read the UFO text files by pattern.  FeynRules writes python 2 syntax, so the files are
+    not imported.  Returns an object with all_vertices, each with .name, .particles (objects
     with .name/.spin), .lorentz (objects with .name/.structure) and .couplings
     {(ic, il): coupling(.name/.value/.order)}."""
     def blocks(fn, head):
@@ -83,7 +86,7 @@ def load_ufo(path: str):
 
 
 def operators_by_wc():
-    """wc name -> parsed Operator (from the catalogue, same order as the blocks)."""
+    """wc name -> Operator, from the encoding gen/operators.py (read through ./dim8)."""
     sys.argv = ["x"]
     exec(open(os.path.join(ROOT, "dim8")).read().split("def main():")[0], g := {"__name__": "dim8lib", "__file__": os.path.join(ROOT, "dim8")})
     ops = g["_parse_all"]()
@@ -91,9 +94,9 @@ def operators_by_wc():
 
 
 def wc_in(value: str, wcs):
-    # One scan of the value, then set lookups: the earlier version ran a compiled regex per
-    # coefficient per coupling, 1030 x 48211 searches on the full model, and took the better part
-    # of an hour where this takes seconds.  Complex WCs appear through their Re/Im parts too.
+    # One scan of the value, then set lookups.  A compiled regex per coefficient per coupling
+    # takes most of an hour on the full model, where this takes seconds.  Complex WCs appear
+    # through their Re/Im parts too.
     names = set(re.findall(r"\b\w+\b", value))
     wcs = wcs if isinstance(wcs, (set, dict)) else set(wcs)
     found = {n for n in names if n in wcs}
@@ -122,11 +125,11 @@ def coefficient_closure(ufo: str):
 
 def well_formed(ufo: str):
     """The files must be what MadGraph can read.  FeynRules writes a failed evaluation INTO the
-    UFO instead of stopping: on 2026-10-04 an iteration limit inside WriteUFO left
+    UFO instead of stopping: an iteration limit inside WriteUFO leaves
     "ClassAttributeCreation[couplings, {... TerminatedEvaluation[IterationLimit] ...}]" where a
-    vertex's couplings should have been, in two models, and this audit passed both because its
-    loader reads entries by pattern and simply did not see the broken one.  So: no Mathematica
-    residue anywhere, and every Vertex( that is opened must be one the loader parsed."""
+    vertex's couplings should be.  load_ufo reads entries by pattern and does not see such an
+    entry, so this check requires that no Mathematica residue appears anywhere and that every
+    Vertex( that is opened is a well-formed entry."""
     problems = []
     for fn in ("vertices.py", "couplings.py", "lorentz.py", "parameters.py", "particles.py"):
         txt = open(os.path.join(ufo, fn)).read()
@@ -201,7 +204,7 @@ def _chirality(v, il, c, op, w, nferm, problems):
             struct = v.lorentz[il].structure
             parts = [p.name for p in v.particles]
             # chirality.  UFO convention (calibrated on the SM W vertex V_40 and on
-            # Q_{quWH^3}^{(1)}, the development log, not shipped session 4): the particle list names the
+            # Q_{quWH^3}^{(1)}): the particle list names the
             # particle each FIELD CREATES, and ProjX(-1,p) sits on the position p of the
             # unbarred field.  A coupling carrying complexconjugate(WC) is the Hermitian-
             # conjugate term, whose unbarred field is the direct term's barred one.
@@ -213,7 +216,7 @@ def _chirality(v, il, c, op, w, nferm, problems):
                 elif isinstance(f, Psi) and (f.bar == conj):
                     need.add("ProjP" if f.name in RIGHT else "ProjM")
             if "CC" in need:
-                return  # fermion-flow-violating chains are re-expressed by FeynRules; not audited here
+                return  # FeynRules re-expresses fermion-flow-violating chains, so they are not audited here
             if nferm and op.hc_mode == "real":
                 # a Hermitian operator contains both orderings; only the chirality set matters
                 pass

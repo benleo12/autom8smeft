@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 """Find Lorentz structures of a UFO that vanish identically, and the vertices that carry them.
 
-SUPERSEDED by validate/zero_vertex.py (2026-09-07).  Two holes, both found by auditing the
-release gate rather than the model.  This test randomises the momenta INDEPENDENTLY, so it can
-only catch a structure that vanishes by the antisymmetry of Epsilon alone, never one that
-vanishes through momentum conservation, which ALOHA does impose; and it skips every structure
-carrying a Gamma matrix.  Run on the released dim8_is it reports zero, while zero_vertex.py finds
-nine, used by fifty vertices, one of which (the psi^4 B one) breaks the build.  Kept because its
-Epsilon-only pass is fast and its findings were real.
+validate/zero_vertex.py is the complete test and the one to run.  This one randomises the
+momenta INDEPENDENTLY, so it catches only a structure that vanishes by the antisymmetry of
+Epsilon alone, never one that vanishes through momentum conservation, which ALOHA imposes.  It
+also skips every structure carrying a Gamma matrix.  Its Epsilon-only pass is fast, and
+validate/b4_normalisation.py uses its tensors and its structure reader.
 
-    validate/zero_lorentz.py <UFO dir> [--all]    (needs numpy: python3.13 on this machine)
+    validate/zero_lorentz.py <UFO dir> [--all]    (needs numpy)
 
 By default only structures containing Epsilon are tested, since the missing antisymmetrisation
 is the Epsilon one and Metric/P-only structures come out of FeynRules canonicalised; --all
@@ -19,14 +17,15 @@ Why: FeynRules does not antisymmetrise Epsilon over its dummy indices, so a stru
   -(Epsilon(1,-1,-2,-3)*P(-3,1)*P(-2,3)*P(-1,2)) - Epsilon(1,-1,-2,-3)*P(-3,1)*P(-2,2)*P(-1,3)
 (the two terms cancel under -1 <-> -2) reaches the UFO as a live vertex.  ALOHA simplifies it to
 zero and then writes a Fortran routine whose arguments it never declares ("Symbol 's2' has no
-IMPLICIT type"), and every process that touches the vertex fails to compile.  Seen on dim8_is:
-the a H H and Z H H vertices of Q_{BH^4D^2}^{(2)}, killing p p > w+ w- z.
+IMPLICIT type"), and every process that touches the vertex fails to compile.  The a H H and
+Z H H vertices of Q_{BH^4D^2}^{(2)} are an example: left in the UFO, they stop p p > w+ w- z
+from compiling.
 
-Method: each structure built from Epsilon, P, Metric and Identity (no Dirac matrices) is
-evaluated numerically at random momenta and random polarisation vectors for its external legs,
-the free Lorentz indices contracted with the vectors' polarisations, six random points; a
-structure that vanishes at all of them to 1e-9 relative to the size of its individual terms is
-reported.  Structures with Gamma matrices are left alone (none of the zero ones found had any).
+Method: each structure built from Epsilon, P and Metric alone is evaluated numerically at random
+momenta and random polarisation vectors for its external legs, the free Lorentz indices
+contracted with the vectors' polarisations, at four random points.  A structure that vanishes at
+all of them to 1e-9 relative to the size of its individual terms is reported.  Structures with
+Identity or a Dirac matrix are left alone, and validate/zero_vertex.py tests those.
 """
 import os, re, sys
 import numpy as np
@@ -111,12 +110,13 @@ def evaluate(parsed, nlegs, rng):
                 if i not in labels: labels[i] = next(letters)
                 spec += labels[i]
             specs.append(spec); arrays.append(arr)
-        # free indices contracted with the polarisation of that leg (upper index, so use metric-lowered eps... we use plain product with pol since P and Metric carry the lowering)
+        # each free index is contracted with the polarisation of its leg, which carries an upper
+        # index; P and Metric carry the lowering, so the polarisation enters as a plain product
         for i, l in labels.items():
             if i > 0:
                 specs.append(l); arrays.append(pol[i])
-        # dummies must be contracted with one metric each pair: our tensors carry all-lower-index
-        # conventions except EPS; treat every dummy pair with a metric insertion
+        # dummies are contracted through one metric per pair: the tensors carry lower indices
+        # except EPS, and every dummy pair gets a metric insertion
         dummies = [i for i in labels if i < 0]
         for i in dummies:
             l = labels[i]; l2 = next(letters)

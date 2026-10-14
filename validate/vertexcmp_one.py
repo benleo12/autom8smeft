@@ -6,15 +6,18 @@ External parameters are set from the caller's dict, internal ones are evaluated 
 (FeynRules usually writes them in dependency order, but the fixpoint makes that irrelevant), and
 every coupling expression is then evaluated in that namespace.
 
-Vertices are keyed by SORTED PDG CODES, so the two models line up even though they name their
-particles and their Lorentz structures differently.  For each vertex the value reported is the
-sum over its (colour, lorentz) coupling entries of |coupling|, which is basis-independent enough
-to compare across two models that may order their colour/Lorentz lists differently, and is all
-that is needed to answer "does this coefficient change this vertex by the same amount".
+The script is run once on each of two models, and the outputs are compared.  Vertices are keyed
+by SORTED PDG CODES, so the two models line up even though they name their particles and their
+Lorentz structures differently.  For each vertex two invariants are reported, the signed sum of
+its coupling entries and the sorted magnitudes of those entries (the comment in evaluate()
+explains both and the weight given to a bare projector).  Together they answer "does this
+coefficient change this vertex by the same amount".
 
     python3.11 vertexcmp_one.py <ufo path> '<json {param: value}>' '<json [coeff names]>'
 
-Prints JSON: {"<pdg key>": [off, on]}.  MUST be python3.11 (PEP 667 breaks MadGraph from 3.13).
+An optional fourth argument gives the value the coefficients are switched on at, default 1.
+Prints JSON: {"<pdg key>": [off, on]}, where off and on are each [[Re sum, Im sum], sorted
+magnitudes].  MUST be python3.11 (PEP 667 breaks MadGraph from 3.13).
 """
 import cmath
 import json
@@ -86,11 +89,6 @@ def evaluate(on):
             cv[c.name] = complex(eval(c.value, ns))
         except Exception:
             cv[c.name] = 0j
-    # Key by PDG content AND the colour/Lorentz structure the coupling sits on, then sum the
-    # couplings SIGNED.  Summing |coupling| over a vertex's entries is wrong: where a model keeps
-    # the operator's contribution and the input-scheme compensation as two entries on one vertex,
-    # |a| + |b| turns their cancellation into an addition.  On the Higgs self-coupling that reads
-    # as 15 + 9 = 24 against the true |-15 + 9| = 6, a spurious factor of 4.
     # Two invariants per vertex, keyed by PDG content alone.
     #   sum   the SIGNED sum of every coupling entry.  Summing |coupling| instead would turn a
     #         cancellation into an addition: where a model keeps the operator's contribution and
@@ -101,26 +99,21 @@ def evaluate(on):
     #         identical physics shows up as every four-fermion entry "differing".
     # Both must match.  The sum alone would miss two structures' couplings being swapped, and the
     # magnitudes alone would miss a sign.
-    # Sum the IDENTITY component, not the raw entries, because the two models do not use the
-    # same Dirac decomposition for a scalar-fermion vertex.  SMEFTsim writes e+ e- h on
-    # Identity(2,1) and Gamma5(2,1); this model writes it on ProjP and ProjM.  Since
+    # Both invariants count the IDENTITY component, not the raw entries, because the two models
+    # do not use the same Dirac decomposition for a fermion bilinear.  SMEFTsim writes e+ e- h on
+    # Identity(2,1) and Gamma5(2,1), and this model writes it on ProjP and ProjM.  Since
     #     a ProjM + b ProjP = (a+b)/2 Identity + (b-a)/2 Gamma5,
-    # a pair of pure projectors each carrying g is exactly one Identity carrying g, and adding
-    # the raw entries reports 2g against their g.  Weight a bare projector by one half.
-    # Structures that pair a projector with Gamma(...) are the four-fermion ones, where both
-    # models already use the same decomposition, so they keep weight one.
-    # ONE projector means one fermion bilinear, and SMEFTsim decomposes those onto
-    # Identity/Gamma5 while this model uses ProjP/ProjM: two projector entries at g ARE one
-    # Identity at g, so halve them.  This covers the scalar vertex (e+ e- h) and the DIPOLES,
-    # whose SMEFTsim structures are Gamma- and Gamma5-based (FFV9, FFV2) with no projector.
-    # TWO projectors means a four-fermion vertex, where SMEFTsim also uses ProjM/ProjM
-    # (FFFF3, FFFF4), so the decompositions already agree and the weight stays one.
+    # a pair of bare projectors each carrying g is exactly one Identity carrying g, and adding
+    # the raw entries would report 2g against their g.  A bare projector is therefore weighted
+    # by one half.  Structures that pair a projector with Gamma(...) are the four-fermion ones,
+    # where SMEFTsim also uses ProjM/ProjM (FFFF3, FFFF4), so the decompositions already agree
+    # and the weight stays one.
     # LIMIT OF THIS TOOL.  It halves a BARE projector only.  A dipole's structure carries the
     # projector inside the two terms of the sigma^{mu nu} antisymmetrisation, and SMEFTsim writes
     # the same dipole on Gamma/Gamma5 structures (FFV9, FFV2) with no projector at all, so cdB
     # and its relatives read as a clean factor 2 here that is decomposition, not physics.
-    # Settling a dipole needs the projectors expanded symbolically into Identity and Gamma5;
-    # until then compare dipoles by cross section, where they agree.
+    # Settling a dipole here would need the projectors expanded symbolically into Identity and
+    # Gamma5, so dipoles are compared by cross section, where the two models agree.
     bare = re.compile(r"^Proj[PM]\(\d+,\d+\)$")
     out = {}
     for v in vertices:

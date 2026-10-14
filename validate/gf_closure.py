@@ -7,8 +7,8 @@ G_F is an input of the scheme, so the muon decay amplitude must not move when a 
 switched on: the W-lepton vertices, the W mass and the four-lepton contact term change together
 and the changes cancel.  At 1/Lambda^2 that is SMEFTsim's statement.  At 1/Lambda^4 it involves
 the products of an operator with the first-order shifts, O_Hl3 at the corrected vev and on the
-rescaled W, which is the part of the model that was missing until 2026-10-05.  No Ward identity
-and no two-point term sees it, and it is a physical observable, which the others are not.
+rescaled W.  No Ward identity and no two-point function is sensitive to these products, and
+muon decay is a physical observable, which the others are not.
 
 The test writes a standalone matrix element for mu- > e- ve~ vm with the amplitude at NP<=2,
 evaluates it at MadGraph's fixed phase-space point with nine coefficients on at strength t, and
@@ -20,9 +20,11 @@ first-order term of relative size Gamma_W^2/M_W^2 = 7e-4 times the shift of M_W^
 third-order residue completely.  What remains at first order with the width off is of relative
 size m_mu^2/M_W^2, the momentum dependence of the propagator, at the 1e-8 level.
 
-Results on 2026-10-05, nine coefficients on:   t = 1        1/2       1/4       1/8
-    dimension-six sector rebuilt             -2.4e-3    -2.7e-4   -3.3e-5   -4.0e-6    ratios 8.7 8.3 8.2
-    the model it replaced                    -4.1e-2    -9.3e-3   -2.2e-3   -5.4e-4    ratios 4.4 4.2 4.1
+Reference output with the nine coefficients of COEFF on:
+    t = 1        1/2       1/4       1/8
+    -2.4e-3    -2.7e-4   -3.3e-5   -4.0e-6    ratios 8.7 8.3 8.2
+A model without the products of an operator with the first-order shifts gives a second-order
+deviation instead, with ratios near four.
 """
 import os
 import re
@@ -60,8 +62,9 @@ def main(argv):
     mg = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3"))
     work = argv[argv.index("--keep") + 1] if "--keep" in argv else tempfile.mkdtemp(prefix="gf_closure_")
     os.makedirs(work, exist_ok=True)
-    # the writer's NP limit is 2 on a model that has not been through the release step; raise it
-    # in a copy so the amplitude at NP=2 is allowed whatever state the model directory is in
+    # WriteUFO sets the NP expansion order to 2 and examples/release_model.sh raises it to 4.
+    # Raise it in a copy, so the amplitude at NP=2 is allowed whatever state the model directory
+    # is in.
     model = os.path.join(work, "model")
     subprocess.run(["rm", "-rf", model]); subprocess.run(["cp", "-r", ufo, model], check=True)
     co = os.path.join(model, "coupling_orders.py")

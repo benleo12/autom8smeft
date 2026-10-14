@@ -4,18 +4,17 @@
     python3.11 validate/compare_dim6_linear.py <UFO A> <UFO B> [--tol 1e-9]
 
 Each model is read in its own interpreter (two UFOs cannot be imported side by side, their module
-names collide).  With ONE real coefficient of block DIM6 at one and the rest at zero, every
-coupling of order NP=1 that carries the dimension-six scale is evaluated, and for each vertex,
-keyed by its PDG codes, the magnitudes over its colour and Lorentz structures are compared as a
-sorted list.  One coefficient at a time is the point: with several on, a model that kept the
-input shifts inside untagged parameters (ours before 2026-10-03) differs from one that tags them
-at the per-cent level, which is a second-order effect and not a difference in the linear vertex.
+names collide).  With ONE real coefficient of the parameter block DIM6 at one and the rest at
+zero, every coupling of order NP=1 that carries the dimension-six scale is evaluated, and for
+each vertex, keyed by its PDG codes, the magnitudes over its colour and Lorentz structures are
+compared as a sorted list.  One coefficient at a time is the point: with several on, a model that
+keeps the input shifts inside untagged parameters differs from one that tags them at the per-cent
+level, which is a second-order effect and not a difference in the linear vertex.
 
-Used on 2026-10-05 to show that rebuilding the dimension-six sector changed nothing at linear
-order except the pure-gluon vertices of cHG, and, in passing, that the build of 2026-10-04 had
-three Yukawa operators in it twice.  Sorted magnitudes are blind to a relabelling of dummy
-indices and to the order of identical legs, which differ freely between two writes of one model,
-and to an overall sign, which they do not.  Needs a Python that can import a UFO (3.11).
+Sorted magnitudes are blind to a relabelling of dummy indices and to the order of identical legs,
+both of which differ freely between two writes of one model.  They are also blind to an overall
+sign, which two writes of one model do not change, so a sign difference passes unseen.  Needs a
+Python that can import a UFO (3.11).
 """
 import collections
 import json

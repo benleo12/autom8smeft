@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exact decision of the 7- and 8-gluon vertices of the dual-dual G^4 operators
+"""Exact decision whether the 7- and 8-gluon vertices vanish for the dual-dual G^4 operators
 Q_{G^4}^{(2)} (L8op426), Q_{G^4}^{(4)} (L8op428), Q_{G^4}^{(8)} (L8op432).
 
 Two independent routes, both exact over Q(sqrt 3):
@@ -87,7 +87,7 @@ for a in range(8):
             dc = cmul(cnum(2), tr(mmul(acom, T[c])))
             assert qzero(fc[1]) and qzero(dc[1]), "f or d not real"
             f[a][b][c] = fc[0]; d[a][b][c] = dc[0]
-# identities (lesson: assert every hand-built tensor against its definitions)
+# identities: the f and d tables are asserted against their definitions and standard values
 half = (Fr(1, 2), Fr(0))
 assert f[0][1][2] == (Fr(1), Fr(0)) and f[3][4][7] == (Fr(0), Fr(1, 2)) and f[0][3][6] == half and f[0][4][5] == (Fr(-1, 2), Fr(0))
 assert d[0][0][7] == (Fr(0), Fr(1, 3)) and d[7][7][7] == (Fr(0), Fr(-1, 3)) and d[0][3][5] == half and d[3][3][7] == (Fr(0), Fr(-1, 6))
@@ -203,8 +203,8 @@ def XYpieces(G1, G2):
             Y[2][a][b], Y[3][a][b], Y[4][a][b] = y2, y3, y4
     return X, Y
 
-# The nine Q_{G^4} operators as bilinear forms A^{ab} B^{cd} with a colour structure, read off
-# models/dev/dim8_generated.fr (block = 424 + k for Q_{G^4}^{(k)}):
+# The nine Q_{G^4} operators as bilinear forms A^{ab} B^{cd} with a colour structure, as in the
+# generated model models/src/dim8_generated.fr (block = 424 + k for Q_{G^4}^{(k)}):
 #   (1) Y^{aa} Y^{bb}   (2) X^{aa} X^{bb}   (3) Y^{ab} Y^{ab}   (4) X^{ab} X^{ab}   (5) Y^{aa} X^{bb}
 #   (6) Y^{ab} X^{ab}   (7) d d Y Y         (8) d d X X         (9) d d Y X
 OPS = {425: ("Y", "Y", "tr"), 426: ("X", "X", "tr"), 427: ("Y", "Y", "pair"), 428: ("X", "X", "pair"),

@@ -3,16 +3,15 @@
 
     examples/studies/table_appendix.py > paper/tables/grid.tex
 
-This replaces the twelve per-process tables an earlier version of the paper carried.  Those
-repeated the class column twelve times and the derived W mass in every row of every one of them,
-which is 252 cells holding at most 21 distinct numbers, since the W mass a class derives depends
-on which coefficients are on and not at all on the process.  One grid says the same thing once:
-rows are the 21 classes, columns the twelve processes, each cell the dimension-eight interference
-as a percentage of that process's Standard-Model rate.  A dash is no diagram, which is the
-reachability statement of the counting made visible as the shape of the table.
+One grid takes the place of twelve per-process tables, which would repeat the class column and
+the derived W mass in every row, although the W mass a class derives depends on which
+coefficients are on and not at all on the process.  Rows are the 21 classes, columns the twelve
+processes, and each cell is the dimension-eight interference in units of 1e-4 of that process's
+Standard-Model rate at Lambda = 3 TeV.  A dash is no diagram, so the pattern of dashes shows
+which classes reach which process.
 
 The absolute cross sections, the Monte Carlo errors and the squared terms are in each study's
-results.tsv in the repository, which is the machine-readable form and the one worth reading.
+results.tsv in the repository.
 """
 import os
 import sys
@@ -62,10 +61,10 @@ def read(study):
             except ValueError:
                 # keep the WORD, not just the absence of a number: "NO_DIAGRAMS" and
                 # "NOT_INTEGRATED" mean opposite things and a table that renders both as a dash
-                # tells the reader a class is absent when it was merely never run
+                # tells the reader a class is absent when it was never run
                 v = (f[3], None)
-            # A process run twice (the Drell-Yan photon channel was) keeps the entry that has a
-            # number, so a later NO_DIAGRAMS pass cannot overwrite a measured row.
+            # A process run twice keeps its first entry, so a later pass, such as one that
+            # reports NO_DIAGRAMS, cannot overwrite a measured row.
             if key not in out or out[key][0] is None:
                 out[key] = v
     return out
@@ -104,7 +103,7 @@ def cell(sig, err, sm, square=None):
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
 # find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 set Lambda_min in diboson, VBF and Drell-Yan
 # (the energy-growth subsection), and X^4 carries the asterisk discussion and the +13.3% in
-# W+W-W+ (the reachability subsection).  Keep this set in step with paper/sections/pheno.tex.
+# W+W-W+ (the reachability subsection).  Keep this set in step with the phenomenology section of the paper.
 HIGHLIGHT = {1, 7, 14, 21}
 
 
@@ -151,7 +150,7 @@ def main():
             r"reachability prediction of \cref{eq:reach} together with the field content of the vertex, "
             r"as \cref{sec:routes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
             r"diagram but interferes below $10^{-6}$ of the Standard-Model rate, a dagger one that produces "
-            r"diagrams whose cross section was not run because the process was too expensive, and "
+            r"diagrams but was not run in these studies, and "
             r"parentheses mark a Monte Carlo error above a tenth of the entry. "
             r"The Drell-Yan processes carry $m_{ee}>200$~GeV, the photon channel additionally "
             r"$p_T^\gamma>20$~GeV and $\Delta R(\gamma,\ell)>0.4$, and $HHjj$ is generated with "

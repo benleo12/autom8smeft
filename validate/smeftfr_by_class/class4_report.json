@@ -1,7 +1,7 @@
 [
 	{
-		"hand":"LQphi4D4n1",
-		"handWC":"cphi4D4n1",
+		"ref":"LQphi4D4n1",
+		"refWC":"cphi4D4n1",
 		"gen":"L8op471",
 		"genWC":"c8H4x1",
 		"norm":"1",
@@ -9,8 +9,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQphi4D4n1",
-		"handWC":"cphi4D4n1",
+		"ref":"LQphi4D4n1",
+		"refWC":"cphi4D4n1",
 		"gen":"L8op471",
 		"genWC":"c8H4x1",
 		"norm":"1",
@@ -18,8 +18,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQphi4D4n2",
-		"handWC":"cphi4D4n2",
+		"ref":"LQphi4D4n2",
+		"refWC":"cphi4D4n2",
 		"gen":"L8op472",
 		"genWC":"c8H4x2",
 		"norm":"1",
@@ -27,8 +27,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQphi4D4n2",
-		"handWC":"cphi4D4n2",
+		"ref":"LQphi4D4n2",
+		"refWC":"cphi4D4n2",
 		"gen":"L8op472",
 		"genWC":"c8H4x2",
 		"norm":"1",
@@ -36,8 +36,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQphi4D4n3",
-		"handWC":"cphi4D4n3",
+		"ref":"LQphi4D4n3",
+		"refWC":"cphi4D4n3",
 		"gen":"L8op473",
 		"genWC":"c8H4x3",
 		"norm":"1",
@@ -45,8 +45,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQphi4D4n3",
-		"handWC":"cphi4D4n3",
+		"ref":"LQphi4D4n3",
+		"refWC":"cphi4D4n3",
 		"gen":"L8op473",
 		"genWC":"c8H4x3",
 		"norm":"1",

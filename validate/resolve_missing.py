@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Fill in the class cells a study never ran, so that a blank in the paper's grid is never
-mistaken for a zero.
+"""Fill in the class cells a study never ran, so that a blank in a class table is never mistaken
+for a zero.
 
     validate/resolve_missing.py <study dir> [--write]
 
-\\code{resolve_no_output.py} resolves a cell that IS in results.tsv and carries no cross section.
-This resolves a cell that is not in results.tsv at all, which is a different and more dangerous
-situation: three of the twelve processes skipped some class rows on cost, and in a table where a
-dash means ``no diagram'' an absent row and an empty row look identical while meaning opposite
+validate/resolve_no_output.py resolves a cell that IS in results.tsv and carries no cross
+section.  This resolves a cell that is not in results.tsv at all, which is a different and more
+dangerous situation: a study can skip some classes of a process on cost, and in a table where a
+dash means "no diagram" an absent entry and an empty entry look identical while meaning opposite
 things.  For each missing (process, class) it asks MadGraph to generate the process on the
-restricted model and writes back either ``NO_DIAGRAMS'' or ``NOT_INTEGRATED'', the latter meaning
-the class does reach the process and the cross section was simply never measured.
+restricted model and writes back either ``NO_DIAGRAMS`` or ``NOT_INTEGRATED``, the latter meaning
+that the class does reach the process and the cross section was never computed.
 
-Only diagram generation runs, never integration, so this is minutes and not hours, and it is
-niced because the machine is usually shared.
+Only diagram generation runs, never integration, so this takes minutes and not hours.  It runs
+under nice, so it yields to other jobs on a shared machine.
 """
 from __future__ import annotations
 

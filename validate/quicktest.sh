@@ -17,8 +17,9 @@ MODEL=$REPO/models/dim8_is
 mkdir -p "$S"
 pass=0; fail=0
 
-# Diagnose the two things that are wrong on somebody else's machine, rather than letting tests 3
-# to 6 fall through an empty cross section into float("") and print a traceback each.
+# Diagnose the two things most likely to be missing on a new machine, python and MadGraph,
+# rather than letting tests 3 to 6 fall through an empty cross section into float("") and print
+# a traceback each.
 command -v "$PY" > /dev/null || PY=python3
 command -v "$PY" > /dev/null || { echo "no python3 on PATH"; exit 2; }
 [ -x "$MG/bin/mg5_aMC" ] || {

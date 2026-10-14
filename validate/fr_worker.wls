@@ -3,7 +3,7 @@
    The expensive parts of a dimension-eight build are per block and independent: the
    ExpandIndices evaluation and the FeynmanRules call.  This worker does both for its
    share of the blocks, caches the vertex list to disk, and runs CheckHermiticity on the
-   way past, so one pass produces both the V5 result and the input to WriteUFO.
+   way past, so one pass produces both the Hermiticity verdict and the input to WriteUFO.
 
    Usage:
      wolframscript -file fr_worker.wls <shard> <nshards> [nblocks] [nkernels] [recursionlimit]
@@ -16,8 +16,9 @@
 
    Outputs, per block:
      build/vertices/<block>.mx        DumpSave of  FR$Vert  (the vertex list)
-     build/vertices/<block>.status    one line: block | ops | terms | vertices |
-                                      nonhermitian | tEval | tVert | tHerm
+     build/vertices/<block>.status    one line: block | vertices | rawvertices |
+                                      nonhermitian | tEval | tVert | tHerm, plus
+                                      maxlegs / minlegs when a leg range is set
 *)
 
 (* DIM8_ROOT lets the same script run off-machine, e.g. on an HPC system *)
@@ -32,19 +33,20 @@ FR$NKernels = If[Length[args] >= 4, ToExpression[args[[4]]], 3];
 z8rlWanted = If[Length[args] >= 5, ToExpression[args[[5]]], 2500];  (* applied AFTER FeynRules loads: FeynRulesPackage.m:1622 resets $RecursionLimit to 2500 *)
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 z9termwise = Environment["DIM8_TERMWISE"] =!= "0";
-(* The Hermiticity check costs about three quarters of a block: on L8op94 it was 22266 s
-   against 5792 s for the vertices themselves.  It is a validation (V5), not something the
+(* The Hermiticity check costs about three quarters of a block: on L8op94 it takes 22266 s
+   against 5792 s for the vertices themselves.  It is a validation, not something the
    UFO writer needs, so it can be deferred to get a complete vertex cache sooner.  OPT IN
-   with DIM8_HERM=0; the default remains the full check.  A block built that way records
+   with DIM8_HERM=0; the default is the full check.  A block built that way records
    "nonhermitian -1", meaning NOT CHECKED rather than clean, and DIM8_HERMONLY=1 later
    re-runs just the check over blocks whose .mx already exists. *)
 z9herm = Environment["DIM8_HERM"] =!= "0";
-z9hermOnly = Environment["DIM8_HERMONLY"] === "1";   (* term-wise chunked evaluation, see below *)
+z9hermOnly = Environment["DIM8_HERMONLY"] === "1";
+(* DIM8_CHUNK: the number of expanded terms per chunk of the term-wise evaluation, see below *)
 z9chunk = If[Environment["DIM8_CHUNK"] === $Failed, 250, ToExpression[Environment["DIM8_CHUNK"]]];
 (* DIM8_SPLIT=1: the chunk unit is a single expanded term instead of a whole monomial.  A monomial
    of a dual-dual G^4 operator is 24 metric products after the Eps-pair rewrite, and one such
-   monomial with seven or eight gluon fields drove FeynmanRules past 122 GB (2026-09-05); with the
-   split, DIM8_CHUNK=1 feeds FeynmanRules one term at a time.  Linear in the Lagrangian, so exact. *)
+   monomial with seven or eight gluon fields can drive FeynmanRules past 122 GB; with the split,
+   DIM8_CHUNK=1 feeds FeynmanRules one term at a time.  Linear in the Lagrangian, so exact. *)
 z9split = Environment["DIM8_SPLIT"] === "1";
 (* DIM8_MAXLEGS=n: FeynRules' own MaxParticles option, vertices with more than n legs are not
    computed.  Opt-in fallback for the class-1 operators whose seven- and eight-gluon vertices
@@ -53,13 +55,13 @@ z9split = Environment["DIM8_SPLIT"] === "1";
    the status line as "maxlegs n"; the whole-block CheckHermiticity path ignores it. *)
 (* DIM8_EPSEPS (default on, 0 to disable): replace the product of two Lorentz Levi-Civita tensors in a monomial by the
    4D identity Eps[a,b,c,d] Eps[e,f,g,h] = -Det[ME[i,j]] (24 metric products; the sign of
-   eps_{0123} squares away, so the identity holds in either convention).  The dual-dual
-   operators Q_{G^4}^{(2),(4),(8)} drove a single-term FeynmanRules call past 80 GB with the
-   two Eps contracted through eight gluon indices, while the non-dual G^4 operators with the
+   eps_{0123} squares away, so the identity holds in either convention).  With the two Eps
+   contracted through eight gluon indices, a single-term FeynmanRules call for the dual-dual
+   operators Q_{G^4}^{(2),(4),(8)} goes past 80 GB, while the non-dual G^4 operators with the
    same eight-gluon vertices build in under two hours below 60 GB; FeynRules' handling of the
-   contracted Eps pair is the cost, not the legs.  Exact; validated on Q_{G^2B^2}^{(2)} against
-   its Eps-carrying build (2026-09-04). *)
-z9epseps = Environment["DIM8_EPSEPS"] =!= "0";   (* default ON since 2026-09-04; DIM8_EPSEPS=0 keeps the Eps pair *)
+   contracted Eps pair is the cost, not the legs.  The rewrite is exact, and
+   validate/check_epseps.sh compares it on Q_{G^2B^2}^{(2)} with the build that keeps the Eps pair. *)
+z9epseps = Environment["DIM8_EPSEPS"] =!= "0";   (* default on; DIM8_EPSEPS=0 keeps the Eps pair *)
 z9maxlegs = If[Environment["DIM8_MAXLEGS"] === $Failed, None, ToExpression[Environment["DIM8_MAXLEGS"]]];
 (* DIM8_MINLEGS=n: FeynRules' MinParticles, only vertices with at least n legs; together with a
    capped build of the same block it splits an eight-gluon operator into a cheap part (up to six
@@ -83,13 +85,13 @@ If[! DirectoryQ[$root <> "/build"], CreateDirectory[$root <> "/build"]];
 If[! DirectoryQ[vdir], CreateDirectory[vdir]];
 
 t0 = AbsoluteTime[];
-(* DIM8_BASE may name several files separated by ";", as the writer already allows, so that a
+(* DIM8_BASE may name several files separated by ";", as the writer allows, so that a
    base assembled from more than one model file loads here too.  That is how the dimension-six
    sector arrives: "base_inputscheme.fr;dim6_smeftsim.fr". *)
 z8bases = StringTrim /@ StringSplit[z8base, ";"];
 LoadModel[Sequence @@ Append[z8bases, "gen.fr"]];
-(* the subkernels keep Mathematica's default $RecursionLimit = 2500 unless told otherwise;
-   CheckHermiticity on a 334-vertex Feynman-gauge class-11 block died there *)
+(* the subkernels keep Mathematica's default $RecursionLimit = 2500 unless told otherwise,
+   and CheckHermiticity on a 334-vertex Feynman-gauge class-11 block exceeds it *)
 Unprotect[$RecursionLimit]; $RecursionLimit = z8rlWanted;
 If[FR$NKernels > 0, With[{z8rl = z8rlWanted}, ParallelEvaluate[Unprotect[$RecursionLimit]; $RecursionLimit = z8rl]]];
 Print["[cfg] RecursionLimit master ", $RecursionLimit, If[FR$NKernels > 0, {" subkernels ", ParallelEvaluate[$RecursionLimit]}, ""]];
@@ -101,8 +103,8 @@ z9frOpts = z9mkFrOpts[];
 (* A Lagrangian term with n field operators feeds exactly the n-point vertex, so with a leg range
    set the terms outside it are dropped BEFORE FeynmanRules: FeynRules would otherwise expand
    the eight-gluon term of a G^4 operator (the memory hog) only to discard its vertex under
-   MaxParticles (the capped build of 432 died at 122 GB that way, 2026-09-05), and the
-   MinParticles run would spend its time on the seventy chunks that hold nothing above six legs. *)
+   MaxParticles (more than 122 GB for block 432), and the MinParticles run would spend its
+   time on the seventy chunks that hold nothing above six legs. *)
 z9nfields[z9t_] := Module[{z9x = z9t /. Power[z9b_, z9n_Integer] /; !FreeQ[z9b, _Symbol?FieldQ] :> z9FPOW[z9n, Count[z9b, (_Symbol?FieldQ)[___], {0, Infinity}] + Count[z9b, _Symbol?FieldQ, {0, Infinity}]]},
   Total[Cases[z9x, z9FPOW[z9n_, z9k_] :> z9n z9k, {0, Infinity}]] + Count[z9x, (_Symbol?FieldQ)[___], {0, Infinity}] + Count[z9x, _Symbol?FieldQ, {0, Infinity}]];
 z9legOK[z9t_] := With[{z9k = z9nfields[z9t]}, (z9maxlegs === None || z9k <= z9maxlegs) && (z9minlegs === None || z9k >= z9minlegs)];
@@ -118,14 +120,14 @@ z9epsepsRule = Eps[z9a_, z9b_, z9c_, z9d_] Eps[z9e_, z9f_, z9g_, z9h_] :> -Det[O
        vertex can come out as  c (Eps p1 p2 p3 - Eps p1 p3 p2)   (class 8, Q_{WH^4D^2}^{(2)});
      - summed (dummy) indices Gluon$1, Gluon$2, ... are never relabelled, so
        f[3,4,G2] f[5,6,G1] f[G1,G2,G3] + f[3,4,G1] f[5,6,G2] f[G1,G2,G3]  survives
-       (class 14, Q_{q^2G^2D}^{(2)}: 12 "non-Hermitian" vertices, all zero).
-   Canonicalise every coupling (sorted Eps/f arguments with the signature, then average over
-   all relabellings of the dummy indices, type by type) and drop the vanishing ones. *)
+       (class 14, Q_{q^2G^2D}^{(2)}, where 12 such zero vertices would be flagged non-Hermitian).
+   Canonicalise every coupling (sorted Eps/f arguments with the signature, then a canonical
+   relabelling of the dummy indices, type by type) and drop the vanishing ones. *)
 canonEps = Eps[z8args__] :> Signature[{z8args}] Eps[Sequence @@ Sort[{z8args}]];
 canonF = f[z8args__] :> Signature[{z8args}] f[Sequence @@ Sort[{z8args}]];
 dummies[z8e_] := Union[Cases[z8e, Index[_, _Symbol], Infinity]];
 (* Averaging over all relabellings is exact but factorial in the number of dummies of one
-   type; the class-14 W blocks (up to ten Lorentz dummies per coupling) never finished.
+   type, out of reach for the class-14 W blocks (up to ten Lorentz dummies per coupling).
    Instead each monomial is brought to a canonical relabelling: the factors are ordered by a
    dummy-blind key, the dummies are renamed in order of first appearance, and among factors
    whose keys tie every ordering is tried and the Order-minimal result kept.  Two monomials
@@ -145,8 +147,8 @@ canonTerm[z8t_] := Module[{z8facs, z8groups, z8orderings},
   z8orderings = Tuples[Permutations /@ z8groups];
   oddUnderSwapQ[First[Sort[renameByAppearance[Flatten[#]] & /@ z8orderings]]]];
 (* a single monomial that changes sign when two of its own dummies of one type are swapped
-   (p^m1 p^m2 Eps[m1, m2, ...]) is zero by itself; the averaging saw that, the canonical
-   relabelling alone does not, so test every same-type pair explicitly *)
+   (p^m1 p^m2 Eps[m1, m2, ...]) is zero by itself; the canonical relabelling alone does not
+   see that, so test every same-type pair explicitly *)
 oddUnderSwapQ[z8t_] := Module[{z8byType, z8pairs},
   z8byType = GatherBy[dummies[z8t], First];
   z8pairs = Flatten[Subsets[#, {2}] & /@ z8byType, 1];
@@ -156,46 +158,43 @@ symDummies[z8e_] := Module[{z8x = Expand[z8e]},
 canonCoup[z8c_] := Module[{z8e},
   z8e = Expand[symDummies[Expand[z8c /. canonEps /. canonF]] /. canonEps /. canonF];
   If[z8e === 0, 0, Simplify[z8e, TimeConstraint -> 10]]];   (* the zero test is exact after Expand; Simplify only compacts *)
-(* Third syntactic zero, found on a charge-conjugated colour-epsilon chain
-   (tests/gen_smoke/cctest.log, L3): the traceless-generator identity
-   eps_{abd} T_{dc} + eps_{bcd} T_{da} + eps_{cad} T_{db} = 0, which no rewriting rule above
-   knows.  Rather than collect SU(3) identities one by one, evaluate the colour algebra
-   numerically: external colour/gluon indices get random values, dummies are summed, and
-   T, f, d, Eps become numbers.  Whatever spin/Lorentz structure remains must vanish
-   identically for a handful of random assignments; a nonzero tensor is caught with
-   probability one.  Only used on couplings that survived canonCoup. *)
+(* A coupling can also vanish through an SU(3) identity that no rewriting rule above knows,
+   such as the traceless-generator identity eps_{abd} T_{dc} + eps_{bcd} T_{da} + eps_{cad} T_{db} = 0
+   of a charge-conjugated colour-epsilon chain.  Rather than collect SU(3) identities one by
+   one, the colour algebra is evaluated with explicit tables for T, f, d, delta and the colour
+   epsilon, exactly and without sampling (the tensor test below).  Only used on couplings that
+   survived canonCoup. *)
 gellMann = {{{0,1,0},{1,0,0},{0,0,0}}, {{0,-I,0},{I,0,0},{0,0,0}}, {{1,0,0},{0,-1,0},{0,0,0}},
   {{0,0,1},{0,0,0},{1,0,0}}, {{0,0,-I},{0,0,0},{I,0,0}}, {{0,0,0},{0,0,1},{0,1,0}},
   {{0,0,0},{0,0,-I},{0,I,0}}, {{1,0,0},{0,1,0},{0,0,-2}}/Sqrt[3]};
 tNum[z8a_, z8i_, z8j_] := gellMann[[z8a, z8i, z8j]]/2;
 (* T = lambda/2, f^{abc} = -2 i Tr([T^a,T^b] T^c), d^{abc} = 2 Tr({T^a,T^b} T^c): with the
-   Gell-Mann matrices that is Tr(...)/8.  Until 2026-09-04 the tables carried Tr(...)/4, i.e.
-   f and d twice too large relative to T and delta; a zero test cannot drop a real vertex that
-   way (an f f tensor is never proportional to a delta delta tensor) but it keeps every zero
-   that rests on [T^a,T^b] = i f^{abc} T^c or the Fierz identity, and flags it non-Hermitian. *)
+   Gell-Mann matrices that is Tr(...)/8.  A wrong normalisation of f and d relative to T and
+   delta cannot make the zero test drop a real vertex (an f f tensor is never proportional to
+   a delta delta tensor), but it keeps every zero that rests on [T^a,T^b] = i f^{abc} T^c or the
+   Fierz identity and flags it non-Hermitian.  validate/check_colour_norm.wls checks the
+   defining identities. *)
 fNum = Table[-2 I Tr[(gellMann[[z8a]].gellMann[[z8b]] - gellMann[[z8b]].gellMann[[z8a]]).gellMann[[z8c]]]/8, {z8a, 8}, {z8b, 8}, {z8c, 8}] // Simplify;
 dNum = Table[2 Tr[(gellMann[[z8a]].gellMann[[z8b]] + gellMann[[z8b]].gellMann[[z8a]]).gellMann[[z8c]]]/8, {z8a, 8}, {z8b, 8}, {z8c, 8}] // Simplify;
 colourQ[z8e_] := !FreeQ[z8e, Index[Colour | Gluon, _]];
-(* The first version of this test put ONE random value on each external colour index for six
-   fixed seeds and dropped the coupling when all six evaluations vanished.  That is unsound
-   for sparse tensors: a random triple of adjoint indices is a nonzero component of f or d
-   about one time in ten, so all six samples missed with probability near one half, and with
-   fixed seeds the miss was the same for every vertex with the same external index pattern.
-   It deleted every bare f^{ABC} and d^{ABC} three-gluon vertex and every f T quark-gluon-gluon
-   structure from the cache (found 2026-09-03 on Q_{G^3B}^{(3)}, which came out with no
-   vertices at all).  A tensor is zero iff every component is zero, so enumerate ALL
-   assignments of the external colour indices, stop at the first nonzero one, and do not test
-   at all (keep the vertex) when there are more than z8maxCombos assignments; a coupling
-   that is kept although zero costs nothing but a vertex in the UFO.  Simplify failing to
-   reach 0 also keeps the vertex, so the test can only err on the safe side. *)
+(* The enumeration (colourAt below, colourZeroQEnum further down; the default test is the
+   tensor contraction after it).  A tensor is zero iff every component is zero, so enumerate
+   ALL assignments of the external colour indices, stop at the first nonzero one, and do not
+   test at all (keep the vertex) when there are more than z8maxCombos assignments.  Sampling
+   is unsound for sparse tensors: a random triple of adjoint indices is a nonzero component of
+   f or d about one time in ten, so a test that samples a few assignments finds bare f^{ABC}
+   and d^{ABC} three-gluon vertices and f T quark-gluon-gluon structures zero.  A coupling
+   that is kept although zero costs nothing but a vertex in the UFO, and a remainder that
+   Expand does not bring to 0 also keeps the vertex, so the test can only err on the safe
+   side. *)
 (* cap on the exhaustive enumeration: 40000 covers q qbar g g g (4608), q qbar g g g g (36864)
-   and five gluons (32768); six gluons (262144) are not tested and kept.  With 4096 the finish
-   job flagged the q^2G^2D family (L8op43, 54) on five-leg vertices whose zero the enumeration
-   never reached (2026-09-04). *)
+   and five gluons (32768); six gluons (262144) are not tested and kept.  A cap of 4096 would
+   leave the five-leg vertices of the q^2G^2D family (L8op43, 54) untested, which in a
+   Hermiticity residual means a flag. *)
 z8maxCombos = If[Environment["DIM8_MAXCOMBOS"] === $Failed, 40000, ToExpression[Environment["DIM8_MAXCOMBOS"]]];
 (* dummies are summed TERM BY TERM: summing over the whole expression multiplies every term
    that lacks the dummy by 3 or 8, which can only mask a genuine zero (safe direction) but is
-   not exact (2026-09-04) *)
+   not exact *)
 colourSumTerm[z8t_] := Module[{z8e = z8t, z8dums = Union[Cases[z8t, Index[Colour | Gluon, _Symbol], Infinity]]},
   Do[z8e = Total[Table[z8e /. z8d -> z8v, {z8v, If[z8d[[1]] === Colour, 3, 8]}]], {z8d, z8dums}]; z8e];
 colourAt[z8c_, z8ext_List, z8vals_List] := Module[{z8e = Expand[z8c /. Thread[z8ext -> z8vals]]},
@@ -207,15 +206,15 @@ colourAt[z8c_, z8ext_List, z8vals_List] := Module[{z8e = Expand[z8c /. Thread[z8
             IndexDelta[z8i_Integer, z8j_Integer] :> KroneckerDelta[z8i, z8j]};
   (* Expand, not Simplify: couplings arrive canonicalised (canonCoup), so like Lorentz monomials
      cancel exactly under Expand, and a nonzero remainder only KEEPS the vertex; Simplify with a
-     time budget cost hours on the 4608-assignment enumeration of a fermionic zero (2026-09-04) *)
+     time budget takes hours on the 4608-assignment enumeration of a fermionic zero *)
   Expand[z8e]];
 (* Split the coupling ONCE into Lorentz/spin monomials and their colour polynomials: a term's
    key is the product of its factors carrying non-colour indices or momenta (FV, SP, ME, Eps,
    Ga, ...), its coefficient everything else (numbers, parameters, colour tensors).  Distinct
    keys are linearly independent syntactic objects, so the coupling vanishes for a colour
    assignment iff every coefficient does; enumerating the small colour polynomials is exact and
-   hundreds of times cheaper than expanding the full expression per assignment (the block-43
-   Hermiticity rerun took hours that way, 2026-09-04). *)
+   hundreds of times cheaper than expanding the full expression per assignment, which takes
+   hours on the Hermiticity residual of block 43. *)
 colourFactorQ[z8f_] := !FreeQ[z8f, Index[Colour | Gluon, _]];
 lorentzFactorQ[z8f_] := !FreeQ[z8f, Index[Except[Colour | Gluon], _] | _FV | _SP | _ME | _Eps | _Ga | _ProjM | _ProjP | _SlashedP | _TensDot | _z9e | _z9p];   (* z9e, z9p: the Lorentz-level residual test below *)
 colourSplit[z8c_] := Module[{z8e = Expand[z8c], z8terms},
@@ -223,12 +222,12 @@ colourSplit[z8c_] := Module[{z8e = Expand[z8c], z8terms},
   Values[GroupBy[z8terms,
     Function[z8t, Times @@ Select[If[Head[z8t] === Times, List @@ z8t, {z8t}], lorentzFactorQ[#] && !colourFactorQ[#] &]] ->
     Function[z8t, Times @@ Select[If[Head[z8t] === Times, List @@ z8t, {z8t}], !(lorentzFactorQ[#] && !colourFactorQ[#]) &]], Total]]];
-(* ---- exact colour tensor evaluation (2026-09-04) --------------------------------------
+(* ---- exact colour tensor evaluation ---------------------------------------------------
    The enumeration above is exact, but its cost is the number of external assignments times
    the number of colour polynomials, and anything above z8maxCombos is not tested at all,
-   which in a Hermiticity residual means a flag: the finish job flagged the whole
-   psi^2 X^2 D family on residual vertices with five and six legs, and the block-43 rerun
-   with the cap lifted enumerated for hours.  So the colour polynomial is evaluated as a
+   which in a Hermiticity residual means a flag.  The residual vertices with five and six legs
+   of the psi^2 X^2 D family are above the cap, and with the cap lifted block 43 enumerates
+   for hours.  So the colour polynomial is evaluated as a
    TENSOR instead: every factor (T, f, d, delta, the colour epsilon) is an explicit array,
    the dummies are contracted factor by factor (the shared axes reshaped into one and
    contracted with Dot, an einsum), and the polynomial vanishes iff the resulting array over
@@ -238,8 +237,8 @@ colourSplit[z8c_] := Module[{z8e = Expand[z8c], z8terms},
    when it vanishes identically), so no symbolic Sqrt[3] ever enters Dot or TensorProduct.
    The f and d tables are generated from the generator matrices in the same arithmetic and
    asserted against the defining identities and against fNum/dNum at load time.
-   DIM8_COLOURTEST=enum restores the enumeration (validate/check_colour_test.wls runs both
-   and requires identical verdicts). *)
+   DIM8_COLOURTEST=enum selects the enumeration instead (validate/check_colour_test.wls runs
+   both and requires identical verdicts). *)
 z8colourEnum = Environment["DIM8_COLOURTEST"] === "enum";
 z8dim[Colour] = 3; z8dim[Gluon] = 8;
 Z8Z = Z8ZeroPart;
@@ -333,8 +332,8 @@ z8colArrRaw[z8t_, z8ext_] := Module[{z8facs, z8tens, z8cur, z8labs, z8rest, z8k,
   z8cur];
 (* non-zero short circuit: ONE non-zero component proves a polynomial non-zero, so a few random
    assignments are tried first; a zero verdict is never drawn from them (the full array decides).
-   Kept vertices are the common case in the build path, where the full array cost 4 s per
-   coupling on block 43 against 0.7 s for the enumeration's early exit (2026-09-04). *)
+   Kept vertices are the common case in the build path, where the full array takes 4 s per
+   coupling on block 43 against 0.7 s for an early exit on a nonzero component. *)
 z8sampleNonzeroQ[z8p_, z8ext_] := Module[{z8dims = z8dim[#[[1]]] & /@ z8ext},
   z8ext =!= {} && AnyTrue[Table[RandomInteger[{1, #}] & /@ z8dims, {8}], colourAt[z8p, z8ext, #] =!= 0 &]];
 z8polyZeroQ[z8p_, z8ext_] := Module[{z8terms, z8arrs, z8tot},
@@ -361,11 +360,11 @@ canonVerts[z8v_List] := Module[{z8cv},
   z8cv = Select[z8cv, #[[2]] =!= 0 &];
   Select[z8cv, !colourZeroQ[#[[2]]] &]];
 
-(* ---- Lorentz/Dirac-level zero test of a residual vertex (2026-09-05) ------------------------
+(* ---- Lorentz/Dirac-level zero test of a residual vertex -----------------------------------
    What survives canonicalisation and the exact colour test can still vanish through a Lorentz
    identity that no syntactic rule knows (Schouten: five antisymmetrised indices vanish in 4D,
    which is how the h.c. of an operator with a dual field strength comes back), through a
-   Clifford identity, or through momentum conservation.  Q_{q^2GBD}^{(3)} (block 66) kept six
+   Clifford identity, or through momentum conservation.  Q_{q^2GBD}^{(3)} (block 66) has six
    such residual vertices, all zero.  So every survivor is evaluated EXACTLY as a polynomial:
    momenta are symbols p[i, mu] with the last one fixed by conservation (all incoming), every
    external Lorentz index is contracted with a symbolic vector e[k, mu], Lorentz dummies are
@@ -455,14 +454,14 @@ Module[{zl1 = Index[Lorentz, Ext[1]], zl2 = Index[Lorentz, Ext[2]], zl3 = Index[
    FeynmanRules collects vertices across the whole expanded Lagrangian and its cost grows
    roughly quadratically with the number of expanded terms: one of the 24 monomials of
    Q_{q^2W^2D}^{(2)} (720 expanded terms) takes 16 s to expand and 147 s in FeynmanRules,
-   the full block never finished in 31 h.  Feynman rules are linear in the Lagrangian, so
-   the block is evaluated monomial by monomial (same ExpandIndices options and the same
-   post-processing as the emitted Module), the expanded pieces are grouped into chunks of
+   while the full block does not finish in 31 h.  Feynman rules are linear in the Lagrangian,
+   so the block is evaluated monomial by monomial (same ExpandIndices options and the same
+   post-processing as the block's own Module in gen.fr), the expanded pieces are grouped into chunks of
    at most DIM8_CHUNK terms, FeynmanRules runs per chunk and MergeVertices adds the
    couplings of identical vertices.  The h.c. buckets (z8lagN, z8lagS) get their HC per
    chunk, and the Hermiticity test is FeynmanRules[L - HC[L]] per chunk exactly as
-   CheckHermiticity does it.  DIM8_TERMWISE=0 restores the whole-block path.
-   Worker-side names carry a z9 prefix: the z8 names are the emitted index symbols and
+   CheckHermiticity does it.  DIM8_TERMWISE=0 selects the whole-block path instead.
+   Worker-side names carry a z9 prefix: the z8 names are the index symbols of gen.fr and
    assigning to one of them (z8s1 = ...) leaks into the evaluated Lagrangian. *)
 z9epsCanon = Eps[z9a__] :> Signature[{z9a}] Eps[Sequence @@ Sort[{z9a}]];
 z9nt[z9e_] := If[Head[z9e] === Plus, Length[z9e], 1];
@@ -470,8 +469,8 @@ z9post[z9l_] := (OptimizeIndex[z9l] /. z9epsCanon) /. del[z9x_, z9m1_] del[z9x_,
 (* The h.c. piece and the Hermiticity normalisation MUST expand with the same option as the
    direct piece.  Without FlavorExpand -> {SU2W, SU2D}, FeynmanRules expands the generation
    indices of the conjugate piece into members (e, mu, ta, ...), the direct and conjugate
-   halves never merge, and a complex block comes out generation-expanded on one side:
-   L8op400 gave 228 vertices term-wise against 21 whole-block (found 2026-09-03). *)
+   halves never merge, and a complex block comes out generation-expanded on one side
+   (L8op400 would give 228 vertices term-wise against 21 whole-block). *)
 z9hc[z9l_] := z9post[ExpandIndices[HC[z9l], FlavorExpand -> {SU2W, SU2D}]];
 (* CheckHermiticity normalises BOTH sides with OptimizeIndex[ExpandIndices[.]] before subtracting;
    without that the Dirac chains of L and HC[L] differ syntactically and nothing cancels *)
@@ -523,7 +522,7 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
   Do[z9c = z9chunks[[z9i]]; z9L = Total[z9c[[All, 2]]];
      z9tot = If[z9c[[1, 1]], z9L + z9hc[z9L], z9L];
      (* the Hermiticity-only pass needs the residual alone; recomputing the direct vertices
-        cost the finish job 20 hours on a heavy W block whose vertices were already cached *)
+        takes up to 20 hours on a heavy W block whose vertices are already cached *)
      If[!z9hermOnly, z9t = AbsoluteTime[]; z9vs = Join[z9vs, FeynmanRules[z9tot, ScreenOutput -> False, Sequence @@ z9frOpts]]; z9tV += AbsoluteTime[] - z9t];
      If[z9herm || z9hermOnly,
        z9t = AbsoluteTime[]; z9hs = Join[z9hs, FeynmanRules[z9norm[z9tot] - z9norm[HC[z9tot]], ScreenOutput -> False, Sequence @@ z9frOpts]]; z9tH += AbsoluteTime[] - z9t];
@@ -535,7 +534,7 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
   {If[z9vs === {}, {}, MergeVertices[z9vs]], If[z9hs === {}, {}, MergeVertices[z9hs]]}];
 
 (* A block is addressed by NAME.  The dimension-eight catalogue names its blocks L8op<n>, so an
-   integer argument still works and means that; a string argument lets a Lagrangian block that is
+   integer argument means that block; a string argument lets a Lagrangian block that is
    not ours be cached the same way, which is how SMEFTsim's dimension-six classes L6cl1...L6cl8d
    enter the same vertex cache and the same UFO without any of the merge logic changing. *)
 (* The dimension-six blocks, to first order in the base's first-order corrections.  The operator
@@ -566,7 +565,7 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
     tt = AbsoluteTime[];
     (* a block built with a leg cap (status "maxlegs n", or "minlegs n") must be checked with the
        same cap: without it the residual of a capped G^4 block recomputes the eight-gluon vertices
-       that the cap was there to avoid (shard 1 of the finish pass on 433, 2026-09-05) *)
+       that the cap is there to avoid *)
     z9stCap = StringCases[Import[st, "Text"], "maxlegs " ~~ z9d : DigitCharacter .. :> ToExpression[z9d]];
     z9stMin = StringCases[Import[st, "Text"], "minlegs " ~~ z9d : DigitCharacter .. :> ToExpression[z9d]];
     {z9maxSaved, z9minSaved} = {z9maxlegs, z9minlegs};

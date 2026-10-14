@@ -2,23 +2,23 @@
 gen/derive_higgs_yukawa.py  --  the Higgs quartic and the Yukawas as series in the input shifts.
 
 WHY.  MadGraph counts interaction orders on couplings, and FeynRules assigns an order to a
-coupling by the tagged parameters that appear in it explicitly.  Until 2026-10-03 the input
-scheme put the corrected vev into the doublet as one internal parameter vevT = vevSM (1 + vev1 +
-vev2), and the quartic and the Yukawas were exact functions of vevT.  Every coupling built from
-them was then a function of the Wilson coefficients that carried no NP tag, so the NP=0 amplitude
-moved with the coefficients and NP^2==2 held products of a tagged and an untagged shift, i.e.
-terms quadratic in the coefficients (the psi^2 H^5 ratio of 256 between Lambda = 1 and 2 TeV in
-e+ e- > W+ W-).  The gauge couplings never had this problem because gw and g1 enter the
+coupling by the tagged parameters that appear in it explicitly.  If the corrected vev entered the
+doublet as one internal parameter vevT = vevSM (1 + vev1 + vev2), and the quartic and the Yukawas
+were exact functions of vevT, every coupling built from them would be a function of the Wilson
+coefficients that carries no NP tag.  The NP=0 amplitude would then move with the coefficients,
+and NP^2==2 would hold products of a tagged and an untagged shift, i.e. terms quadratic in the
+coefficients.  The gauge couplings have the form that avoids this: gw and g1 enter the
 Lagrangian as gwSM (1 + gw1 + gw2), a sum FeynRules splits by order.
 
-WHAT.  The same form for the three remaining places, with the series truncated at O(1/Lambda^4):
+WHAT.  The same form for the vev, the quartic and the Yukawas, with the series truncated at
+O(1/Lambda^4):
 
     Phi      = (vevSM (1 + vev1 + vev2) + H)/Sqrt[2]
     quartic  = lam (1 + lamr1 + lamr2),       lam = MH^2/(2 vevSM^2)
     Yukawa   = y_f (1 + yr1 + yr2) + c8fH5 vevSM^4 L8/4,   y_f = Sqrt[2] m_f/vevSM
 
 where lamr1, yr1 are O(1/Lambda^2) and lamr2, yr2 are O(1/Lambda^4), dimension-six squared
-included.  They follow from the exact relations the model already used,
+included.  They follow from the exact relations
 
     lam  = (Zh2 MH^2/vevT^2 + 3 cH vevT^2 L6 + 3 c8H8 vevT^4 L8)/2
     y_f  = Sqrt[2] m_f/vevT + c8fH5 vevT^4 L8/4
@@ -29,14 +29,12 @@ c8H6x1, c8H6x2 at O(t^2).  muH is left alone: it multiplies only the tadpole and
 neither of which is a vertex.  The W mass is left exact, as SMEFTsim 3 does by default.
 
 Zh2 is the coefficient of the Higgs kinetic term and it is evaluated at the CORRECTED vev, like
-everything else here.  Until 2026-10-05 its dimension-six term was written with vevSM, which is
-what the kinetic term is when the dimension-six operators are held at the uncorrected vev, while
-gen/derive_rotation.py derived the rescaling of h from the same quantity at the corrected one.
-The two disagree by (cHDD - 4 cHbox) vev1 vevSM^2 L6, a product of two dimension-six coefficients,
-so the quartic and the rescaling were consistent with different truncations of the operators and
-with each other only when the dimension-six sector was off.  validate/check_bilinears.wls
-measured it as a Higgs mass off its input at second order, by 2.3e-3 at the test point.  The
-operators are evaluated at the corrected vev now (gen/make_dim6.py), and so is this.
+everything else here.  The dimension-six operators are evaluated at the corrected vev
+(gen/make_dim6.py), and gen/derive_rotation.py derives the rescaling of h from the same quantity
+at the corrected vev.  Zh2 at vevSM would differ by (cHDD - 4 cHbox) vev1 vevSM^2 L6, a product
+of two dimension-six coefficients, and the quartic and the rescaling of h would then agree only
+when the dimension-six sector is off.  validate/check_bilinears.wls tests this through the Higgs
+mass, which must equal its input at second order.
 
 The results are merged into gen/input_scheme_formulae.json and gen/input_scheme_formulae_mw.json
 under lamr1, lamr2, yr1, yr2, and gen/input_scheme.py reads them from there.

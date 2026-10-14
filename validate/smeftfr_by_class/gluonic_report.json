@@ -1,7 +1,7 @@
 [
 	{
-		"hand":"LQG2phi4n1",
-		"handWC":"cG2phi4n1",
+		"ref":"LQG2phi4n1",
+		"refWC":"cG2phi4n1",
 		"gen":"L8op593",
 		"genWC":"c8G2H4x1",
 		"norm":"1",
@@ -9,8 +9,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi4n2",
-		"handWC":"cG2phi4n2",
+		"ref":"LQG2phi4n2",
+		"refWC":"cG2phi4n2",
 		"gen":"L8op594",
 		"genWC":"c8G2H4x2",
 		"norm":"1",
@@ -18,8 +18,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi2D2n1",
-		"handWC":"cG2phi2D2n1",
+		"ref":"LQG2phi2D2n1",
+		"refWC":"cG2phi2D2n1",
 		"gen":"L8op603",
 		"genWC":"c8G2H2D2x1",
 		"norm":"1",
@@ -27,8 +27,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi2D2n2",
-		"handWC":"cG2phi2D2n2",
+		"ref":"LQG2phi2D2n2",
+		"refWC":"cG2phi2D2n2",
 		"gen":"L8op604",
 		"genWC":"c8G2H2D2x2",
 		"norm":"1",
@@ -36,8 +36,8 @@
 		"surviving":0
 	},
 	{
-		"hand":"LQG2phi2D2n3",
-		"handWC":"cG2phi2D2n3",
+		"ref":"LQG2phi2D2n3",
+		"refWC":"cG2phi2D2n3",
 		"gen":"L8op605",
 		"genWC":"c8G2H2D2x3",
 		"norm":"1",

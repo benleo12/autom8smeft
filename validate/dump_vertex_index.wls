@@ -38,7 +38,7 @@ Print["[blocks] ", Length[files], " cached blocks from ", Length[vdirs], " cache
 idx = Association[];
 Do[Module[{nm},
    nm = FileBaseName[z8file];
-   If[FileByteCount[z8file] == 0, Continue[]];   (* SKIPPED placeholder, see fr_worker *)
+   If[FileByteCount[z8file] == 0, Continue[]];   (* an empty file holds no vertex list *)
    Get[z8file];
    idx[nm] = DeleteDuplicates[fields /@ FR$Vert];
    ClearAll[FR$Vert];

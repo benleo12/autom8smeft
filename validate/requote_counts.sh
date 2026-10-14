@@ -1,8 +1,7 @@
 #!/bin/bash
-# Selection counts for the processes quoted in the paper and the plan, from the CURRENT
-# build/vertex_index.json (regenerate it after a cache change: hpc/run_finish.sh or
-# validate/dump_vertex_index.wls).  Every count quoted before commit 77599d1 (2026-09-02)
-# came from a selector that never followed internal fermion lines and from a partial index.
+# Selection counts for the processes quoted in the paper, from the CURRENT
+# build/vertex_index.json (regenerate it after a cache change with ./dim8 index, which runs
+# validate/dump_vertex_index.wls), with one insertion and with --two-insertions.
 cd "$(dirname "$0")/.."
 export DIM8_VDIR=${DIM8_VDIR:-$HOME/dim8auto_build/vertices}
 echo "index blocks: $(python3 -c "import json;d=json.load(open('build/vertex_index.json'));print(len(d.get('blocks',d)))")"

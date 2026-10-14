@@ -1,13 +1,13 @@
 cff-version: 1.2.0
 title: autom8smeft
 message: >-
-  If you use this model, please cite it together with the paper whose operator
-  tabulation it implements and the tools that write and read it. The authors of
+  If you use this model, please cite it together with the paper that defines
+  the Murphy basis it encodes and the tools that write and read it. The authors of
   those references have no involvement in this work.
 type: software
 authors:
   - family-names: Assi
-    given-names: Beno\^it
+    given-names: Benoît
     affiliation: "Perimeter Institute for Theoretical Physics, University of Toronto, and Vector Institute"
   - family-names: Martin
     given-names: Adam
@@ -34,7 +34,7 @@ references:
     volume: "10"
     year: 2020
     start: 174
-    notes: "the operator tabulation this model implements"
+    notes: "defines the Murphy basis, which this model encodes"
   - type: article
     title: "FeynRules 2.0 - A complete toolbox for tree-level phenomenology"
     identifiers:
@@ -54,7 +54,7 @@ references:
         value: "arXiv:2012.11343"
     notes: "the dimension-six sector of models/dim68_is is SMEFTsim's, in its U(3)^5 framework"
   - type: article
-    title: "The Standard Model as an Effective Field Theory"
+    title: "The SMEFTsim package, theory and tools"
     identifiers:
       - type: other
         value: "arXiv:1709.06492"

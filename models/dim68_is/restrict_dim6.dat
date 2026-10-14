@@ -2,7 +2,7 @@
 # keeps 0 dimension-eight coefficient(s) from 0 operator block(s): 
 # keeps 81 dimension-six coefficient(s)
 # kept coefficients carry placeholder values; set the physical values in the run's param_card.dat
-# import with:  import model dim68_is_new-dim6
+# import with:  import model dim68_is-dim6
 Block SMINPUTS 
   1 1.279000e+02 # aEWM1 
   2 1.166370e-05 # Gf 

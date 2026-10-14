@@ -1,7 +1,8 @@
 """
-validate/check_counts.py  --  the number of Lagrangian terms per class read from the
-tables must equal Murphy's Table 1 (results_v5.tex), with a "+h.c." row counted as two
-terms (Q and Q^dagger), which is the convention that reproduces his N_term column.
+validate/check_counts.py  --  the number of Lagrangian terms per class in the catalogue
+must equal the N_term column of Table 1 of the Murphy basis paper (arXiv:2005.00059).  An
+operator written with "+h.c." counts as two terms (Q and Q^dagger), which is the convention
+of that column.
 
 Usage: python3 validate/check_counts.py   (reads docs/catalogue.json)
 """
@@ -14,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(ROOT, "validate"))
 import catalogue   # noqa: E402
 
-# Murphy 2005.00059 v6, Table 1 (N_term column).  "a+b": b terms vanish for n_g = 1.
+# arXiv:2005.00059 v6, Table 1 (N_term column).  In "a+b" the b terms vanish for n_g = 1.
 EXPECTED = {
     1: 43, 2: 1, 3: 2, 4: 3, 5: 6, 6: 10, 7: 18, 8: 6,
     9: 96, 10: 22, 11: 16, 12: 6, 13: 13, 14: 57, 15: 92, 16: 48, 17: 36,
@@ -35,7 +36,7 @@ def main():
         key = (e["cls"], e["b_violating"]) if e["cls"] >= 18 else e["cls"]
         got[key] = got.get(key, 0) + (2 if e["plus_hc"] else 1)
     ok = True
-    print(f"{'class':>12s} {'Murphy':>8s} {'tables':>8s}")
+    print(f"{'class':>12s} {'Murphy':>8s} {'encoded':>8s}")
     for k in EXPECTED:
         g = got.get(k, 0)
         flag = "" if g == EXPECTED[k] else "   <-- MISMATCH"
@@ -46,7 +47,7 @@ def main():
     print(f"\nB-conserving terms: {tb} (Murphy {TOTAL_B})\nB-violating terms:  {tbv} (Murphy {TOTAL_BV})\ntotal: {tb + tbv} (Murphy {TOTAL})")
     ok &= tb == TOTAL_B and tbv == TOTAL_BV
     parsed = sum(e["status"] == "ok" for e in es)
-    print(f"\nrows parsed into the DSL: {parsed} / {len(es)}")
+    print(f"\noperators encoded: {parsed} / {len(es)}")
     print("term counts", "PASS" if ok else "FAIL")
     sys.exit(0 if ok else 1)
 

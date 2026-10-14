@@ -8,22 +8,21 @@ A term linear in a dimension-eight coefficient falls as 1/Lambda^4, so the cross
 Lambda = 1 TeV is sixteen times the one at 2 TeV.  A term quadratic in it falls as 1/Lambda^8 and
 the ratio is 256.  The order tag NP^2==2 is meant to select the first and nothing else.
 
-It did not, in the first build of the model.  The derived parameters of the input scheme, the
-vacuum expectation value, the Yukawas and the Higgs quartic, were exact functions of the
-coefficients inside couplings that carried no NP tag.  The amplitude MadGraph labelled NP=0
-therefore depended on the coefficients, and its product with a tagged NP=2 amplitude was quadratic
-while being counted at NP^2==2.  Where a class had a genuine interference this was a correction of
-order a per cent at unit coefficient and Lambda = 1 TeV.  Where it had none, because the
-interference vanishes by chirality, the quadratic piece was everything the tag returned:
-psi^2H^5 in e+ e- > w+ w- returned 256.  Since 2026-10-03 the three enter the Lagrangian as
-tagged series (gen/input_scheme.py) and the same class returns 16 at an interference five orders
-of magnitude smaller.  The W mass stays exact and untagged, so for the classes that shift it (3, 6
-and the leptonic part of 13) the Standard-Model half of the interference is evaluated at the
-shifted mass and the ratio sits a few per mille from 16 at unit coefficients; that residue is the
-mass and not a tagging defect, and it is absent in the {M_W, M_Z, G_F} scheme.
+That holds only if every coefficient-dependent coupling carries its NP tag.  The derived
+parameters of the input scheme, the vacuum expectation value, the Yukawas and the Higgs quartic,
+enter the Lagrangian as tagged series (gen/input_scheme.py).  Were one of them an exact, untagged
+function of the coefficients, the amplitude MadGraph labels NP=0 would depend on the
+coefficients, and its product with a tagged NP=2 amplitude would be quadratic while counted at
+NP^2==2.  A class whose interference vanishes by chirality, such as psi^2H^5 in e+ e- > w+ w-,
+is the sharpest case: there the quadratic piece would be everything the tag returns, and the
+ratio would be 256.  The W mass is exact and untagged, so for the classes that shift it (3, 6 and
+the leptonic part of 13) the Standard-Model half of the interference is evaluated at the shifted
+mass and the ratio sits a few per mille from 16 at unit coefficients.  That residue is the mass
+and not a tagging defect, and it is absent in the {M_W, M_Z, G_F} scheme.
 
-This runs every class card at both scales and prints the ratio, so the affected entries are a
-list and not a suspicion.  Results append to validate/lambda_scaling.tsv.
+This runs the restriction card of every class (restrict_clsN.dat) at both scales and prints the
+ratio with a verdict: linear, QUADRATIC, mixed or zero.  Results append to
+validate/lambda_scaling.tsv, or to validate/lambda_scaling_<model>.tsv for another model.
 """
 from __future__ import annotations
 

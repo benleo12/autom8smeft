@@ -4,12 +4,12 @@
     examples/studies/merge_rows.py <source results.tsv> <target results.tsv> [--replace]
 
 A row is identified by (process, model, order).  A source row replaces a target row with the same
-key whose sigma is FAILED, NO_OUTPUT or BAD_SETTING, or one that is absent; healthy target rows
+key whose sigma is FAILED, NO_OUTPUT or BAD_SETTING, or one that is absent.  Healthy target rows
 are left alone and the source row is reported as skipped, unless --replace is given, in which case
-every source row replaces its target row (used after the event files of a process had been
-overwritten by a name collision, when the numbers were fine but the files were not).  The LHE file named in a merged row is
-copied into the target study's lhe/ directory.  Used to fold reruns (a scratch study with one
-process and no classes) back into the paper's studies without re-running what worked.
+every source row replaces its target row (for instance to restore event files when the numbers
+are right but the files are not).  The LHE file named in a merged row is copied into the target
+study's lhe/ directory.  This folds reruns (a scratch study with one process and no classes) back
+into the paper's studies without re-running what worked.
 """
 import os, shutil, sys
 

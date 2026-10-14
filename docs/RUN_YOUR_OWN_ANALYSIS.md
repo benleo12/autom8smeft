@@ -9,7 +9,8 @@ From a process to cross sections. Needs MadGraph5_aMC@NLO 3.5 and Python 3.11.
 
 `dim68_is` carries both sectors, `dim8_is` the dimension-eight one alone and so generates far
 fewer diagrams. Everything below works with either; the examples name `dim8_is` because its
-numbers are the checked ones.
+numbers are the checked ones. The study driver of section 4 finds MadGraph through `MG5_DIR`:
+
     export MG5_DIR=/path/to/MG5_aMC
 
 ## 2. Which operators enter
@@ -21,8 +22,9 @@ prints the operators with a tree-level vertex in that process, by class and with
 each enters through, and then a second group: the operators with no vertex in the process that
 still move its prediction because they enter the {alpha, MZ, GF} relations (c8B2H4x1, c8H6x1,
 c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4 are the eight that can). On
-p p > w+ w- two of them have no vertex in any diagram and carry a third of the effect. The two
-groups together are complete at tree level with one insertion.
+p p > w+ w- three of them have no vertex in any diagram, and two of those, c8l2H4Dx2 and
+c8l2H4Dx4, carry a third of the effect. The two groups together are complete at tree level with
+one insertion.
 
 `--card NAME` writes `restrict_NAME.dat` into the model (`--model`, default `models/dim8_is`),
 keeping both groups, and `import model dim8_is-NAME` applies it. Nothing is rebuilt at this
@@ -56,9 +58,10 @@ diagrams, hours of code generation.
     cls15
     cls18
 
-29 cards ship, one per class plus `bosonic`, `cpeven`, `cpodd`, `all`, `ten`, `only_q2H4D`,
-`only_W2H2D2`, `l2H4D24`. `cpeven` and `cpodd` use the derived C x P parity of `gen/cp_parity.py`, which is
-not the same as counting dual field strengths: see the README. Any other selection, by operator name, coefficient, block number or class:
+29 cards ship with `dim8_is`, one per class plus `bosonic`, `cpeven`, `cpodd`, `all`, `ten`,
+`only_q2H4D`, `only_W2H2D2`, `l2H4D24`. `cpeven` and `cpodd` use the derived C x P parity of
+`gen/cp_parity.py`, which is not the same as counting dual field strengths: see the README. Any
+other selection, by operator name, coefficient, block number or class:
 
     validate/make_restriction.py models/dim8_is mine Q_{q^2W^2D}^{(1)} c8q2WH2Dx1 cls:18
 

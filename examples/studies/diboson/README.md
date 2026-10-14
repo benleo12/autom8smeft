@@ -5,17 +5,26 @@ Cross sections at 13.6 TeV for the processes in `processes.txt`, in the Standard
 dimension-eight-squared order (`NP<=2 NP^2==4`), first with the full model and every
 coefficient at 1 with Lam at 1 TeV, then one operator class at a time through the restriction
 cards listed in `classes.txt`. Running one class at a time is what isolates the classes that
-dominate and shows where the squared term overtakes the interference, as in the VBF paper.
+dominate and shows where the squared term overtakes the interference, as in the study of
+dimension eight in vector-boson-fusion Higgs production, arXiv:2410.21563.
 
-The four processes are the on-shell diboson final states. `p p > w+ w-` is the one where the input scheme matters most: in the {alpha, MZ, GF} scheme the coefficient shifts of `Q_{W^2H^4}^{(1)}` and `Q_{H^6}^{(1)}` cancel exactly and neither operator has any O(1/Lambda^4) effect there, so the interference comes from the two-fermion classes 11, 13, 14 and 15 (psi^2 H^2 D^3, psi^2 H^4 D, psi^2 X^2 D and psi^2 X H^2 D). The bosonic X^2 H^2 D^2 class has no three-point vertex and gives no diagram in 2 to 2 diboson production, its per-class rows come out empty here and it first appears in the triboson study.
+The four processes are the on-shell diboson final states. `p p > w+ w-` is the one where the
+input scheme matters most. In the {alpha, MZ, GF} scheme the coefficient shifts of
+`Q_{W^2H^4}^{(1)}` and `Q_{H^6}^{(1)}` cancel exactly, and neither operator has any O(1/Lambda^4)
+effect there. The largest class interferences in `p p > w+ w-` are those of class 14
+(psi^2 X^2 D), class 6 (X^2 H^4), class 3 (H^6 D^2) and class 13 (psi^2 H^4 D), as `table.md`
+shows. The bosonic X^2 H^2 D^2 class has no three-point vertex, so its interference rows say no
+diagram here, and its interference first appears in the triboson study. Its squared row in
+`p p > w+ w-` is `g g > w+ w-` through a G G W W contact vertex, which has no Standard-Model
+amplitude to interfere with.
 
 Run
 
     examples/studies/run_study.sh examples/studies/diboson models/dim8_is 5000
 
-The class cards have to exist in the model directory first, which `examples/release_model.sh`
-does when it builds `models/dim8_is`, or `validate/make_restriction.py <model> cls7 cls:7`
-one at a time. Cross sections append to `results.tsv` and the event files are kept in `lhe/`,
+The class cards ship in the model directory, written by `examples/release_model.sh` when it
+builds `models/dim8_is`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
+time. Cross sections append to `results.tsv` and the event files are kept in `lhe/`,
 one per row, from which
 
     examples/studies/plot_study.py diboson SM=lhe/<...>_NP_0.lhe.gz int=lhe/<...>_NP_2_2.lhe.gz
@@ -31,8 +40,9 @@ used, which is the signal to raise the event count if the factor is far from one
 
 One caution about the all-coefficients-at-one row. The W mass is derived in the {alpha, MZ, GF}
 scheme, so switching coefficients on moves it: with all 1030 at 1 and Lam at 1 TeV the model
-derives 79.33 GeV instead of the tree-level 79.82 of the {alpha, MZ, GF} scheme, and the squared term for `p p > w+ w-` comes out three times
-the Standard Model, which is not a regime where the expansion means anything. That row is a
+derives 79.33 GeV instead of the tree-level 79.82 of the {alpha, MZ, GF} scheme, and the
+squared term for `p p > w+ w-` comes out fifty-nine times the Standard Model, which is not a
+regime where the expansion means anything. That row is a
 linearity check, since the class interferences must add up to it, rather than a prediction. The
 physics is in the per-class rows, where only a handful of operators are on and the shift is
 small. `results.tsv` carries the derived W mass and the coefficient settings for every row so

@@ -1,30 +1,29 @@
 #!/bin/bash
 # Turn a full-basis UFO written by validate/fr_writeufo.wls into the shipped model directory.
 #   usage: examples/release_model.sh <UFO dir written by the writer> <release name, e.g. dim8_is>
-# Steps: copy to models/<name>, drop caches and logs, raise the NP expansion order to 4 so that
-# double insertions can be requested (the writer sets 2), write the standard restriction cards
-# (one per Murphy class, plus bosonic / two-fermion / four-fermion / CP-even groups), write an
-# annotated parameter-card template, and print the sizes.  Pure Python and shell.
+# Steps: copy to a staging directory, drop caches and logs, set the author in __init__.py, raise
+# the NP expansion order to 4 so that double insertions can be requested (the writer sets 2), drop
+# the identically vanishing Lorentz structures, write an annotated parameter-card template, write
+# the standard restriction cards (one per class of the Murphy basis, plus bosonic, cpeven, cpodd
+# and all, and dim6 and both when the model carries a dimension-six sector), check that the model
+# files are well formed and that MadGraph imports them, swap the result into models/<name>, and
+# print the sizes.  Python and shell, plus MadGraph for the import test.  No Mathematica needed.
 set -e
 SRC=$(cd "${1:?UFO dir}" && pwd); NAME=${2:?release name}
 ROOT=$(cd "$(dirname "$0")/.." && pwd); FINAL=$ROOT/models/$NAME; DEST=${FINAL}_new
-# The staging directory must be a name MadGraph can import: it takes the directory name as a
-# Python module name, and "dim68_is.new" stopped the import test below with "invalid syntax
-# (object_library.py, line 268)", the message of a model it had not managed to convert, on a
-# model that imports without complaint from any directory whose name has no dot (2026-10-05).
-# Built next to the final name and swapped in at the end, so that a MadGraph session importing
-# the current release while this runs sees either the old directory or the new one, never a
-# half-copied one.
+# The staging directory must be a name MadGraph can import.  MadGraph takes the directory name as
+# a Python module name, so a name with a dot, such as dim68_is.new, fails the import test below
+# with a misleading "invalid syntax (object_library.py, ...)".  The model is built next to the
+# final name and swapped in at the end, so that a MadGraph session importing the current release
+# while this runs sees either the old directory or the new one, never a half-copied one.
 mkdir -p $ROOT/models; rm -rf $DEST; cp -r $SRC $DEST
 rm -rf $DEST/__pycache__ $DEST/*.log $DEST/*.cmd $DEST/param_card.dat
 python3 - $DEST <<'EOF'
 import re, sys, os
 d = sys.argv[1]
-# The UFO header names the people who wrote THIS model.  FeynRules copies M$Information of the
-# base file into __init__.py, and the base file's Standard-Model half descends from the model of
-# Hays, Martin, Setford and Sanz, whose names and e-mail addresses were shipped as the authors of
-# two releases before this line existed (2026-09-07 and again 2026-09-23); the base files now carry
-# dim8auto, and this makes the release independent of them.
+# The UFO header names the authors of THIS model.  FeynRules copies M$Information of the base
+# file into __init__.py, so the header carries whatever the base file names.  Setting the author
+# here makes the release independent of the base file.
 p = f"{d}/__init__.py"; s = open(p).read()
 s = re.sub(r'__author__\s*=\s*"[^"]*"', '__author__ = "dim8auto"', s)
 s = re.sub(r'__date__\s*=\s*"[^"]*"', '__date__ = "2026"', s)
@@ -39,8 +38,8 @@ EOF
 # no longer uses, and the generated Fortran fails to compile on any process reaching that vertex,
 # with a message that points at the process rather than at the structure.  Nine of them sit in a
 # freshly written full-basis UFO, on fifty vertices, and only fifteen of the fifty have nothing
-# else in them, so the rest are edited rather than dropped.  The test this uses evaluates Dirac
-# structures too and imposes momentum conservation; the earlier one did neither and found none.
+# else in them, so the rest are edited rather than dropped.  The test evaluates the Dirac
+# structures as well and imposes momentum conservation, since a test that does neither finds none.
 $(command -v python3.13 || command -v python3) $ROOT/validate/drop_zero_structures.py $DEST
 python3 - $DEST <<'EOF'
 import re, sys, os
@@ -53,9 +52,9 @@ for e in idx:
     for w in e["wcs"]: op_of[w] = (e["ops"], e["cls"], e["block"])
 params = open(f"{d}/parameters.py").read()
 # Coefficients the model carries as parameters but uses in no vertex: the whole basis is written
-# into parameters.py whatever blocks were built, so the 120 baryon-number-violating coefficients
-# of blocks 675-734 sit in the card of a B-conserving model and setting them does nothing.  Say so
-# on the line rather than letting a user wonder why nothing changed.
+# into parameters.py whatever blocks were built, so the 120 baryon-number-violating entries of
+# blocks 675-734 (the Re and Im parts of 60 coefficients) sit in the card of a B-conserving model
+# and setting them does nothing.  The template says so on the line.
 used = set(re.findall(r"\bc8\w+\b", open(f"{d}/couplings.py").read()))
 # a complex coefficient enters the couplings as its base name (an internal parameter built from
 # the external Re and Im parts), so the parts count as used when the base is
@@ -106,13 +105,10 @@ $MR bosonic $(python3 -c "
 import json; idx=json.load(open('$ROOT/docs/block_index.json'))
 print(' '.join(e['block'] for e in idx if int(e['block'][4:])<=674 and not any(ch in e['ops'][0] for ch in ('q','u','d','l','e','\\\\psi'))))") | grep -E "WARNING|^note:" || true
 # CP parity comes from gen/cp_parity.py, which READS the field-by-field C x P derivation stored
-# in the catalogue.  Three versions of this card were wrong before that.  The first tested the
-# operator LABEL for "tilde", which matches nothing, so the card was really "operators with a real
-# coefficient" and shipped 128 CP-odd ones.  The second counted "widetilde" in the printed row.
-# The third counted dual field strengths per term of the parsed operator, which is a better count
-# and still a count: it disagrees with the derivation on 170 of the 438 real-coefficient rows and
+# in the catalogue.  Counting dual field strengths is not the CP parity at dimension eight.  It
+# disagrees with the derivation on 170 of the 438 operators with a real coefficient, and
 # validate/cp_rates.py measures the difference as a 1.2 pb interference where zero is required.
-# Ask the classifier.  Do not re-derive the rule here, and do not count anything.
+# So the cards ask the classifier and do not re-derive the rule or count anything.
 $MR cpeven $(python3 -c "
 import sys; sys.path.insert(0,'$ROOT/gen'); import cp_parity, json
 cp=cp_parity.table(); idx=json.load(open('$ROOT/docs/block_index.json'))
@@ -128,23 +124,21 @@ $MR all all | grep -E "WARNING|^note:" || true
 # how you read NP^2==2: it holds the dimension-six square and the dimension-eight interference
 # together, both being 1/Lambda^4, and there is no order that tells them apart.
 # A dimension-six coefficient reaches the couplings as a bare symbol, cHG or cdH, not as a
-# coupling NAME (those are all GC_<n>), so the test has to look for the symbols in the coupling
-# VALUES.  Testing for "name = 'c...'" found nothing and silently skipped both cards.
+# coupling NAME (those are all GC_<n>), so the test looks for the symbols in the coupling VALUES.
 if grep -q "lhablock = 'DIM6'" $DEST/parameters.py && \
    python3 -c "import re,sys; sys.exit(0 if re.search(r\"value = '[^']*\\bc(HG|HW|HB|dH|uH|eH|qq1|ll)\\b\", open('$DEST/couplings.py').read()) else 1)"; then
   $MR dim6 dim6 | grep -E "WARNING|^note:" || true
   $MR both all dim6 | grep -E "WARNING|^note:" || true
 fi
 ls $DEST/restrict_*.dat | wc -l | xargs echo "restriction cards:"
-for extra in $FINAL/restrict_*.dat; do [ -f "$extra" ] || continue; b=$(basename $extra); [ -f $DEST/$b ] || cp $extra $DEST/$b; done   # cards written by hand into the old release survive (guard: a first release has no old directory and the glob stays literal)
+for extra in $FINAL/restrict_*.dat; do [ -f "$extra" ] || continue; b=$(basename $extra); [ -f $DEST/$b ] || cp $extra $DEST/$b; done   # cards this script does not write, such as only_q2H4D and ten, carry over from the current release (guard: a first release has no old directory and the glob stays literal)
 # Nothing is swapped in until the model has been read back.  FeynRules does not stop when an
-# evaluation fails inside WriteUFO: it writes the failure into the file.  On 2026-10-04 an
-# iteration limit left a "ClassAttributeCreation[couplings, ...TerminatedEvaluation...]" where the
-# couplings of one photon-Z-Higgs vertex should have been, in two models, and one of them was
-# committed as a release, because every check that ran on it read the files by pattern and none
-# of them asked Python or MadGraph to import it.  Two checks, in the order of their cost: the
-# files are well formed (pure Python, always), and MadGraph imports the model and builds one
-# process through it (when MadGraph is installed; DIM8_SKIP_MG5_IMPORT=1 skips it, loudly).
+# evaluation fails inside WriteUFO.  It writes the failure into the file, for instance a
+# "ClassAttributeCreation[couplings, ...TerminatedEvaluation...]" in place of the couplings of a
+# vertex when an iteration limit is hit, and a check that reads the files by pattern does not see
+# it.  Two checks therefore run, in the order of their cost.  The files must be well formed (pure
+# Python, always), and MadGraph must import the model and build one process through it (when
+# MadGraph is installed, and DIM8_SKIP_MG5_IMPORT=1 skips it with a warning).
 python3 - $ROOT $DEST <<'EOF'
 import sys
 sys.path.insert(0, sys.argv[1] + "/validate")
@@ -170,8 +164,8 @@ else
   find "${DEST:?}" -maxdepth 1 \( -name __pycache__ -o -name '*.pkl' \) -prune -exec rm -r {} +
 fi
 rm -rf $FINAL.old; [ -d $FINAL ] && mv $FINAL $FINAL.old; mv $DEST $FINAL; rm -rf $FINAL.old; DEST=$FINAL
-# The restriction cards live in the model directory and are not copied anywhere else: the copies
-# under examples/cards/ went stale, lost Block DIM6 and named a model that does not exist.
+# The restriction cards live in the model directory only, so that no copy elsewhere can fall out
+# of step with the model.
 du -sh $DEST | cut -f1 | xargs echo "model size:"
 grep -c "^V_" $DEST/vertices.py | xargs echo "vertices:"
 echo "install: copy or symlink $DEST into MadGraph's models/ as $NAME"

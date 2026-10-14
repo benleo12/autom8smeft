@@ -5,15 +5,15 @@
 
 The study driver records a cell with no cross section as ``NO_OUTPUT`` and the table generator
 then reads the run log to tell a class that has no diagram in the process from one that crashed.
-That works while the logs are there.  They are build artifacts and get cleaned, after which an
-honest "no diagram" silently becomes an unexplained "no output" in a published table.
+That works while the logs are there.  They are build artifacts and can be cleaned, after which a
+genuine "no diagram" becomes an unexplained "no output" in the table.
 
-This re-derives the answer from the model instead of from a log, and it is cheap because it needs
-only the diagram generation and not the integration: for each empty cell it asks MadGraph to
-generate the process on the restricted model and records ``NO_DIAGRAMS`` if it raises
-``NoDiagramException``.  Cells are grouped by model so that each restricted model is imported
-once.  With --write the answers go back into results.tsv, so the resolution is stored with the
-data and does not have to be redone.
+This derives the answer from the model instead of from a log, and it is cheap because it needs
+only the diagram generation and not the integration: for each empty cell (``NO_OUTPUT``,
+``BAD_SETTING`` or ``FAILED``) it asks MadGraph to generate the process on the restricted model
+and records ``NO_DIAGRAMS`` if it raises ``NoDiagramException``.  Cells are grouped by model so
+that each restricted model is imported once.  With --write the answers go back into results.tsv,
+so the resolution is stored with the data and does not have to be redone.
 """
 from __future__ import annotations
 

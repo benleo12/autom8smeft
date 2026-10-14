@@ -1,18 +1,20 @@
 """
-validate/check_symbol_clash.py  --  emitted symbol names against the model's own.
+validate/check_symbol_clash.py  --  generated symbol names against the model's own.
 
-Every emitted Lagrangian block scopes its index names.  If one of those names is also a
-symbol the model defines, the scoping silently corrupts the model: with ``Block`` the
-global value is cleared for the duration of the expansion, and even with ``Module`` a
-name that the model uses can be shadowed.  Nothing warns.  Three real cases have been
-found this way in this project:
+Every generated operator Lagrangian scopes its index names in a ``Module``.  If one of those
+names is also a symbol the model defines, the scoping corrupts the model without any warning:
+``Block`` would clear the global value for the duration of the expansion, and even ``Module``
+can shadow a name that the model uses.  The base model already uses short names that an index
+or loop variable could easily take:
 
-  * a single-letter loop variable ``b`` clobbered the b quark (session 1),
+  * ``b`` is the b quark,
   * ``ee`` is the electromagnetic coupling,
   * ``mu`` is the muon (``ClassMembers -> {e, mu, ta}``).
 
-So the check is mechanical: read every symbol the base model declares, and assert that
-the index pools and block locals are disjoint from it.  Run on every build.
+So the check is mechanical: read every symbol the base model declares, and assert that the
+index pools and the scoped locals (BLOCK_LOCALS) are disjoint from it.  It also checks the sign
+convention of the covariant derivative and that every Mathematica comment in the file is
+closed.  ``./dim8 check`` runs it.
 
 Usage:  python3 validate/check_symbol_clash.py [base.fr ...]
 Exit status 1 on any clash.
@@ -30,7 +32,7 @@ from dsl import ALL_INDEX_NAMES  # noqa: E402
 from emit_fr import BLOCK_LOCALS  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-DEFAULT_MODELS = [os.path.join(ROOT, "models", "base", "sm.fr")]
+DEFAULT_MODELS = [os.path.join(ROOT, "tests", "gen_smoke", "base.fr")]
 
 
 def model_symbols(path: str) -> dict:
@@ -59,9 +61,9 @@ def model_symbols(path: str) -> dict:
 
 REQUIRED_FLAGS = {
     # FeynRules builds DC as  del[f,mu] - I FR$DSign g A,  so FR$DSign = 1 (its default)
-    # means D = d - i g A.  Murphy's basis defines D = d + i g A, so the flag must be -1.
-    # Getting this wrong flips the sign of the gauge piece of every covariant derivative
-    # in every operator, silently.  SMEFTsim sets the same value.
+    # means D = d - i g A.  The Murphy basis defines D = d + i g A, so the flag must be -1.
+    # The wrong value flips the sign of the gauge piece of every covariant derivative in
+    # every operator, without any warning.  SMEFTsim sets the same value.
     "FR$DSign": "-1",
 }
 
@@ -79,9 +81,8 @@ def check_flags(path: str) -> List[str]:
 
 
 def check_comments(path: str) -> List[str]:
-    """A stray '*)' inside a comment silently truncates it and the rest of the line
-    becomes code.  This happened writing the header of this very file, where the text
-    "newL8geo*)" ended the comment early.
+    """A stray '*)' inside a comment truncates it and the rest of the line becomes code,
+    with no error.  Text such as "L8op12*)" inside a comment ends it early.
 
     The scan tokenises rather than counting occurrences, because the three characters
     "(*)" would otherwise register as both an opener and a closer.  Mathematica comments
@@ -128,13 +129,13 @@ def main(paths) -> int:
         if os.path.exists(p):
             for msg in check_flags(p) + check_comments(p):
                 bad.append((os.path.basename(p), msg, "convention"))
-    print(f"symbol clash: {len(ours)} emitted names vs {total} model symbols")
+    print(f"symbol clash: {len(ours)} generated names vs {total} model symbols")
     if bad:
         print("FAIL:")
         for f, n, k in bad:
             print(f"  {f}: {n}  ({k})")
         return 1
-    print("PASS, no emitted name collides with a model symbol")
+    print("PASS, no generated name collides with a model symbol")
     return 0
 
 

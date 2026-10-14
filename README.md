@@ -6,9 +6,10 @@ framework. The `{alpha, MZ, GF}` input relations are corrected to `1/Lambda^4` a
 dimension-six squares, so cross sections can be computed to that order for any process MadGraph
 can generate.
 
-Dimension-eight tabulation: arXiv:2005.00059, whose naming and class numbering this model follows.
-Dimension six is SMEFTsim's, arXiv:1709.06492 with the flavour framework of arXiv:2012.11343, put
-on the same base, with the same vertices at `1/Lambda^2`: see [docs/DIM6.md](docs/DIM6.md).
+The dimension-eight operators are those of the Murphy basis, arXiv:2005.00059, whose naming and
+class numbering this model follows. Dimension six is SMEFTsim's, arXiv:1709.06492 with the flavour
+framework of arXiv:2012.11343, put on the same base, with the same vertices at `1/Lambda^2`: see
+[docs/DIM6.md](docs/DIM6.md).
 
 ## Install
 
@@ -49,8 +50,8 @@ insertion is two. `NP^2==n` constrains the sum over the two amplitudes.
 | `NP^2==4` | dimension-eight squared, `1/Lambda^8` |
 | `NP<=2` | everything up to one dimension-eight or two dimension-six insertions |
 
-That `NP^2==2` mixes the two is the power counting, not a bug: both are `1/Lambda^4` and a
-consistent calculation at that order needs both. To separate them, switch one sector off in the
+`NP^2==2` mixes the two because of the power counting: both are `1/Lambda^4` and a consistent
+calculation at that order needs both. To separate them, switch one sector off in the
 param card.
 
 ## Getting the orders right
@@ -102,8 +103,8 @@ python3.11 (see below). Four of the validation scripts want `numpy` (`validate/z
 `zero_vertex.py`, `zero_vertex_dirac.py`, `b4_normalisation.py`) and two want `sympy`
 (`gen/derive_input_scheme.py`, `gen/derive_rotation.py`); each says so if the module is missing.
 Rebuilding the FeynRules models needs Mathematica 14.2 or earlier with FeynRules 2.3.49, and
-nothing in the shipped model does. The operators themselves are `gen/operators.py`, one object
-per operator in block order, from which `./dim8 build` emits the FeynRules Lagrangian before it
+nothing in the shipped model does. The operators themselves are encoded in `gen/operators.py`,
+one typed object per operator, from which `./dim8 build` writes the FeynRules Lagrangian before it
 computes the vertices; `models/src/README.md` describes the source files.
 
 Two things are deliberately not redistributed and every script that wants one says which and
@@ -127,10 +128,10 @@ opposite signs.
 
 That is not the same as counting dual field strengths, and the difference is 170 of the 438
 operators with a real coefficient. The clearest case is `Q_{q^2W^2D}^{(1..4)}`, where the
-derivation gives even, ODD, even, even: the member with no dual is the CP-odd one. Two earlier
-versions of this card counted instead, and the CP test `validate/cp_rates.py` measures the
-difference as a 1.2 pb interference on `p p > w+ w-` where a CP-odd set must give zero.
-`gen/cp_parity.py` is the single place the parity is decided.
+derivation gives even, ODD, even, even: the member with no dual is the CP-odd one. The CP test
+`validate/cp_rates.py` checks the card. A CP-odd set must give zero interference in a total rate,
+and a set chosen by counting duals gives 1.2 pb on `p p > w+ w-`. `gen/cp_parity.py` is the single
+place the parity is decided.
 
     import model dim68_is-cls14
     import model dim68_is-dim6
@@ -138,7 +139,8 @@ difference as a 1.2 pb interference on `p p > w+ w-` where a CP-odd set must giv
 `validate/make_restriction.py` writes any other selection. `./dim8 select "p p > w+ w-"` lists
 which dimension-eight operators can enter a process, in two groups: those with a vertex in some
 tree diagram, and those with none that enter through the input relations. With `--card ww` it
-writes `restrict_ww.dat` into the model, keeping both groups, for `import model dim8_is-ww`.
+writes `restrict_ww.dat` into the model (`models/dim8_is` unless `--model` names another), keeping
+both groups, for `import model dim8_is-ww`.
 FeynRules has already been run and the shipped model carries every vertex of every operator,
 so a selection is a restriction card that MadGraph applies at import, never a rebuild.
 `validate/select_complement.py` checks a selection by keeping its complement instead, which
@@ -165,8 +167,8 @@ Flavour universal, one coefficient per operator, so the basis's `p, r, s, t` col
 and `s = t`. `Q_{udWH^2}^{(1)}` and `Q_{udWH^2}^{(2)}` vanish identically as written, whatever the
 flavour structure, because `epsilon tau^I` is symmetric for all three `I` while `epsilon` is
 antisymmetric; their coefficients are in the card and do nothing. A further set vanishes because
-of flavour universality alone, leaving 915 of the 1030 `DIM8` coefficients with a vertex in the
-model.
+of flavour universality alone, leaving 899 of the 1030 `DIM8` coefficients with a vertex in the
+model. The 120 entries of the baryon-number-violating operators have none either.
 
 The dimension-six sector is complete at `1/Lambda^4`. Its `NP=1` vertices are SMEFTsim's, and
 checkable against its shipped UFO. The products of a dimension-six operator with the first-order
@@ -182,6 +184,6 @@ with a coefficient (so the `NP=0` bracket above is absent, and its `NP=0` matrix
 identical to every digit with the coefficients on and off), and `models/dim8_plain` puts the same
 operators on the plain FeynRules Standard Model, for cross-checks. Set `MW` to 79.82435975 in
 `dim8_mw` to put it on the same numerical point as `dim8_is`, whose derived W mass that is. The param card of `dim8_is`
-still has a block `DIM6`, with the eight dimension-six coefficients its input relations are
+also has a block `DIM6`, with the eight dimension-six coefficients its input relations are
 written in. Leave them at zero there: that model has their effect on the inputs and not the
 operators themselves, which is half a calculation. Dimension six is what `dim68_is` is for.

@@ -2,7 +2,7 @@
 # keeps 3 dimension-eight coefficient(s) from 3 operator block(s): L8op471 L8op472 L8op473
 # keeps 0 dimension-six coefficient(s)
 # kept coefficients carry placeholder values; set the physical values in the run's param_card.dat
-# import with:  import model dim8_mw_new-cls4
+# import with:  import model dim8_mw-cls4
 Block SMINPUTS 
   1 8.038700e+01 # MW 
   2 1.166370e-05 # Gf 

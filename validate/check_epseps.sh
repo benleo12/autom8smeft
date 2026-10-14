@@ -1,5 +1,5 @@
 #!/bin/bash
-# Regression test of the Levi-Civita-pair rewrite (default in fr_worker.wls, DIM8_EPSEPS=0 disables it): build the
+# Test of the Levi-Civita-pair rewrite (default in fr_worker.wls, DIM8_EPSEPS=0 disables it): build the
 # dual-dual Q_{G^2B^2}^{(2)} (L8op455) with and without it into scratch caches and require numeric
 # equality vertex by vertex.  usage: validate/check_epseps.sh [wolframscript]
 set -e

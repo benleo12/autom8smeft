@@ -41,8 +41,7 @@ z9params := Join[First /@ M$Parameters, {MZ, MH}];
 z9left[z9e_] := Intersection[Cases[z9e, _Symbol, {0, Infinity}], z9params];
 (* the kinetic part (two momenta) and the mass part (none) of a two-point term are measured
    separately: they carry different units, and taken together the mass residue, in GeV^2, hides a
-   kinetic residue a thousand times its relative size.  The first version of this test did take
-   them together and passed the W, the Z and the photon-Z mixing on the strength of their masses. *)
+   kinetic residue a thousand times its relative size. *)
 z9mag[z9e_, z9r_, z9kin_] := Module[{z9y = Expand[z9e /. z9r], z9l},
   z9l = Select[If[Head[z9y] === Plus, List @@ z9y, {z9y}], If[z9kin, ! FreeQ[#, FV | SP] &, FreeQ[#, FV | SP] &]];
   If[z9l === {} || z9y === 0, 0., Max[z9coef /@ z9l]]];
@@ -57,8 +56,8 @@ z9bos = {A, Z, W, Wbar, H, G};
 (* The spectator carries no momentum.  A two-point term is defined up to a total derivative, and
    multiplying by the spectator spoils that: h Box h and -(d h)^2 are the same kinetic term and
    different three-point vertices unless nothing flows out through the third leg.  O_Hbox is
-   written with the box, and before this substitution the test reported its kinetic term as a
-   first-order failure of a Lagrangian that was canonical. *)
+   written with the box, and without this substitution its kinetic term would show up as a
+   first-order failure of a Lagrangian that is canonical. *)
 z9atrest[{z9p_, z9e_}] := Module[{z9g = First[Select[z9p, #[[1]] === G0 &]][[2]], z9o, z9a, z9b},
   z9o = DeleteCases[z9p[[All, 2]], z9g]; {z9a, z9b} = z9o;
   {z9p, Expand[z9e /. {FV[z9g, _] -> 0, SP[z9g, _] -> 0, SP[_, z9g] -> 0} /.

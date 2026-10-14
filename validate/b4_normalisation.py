@@ -1,3 +1,13 @@
+"""Normalisation of the four-B vertices of models/dim8_is, checked against field strengths.
+
+The Lorentz structures VVVV139 and VVVV28 are evaluated at fixed generic momenta and
+polarisations and compared with the four-point vertices of (B_{mu nu} B^{mu nu})^2 and
+(B_{mu nu} Btilde^{mu nu})^2, built directly from the abelian field strengths
+f_{mu nu} = p_mu e_nu - p_nu e_mu.  The printed ratios give the normalisation of each structure.
+The script then evaluates the vertex of Tr(B^4) and compares it with
+(1/2)(B.B)^2 + (1/4)(B.Btilde)^2, the combination that expresses Tr(B^4) through the two
+invariants.
+"""
 import sys, re, itertools
 import numpy as np
 sys.path.insert(0,'${DIM8_ROOT:-.}/validate')

@@ -6,9 +6,9 @@
 Every dimension-eight coefficient enters at order 1/Lambda^4, so every internal parameter of the
 model must be exactly LINEAR in a common coefficient c, up to the places where a nonlinearity is
 physical rather than a truncation error (MW = sqrt(MW2) is the standard example: MW2 is linear,
-its square root is not).  This evaluates the whole internal parameter list at several values of c
-and fits each parameter to a + b c, then reports the size of the quadratic remainder relative to
-the linear term.
+its square root is not).  This evaluates the whole internal parameter list at c = 0 and c = +-h,
+takes the linear term and the quadratic remainder of each parameter from central differences, and
+reports their ratio.  It does so at two step sizes h an octave apart.
 
 A parameter with a quadratic remainder that does not shrink like c^2 when c shrinks is a genuine
 inconsistency: a 1/Lambda^8 term has been kept in a 1/Lambda^4 construction.  A parameter whose
@@ -56,7 +56,8 @@ def main(argv):
         tol = float(argv[argv.index("--tol") + 1])
 
     # Two scales an octave apart.  A true 1/Lambda^8 contamination keeps the same relative size at
-    # both, a square-root nonlinearity falls by four.
+    # both.  The quadratic remainder of a square-root nonlinearity falls by four, so its ratio to
+    # the linear term halves.
     for scale in (1e-3, 5e-4):
         cs = [-2 * scale, -scale, 0.0, scale, 2 * scale]
         rows = [evaluate(ufo, c) for c in cs]
