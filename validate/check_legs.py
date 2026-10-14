@@ -11,7 +11,8 @@ legs, N_HD being the number of Higgs fields that carry a derivative, smallest ov
 the class.  The two-point terms shift masses and field normalisations, which the input relations
 absorb, so the vertices of the released model start at three legs.  The test recomputes N_HD from
 gen/operators.py, checks it against epower.DIM8_HD, and checks that the smallest and largest
-vertex of every class in the model sit exactly on the two bounds.
+vertex of every class in the model sit exactly on the two bounds.  In a model with the
+dimension-six sector (dim68_is) the eight dimension-six classes are checked the same way.
 """
 import collections
 import json
@@ -56,6 +57,37 @@ def vertex_legs(model):
     return legs
 
 
+# the dimension-six coefficients of the combined model, by class; Ph and Abs are the phase and
+# modulus of a complex coefficient
+DIM6 = {"H^6": "cH", "H^4D^2": "cHbox cHDD", "X^2H^2": "cHW cHB cHWB cHG cHGtil cHWtil cHBtil cHWBtil",
+        "X^3": "cG cGtil cW cWtil", "psi^2H^3": "ceH cuH cdH",
+        "psi^2XH": "ceW ceB cuG cuW cuB cdG cdW cdB",
+        "psi^2H^2D": "cHl1 cHl3 cHe cHq1 cHq3 cHu cHd cHud",
+        "psi^4": "cll cll1 cqq1 cqq11 cqq3 cqq31 clq1 clq3 cee cuu cuu1 cdd cdd1 ceu ced cud1 cud8 "
+                 "cle clu cld cqe cqu1 cqu8 cqd1 cqd8 cledq cquqd1 cquqd8 clequ1 clequ3"}
+
+
+def dim6_legs(model):
+    """{class name: Counter of leg counts} for the dimension-six vertices, or {} without them."""
+    if "lhablock = 'DIM6'" not in open(os.path.join(model, "parameters.py")).read() \
+            or "cHbox" not in open(os.path.join(model, "couplings.py")).read():
+        return {}
+    cls_of = {w: c for c, ws in DIM6.items() for w in ws.split()}
+    classes = {}
+    for m in re.finditer(r"(GC_\w+) = Coupling\(name = '\w+',\s*value = '([^']*)'",
+                         open(os.path.join(model, "couplings.py")).read()):
+        ids = set(re.findall(r"\b(c[A-Za-z0-9]+?)(?:Ph|Abs)?\b", m.group(2)))
+        classes[m.group(1)] = {cls_of[i] for i in ids if i in cls_of}
+    legs = collections.defaultdict(collections.Counter)
+    for m in re.finditer(r"Vertex\(name = '\w+',\s*particles = \[([^\]]*)\].*?couplings = \{([^}]*)\}",
+                         open(os.path.join(model, "vertices.py")).read(), re.S):
+        n = m.group(1).count("P.")
+        for g in set(re.findall(r"C\.(GC_\w+)", m.group(2))):
+            for c in classes.get(g, ()):
+                legs[c][n] += 1
+    return legs
+
+
 def main(argv):
     model = os.path.abspath(argv[1]) if len(argv) > 1 else os.path.join(ROOT, "models", "dim8_is")
     names = list(epower.DIM8_CLASSES)
@@ -71,7 +103,16 @@ def main(argv):
         bad += not ok
         print(f"{'ok  ' if ok else 'FAIL'} {c:2d} {name:12s} N_HD={hd[c]} (table {epower.DIM8_HD[name]})"
               f"  bounds {lo}..{hi}  vertices {min(seen) if seen else '-'}..{max(seen) if seen else '-'}")
-    print(f"\n{len(names) - bad}/{len(names)} classes sit exactly on the bounds")
+    total = len(names)
+    for name, seen in sorted(dim6_legs(model).items()):
+        D, H, psi, F = epower.DIM6_CLASSES[name]
+        lo = max(psi + F + epower.higgs_with_derivative(name), 3)
+        hi = psi + H + 2 * F + D
+        ok = min(seen) == lo and max(seen) == hi
+        bad += not ok
+        total += 1
+        print(f"{'ok  ' if ok else 'FAIL'}  6 {name:12s}  bounds {lo}..{hi}  vertices {min(seen)}..{max(seen)}")
+    print(f"\n{total - bad}/{total} classes sit exactly on the bounds")
     return 1 if bad else 0
 
 
