@@ -166,9 +166,11 @@ sections.
 Flavour universal, one coefficient per operator, so the basis's `p, r, s, t` collapse to `p = r`
 and `s = t`. `Q_{udWH^2}^{(1)}` and `Q_{udWH^2}^{(2)}` vanish identically as written, whatever the
 flavour structure, because `epsilon tau^I` is symmetric for all three `I` while `epsilon` is
-antisymmetric; their coefficients are in the card and do nothing. A further set vanishes because
-of flavour universality alone, leaving 899 of the 1030 `DIM8` coefficients with a vertex in the
-model. The 120 entries of the baryon-number-violating operators have none either.
+antisymmetric; their coefficients are in the card and do nothing. Thirteen more vanish because of
+flavour universality alone, `Q_{q^4H^2}^{(5)}` and the twelve four-fermion field-strength operators
+with two identical currents (`l^4B`, `q^4B`, `e^4B`, `u^4B`, `d^4B`), which are then symmetric in
+the Lorentz indices of an antisymmetric field strength. That leaves 893 of the 1030 `DIM8`
+coefficients with a vertex in the model, and `./dim8 select` never lists the other operators. The 120 entries of the baryon-number-violating operators have none either.
 
 The dimension-six sector is complete at `1/Lambda^4`. Its `NP=1` vertices are SMEFTsim's, and
 checkable against its shipped UFO. The products of a dimension-six operator with the first-order

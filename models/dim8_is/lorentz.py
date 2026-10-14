@@ -8284,10 +8284,6 @@ FFFFVV36 = Lorentz(name = 'FFFFVV36',
                    spins = [ 2, 2, 2, 2, 3, 3 ],
                    structure = 'Epsilon(5,6,-1,-2)*Gamma(-2,2,-4)*Gamma(-1,4,-3)*ProjM(-4,3)*ProjM(-3,1)')
 
-FFFFVV37 = Lorentz(name = 'FFFFVV37',
-                   spins = [ 2, 2, 2, 2, 3, 3 ],
-                   structure = 'Epsilon(5,6,-1,-2)*Gamma(-2,4,-3)*Gamma(-1,2,-4)*ProjM(-4,3)*ProjM(-3,1)')
-
 FFFFVV38 = Lorentz(name = 'FFFFVV38',
                    spins = [ 2, 2, 2, 2, 3, 3 ],
                    structure = 'Epsilon(5,6,-1,-2)*Gamma(-2,4,-4)*Gamma(-1,2,-3)*ProjM(-4,3)*ProjM(-3,1)')

@@ -19,12 +19,11 @@ Two things are tested here that zero_lorentz.py cannot reach.
                  that vanishes only on shell is correctly kept.
 
   --wcs          the whole vertex, sum over (colour, Lorentz) of coupling times structure, per
-                 Wilson coefficient.  This is the test that catches a coefficient whose every
-                 vertex cancels between two live structures.  Three of the psi^4 B operators,
-                 six card entries since their coefficients are complex, are such a case: they
-                 look live and give exactly zero, because their two surviving structures differ
-                 by a swap of two dummy indices inside one Epsilon and carry the same coupling,
-                 so they sum to nothing.
+                 Wilson coefficient, every term at the same random point.  This is the test that
+                 catches a coefficient whose every vertex cancels between live structures, as
+                 the four-fermion field-strength operators with two identical currents do for
+                 flavour-universal coefficients.  validate/drop_zero_structures.py removes such
+                 coefficients at release, so on a released model this test finds none.
 
 Default runs both.  A structure or coefficient is reported when it vanishes at every random
 point to 1e-9 of the size of its own terms, which for a multilinear form is proof.
@@ -282,8 +281,10 @@ def dead_coefficients(ufo, zeros, verbose=True):
     for vx in V.all_vertices:
         names = set()
         for c in vx.couplings.values():
+            # a complex coefficient reaches the couplings through its base name, an internal
+            # parameter built from the external <name>Re and <name>Im
             names |= {w for w in wcs if re.search(r"\b" + w + r"\b", c.value)}
-            names |= {w for w in wcs if re.search(r"\b" + w + r"(Re|Im)\b", c.value)}
+            names |= {w for w in wcs if re.search(r"\b" + re.sub(r"(Re|Im)$", "", w) + r"\b", c.value)}
         for w in names: touched.setdefault(w, []).append(vx)
 
     dead = []
@@ -294,9 +295,12 @@ def dead_coefficients(ufo, zeros, verbose=True):
             for ci in range(len(vx.color)):
                 tot, scale = 0j, 0.0
                 for rep in range(3):
-                    rng = np.random.default_rng(1000 + rep)
                     tot, scale = 0j, 0.0
                     for (cc, li), cp in vx.couplings.items():
+                        # every term of the sum at the same kinematic point: a fresh generator
+                        # with the same seed per term draws the same momenta, polarisations and
+                        # wavefunctions, so the sum is the vertex at one point
+                        rng = np.random.default_rng(1000 + rep)
                         if cc != ci: continue
                         try: g = complex(eval(cp.value, ns, dict(vals)))
                         except Exception: g = float("nan")

@@ -33,13 +33,14 @@ s2 = re.sub(r"(NP = CouplingOrder\(name = 'NP',\s*expansion_order = )\d+", r"\g<
 assert s2 != s or "expansion_order = 4" in s, "NP order block not found"
 open(p, "w").write(s2); print("coupling_orders.py: NP expansion_order = 4")
 EOF
-# Identically vanishing Lorentz structures.  FeynRules writes a structure without checking whether
-# it is zero.  ALOHA then reduces the routine to zero, omits the declarations of the arguments it
-# no longer uses, and the generated Fortran fails to compile on any process reaching that vertex,
-# with a message that points at the process rather than at the structure.  Nine of them sit in a
-# freshly written full-basis UFO, on fifty vertices, and only fifteen of the fifty have nothing
-# else in them, so the rest are edited rather than dropped.  The test evaluates the Dirac
-# structures as well and imposes momentum conservation, since a test that does neither finds none.
+# Zeros that FeynRules writes without checking, removed in three stages.  An identically vanishing
+# Lorentz structure, a group of structures in one vertex whose couplings are equal up to sign and
+# whose sum vanishes, and a coefficient whose whole contribution vanishes (the four-fermion
+# field-strength operators with two identical currents, for flavour-universal coefficients).
+# ALOHA reduces any of them to a zero routine, omits the declarations of the arguments it no longer
+# uses, and the generated Fortran fails to compile on any process reaching that vertex, with a
+# message that points at the process rather than at the structure.  Every test evaluates the
+# Dirac structures as well and imposes momentum conservation, at random values of every input.
 $(command -v python3.13 || command -v python3) $ROOT/validate/drop_zero_structures.py $DEST
 python3 - $DEST <<'EOF'
 import re, sys, os

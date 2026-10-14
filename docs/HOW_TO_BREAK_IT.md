@@ -110,20 +110,20 @@ its cross section, through the W mass in its two t-channel propagators. Since th
 the cheapest one in any study, run it both ways rather than guess. In the {M_W, M_Z, G_F} scheme
 the bracket is absent by construction.
 
-**Three four-fermion operators have vertices that sum to zero in the released models.** They are
-`Q_{ledqB}^(2)`, `Q_{lequB}^(2)` and `Q_{q^2udB}^(2)`, independent members of the Murphy basis that
-are not zero as operators, on 90, 126 and 114 vertices, none of which survives the sum.
-Two structures of the same vertex differ by a swap of two dummy indices inside one `Epsilon`, so
-one is minus the other, and they carry the same coupling: evaluated numerically each is 29.50 and
-the sum is 5e-15. With the nine operators that have no vertex at all ("The nine operators that
-vanish", below), twelve of the 674 coefficients have no effect in the released models. Each of the three
-carries a complex coefficient and so occupies two card entries, Re and Im, so 893 of the 899
-entries with vertices do something. Every other `psi^4 B` dual is alive, and so is `c8G2H4x2`.
-
-`validate/zero_vertex.py --wcs` finds the three. It takes each vertex's leg count from the vertex
-rather than from the indices its structure happens to mention. A count inferred from the indices
-imposes the wrong momentum conservation and turns live structures into false zeros, which
-`evaluate()` warns about in its own docstring and `zero_structures()` honours.
+**No coefficient whose vertices cancel ships.** Two structures of one vertex can each be nonzero
+and cancel, when they carry couplings equal up to sign, and MadGraph then merges them into one
+routine that ALOHA reduces to zero. A coefficient can also vanish as a whole. The twelve
+four-fermion field-strength operators with two identical currents, those of `l^4B`, `q^4B`, `e^4B`,
+`u^4B` and `d^4B`, are symmetric in the Lorentz indices of an antisymmetric field strength and
+vanish for flavour-universal coefficients, yet FeynRules writes some of them as pairs of structures
+that differ by a swap of two dummy indices inside one `Epsilon` and carry the same coupling.
+`validate/drop_zero_structures.py` groups the structures of every vertex by coupling, removes a group
+whose sum vanishes, and sets to zero every coefficient whose whole contribution vanishes. Every
+vertex of the released models equals the vertex FeynRules wrote at a common random point with all
+coefficients on, so nothing live is removed. With the three operators that vanish by their SU(2)
+structure or for flavour-universal coefficients, fifteen of the 674 have no vertex
+("The fifteen operators that vanish", below). `validate/zero_vertex.py --wcs` evaluates every
+coefficient's vertices at one common point and finds no cancelling coefficient in a released model.
 
 **No identically-zero Lorentz structure ships.** ALOHA reduces such a structure to zero and then
 writes a Fortran routine whose arguments it never declares. A process that reaches one dies at
@@ -267,9 +267,9 @@ scheme is defined at fixed G_F and a 1/Lambda^8 remainder is beyond the truncati
 the coupling-order label is not a complete bookkeeping of the Lambda expansion in this model.
 Disagreeing with that reading would be a real finding.
 
-**The nine operators that vanish.** Seven of them contract two identical currents, symmetric in
-their Lorentz indices, with an antisymmetric field strength, and two vanish by their SU(2)
-structure. I claim this is a consequence of taking one flavour-universal coefficient per operator
+**The fifteen operators that vanish.** Twelve of them contract two identical currents, symmetric
+in their Lorentz indices, with an antisymmetric field strength, `Q_{q^4H^2}^{(5)}` vanishes for a
+flavour-universal coefficient as well, and two vanish by their SU(2) structure. I claim this is a consequence of taking one flavour-universal coefficient per operator
 and not a defect, and the argument is short enough to check independently in ten minutes. If any of
 them should be nonzero the whole flavour-universal simplification is in question.
 

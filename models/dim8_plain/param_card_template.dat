@@ -428,11 +428,11 @@ Block DIM8
   393 0.000000e+00 # c8l2q2Bx3  Q_{l^2q^2B}^{(3)} (L8op306, class 19)
   394 0.000000e+00 # c8l2q2Bx4  Q_{l^2q^2B}^{(4)} (L8op307, class 19)
   395 0.000000e+00 # c8l4Bx1  Q_{l^4B}^{(1)} (L8op308, class 19)  [no vertex in this model, setting it does nothing]
-  396 0.000000e+00 # c8l4Bx2  Q_{l^4B}^{(2)} (L8op309, class 19)
+  396 0.000000e+00 # c8l4Bx2  Q_{l^4B}^{(2)} (L8op309, class 19)  [no vertex in this model, setting it does nothing]
   397 0.000000e+00 # c8q4Bx1  Q_{q^4B}^{(1)} (L8op310, class 19)  [no vertex in this model, setting it does nothing]
-  398 0.000000e+00 # c8q4Bx2  Q_{q^4B}^{(2)} (L8op311, class 19)
+  398 0.000000e+00 # c8q4Bx2  Q_{q^4B}^{(2)} (L8op311, class 19)  [no vertex in this model, setting it does nothing]
   399 0.000000e+00 # c8q4Bx3  Q_{q^4B}^{(3)} (L8op312, class 19)  [no vertex in this model, setting it does nothing]
-  400 0.000000e+00 # c8q4Bx4  Q_{q^4B}^{(4)} (L8op313, class 19)
+  400 0.000000e+00 # c8q4Bx4  Q_{q^4B}^{(4)} (L8op313, class 19)  [no vertex in this model, setting it does nothing]
   401 0.000000e+00 # c8u4Gx1  Q_{u^4G}^{(1)} (L8op314, class 19)
   402 0.000000e+00 # c8u4Gx2  Q_{u^4G}^{(2)} (L8op315, class 19)
   403 0.000000e+00 # c8d4Gx1  Q_{d^4G}^{(1)} (L8op316, class 19)
@@ -458,11 +458,11 @@ Block DIM8
   423 0.000000e+00 # c8u2d2Bx3  Q_{u^2d^2B}^{(3)} (L8op336, class 19)
   424 0.000000e+00 # c8u2d2Bx4  Q_{u^2d^2B}^{(4)} (L8op337, class 19)
   425 0.000000e+00 # c8e4Bx1  Q_{e^4B}^{(1)} (L8op338, class 19)  [no vertex in this model, setting it does nothing]
-  426 0.000000e+00 # c8e4Bx2  Q_{e^4B}^{(2)} (L8op339, class 19)
+  426 0.000000e+00 # c8e4Bx2  Q_{e^4B}^{(2)} (L8op339, class 19)  [no vertex in this model, setting it does nothing]
   427 0.000000e+00 # c8u4Bx1  Q_{u^4B}^{(1)} (L8op340, class 19)  [no vertex in this model, setting it does nothing]
-  428 0.000000e+00 # c8u4Bx2  Q_{u^4B}^{(2)} (L8op341, class 19)
+  428 0.000000e+00 # c8u4Bx2  Q_{u^4B}^{(2)} (L8op341, class 19)  [no vertex in this model, setting it does nothing]
   429 0.000000e+00 # c8d4Bx1  Q_{d^4B}^{(1)} (L8op342, class 19)  [no vertex in this model, setting it does nothing]
-  430 0.000000e+00 # c8d4Bx2  Q_{d^4B}^{(2)} (L8op343, class 19)
+  430 0.000000e+00 # c8d4Bx2  Q_{d^4B}^{(2)} (L8op343, class 19)  [no vertex in this model, setting it does nothing]
   431 0.000000e+00 # c8l2e2Wx1  Q_{l^2e^2W}^{(1)} (L8op344, class 19)
   432 0.000000e+00 # c8l2e2Wx2  Q_{l^2e^2W}^{(2)} (L8op345, class 19)
   433 0.000000e+00 # c8l2e2Bx1  Q_{l^2e^2B}^{(1)} (L8op346, class 19)

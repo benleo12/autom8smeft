@@ -30,79 +30,6 @@ Block DIM6
   7 0.000000e+00 # cll1
   8 0.000000e+00 # cHbox
   9 0.000000e+00 # cH
-  10 0.000000e+00 # ceWPh
-  11 0.000000e+00 # ceBPh
-  12 0.000000e+00 # cuGPh
-  13 0.000000e+00 # cuWPh
-  14 0.000000e+00 # cuBPh
-  15 0.000000e+00 # cdGPh
-  16 0.000000e+00 # cdWPh
-  17 0.000000e+00 # cdBPh
-  18 0.000000e+00 # cHudPh
-  19 0.000000e+00 # ceHPh
-  20 0.000000e+00 # cuHPh
-  21 0.000000e+00 # cdHPh
-  22 0.000000e+00 # cledqPh
-  23 0.000000e+00 # cquqd1Ph
-  24 0.000000e+00 # cquqd8Ph
-  25 0.000000e+00 # clequ1Ph
-  26 0.000000e+00 # clequ3Ph
-  27 0.000000e+00 # cG
-  28 0.000000e+00 # cGtil
-  29 0.000000e+00 # cW
-  30 0.000000e+00 # cWtil
-  31 0.000000e+00 # cHG
-  32 0.000000e+00 # cHGtil
-  33 0.000000e+00 # cHWtil
-  34 0.000000e+00 # cHBtil
-  35 0.000000e+00 # cHWBtil
-  36 0.000000e+00 # ceHAbs
-  37 0.000000e+00 # cuHAbs
-  38 0.000000e+00 # cdHAbs
-  42 0.000000e+00 # ceWAbs
-  44 0.000000e+00 # ceBAbs
-  46 0.000000e+00 # cuGAbs
-  48 0.000000e+00 # cuWAbs
-  50 0.000000e+00 # cuBAbs
-  52 0.000000e+00 # cdGAbs
-  54 0.000000e+00 # cdWAbs
-  56 0.000000e+00 # cdBAbs
-  58 0.000000e+00 # cHl1
-  59 0.000000e+00 # cHe
-  60 0.000000e+00 # cHq1
-  61 0.000000e+00 # cHq3
-  62 0.000000e+00 # cHu
-  63 0.000000e+00 # cHd
-  64 0.000000e+00 # cHudAbs
-  66 0.000000e+00 # cll
-  67 0.000000e+00 # cqq1
-  68 0.000000e+00 # cqq11
-  69 0.000000e+00 # cqq3
-  70 0.000000e+00 # cqq31
-  71 0.000000e+00 # clq1
-  72 0.000000e+00 # clq3
-  73 0.000000e+00 # cee
-  74 0.000000e+00 # cuu
-  75 0.000000e+00 # cuu1
-  76 0.000000e+00 # cdd
-  77 0.000000e+00 # cdd1
-  78 0.000000e+00 # ceu
-  79 0.000000e+00 # ced
-  80 0.000000e+00 # cud1
-  81 0.000000e+00 # cud8
-  82 0.000000e+00 # cle
-  83 0.000000e+00 # clu
-  84 0.000000e+00 # cld
-  85 0.000000e+00 # cqe
-  86 0.000000e+00 # cqu1
-  87 0.000000e+00 # cqu8
-  88 0.000000e+00 # cqd1
-  89 0.000000e+00 # cqd8
-  90 0.000000e+00 # cledqAbs
-  92 0.000000e+00 # cquqd1Abs
-  94 0.000000e+00 # cquqd8Abs
-  96 0.000000e+00 # clequ1Abs
-  98 0.000000e+00 # clequ3Abs
 Block DIM8 
   0 1.000000e+03 # Lam
 #   ---- class 10 ----
@@ -511,11 +438,11 @@ Block DIM8
   393 0.000000e+00 # c8l2q2Bx3  Q_{l^2q^2B}^{(3)} (L8op306, class 19)
   394 0.000000e+00 # c8l2q2Bx4  Q_{l^2q^2B}^{(4)} (L8op307, class 19)
   395 0.000000e+00 # c8l4Bx1  Q_{l^4B}^{(1)} (L8op308, class 19)  [no vertex in this model, setting it does nothing]
-  396 0.000000e+00 # c8l4Bx2  Q_{l^4B}^{(2)} (L8op309, class 19)
+  396 0.000000e+00 # c8l4Bx2  Q_{l^4B}^{(2)} (L8op309, class 19)  [no vertex in this model, setting it does nothing]
   397 0.000000e+00 # c8q4Bx1  Q_{q^4B}^{(1)} (L8op310, class 19)  [no vertex in this model, setting it does nothing]
-  398 0.000000e+00 # c8q4Bx2  Q_{q^4B}^{(2)} (L8op311, class 19)
+  398 0.000000e+00 # c8q4Bx2  Q_{q^4B}^{(2)} (L8op311, class 19)  [no vertex in this model, setting it does nothing]
   399 0.000000e+00 # c8q4Bx3  Q_{q^4B}^{(3)} (L8op312, class 19)  [no vertex in this model, setting it does nothing]
-  400 0.000000e+00 # c8q4Bx4  Q_{q^4B}^{(4)} (L8op313, class 19)
+  400 0.000000e+00 # c8q4Bx4  Q_{q^4B}^{(4)} (L8op313, class 19)  [no vertex in this model, setting it does nothing]
   401 0.000000e+00 # c8u4Gx1  Q_{u^4G}^{(1)} (L8op314, class 19)
   402 0.000000e+00 # c8u4Gx2  Q_{u^4G}^{(2)} (L8op315, class 19)
   403 0.000000e+00 # c8d4Gx1  Q_{d^4G}^{(1)} (L8op316, class 19)
@@ -541,11 +468,11 @@ Block DIM8
   423 0.000000e+00 # c8u2d2Bx3  Q_{u^2d^2B}^{(3)} (L8op336, class 19)
   424 0.000000e+00 # c8u2d2Bx4  Q_{u^2d^2B}^{(4)} (L8op337, class 19)
   425 0.000000e+00 # c8e4Bx1  Q_{e^4B}^{(1)} (L8op338, class 19)  [no vertex in this model, setting it does nothing]
-  426 0.000000e+00 # c8e4Bx2  Q_{e^4B}^{(2)} (L8op339, class 19)
+  426 0.000000e+00 # c8e4Bx2  Q_{e^4B}^{(2)} (L8op339, class 19)  [no vertex in this model, setting it does nothing]
   427 0.000000e+00 # c8u4Bx1  Q_{u^4B}^{(1)} (L8op340, class 19)  [no vertex in this model, setting it does nothing]
-  428 0.000000e+00 # c8u4Bx2  Q_{u^4B}^{(2)} (L8op341, class 19)
+  428 0.000000e+00 # c8u4Bx2  Q_{u^4B}^{(2)} (L8op341, class 19)  [no vertex in this model, setting it does nothing]
   429 0.000000e+00 # c8d4Bx1  Q_{d^4B}^{(1)} (L8op342, class 19)  [no vertex in this model, setting it does nothing]
-  430 0.000000e+00 # c8d4Bx2  Q_{d^4B}^{(2)} (L8op343, class 19)
+  430 0.000000e+00 # c8d4Bx2  Q_{d^4B}^{(2)} (L8op343, class 19)  [no vertex in this model, setting it does nothing]
   431 0.000000e+00 # c8l2e2Wx1  Q_{l^2e^2W}^{(1)} (L8op344, class 19)
   432 0.000000e+00 # c8l2e2Wx2  Q_{l^2e^2W}^{(2)} (L8op345, class 19)
   433 0.000000e+00 # c8l2e2Bx1  Q_{l^2e^2B}^{(1)} (L8op346, class 19)

@@ -157,10 +157,26 @@ def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
     import process as P
 
     vi, sm = P.load_data(ROOT)
+    idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
     if not with_bviol:
-        idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
         vi = {k: v for k, v in vi.items() if idx.get(k, {}).get("cls", 0) < 18 or not _is_bviol(idx[k])}
+    # An operator whose every vertex vanishes carries no vertex in the released models, since the
+    # release step removes it (validate/drop_zero_structures.py), although FeynRules' vertex lists
+    # still name it.  The four-fermion field-strength operators with two identical currents are the
+    # case.  They are dropped here, so that the selection and the released model agree.
+    dead = _operators_without_vertex(idx)
+    vi = {k: v for k, v in vi.items() if k not in dead}
     return P.select(proc, vi, sm, collapse=collapse, two_insertions=two_insertions), vi
+
+
+def _operators_without_vertex(idx):
+    """Dimension-eight blocks none of whose coefficients appears in a coupling of models/dim8_is."""
+    path = os.path.join(ROOT, "models", "dim8_is", "couplings.py")
+    if not os.path.exists(path):
+        return set()
+    import re
+    used = set(re.findall(r"\bc8\w+?(?=Re\b|Im\b|\b)", open(path, errors="replace").read()))
+    return {b for b, e in idx.items() if b.startswith("L8op") and not any(w in used for w in e["wcs"])}
 
 
 def _is_bviol(entry):

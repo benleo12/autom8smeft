@@ -82,9 +82,9 @@ def main(argv) -> int:
             if w and not re.search(r"\b" + re.escape(w) + r"(Re|Im)?\b", coup):
                 novertex.add(e["label"])
     else:                                   # no model built: fall back to the known answer
-        novertex = {"Q_{udWH^2}^{(1)}", "Q_{udWH^2}^{(2)}", "Q_{q^4H^2}^{(5)}", "Q_{l^4B}^{(1)}",
-                    "Q_{q^4B}^{(1)}", "Q_{q^4B}^{(3)}", "Q_{e^4B}^{(1)}", "Q_{u^4B}^{(1)}",
-                    "Q_{d^4B}^{(1)}"}
+        novertex = {"Q_{udWH^2}^{(1)}", "Q_{udWH^2}^{(2)}", "Q_{q^4H^2}^{(5)}"} | {
+            f"Q_{{{f}^4B}}^{{({k})}}" for f, ks in (("l", "12"), ("q", "1234"), ("e", "12"), ("u", "12"), ("d", "12"))
+            for k in ks}
 
     # ---------------------------------------------------------------- summary
     rows = []
