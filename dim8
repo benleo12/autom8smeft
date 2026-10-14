@@ -345,7 +345,7 @@ def cmd_count(a):
     name, args = E.resolve(a.spec)
     lead = []
     for n in a.n:
-        t = E.tower(*args, n, target=a.target)
+        t = E.tower(*args, n, target=a.target, HD=E.higgs_with_derivative(name))
         if isinstance(t, str):
             print(f"{name} n={n}: {t}")
             continue

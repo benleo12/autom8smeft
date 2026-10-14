@@ -10,20 +10,19 @@ counting of each class is tabulated separately, in the catalogue summary of the 
 
 Columns per process are the interference in units of 1e-4 of the Standard Model at the paper's
 scale, Lambda = 3 TeV, and Lambda_min, the scale above which the class's square is smaller than
-its interference at unit coefficient in the inclusive sample.  The samples are generated at
-Lambda = 1 TeV and rescaled exactly, the interference by (1/3)^4 and the square by (1/3)^8, since
-a genuine 1/Lambda^4 term is linear in C/Lambda^4 (the paper's figures do the same, and the
-W-mass bracket, which is not rescaled here, is not in these tables).  The ratio
-R = sigma_{1/Lambda^8}/|sigma_{1/Lambda^4}| scales as 1/Lambda^4 at fixed kinematics, so
-Lambda_min = R^{1/4} TeV from the runs at 1 TeV whatever scale the table is printed at, and it is
-the scale below which the 1/Lambda^4 truncation is not self-consistent for that class in that
-sample.  A raw R of 61 at Lambda = 1 TeV is not a prediction of a large effect.  It says the
-expansion has failed there, and 2.8 TeV is the number a reader can use.  For a class with no
+its interference at unit coefficient in the inclusive sample.  A tagged order is exactly one
+power of 1/Lambda, the interference 1/Lambda^4 and the square 1/Lambda^8, so read() brings every
+row from the Lambda recorded in its settings column to LAM_PAPER, and a study run at any scale
+gives the same table (the W-mass bracket is not a tagged order and is not in these tables).  The
+ratio R = sigma_{1/Lambda^8}/|sigma_{1/Lambda^4}| scales as 1/Lambda^4 at fixed kinematics, so
+Lambda_min = LAM_PAPER R^{1/4} does not depend on the scale, and it is the scale below which the
+1/Lambda^4 truncation is not self-consistent for that class in that sample.  For a class with no
 interference the bracketed entry is the scale above which the square is smaller than the
-Standard-Model rate, (sq/SM)^{1/8} TeV.
+Standard-Model rate, LAM_PAPER (sq/SM)^{1/8}.
 Pure Python, reads each study's results.tsv.
 """
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -45,10 +44,21 @@ COLS = [("diboson",    "p p > w+ w-",         r"$pp\to W^+W^-$"),
         ("drellyan",   "p p > e+ e-",         r"$pp\to e^+e^-$")]
 
 INT, SQ = "NP^2==2", "NP<=2 NP^2==4"
-LAM_SAMPLE = 1000.0   # the scale the studies were run at
-LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at
-F4 = (LAM_SAMPLE / LAM_PAPER) ** 4   # a 1/Lambda^4 term from the sample scale to the paper's
+POWER = {INT: 4, SQ: 8}   # the power of 1/Lambda that each tagged order carries
+LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at, in GeV
 UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Standard Model
+
+
+def at_paper_scale(order, sig, err, settings, where):
+    """A tagged cross section and its error at LAM_PAPER, from the Lam= of the row's settings."""
+    k = POWER.get(order)
+    if k is None:
+        return sig, err
+    m = re.search(r"\bLam=([0-9.eE+-]+)", settings)
+    if not m:
+        sys.exit(f"{where}: a {order} row with no Lam= in its settings")
+    f = (float(m.group(1)) / LAM_PAPER) ** k
+    return sig * f, err * f
 
 
 def read(study):
@@ -62,7 +72,8 @@ def read(study):
                 continue
             proc, model, order, sig, err = f[0].strip(), f[1], f[2], f[3], f[4]
             try:
-                out[(proc, model, order)] = (float(sig), float(err))
+                out[(proc, model, order)] = at_paper_scale(
+                    order, float(sig), float(err), f[7] if len(f) > 7 else "", f"{study}: {proc} {model}")
             except ValueError:
                 # keep the word: NO_DIAGRAMS and NOT_INTEGRATED mean opposite things, and a table
                 # that renders both as a dash claims a class is absent when it was never run
@@ -76,20 +87,20 @@ def tev(x):
 
 
 def tex_ratio(r):
-    """Lambda_min in TeV from R at 1 TeV: R^(1/4)."""
-    return "$" + tev(r ** 0.25) + "$"
+    """Lambda_min in TeV from R at LAM_PAPER: LAM_PAPER R^(1/4)."""
+    return "$" + tev(LAM_PAPER / 1000 * r ** 0.25) + "$"
 
 
 def sq_over_sm(x):
     """For a class with no interference: the scale in TeV above which its square is below the
-    Standard-Model rate, (sq/SM)^(1/8) from the run at 1 TeV."""
-    return tev(x ** 0.125)
+    Standard-Model rate, LAM_PAPER (sq/SM)^(1/8) with the square at LAM_PAPER."""
+    return tev(LAM_PAPER / 1000 * x ** 0.125)
 
 
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
 # find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 set Lambda_min in diboson, VBF and Drell-Yan
 # (the energy-growth subsection), and X^4 carries the asterisk discussion and its large entry in
-# W+W-W+ (the reachability subsection).  Keep this set in step with the phenomenology section of the paper.
+# W+W-W+ (the subsection on which classes contribute).  Keep this set in step with the phenomenology section of the paper.
 HIGHLIGHT = {1, 7, 14, 21}
 
 
@@ -104,7 +115,7 @@ def label(c):
 def tex_q(cls):
     """The counting's leading lambda power for this class at four legs, or a dash when the class
     has no four-point vertex.  One number rather than a (q, p) pair."""
-    r = epower.leading(*epower.DIM8_CLASSES[CLASSES[cls]], 4)
+    r = epower.leading(*epower.DIM8_CLASSES[CLASSES[cls]], 4, HD=epower.DIM8_HD[CLASSES[cls]])
     return "--" if isinstance(r, str) else "$\\lambda^{%d}$" % r.lambdaExp
 
 
@@ -153,7 +164,7 @@ def main():
                 # the same three-way encoding as the appendix grid: an open circle is a class that
                 # produces a diagram but interferes negligibly, which is not the same statement as
                 # a dash, and the two must not look alike
-                x = i[0] * F4 / s0 / UNIT
+                x = i[0] / s0 / UNIT
                 pct = (r"$\circ$" if abs(x) < 0.005 else f"${x:+.0f}$" if abs(x) >= 100
                        else f"${x:+.1f}$" if abs(x) >= 10 else f"${x:+.2f}$")
             else:
@@ -184,7 +195,7 @@ def main():
             r"$\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample, which is a self-consistency scale of the $1/\Lambda^4$ truncation and not a validity bound. "
             r"It is $\Lambda$ times the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$, which does not depend on $\Lambda$ since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
             r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "
-            r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one. The samples are generated at $\Lambda = 1$~TeV and rescaled exactly to $3$~TeV, the interference by $(1/3)^4$ and the square by $(1/3)^8$, and an entry at another $\Lambda$ follows by multiplying $\delta$ by $(3~\mathrm{TeV}/\Lambda)^4$. "
+            r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one, and $\delta$ at another $\Lambda$ is the entry times $(3~\mathrm{TeV}/\Lambda)^4$. "
             r"The power counting of each class at four, five and six legs is in \cref{tab:catalogue-summary}, and \cref{sec:routes} explains which of its vertices a process uses. "
             r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")

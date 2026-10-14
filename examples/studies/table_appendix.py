@@ -7,8 +7,9 @@ One grid takes the place of twelve per-process tables, which would repeat the cl
 the derived W mass in every row, although the W mass a class derives depends on which
 coefficients are on and not at all on the process.  Rows are the 21 classes, columns the twelve
 processes, and each cell is the dimension-eight interference in units of 1e-4 of that process's
-Standard-Model rate at Lambda = 3 TeV.  A dash is no diagram, so the pattern of dashes shows
-which classes reach which process.
+Standard-Model rate at Lambda = 3 TeV, brought there from the Lambda recorded in each row by the
+reader of table_master.py.  A dash is no diagram, so the pattern of dashes shows which classes
+reach which process.
 
 The absolute cross sections, the Monte Carlo errors and the squared terms are in each study's
 results.tsv in the repository.
@@ -17,6 +18,8 @@ import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from table_master import at_paper_scale  # noqa: E402
 
 # (study, process, column head).  Order: the four body processes first, then the rest.
 PROCS = [
@@ -41,9 +44,6 @@ CLASSES = {1: "X^4", 2: "H^8", 3: "H^6D^2", 4: "H^4D^4", 5: "X^3H^2", 6: "X^2H^4
            20: "psi^4HD", 21: "psi^4D^2"}
 
 INT = "NP^2==2"
-LAM_SAMPLE = 1000.0   # the scale the studies were run at
-LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at
-F4 = (LAM_SAMPLE / LAM_PAPER) ** 4   # a 1/Lambda^4 term from the sample scale to the paper's
 UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Standard Model
 
 
@@ -57,7 +57,8 @@ def read(study):
                 continue
             key = (f[0].strip(), f[1], f[2])
             try:
-                v = (float(f[3]), float(f[4]))
+                v = at_paper_scale(f[2], float(f[3]), float(f[4]), f[7] if len(f) > 7 else "",
+                                   f"{study}: {f[0].strip()} {f[1]}")
             except ValueError:
                 # keep the WORD, not just the absence of a number: "NO_DIAGRAMS" and
                 # "NOT_INTEGRATED" mean opposite things and a table that renders both as a dash
@@ -80,8 +81,7 @@ def cell(sig, err, sm, square=None):
     """One entry, on a three-way encoding that makes the shape of the table readable at a glance:
     a dash where the class produces no diagram, an open circle where it produces one whose
     interference is below 1e-6 of the Standard Model at Lambda = 3 TeV, and otherwise the
-    number, in units of 1e-4 of the Standard Model at 3 TeV, rescaled exactly from the 1 TeV
-    samples by (1/3)^4.  Parentheses mark a Monte Carlo error above a tenth of the entry.  Writing
+    number, in units of 1e-4 of the Standard Model at 3 TeV.  Parentheses mark a Monte Carlo error above a tenth of the entry.  Writing
     the negligible entries out as numbers instead buries the pattern of dashes, which is the result."""
     if sig is None or not sm:
         return "--"
@@ -93,7 +93,7 @@ def cell(sig, err, sm, square=None):
         # no interference but a square: the class reaches the process through a channel with
         # no tree-level Standard-Model amplitude, which is not the same as not reaching it
         return r"$\ast$" if isinstance(square, float) else "--"
-    pct = sig * F4 / sm / UNIT
+    pct = sig / sm / UNIT
     if abs(pct) < 0.005:
         return r"$\circ$"
     t = f"{pct:+.0f}" if abs(pct) >= 100 else f"{pct:+.1f}" if abs(pct) >= 10 else f"{pct:+.2f}"
@@ -103,7 +103,7 @@ def cell(sig, err, sm, square=None):
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
 # find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 set Lambda_min in diboson, VBF and Drell-Yan
 # (the energy-growth subsection), and X^4 carries the asterisk discussion and the +13.3% in
-# W+W-W+ (the reachability subsection).  Keep this set in step with the phenomenology section of the paper.
+# W+W-W+ (the subsection on which classes contribute).  Keep this set in step with the phenomenology section of the paper.
 HIGHLIGHT = {1, 7, 14, 21}
 
 
@@ -145,9 +145,9 @@ def main():
     out += [r"\bottomrule", r"\end{tabular}}",
             r"\caption{The term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}, for every class in every process of "
             r"\cref{sec:pheno}, in units of $10^{-4}$ of that process's Standard-Model rate, at "
-            r"$13.6$~TeV, $\Lambda = 3$~TeV and every coefficient of the class at one, rescaled exactly by $(1/3)^4$ from the samples generated at $1$~TeV. A dash "
-            r"is no diagram rather than a small number, and the pattern of dashes is the "
-            r"reachability prediction of \cref{eq:reach} together with the field content of the vertex, "
+            r"$13.6$~TeV, $\Lambda = 3$~TeV and every coefficient of the class at one. A dash "
+            r"is no diagram rather than a small number, and the pattern of dashes follows from the "
+            r"number of legs of \cref{eq:legs} and the field content of the vertices, "
             r"as \cref{sec:routes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
             r"diagram but interferes below $10^{-6}$ of the Standard-Model rate, a dagger one that produces "
             r"diagrams but was not run in these studies, and "

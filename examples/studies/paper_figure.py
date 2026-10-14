@@ -36,12 +36,12 @@ a 1/Lambda^8 curve above the Standard Model reads as a prediction of a large eff
 not.  A dotted line marks m = Lambda (--lambda GeV), the a priori expectation the crossing
 confirms.
 
-The samples are generated at Lambda = 1 TeV with unit coefficients, and a genuine 1/Lambda^4
-term is exactly linear in C/Lambda^4, so a figure at another Lambda needs no new events: with
---lambda L every interference column is multiplied by (1000/L)^4 and every squared column by
-(1000/L)^8 (--sample-lambda changes the 1000), the reference column being the Standard Model.
-The W-mass bracket sigma(NP=0, c) - sigma(NP=0, 0) is not in these columns, so the rescaling is
-exact.
+--lambda L is the scale the figure is drawn at.  The interference is exactly one power of
+1/Lambda^4 and the square one power of 1/Lambda^8, so samples generated at another scale L0 are
+drawn at L with --sample-lambda L0, every interference column multiplied by (L0/L)^4 and every
+squared column by (L0/L)^8, the reference column being the Standard Model.  Without
+--sample-lambda the samples are taken to be at L and drawn as they are.  The W-mass bracket
+sigma(NP=0, c) - sigma(NP=0, 0) is not in these columns.
 """
 from __future__ import annotations
 
@@ -178,7 +178,7 @@ def main(argv) -> int:
     ymin = opt("--ymin", None)   # lower edge of the cross-section panel, default from the data
     edges_opt = opt("--edges", None, str)
     lam = opt("--lambda", None)
-    lam0 = opt("--sample-lambda", 1000.0)
+    lam0 = opt("--sample-lambda", lam)
 
     lo, hi, cols = read(src)
     squares = {k: v for k, v in cols.items() if k.strip().endswith("squared")}

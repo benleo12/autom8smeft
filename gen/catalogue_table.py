@@ -98,7 +98,7 @@ def main(argv) -> int:
         cx = sum(1 for e in es if cp_of(e) == "Re/Im")
         qp = []
         for n in (4, 5, 6):
-            L = epower.leading(*FIELDS[c], n)
+            L = epower.leading(*FIELDS[c], n, HD=epower.DIM8_HD[list(epower.DIM8_CLASSES)[c - 1]])
             qp.append("--" if L is epower.NO_LEGS else f"$\\lambda^{{{L.lambdaExp}}}$")
         rows.append(f"{c} & ${CLASSES[c]}$ & {nb} & {nbv} & {terms} & "
                     f"{conj.get('real',0)} & {conj.get('complex',0)} & {conj.get('sym',0)} & "

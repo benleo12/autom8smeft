@@ -22,8 +22,13 @@ Lambda >> E >> v with (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1).
 
 Two rules from the notebook are reproduced exactly and are worth knowing about.
 
-* Reachability is  psi + F <= n <= psi + H + 2F + D.  The leading function only checks
-  the lower bound, the subleading one checks both; this port does the same.
+* A vertex has  max(psi + F + HD, 2) <= n <= psi + H + 2F + D  legs, where HD is the number of
+  Higgs fields that carry a derivative (a covariant derivative of the vacuum is a gauge boson,
+  so such a field leaves a leg either way), smallest over the terms of the class, and the one-
+  and two-point terms of the notebook's window are the tadpole, which the vev removes, and the
+  masses and normalisations.  The notebook has HD = 0 and no floor, and every n it evaluates
+  lies at or above two, so its results are unchanged.  The leading function only checks the
+  lower bound, the subleading one checks both, as in the notebook.
 * ``If[pMin == kMax, kMax = 0]``: when every Higgs that could be traded for a vev is
   already vev'd at leading order, the subleading tower is empty.  The rule empties the
   subleading towers of 16 (class, n) combinations at dimension eight and changes no
@@ -55,7 +60,24 @@ DIM6_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "X^3": (0, 0, 0, 3), "psi^2XH": (0, 1, 2, 1), "psi^2H^2D": (1, 2, 2, 0), "psi^4": (0, 0, 4, 0),
 }
 
+# Higgs fields that carry a derivative, smallest over the terms of the class, from
+# gen/operators.py; validate/check_legs.py recomputes them and checks the window against the vertices
+# of the released model.
+DIM8_HD: Dict[str, int] = {
+    "X^4": 0, "H^8": 0, "H^6D^2": 2, "H^4D^4": 4, "X^3H^2": 0, "X^2H^4": 0, "X^2H^2D^2": 2,
+    "XH^4D^2": 2, "psi^2X^2H": 0, "psi^2XH^3": 0, "psi^2H^2D^3": 1, "psi^2H^5": 0,
+    "psi^2H^4D": 1, "psi^2X^2D": 0, "psi^2XH^2D": 1, "psi^2XHD^2": 1, "psi^2H^3D^2": 2,
+    "psi^4H^2": 0, "psi^4X": 0, "psi^4HD": 0, "psi^4D^2": 0,
+}
+# Q_{H box} = (H^dag H) box (H^dag H) puts both derivatives on one Higgs field in one of its terms
+DIM6_HD: Dict[str, int] = {"H^4D^2": 1, "psi^2H^2D": 1}
+
 NO_LEGS = "Operator can't generate this number of legs"
+
+
+def higgs_with_derivative(name: str) -> int:
+    """HD of a named class, and 0 for an explicit field content, which gives the weaker bound."""
+    return DIM8_HD.get(name, DIM6_HD.get(name, 0))
 
 
 def op_dimension(D: int, H: int, psi: int, F: int) -> int:
@@ -88,18 +110,18 @@ class Tower:
                 "lambdaExp": self.lambdaExp, "Results": self.Results}
 
 
-def leading(D: int, H: int, psi: int, F: int, n: int):
+def leading(D: int, H: int, psi: int, F: int, n: int, HD: int = 0):
     """CalculatePowersRegime1.  Returns Leading, or the notebook's message string."""
     Dop = op_dimension(D, H, psi, F)
     p = max(H + psi + F - n, 0)
     q = Dop + (4 - n) - p
     lam = 3 * Dop - 2 * q - p
-    if psi + F <= n:
+    if max(psi + F + HD, 2) <= n:
         return Leading(p, q, lam)
     return NO_LEGS
 
 
-def tower(D: int, H: int, psi: int, F: int, n: int, target: Optional[int] = None):
+def tower(D: int, H: int, psi: int, F: int, n: int, target: Optional[int] = None, HD: int = 0):
     """CalculateSubleadingPowersRegime1, both arities.
 
     With ``target`` given, behaves like the six-argument notebook function: returns the
@@ -113,7 +135,7 @@ def tower(D: int, H: int, psi: int, F: int, n: int, target: Optional[int] = None
     kMax = (H - max(n - psi - 2 * F - D, 0)) if H > 0 else 0
     if pMin == kMax:
         kMax = 0
-    if not (psi + F <= n <= psi + H + 2 * F + D):
+    if not (max(psi + F + HD, 2) <= n <= psi + H + 2 * F + D):
         return NO_LEGS
     results = []
     for k in range(0, min(kMax, qMax) + 1):
@@ -145,7 +167,7 @@ def resolve(spec: str) -> Tuple[str, Tuple[int, int, int, int]]:
 def table(classes: Dict[str, Tuple[int, int, int, int]], n: int) -> str:
     lines = [f"{'class':14s} {'(D,H,psi,F)':13s} {'p':>2s} {'q':>2s} {'lam':>4s}   tower (p,q) with lambda exponent"]
     for name, args in classes.items():
-        t = tower(*args, n)
+        t = tower(*args, n, HD=higgs_with_derivative(name))
         if isinstance(t, str):
             lines.append(f"{name:14s} {str(args):13s}   cannot make {n} legs")
             continue
