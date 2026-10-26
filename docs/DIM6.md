@@ -118,7 +118,11 @@ nothing in the merge logic is special-cased:
         L6cl1,L6cl2,L6cl3,L6cl4,L6cl5,L6cl6,L6cl7,L6cl8a,L6cl8b,L6cl8c,L6cl8d 0 674 2
 
 About twenty minutes for 198 vertices, class 1 taking fifteen of them. The cache is keyed on the
-block name alone, so **an operator file that has changed needs an empty cache directory**. Then
+block name alone, so **an operator file that has changed needs an empty cache directory**. The
+worker writes into each block's `.status` the stamp of the code it was built from, and the writer
+runs `validate/cache_source.py check` on every cache it reads and stops on a stale block, so a
+forgotten directory can no longer reach a model. A block built before the stamps existed is
+counted and let through. Then
 the combined UFO, with both caches and a list of the blocks that go in, the 674
 baryon-number-conserving dimension-eight ones and the eleven above:
 
@@ -194,8 +198,12 @@ Five things, in the order of what they can see.
 `WARD_ON=dim6` switches on all 64 real coefficients of block `DIM6` and runs MadGraph's
 `check lorentz` on the thirty processes of `validate/procs_dim6.txt`, eight gluonic, fifteen with
 a photon and seven without a massless vector, at `WARD_ORDER="NP<=1"` and at `"NP<=2"`. The
-released `dim68_is` passes sixty of sixty, the worst at 6e-14, and the seven electroweak
-processes of `validate/procs_ew.txt` pass with `WARD_ON=both` as well. (The control run with the
+`dim68_is` released on 2026-10-25 passes all fifty-eight checks that have an amplitude, the worst at
+1.6e-13, and the seven electroweak processes of `validate/procs_ew.txt` pass with `WARD_ON=both` as
+well. The thirtieth process, `ve ve~ > a z`, has no diagram at `NP<=1` and only a zero one at
+`NP<=2` with the dimension-eight coefficients off: its neutrino-photon vertices vanish by charge,
+and the release no longer writes them (earlier releases did, with zero couplings, and the check
+then passed on amplitudes that were zero). (The control run with the
 coefficients off prints `Failed` for `ve ve~ > h a`. That process has no Standard Model
 amplitude, and the verdict is the ratio of two numbers of order 1e-36.) The check switches on the
 dimension-six coefficients themselves, because a Ward check with only the dimension-eight
@@ -284,7 +292,8 @@ against 172.76 there. With `ymt` matched it is 0.42 sigma and 0.07 percent.
 
 The eight coefficients that enter our input relations, `cHW cHB cHWB cHDD cHl3 cll1 cHbox cH`,
 are not compared this way. They shift `M_W` in our scheme and `alpha` in theirs, so it is not
-like for like.
+like for like. They are compared vertex by vertex with SMEFTsim's alpha-scheme model instead,
+under "Every linear vertex against SMEFTsim's alpha-scheme model" below.
 
 Two more checks on the sector as a whole. All eleven classes pass `CheckHermiticity` with a zero
 residual. And the Standard Model limit of the combined model, every coefficient at zero, is
@@ -386,40 +395,44 @@ at order `cHG^2`, which is 0.24250 at `cHG = 1`, `Lam6 = 1 TeV`:
 
 on one seed, so the errors are correlated and the ratio is good to better than they suggest.
 
-## The coefficients no cross section can test
+## Every linear vertex against SMEFTsim's alpha-scheme model
 
-Five dimension-six coefficients have no tree-level probe in proton collisions. `cH` modifies the
-Higgs potential only, `ceH` needs a Higgs radiated off an electron line, and `cll`, `cee`, `cle`
-are four-lepton contact terms. A cross-section comparison cannot test them, but they are not
-beyond reach: switch the coefficient on, evaluate the UFO's parameters and couplings numerically,
-and read what it did to the vertices. No phase space, no Monte Carlo, no statistical error. `cH`,
-`cll`, `cee` and `cle` agree with SMEFTsim to one part in 10^15, which is machine precision, and
-`ceH` is the lepton case of the class-5 subtraction above.
+`validate/dim6_vs_smeftsim.py` compares every dimension-six vertex of `models/dim68_is` with
+SMEFTsim's U(3)^5 `{alpha, M_Z, G_F}` UFO, version 3.0.2, which is our input scheme exactly. It is
+not shipped here (github.com/SMEFTsim/SMEFTsim, `UFO_models/SMEFTsim_U35_alphaScheme_UFO`):
 
-There are three traps in doing this, and each produces a convincing false alarm.
+    python3 validate/dim6_vs_smeftsim.py /path/to/SMEFTsim_U35_alphaScheme_UFO
 
-The first is summing `|coupling|` over a vertex's entries. Where a model keeps the operator's
-contribution and the input-scheme compensation as two separate entries on one vertex, `|a| + |b|`
-turns their cancellation into an addition. On the Higgs self-coupling that reads as `15 + 9 = 24`
-against the true `|-15 + 9| = 6`, so `cH` appears to be out by a factor of four and `hhhh` by
-exactly 3/2, with `h^5` and `h^6` agreeing because nothing cancels there. Sum the couplings
-SIGNED. The second is then keying on the colour and Lorentz structure, which is too strict: the
-two models order their Dirac structures differently, so identical physics shows up as every
-four-fermion entry differing. Key on the particle content and sum.
+Both models are evaluated at SMEFTsim's default inputs, with the CKM matrix the unit matrix and
+Lambda = 1 TeV. For every coefficient, a complex one along its real and its imaginary direction,
+the derivative of every coupling at zero is taken, and every vertex is then contracted completely:
+colour with random colour vectors, Lorentz indices with random polarisation vectors, spinor indices
+with random spinors, momenta random and conserved, the same external state for a given particle in
+both models. The number obtained does not depend on how either model splits a vertex into
+Lorentz structures, colour bases or Dirac projectors, which is where a comparison of coupling
+values goes wrong (a signed or unsigned sum, a projector basis against an `Identity`/`Gamma5`
+basis, two orderings of one colour structure). Our model carries the dimension-six squares of the
+input relations and SMEFTsim does not, so only the linear term is compared, and the derivative is
+taken from symmetric differences combined so that the quadratic and cubic terms cancel.
 
-The third is the subtlest. The two models do not use the same Dirac decomposition for a
-scalar-fermion vertex. SMEFTsim writes `e+ e- h` on `Identity(2,1)` and `Gamma5(2,1)`,
-this model writes it on `ProjP` and `ProjM`. Since
+Result, on the `dim68_is` released on 2026-10-25 from the stamped dimension-six cache (and on the
+release of 2026-10-19 before it, built from the same blocks): all 81 directions (every real coefficient, and the real and imaginary parts of the complex ones) agree
+on all 1513 vertices they move, to 1e-6 of the vertex. That includes the six
+coefficients of the input relations, which shift `M_W` in this scheme, and the coefficients with
+no tree-level effect in a simple proton process, `cH`, `cll`, `cee`, `cle` and `ceH`. Two
+coefficients of SMEFTsim's file, `cquqd11` and `cquqd81`, have no counterpart in the 2018 U(3)^5
+operator files this port is built on. The tool also checks itself: a model compared with itself
+agrees on every vertex, and a sign planted on one coefficient (`--plant cHWB`) is reported on
+every vertex that coefficient moves.
 
-    a ProjM + b ProjP = (a+b)/2 Identity + (b-a)/2 Gamma5
-
-a pair of bare projectors each carrying `g` IS one `Identity` carrying `g`, so adding the raw
-entries reports `2g` against their `g` and `ceH` looks like it is out by exactly a factor of two
-on all nine of its vertices at once. A uniform factor across every vertex of one coefficient,
-with the ratios between `h`, `hh` and `hhh` all correct, is the signature: it is a normalisation
-or a decomposition, not a basis. Weight a bare projector by one half. Structures that pair a
-projector with `Gamma(...)` are the four-fermion ones, where the two models already agree on the
-decomposition, and they keep weight one.
+The comparison found one real defect. A rebuild of 2026-10-22 had taken the dimension-six blocks
+from a cache of 2026-09-17, which predates the subtraction of the vacuum piece of `O_HG` (above),
+and its three- and four-gluon vertices moved with `cHG`, two vertices that SMEFTsim's model does
+not move. The same blocks lacked the products of every operator with the first-order corrections
+of the base, which a linear comparison cannot see. Every block now carries the stamp of the code
+it was built from (`validate/cache_source.py`), and the UFO writer stops on a block whose stamp
+does not match. The rewrite of 2026-10-25 passed that check on all 685 blocks, and its two extra
+`cHG` vertices are gone.
 
 ## Why this model does not agree with SMEFTsim to all orders, and should not
 
@@ -440,10 +453,6 @@ because it truncates at `1/Lam^2`. Keeping it is the point of a dimension-eight 
 Do not reach for the odd part in `c` to settle this. `(sigma(+c) - sigma(-c))/2` removes the even
 orders and so removes MadGraph's mass-tagging artefact, which is real and is described under
 "Orders" above, but it does NOT remove this, and the disagreement survives it almost unchanged.
-
-For scale, SMEFTsim's own two UFOs differ from each other by a median of 21 percent on `cHWB`'s
-vertices, while this model sits within 0.1 percent of its alpha-scheme one. We agree with
-SMEFTsim better than SMEFTsim agrees with itself across its own two schemes.
 
 ## Traps
 

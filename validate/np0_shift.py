@@ -33,7 +33,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MG = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3"))
 PY = "python3.11"
-MODEL = os.path.join(ROOT, "models", "dim8_is")
+MODEL = os.environ.get("DIM8_MODEL", os.path.join(ROOT, "models", "dim8_is"))   # any copy of the released model
 WORK = os.path.join(os.environ.get("DIM8_BUILD", os.path.expanduser("~/dim8auto_build")), "np0")
 NICE = ["nice", "-n", "19"]
 
@@ -106,8 +106,10 @@ def main(argv) -> int:
         for name, sets in jobs:
             if (proc, name) in done:
                 continue
+            # H_T/2, the scale MadGraph sets for the tagged interference, so that the bracket and the
+            # interference it is added to share one scale
             common = [f"nevents={nev}", "ebeam1=6800", "ebeam2=6800",
-                      "hel_recycling=False", "use_syst=False"] + extra
+                      "hel_recycling=False", "use_syst=False", "dynamical_scale_choice=3"] + extra
             have = set(re.findall(r"=\s*(\w+)", open(os.path.join(d, "Cards", "run_card.dat")).read()))
             common = [a for a in common if a.split("=")[0] in have or a.startswith("hel_recycling")]
             if run([PY, os.path.join(ROOT, "examples", "studies", "set_cards.py"), d]

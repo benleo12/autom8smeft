@@ -576,7 +576,10 @@ class Operator:
     #   "sym"     L = (C/2)(Q + Q^dag)  C real, Q Hermitian only up to integration by parts
     #                              (the 14 class-11 psi^2H^2D^3 operators)
     hc_mode: str = "real"
-    cp: str = "even"
+    # the CP parity derived by gen/cp_parity.py: "even" or "odd" for a real coefficient, and for a
+    # complex one "Re even, Im odd" or "Re odd, Im even", the parities of the parts of C that multiply
+    # Q + Q^dag and i(Q - Q^dag)
+    cp: str = ""
     notes: str = ""
     # pairs of flavour indices that are identified under the flavour-universal assumption
     # (one pair per fermion bilinear, in order); derived from ``gens`` if not given

@@ -5,7 +5,7 @@
 
 MadGraph's `check lorentz` / `check gauge` evaluate the model at the DEFAULT parameter values in
 parameters.py.  The optional param-card argument of `check` leaves the couplings untouched (on
-MG5_aMC 3.5.3, g g > h g stays "not checked" with a card that switches Q_{G^2H^4}^{(1)} on), and
+MG5_aMC 3.5.6, g g > h g stays "not checked" with a card that switches Q_{G^2H^4}^{(1)} on), and
 `set c8... 0.7` at the top level sets MG5 options, not parameters.  So a check with the operators
 on needs a copy of the model whose defaults are on.  This edits only the value line of each c8
 parameter whose default is 0, because a blanket text substitution would also match inside names
@@ -26,8 +26,9 @@ def main(argv):
     out, pending, n = [], False, 0
     for l in lines:
         if re.match(r"\w+ = Parameter\(name = 'c8\w+'", l): pending = True
-        if pending and re.match(r"\s*value = 0,?\s*$", l):
-            l = l.replace("value = 0", f"value = {val}"); n += 1; pending = False
+        # a zero default is "0" from FeynRules under Mathematica 14 and "0." under Mathematica 15
+        if pending and re.match(r"\s*value = 0\.?0*,?\s*$", l):
+            l = re.sub(r"value = 0\.?0*", f"value = {val}", l, count=1); n += 1; pending = False
         elif pending and "value =" in l:
             pending = False
         out.append(l)

@@ -1,5 +1,5 @@
 process	set	sigma_pb	error_pb	nevents
-p p > e+ e-	off	1.359	0.005206	5000
-p p > e+ e-	on	1.357	0.00438	5000
-p p > e+ e- a	off	0.02097	9.074e-05	5000
-p p > e+ e- a	on	0.02109	8.339e-05	5000
+p p > e+ e-	off	1.267	0.003661	5000
+p p > e+ e-	on	1.266	0.00389	5000
+p p > e+ e- a	off	0.02019	9.365e-05	5000
+p p > e+ e- a	on	0.02028	8.766e-05	5000

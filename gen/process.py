@@ -195,7 +195,7 @@ def _expand(tok: str, collapse: bool) -> List[str]:
 
 
 # --------------------------------------------------------------------------------------
-# tree reachability
+# can a vertex sit in a tree diagram of the process
 # --------------------------------------------------------------------------------------
 
 
@@ -436,8 +436,9 @@ def select(proc: str, vertex_index: Dict[str, List[List[str]]], sm_vertices: Seq
     slots = parse_process(proc, collapse=collapse)
     sel6 = Selector(sm_vertices)                                  # dimension-six blocks
     sel8 = Selector(standard_model_vertices(sm_vertices))         # dimension-eight blocks
-    # every concrete assignment of the multiparticle slots, deduplicated as multisets
-    assignments = {tuple(sorted(a)) for a in _product(slots)}
+    # every concrete assignment of the multiparticle slots, deduplicated as multisets, and sorted so
+    # that the vertex reported for a block does not depend on the interpreter's string hashing
+    assignments = sorted({tuple(sorted(a)) for a in _product(slots)})
     hits: Dict[str, List[str]] = {}
     for block, verts in vertex_index.items():
         sel = sel8 if block.startswith("L8op") else sel6
@@ -463,6 +464,21 @@ def select(proc: str, vertex_index: Dict[str, List[List[str]]], sm_vertices: Seq
             if block in hits:
                 break
     return hits
+
+
+def sm_tree(proc: str, sm_vertices: Sequence[Sequence[str]], collapse: bool = True) -> bool:
+    """Whether the Standard Model alone has a tree diagram for the process.
+
+    Without one there is no amplitude for a dimension-eight one to interfere with: the
+    interference vanishes at 1/Lambda^4 and the leading term is the square.  An operator that acts
+    only through the input relations then changes nothing, since what it shifts is the
+    Standard-Model amplitude.  The test is the selector's own recursion: the first external leg
+    enters a Standard-Model vertex, whose other legs reach the remaining externals."""
+    sel = Selector(standard_model_vertices(sm_vertices))
+    for ext in {tuple(sorted(a)) for a in _product(parse_process(proc, collapse=collapse))}:
+        if sel.reach(anti(ext[0]), ext[1:]):
+            return True
+    return False
 
 
 def _product(slots: List[List[str]]):

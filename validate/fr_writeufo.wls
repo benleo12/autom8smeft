@@ -45,7 +45,10 @@ vdirs = StringTrim /@ StringSplit[If[Environment["DIM8_VDIR"] === $Failed,
     $root <> "/build/vertices", Environment["DIM8_VDIR"]], ";"];
 vdir = First[vdirs];
 Print["[cfg] base ", z8base, "  caches ", vdirs, "  FeynmanGauge ", FeynmanGauge];
-files = Flatten[FileNames["*.mx", #] & /@ vdirs];
+(* A cache entry is a .mx file, which only the platform that wrote it can read, or the same list
+   exported as .wxf, which any platform can: validate/mx_to_wxf.wls converts a cache so that it can
+   be used off-machine.  A directory holds one or the other for a block. *)
+files = Flatten[FileNames[{"*.mx", "*.wxf"}, #] & /@ vdirs];
 files = Select[files, ! StringStartsQ[FileBaseName[#], "base_"] &];   (* base-vertex caches are not blocks *)
 (* nor is anything else a worker leaves beside a block: <block>.herm.mx holds the residual of a
    Hermiticity check, not a vertex list (the load loop below explains what loading one would do) *)
@@ -60,6 +63,16 @@ If[selfile =!= "",
     If[Length[files] < Length[want], Print["[abort] requested blocks missing from the cache"]; Quit[1]]];
 ];
 Print["[load] ", Length[files], " cached vertex lists"];
+(* Every block must have been built from the source it has now: the cache is keyed on the name
+   alone, and a block that predates a change of its operator would otherwise go into the model
+   unnoticed (validate/cache_source.py says how it once did).  Stale stamps stop the write; blocks
+   built before the stamps existed are counted and let through. *)
+Module[{z8sel = If[selfile =!= "", selfile, ""], z8rc},
+  If[Run["command -v python3 > /dev/null 2>&1"] =!= 0,
+    Print["[warn] no python3 here, so the cached blocks are not checked against their source"],
+    z8rc = Run["python3 '" <> $root <> "/validate/cache_source.py' check '" <> StringRiffle[vdirs, ";"] <> "' " <>
+               If[z8sel =!= "", "'" <> z8sel <> "'", ""]];
+    If[z8rc =!= 0, Print["[abort] cached blocks built from a different source than they have now; see the check above"]; Quit[1]]]];
 
 (* The base model's own vertices.  For our Standard Model file this is seconds and caching it
    would be pointless.  For a base that carries a dimension-six sector it is not: SMEFTsim's
@@ -83,8 +96,11 @@ z8lsmparts = StringTrim /@ StringSplit[z8lsmname, "+"];
 z8smkey = IntegerString[Hash[{z8base, z8lsmname, FeynmanGauge,
     Import[FileNameJoin[{$root, "tests/gen_smoke", #}], "Text"] & /@ z8bases}, "SHA256"], 16];
 z8smfile = FileNameJoin[{vdir, "base_" <> z8smkey <> ".mx"}];
+If[! FileExistsQ[z8smfile] && FileExistsQ[StringReplace[z8smfile, ".mx" ~~ EndOfString -> ".wxf"]],
+  z8smfile = StringReplace[z8smfile, ".mx" ~~ EndOfString -> ".wxf"]];
 If[FileExistsQ[z8smfile] && Environment["DIM8_NOSMCACHE"] === $Failed,
-  Get[z8smfile];                                   (* restores FR$BaseVert *)
+  If[FileExtension[z8smfile] === "wxf", FR$BaseVert = Import[z8smfile, "WXF"],
+    Get[z8smfile]];                                (* restores FR$BaseVert *)
   smVerts = FR$BaseVert; ClearAll[FR$BaseVert];
   Print["[cache] base vertices from ", FileNameTake[z8smfile], ": ", Length[smVerts]],
   smVerts = MergeVertices @@ Table[
@@ -109,7 +125,8 @@ all = {smVerts};
 Do[
   Module[{},
     ClearAll[FR$Vert];
-    Get[z8file];                       (* restores FR$Vert *)
+    If[FileExtension[z8file] === "wxf", FR$Vert = Import[z8file, "WXF"],
+      Get[z8file]];                    (* restores FR$Vert *)
     If[! ListQ[FR$Vert],
       Print["[abort] ", z8file, " does not hold a vertex list"]; Quit[1]];
     AppendTo[all, FR$Vert];
@@ -133,30 +150,19 @@ If[Environment["DIM8_NPORDER"] =!= $Failed,
     {NP, _} -> {NP, ToExpression[Environment["DIM8_NPORDER"]]};
   Print["[cfg] NP coupling-order limit raised to ", Environment["DIM8_NPORDER"],
         " (two dimension-eight insertions allowed)"]];
-(* DIM8_TRUNCATE=1: with the input-scheme base model the rotated SM Lagrangian carries a few
-   vertices ({A,A,H}, {A,H,Z}, {A,nu,nubar}, ...) whose couplings are polynomials in the shift
-   parameters that vanish only through the parameter relations: FeynRules keeps them because
-   they are not syntactically zero, and numerically they are O(Lambda^-8), below the
-   truncation (measured 1e-9 relative at Lam = 3 TeV).  Drop a merged vertex only if its
-   coupling vanishes at zero coefficients, responds to the input-scheme coefficients, and
-   scales as Lambda^-8 between 3 and 6 TeV (ratio 2^-8): a genuine dim-8 vertex scales as 2^-4
-   and an SM one not at all, so neither can be caught. *)
+(* DIM8_TRUNCATE=1: with the input-scheme base model, keep the 1/Lambda^4 content of every
+   vertex.  The rotated Standard-Model Lagrangian carries pieces that vanish only through the
+   parameter relations or lie beyond 1/Lambda^4, and a vertex can hold such a piece next to a
+   genuine dimension-eight structure ({A,H,Z} does), so the test is made term by term, on pieces
+   labelled by Lorentz/colour structure and NP order: validate/np_truncate.m. *)
 If[Environment["DIM8_TRUNCATE"] === "1",
-  Module[{z9wc, z9lam0, z9rulesAt, z9coef, z9mag, z9c0, z9c3, z9c6, z9keep, z9dropped},
-    z9wc = Select[{c8W2H4x1, c8W2H4x3, c8B2H4x1, c8WBH4x1, c8H6x1, c8H6x2, c8l2H4Dx2, c8l2H4Dx4}, MemberQ[First /@ M$Parameters, #] &];
-    z9lam0 = NumericalValue[Lam];
-    z9rulesAt[z9vals_List, z9l_] := (UpdateParameters[Sequence @@ Thread[z9wc -> z9vals], Lam -> z9l];
-      (# -> NumericalValue[#]) & /@ Select[First /@ M$Parameters, NumericQ[NumericalValue[#]] &]);
-    z9coef[z9t_] := Which[NumericQ[z9t], Abs[N[z9t]], Head[z9t] === Times, Abs[N[Times @@ Cases[z9t, _?NumericQ, {1}]]], True, 1.];
-    z9mag[z9c_, z9r_] := Module[{z9e = Expand[z9c /. z9r]}, Max[z9coef /@ If[Head[z9e] === Plus, List @@ z9e, {z9e}]]];
-    z9c0 = With[{z9r = z9rulesAt[0 z9wc, 3000]}, z9mag[#[[2]], z9r] & /@ merged];
-    z9c3 = With[{z9r = z9rulesAt[1 + 0 z9wc, 3000]}, z9mag[#[[2]], z9r] & /@ merged];
-    z9c6 = With[{z9r = z9rulesAt[1 + 0 z9wc, 6000]}, z9mag[#[[2]], z9r] & /@ merged];
-    UpdateParameters[Sequence @@ Thread[z9wc -> 0], Lam -> z9lam0];
-    z9keep = Table[! (z9c0[[z9i]] < 10^-12 Max[1, z9c3[[z9i]]] && z9c3[[z9i]] > 0 && z9c6[[z9i]]/z9c3[[z9i]] < 2^-6), {z9i, Length[merged]}];
-    z9dropped = Pick[merged, Not /@ z9keep];
-    Print["[truncate] dropped ", Length[z9dropped], " Lambda^-8 vertices: ", (#[[1, All, 1]] & /@ z9dropped)];
-    merged = Pick[merged, z9keep]]];
+  Get[$root <> "/validate/np_truncate.m"];
+  tt = AbsoluteTime[];
+  {merged, z9rep} = ztTruncate[merged];
+  ztPrintReport[z9rep];
+  Print["[time] truncation: ", Round[AbsoluteTime[] - tt, 0.1], " s, ", Length[merged], " vertices kept"]];
+(* DIM8_DRYRUN=1: report the merge and the truncation, and stop before WriteUFO *)
+If[Environment["DIM8_DRYRUN"] === "1", Print["[dryrun] stopping before WriteUFO"]; Quit[0]];
 (* DIM8_MAXLEGS=n: drop merged vertices with more than n legs before writing, so a UFO is
    consistent whatever leg cap the cached blocks were built with (see fr_worker.wls). *)
 If[Environment["DIM8_MAXLEGS"] =!= $Failed,

@@ -1,5 +1,4 @@
 process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
-p p > w+ w-	dim8_is	NP=0	68.07	0.1521	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wp_wm_dim8_is_NP_0.lhe.gz
 p p > w+ w-	dim8_is	NP^2==2	-3.998	0.0122	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_is_NP_2__2.lhe.gz
 p p > w+ w-	dim8_is	NP<=2 NP^2==4	4004	52.96	1000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_is_NP__2_NP_2__4.lhe.gz
 p p > w+ w-	dim8_is-cls1	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
@@ -22,8 +21,8 @@ p p > w+ w-	dim8_is-cls9	NP^2==2	-0.0002988	1.535e-06	5000	7.982436e+01	dim8_all
 p p > w+ w-	dim8_is-cls9	NP<=2 NP^2==4	9.036	0.06474	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls9_NP__2_NP_2__4.lhe.gz
 p p > w+ w-	dim8_is-cls10	NP^2==2	-0.0004848	3.202e-06	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls10_NP_2__2.lhe.gz
 p p > w+ w-	dim8_is-cls10	NP<=2 NP^2==4	0.05672	0.0001689	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls10_NP__2_NP_2__4.lhe.gz
-p p > w+ w-	dim8_is-cls11	NP^2==2	-0.07308	0.0003944	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls11_NP_2__2.lhe.gz
-p p > w+ w-	dim8_is-cls11	NP<=2 NP^2==4	1.163	0.006305	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls11_NP__2_NP_2__4.lhe.gz
+p p > w+ w-	dim8_is-cls11	NP^2==2	-0.07308	0.0003944	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls11_NP_2__2.lhe.gz
+p p > w+ w-	dim8_is-cls11	NP<=2 NP^2==4	1.163	0.006305	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__w__dim8_is_cls11_NP__2_NP_2__4.lhe.gz
 p p > w+ w-	dim8_is-cls12	NP^2==2	-0.0001443	3.695e-07	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_ismcls12_NP_2__2.lhe.gz
 p p > w+ w-	dim8_is-cls12	NP<=2 NP^2==4	0.004668	1.064e-05	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_ismcls12_NP__2_NP_2__4.lhe.gz
 p p > w+ w-	dim8_is-cls13	NP^2==2	-0.3245	0.001506	5000	79.696	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_ismcls13_NP_2__2.lhe.gz
@@ -44,7 +43,6 @@ p p > w+ w-	dim8_is-cls20	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ w-	dim8_is-cls20	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ w-	dim8_is-cls21	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ w-	dim8_is-cls21	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
-p p > w+ z	dim8_is	NP=0	15.58	0.0587	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wp_z_dim8_is_NP_0.lhe.gz
 p p > w+ z	dim8_is	NP^2==2	-1.446	0.007112	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_z_dim8_is_NP_2__2.lhe.gz
 p p > w+ z	dim8_is	NP<=2 NP^2==4	287.6	1.608	1000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_z_dim8_is_NP__2_NP_2__4.lhe.gz
 p p > w+ z	dim8_is-cls1	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
@@ -67,8 +65,8 @@ p p > w+ z	dim8_is-cls9	NP^2==2	6.206e-06	3.78e-07	5000	7.982436e+01	dim8_all=1 
 p p > w+ z	dim8_is-cls9	NP<=2 NP^2==4	1.713	0.008092	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls9_NP__2_NP_2__4.lhe.gz
 p p > w+ z	dim8_is-cls10	NP^2==2	2.22e-05	9.037e-07	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls10_NP_2__2.lhe.gz
 p p > w+ z	dim8_is-cls10	NP<=2 NP^2==4	0.02868	0.0001126	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls10_NP__2_NP_2__4.lhe.gz
-p p > w+ z	dim8_is-cls11	NP^2==2	-0.008212	0.0002651	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP_2__2.lhe.gz
-p p > w+ z	dim8_is-cls11	NP<=2 NP^2==4	1.734	0.006476	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP__2_NP_2__4.lhe.gz
+p p > w+ z	dim8_is-cls11	NP^2==2	-0.008212	0.0002651	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP_2__2.lhe.gz
+p p > w+ z	dim8_is-cls11	NP<=2 NP^2==4	1.734	0.006476	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP__2_NP_2__4.lhe.gz
 p p > w+ z	dim8_is-cls12	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ z	dim8_is-cls12	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ z	dim8_is-cls13	NP^2==2	0.015	0.0006159	5000	79.696	dim8_all=1 Lam=1000	lhe/p_p___wp_z_dim8_ismcls13_NP_2__2.lhe.gz
@@ -89,7 +87,6 @@ p p > w+ z	dim8_is-cls20	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ z	dim8_is-cls20	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ z	dim8_is-cls21	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w+ z	dim8_is-cls21	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
-p p > w- z	dim8_is	NP=0	9.492	0.03132	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wm_z_dim8_is_NP_0.lhe.gz
 p p > w- z	dim8_is	NP^2==2	-0.6969	0.004	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wm_z_dim8_is_NP_2__2.lhe.gz
 p p > w- z	dim8_is	NP<=2 NP^2==4	89.19	1.715	4000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wm_z_dim8_is_NP__2_NP_2__4.lhe.gz
 p p > w- z	dim8_is-cls1	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
@@ -112,8 +109,8 @@ p p > w- z	dim8_is-cls9	NP^2==2	1.212e-06	4.655e-07	5000	7.982436e+01	dim8_all=1
 p p > w- z	dim8_is-cls9	NP<=2 NP^2==4	0.6059	0.004375	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls9_NP__2_NP_2__4.lhe.gz
 p p > w- z	dim8_is-cls10	NP^2==2	3.439e-05	1.165e-06	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls10_NP_2__2.lhe.gz
 p p > w- z	dim8_is-cls10	NP<=2 NP^2==4	0.01375	4.857e-05	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls10_NP__2_NP_2__4.lhe.gz
-p p > w- z	dim8_is-cls11	NP^2==2	-0.0045	0.0001171	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP_2__2.lhe.gz
-p p > w- z	dim8_is-cls11	NP<=2 NP^2==4	0.532	0.002553	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP__2_NP_2__4.lhe.gz
+p p > w- z	dim8_is-cls11	NP^2==2	-0.0045	0.0001171	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP_2__2.lhe.gz
+p p > w- z	dim8_is-cls11	NP<=2 NP^2==4	0.532	0.002553	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___w__z_dim8_is_cls11_NP__2_NP_2__4.lhe.gz
 p p > w- z	dim8_is-cls12	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w- z	dim8_is-cls12	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w- z	dim8_is-cls13	NP^2==2	0.007933	0.0004065	5000	79.696	dim8_all=1 Lam=1000	lhe/p_p___wm_z_dim8_ismcls13_NP_2__2.lhe.gz
@@ -134,7 +131,6 @@ p p > w- z	dim8_is-cls20	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w- z	dim8_is-cls20	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w- z	dim8_is-cls21	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > w- z	dim8_is-cls21	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
-p p > z z	dim8_is	NP=0	9.388	0.02988	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___z_z_dim8_is_NP_0.lhe.gz
 p p > z z	dim8_is	NP^2==2	-0.6932	0.002653	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_NP_2__2.lhe.gz
 p p > z z	dim8_is	NP<=2 NP^2==4	1872	11.37	4000	79.325	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_NP__2_NP_2__4.lhe.gz
 p p > z z	dim8_is-cls1	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
@@ -157,7 +153,7 @@ p p > z z	dim8_is-cls9	NP^2==2	2.068e-05	3.796e-07	5000	7.982436e+01	dim8_all=1 
 p p > z z	dim8_is-cls9	NP<=2 NP^2==4	3.788	0.02931	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_cls9_NP__2_NP_2__4.lhe.gz
 p p > z z	dim8_is-cls10	NP^2==2	-6.712e-06	2.066e-07	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_cls10_NP_2__2.lhe.gz
 p p > z z	dim8_is-cls10	NP<=2 NP^2==4	0.01086	2.965e-05	5000	7.982436e+01	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_cls10_NP__2_NP_2__4.lhe.gz
-p p > z z	dim8_is-cls11	NP^2==2	-0.02708	7.64e-05	5000	1.000000e+00	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_cls11_NP_2__2.lhe.gz
+p p > z z	dim8_is-cls11	NP^2==2	-0.02708	7.64e-05	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_cls11_NP_2__2.lhe.gz
 p p > z z	dim8_is-cls11	NP<=2 NP^2==4	0.3447	0.002717	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___z_z__dim8_ismcls11_NP__2_NP_2__4.lhe.gz
 p p > z z	dim8_is-cls12	NP^2==2	-1.423e-05	6.874e-08	5000	79.824	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_ismcls12_NP_2__2.lhe.gz
 p p > z z	dim8_is-cls12	NP<=2 NP^2==4	0.001633	3.947e-06	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_ismcls12_NP__2_NP_2__4.lhe.gz
@@ -179,7 +175,11 @@ p p > z z	dim8_is-cls20	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > z z	dim8_is-cls20	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > z z	dim8_is-cls21	NP^2==2	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
 p p > z z	dim8_is-cls21	NP<=2 NP^2==4	NO_DIAGRAMS	-	5000	-	dim8_all=1 Lam=1000	-
+p p > w+ w-	dim8_is	NP=0	68.07	0.1521	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wp_wm_dim8_is_NP_0.lhe.gz
 p p > w+ w-	dim8_is	NP=0 on	69.42	0.1554	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_wm_dim8_is_NP_0_on.lhe.gz
-p p > w+ z	dim8_is	NP=0 on	15.81	0.06106	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_z_dim8_is_NP_0_on.lhe.gz
-p p > w- z	dim8_is	NP=0 on	9.6	0.03184	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wm_z_dim8_is_NP_0_on.lhe.gz
+p p > w+ z	dim8_is	NP=0	15.56	0.0568	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wp_z_dim8_is_NP_0.lhe.gz
+p p > w+ z	dim8_is	NP=0 on	15.71	0.06162	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wp_z_dim8_is_NP_0_on.lhe.gz
+p p > w- z	dim8_is	NP=0	9.458	0.03192	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___wm_z_dim8_is_NP_0.lhe.gz
+p p > w- z	dim8_is	NP=0 on	9.567	0.03111	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___wm_z_dim8_is_NP_0_on.lhe.gz
+p p > z z	dim8_is	NP=0	9.388	0.02988	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___z_z_dim8_is_NP_0.lhe.gz
 p p > z z	dim8_is	NP=0 on	9.388	0.02988	5000	79.325	dim8_all=1 Lam=1000	lhe/p_p___z_z_dim8_is_NP_0_on.lhe.gz

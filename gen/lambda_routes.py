@@ -2,6 +2,7 @@
 """The power of lambda of every dimension-six and dimension-eight class in a process, by its cheapest tree.
 
     gen/lambda_routes.py "p p > w+ w-" [--n 4]
+    gen/lambda_routes.py "p p > h h j j QCD=0"
 
 A tree is the product of its vertices and propagators.  In the energy-enhanced counting of the
 paper (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1): a Standard Model three-point vertex
@@ -25,6 +26,11 @@ lambda^(2n-8+8).  Whether a class interferes with the Standard Model is a separa
 (chirality, or a gluon-initiated channel with no tree-level SM amplitude); the tables of the
 paper answer it, this script does not.  The number of external legs n is read from the process
 unless --n is given.
+
+QCD=0 in the process, as for electroweak HHjj, removes every tree with a power of g_s, as MadGraph
+does: the Standard Model vertices with a gluon, and an operator vertex with more gluon legs than the
+operator has gluon field strengths, since each further gluon comes from a covariant derivative or
+from the non-abelian part of a field strength and carries g_s.  Other QCD orders are refused.
 """
 import json, os, sys
 
@@ -38,6 +44,9 @@ BOSONS = {"A", "Z", "W", "Wbar", "G", "H"}
 DIM6 = {"L6cl1": ("X^3", 0), "L6cl2": ("H^6", 6), "L6cl3": ("H^4D^2", 4), "L6cl4": ("X^2H^2", 2),
         "L6cl5": ("psi^2H^3", 3), "L6cl6": ("psi^2XH", 1), "L6cl7": ("psi^2H^2D", 2),
         "L6cl8a": ("psi^4", 0), "L6cl8b": ("psi^4", 0), "L6cl8c": ("psi^4", 0), "L6cl8d": ("psi^4", 0)}
+# the largest number of gluon field strengths among the coefficients of a dimension-six class:
+# Q_G (X^3), Q_HG (X^2H^2) and the chromomagnetic dipoles (psi^2XH)
+DIM6_NG = {"L6cl1": 3, "L6cl4": 2, "L6cl6": 1}
 CLASSES = {1: "X^4", 2: "H^8", 3: "H^6D^2", 4: "H^4D^4", 5: "X^3H^2", 6: "X^2H^4", 7: "X^2H^2D^2",
            8: "XH^4D^2", 9: "psi^2X^2H", 10: "psi^2XH^3", 11: "psi^2H^2D^3", 12: "psi^2H^5",
            13: "psi^2H^4D", 14: "psi^2X^2D", 15: "psi^2XH^2D", 16: "psi^2XHD^2", 17: "psi^2H^3D^2",
@@ -57,8 +66,10 @@ class Cheapest:
         self.cache = {}
 
     def _cands(self, f):
+        # sorted, so that among routes of equal cost the one printed does not depend on the
+        # interpreter's string hashing, which changes from run to run
         seen, out = set(), []
-        for key in set(P._members(f)) | {f}:
+        for key in sorted(set(P._members(f)) | {f}):
             for v in self.by.get(key, ()):
                 if v not in seen:
                     seen.add(v)
@@ -124,11 +135,61 @@ class Cheapest:
         return best
 
 
-def routes(proc, vertex_index, base_vertices, catalogue):
+def leading(verts, dim, n_higgs, assignments, cheap):
+    """(lambda power, p, vertex legs, SM vertices) of the cheapest tree through any of the vertices
+    verts of one operator, or None when every tree needs a Yukawa coupling of a quark or lepton.
+    ./dim8 select prints it beside each operator."""
+    best = None
+    for legs in verts:
+        p = n_higgs - legs.count("H")
+        w = dim - 12 + 2 * len(legs) + p      # lambda^(2m-4+p) at dimension eight, lambda^(2m-6+p) at six
+        for ext in assignments:
+            c, used = cheap.vertex(list(legs), ext)
+            if c >= INF:
+                continue
+            if best is None or w + c < best[0]:
+                best = (w + c, p, list(legs), used)
+    return best
+
+
+def qcd_zero(proc):
+    """True when the process string asks for QCD=0 (or QCD<=0, QCD==0), False when it sets no QCD
+    order.  Any other QCD order is refused, since the cheapest-tree search does not track it."""
+    import re
+    m = re.findall(r"\bQCD\s*(<=|==|=|>=|<|>)\s*(\d+)", proc, re.I)
+    if not m:
+        return False
+    if all(op in ("=", "==", "<=") and int(n) == 0 for op, n in m) or all(op == "<" and int(n) == 1 for op, n in m):
+        return True
+    raise ValueError(f"only QCD=0 is supported, not {' '.join(op + n for op, n in m)}")
+
+
+def gluon_strengths(block_index):
+    """block -> the largest number of gluon field strengths among its operators, from the encoding."""
+    sys.path.insert(0, HERE)
+    import dsl
+    from operators import OPS
+    ng = {op.name: max(sum(1 for f in t.factors if isinstance(f, dsl.FS) and f.group == "G") for t in op.terms)
+          for op in OPS}
+    out = {e["block"]: max(ng.get(o, 0) for o in e["ops"]) for e in block_index}
+    out.update(DIM6_NG)
+    return out
+
+
+def routes(proc, vertex_index, base_vertices, catalogue, block_index=None):
     """(dim, class name) -> (lambda power, p, operator label, vertex legs, SM vertices) of the cheapest tree."""
     slots = P.parse_process(proc, collapse=True)
-    assignments = {tuple(sorted(a)) for a in P._product(slots)}
-    cheap = Cheapest(P.standard_model_vertices(base_vertices))
+    assignments = sorted({tuple(sorted(a)) for a in P._product(slots)})
+    sm = P.standard_model_vertices(base_vertices)
+    qcd0 = qcd_zero(proc)
+    if qcd0:
+        # g_s at every Standard Model vertex with a gluon, and at every gluon an operator vertex
+        # has beyond its gluon field strengths
+        sm = [v for v in sm if "G" not in v]
+        ng = gluon_strengths(block_index if block_index is not None else
+                             json.load(open(os.path.join(ROOT, "docs", "block_index.json"))))
+        vertex_index = {b: [v for v in vs if v.count("G") <= ng.get(b, 0)] for b, vs in vertex_index.items()}
+    cheap = Cheapest(sm)
     best = {}
     for block, verts in vertex_index.items():
         if block.startswith("L8op"):
@@ -141,15 +202,9 @@ def routes(proc, vertex_index, base_vertices, catalogue):
             key = (6, name)
         else:
             continue
-        for legs in verts:
-            p = n_higgs - legs.count("H")
-            w = dim - 12 + 2 * len(legs) + p      # lambda^(2m-4+p) at dimension eight, lambda^(2m-6+p) at six
-            for ext in assignments:
-                c, used = cheap.vertex(list(legs), ext)
-                if c >= INF:
-                    continue
-                if key not in best or w + c < best[key][0]:
-                    best[key] = (w + c, p, label, list(legs), used)
+        got = leading(verts, dim, n_higgs, assignments, cheap)
+        if got is not None and (key not in best or got[0] < best[key][0]):
+            best[key] = (got[0], got[1], label, got[2], got[3])
     return best, len(slots)
 
 

@@ -152,9 +152,11 @@ def main():
             r"diagram but interferes below $10^{-6}$ of the Standard-Model rate, a dagger one that produces "
             r"diagrams but was not run in these studies, and "
             r"parentheses mark a Monte Carlo error above a tenth of the entry. "
-            r"The Drell-Yan processes carry $m_{ee}>200$~GeV, the photon channel additionally "
-            r"$p_T^\gamma>20$~GeV and $\Delta R(\gamma,\ell)>0.4$, and $HHjj$ is generated with "
-            r"$\mathrm{QCD}=0$ and $p_T^j>25$~GeV, $|\eta_j|<5$, $m_{jj}>400$~GeV. Absolute cross "
+            r"The Drell-Yan processes carry $m_{ee}>200$~GeV, $p_T^\ell>10$~GeV, $|\eta_\ell|<2.5$ and "
+            r"$\Delta R(\ell,\ell)>0.4$, the photon channel additionally $p_T^\gamma>20$~GeV, "
+            r"$|\eta_\gamma|<2.5$ and $\Delta R(\gamma,\ell)>0.4$, and $HHjj$ is generated with "
+            r"$\mathrm{QCD}=0$ and $p_T^j>25$~GeV, $|\eta_j|<5$, $m_{jj}>400$~GeV and "
+            r"$\Delta R(j,j)>0.4$. The diboson and triboson processes carry no cuts. Absolute cross "
             r"sections, Monte Carlo errors and the squared terms are in each study's "
             r"\code{results.tsv}.}",
             r"\label{tab:grid}", r"\end{table}"]

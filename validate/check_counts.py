@@ -29,12 +29,30 @@ TOTAL_BV = 98 + 22
 TOTAL = 993 + 37
 
 
+def vanishing_wcs():
+    """Coefficients whose operator, as encoded, emits an identically vanishing Lagrangian."""
+    sys.path.insert(0, os.path.join(ROOT, "gen"))
+    import emit_fr                    # noqa: E402
+    from operators import OPS         # noqa: E402
+    return {o.wc for o in OPS if emit_fr.emit_operator_expr(o).endswith("(0)")}
+
+
 def main():
     es = catalogue.derived()
-    got = {}
+    # A label whose operator vanishes identically is not a term of the basis.  As printed,
+    # Q_{udWH^2}^{(1,2)} vanished, and counting their labels made class 15 agree with Table 1
+    # while the encoded basis was two operators short.  Classes 18 to 21 are exempt: their "+b"
+    # terms vanish for one generation by construction and Table 1 counts them.
+    dead = vanishing_wcs()
+    got, skipped = {}, []
     for e in es:
         key = (e["cls"], e["b_violating"]) if e["cls"] >= 18 else e["cls"]
+        if e["cls"] < 18 and e["wc"] in dead:
+            skipped.append(e["label"])
+            continue
         got[key] = got.get(key, 0) + (2 if e["plus_hc"] else 1)
+    if skipped:
+        print(f"not counted, the operator vanishes identically: {', '.join(skipped)}\n")
     ok = True
     print(f"{'class':>12s} {'Murphy':>8s} {'encoded':>8s}")
     for k in EXPECTED:

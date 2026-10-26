@@ -107,30 +107,38 @@ nothing in the shipped model does. The operators themselves are encoded in `gen/
 one typed object per operator, from which `./dim8 build` writes the FeynRules Lagrangian before it
 computes the vertices; `models/src/README.md` describes the source files.
 
-Two things are deliberately not redistributed and every script that wants one says which and
-where to get it: SMEFTsim's FeynRules sources (for `gen/make_dim6.py`, set `$SMEFTSIM_FR`), and
-SmeftFR's model files (for the class-by-class comparison in `validate/smeftfr_by_class/`).
+Four things are deliberately not redistributed and every script that wants one says which and
+where to get it: SMEFTsim's FeynRules sources (for `gen/make_dim6.py`, set `$SMEFTSIM_FR`),
+SmeftFR's model files (for the class-by-class comparison in `validate/smeftfr_by_class/`),
+SMEFTsim's U(3)^5 alpha-scheme UFO (for the vertex-by-vertex comparison of the dimension-six sector,
+`validate/dim6_vs_smeftsim.py`) and the Murphy-basis UFO of the Matchete model database (for the
+comparison of the dimension-eight sector, `validate/vs_matchete_ufo.py`). The two vertex
+comparisons want `numpy`.
 
 Run MadGraph through **python3.11**. From Python 3.13 the `locals()` change of PEP 667 breaks
 MadGraph's `model_reader` and every restricted model fails to import with `Unable to evaluate
 mdl_L6 = mdl_Lam6**(-2)`, which looks like a broken restriction card and is not one.
 
-27 restriction cards ship: one per dimension-eight class, plus `bosonic`, `cpeven`, `cpodd` and
-`all`, plus `dim6` and `both` for the two sectors. Separating the sectors is how you read
+Restriction cards ship with every model: one per dimension-eight class, plus `bosonic`, `cpeven`,
+`cpodd` and `all`, which keeps every dimension-eight coefficient. `dim68_is` has `dim6`, `dim8` and
+`both` in place of `all`, for the two sectors apart and together. Separating the sectors is how you read
 `NP^2==2`, which holds the dimension-six square and the dimension-eight interference together.
 
 `cpeven` and `cpodd` keep the 285 and 153 operators whose coefficient is real and whose CP parity
-is even or odd. The parity is DERIVED, field by field, as C times P: P gives one minus sign per
-dual field strength, C sends `B -> -B`, `W^I -> -s_I W^I`, `G^A -> -s_A G^A` and `H -> H^*` with
-`s = +1` for a symmetric generator and `-1` for an antisymmetric one, so `eps^{IJK}` and `f^{ABC}`
-each contribute `-1` and the symmetric and antisymmetric parts of a fermion bilinear carry
-opposite signs.
+is even or odd. The parity is DERIVED, field by field: `CP(Q) = eta Q^dag`, with `eta` the
+product of `+1` for a scalar bilinear and `-1` for a vector or tensor bilinear, `-1` for a field
+strength and `+1` for a dual one, `-1` for each `eps^{IJK}` or `f^{ABC}`, `+1` for `d^{ABC}` and
+for every Higgs factor, and `-1` for each explicit `i`. An operator that is Hermitian as written
+has parity `eta` and an anti-Hermitian one `-eta`. For a complex coefficient the real part has
+`eta` and the imaginary part `-eta`, which `docs/catalogue.json` records as "Re even, Im odd" or
+"Re odd, Im even"; 44 of the 236 complex operators have a CP-odd real part.
 
 That is not the same as counting dual field strengths, and the difference is 170 of the 438
 operators with a real coefficient. The clearest case is `Q_{q^2W^2D}^{(1..4)}`, where the
 derivation gives even, ODD, even, even: the member with no dual is the CP-odd one. The CP test
 `validate/cp_rates.py` checks the card. A CP-odd set must give zero interference in a total rate,
-and a set chosen by counting duals gives 1.2 pb on `p p > w+ w-`. `gen/cp_parity.py` is the single
+and a set chosen by counting duals gives 1.2 pb on `p p > w+ w-`, with its coefficients at one
+and `Lam` = 1 TeV. `gen/cp_parity.py` is the single
 place the parity is decided.
 
     import model dim68_is-cls14
@@ -138,7 +146,8 @@ place the parity is decided.
 
 `validate/make_restriction.py` writes any other selection. `./dim8 select "p p > w+ w-"` lists
 which dimension-eight operators can enter a process, in two groups: those with a vertex in some
-tree diagram, and those with none that enter through the input relations. With `--card ww` it
+tree diagram, each with the vertex of its leading tree and that tree's power of lambda, and those
+with none that enter through the input relations of the model's scheme. With `--card ww` it
 writes `restrict_ww.dat` into the model (`models/dim8_is` unless `--model` names another), keeping
 both groups, for `import model dim8_is-ww`.
 FeynRules has already been run and the shipped model carries every vertex of every operator,
@@ -164,13 +173,13 @@ sections.
 ## Limits
 
 Flavour universal, one coefficient per operator, so the basis's `p, r, s, t` collapse to `p = r`
-and `s = t`. `Q_{udWH^2}^{(1)}` and `Q_{udWH^2}^{(2)}` vanish identically as written, whatever the
-flavour structure, because `epsilon tau^I` is symmetric for all three `I` while `epsilon` is
-antisymmetric; their coefficients are in the card and do nothing. Thirteen more vanish because of
-flavour universality alone, `Q_{q^4H^2}^{(5)}` and the twelve four-fermion field-strength operators
-with two identical currents (`l^4B`, `q^4B`, `e^4B`, `u^4B`, `d^4B`), which are then symmetric in
-the Lorentz indices of an antisymmetric field strength. That leaves 893 of the 1030 `DIM8`
-coefficients with a vertex in the model, and `./dim8 select` never lists the other operators. The 120 entries of the baryon-number-violating operators have none either.
+and `s = t`. Thirteen operators vanish because of flavour universality alone, `Q_{q^4H^2}^{(5)}` and
+the twelve four-fermion field-strength operators with two identical currents (`l^4B`, `q^4B`,
+`e^4B`, `u^4B`, `d^4B`), which are then symmetric in the Lorentz indices of an antisymmetric field
+strength. That leaves 897 of the 1030 `DIM8` coefficients with a vertex in the model, and
+`./dim8 select` never lists the other operators. (`Q_{udWH^2}^{(1,2)}` as printed in the Murphy
+basis vanish identically, whatever the flavour structure, and are encoded in the form that does not;
+`gen/murphy_patches.py` gives the reason.) The 120 entries of the baryon-number-violating operators have none either.
 
 The dimension-six sector is complete at `1/Lambda^4`. Its `NP=1` vertices are SMEFTsim's, and
 checkable against its shipped UFO. The products of a dimension-six operator with the first-order

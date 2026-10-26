@@ -9,7 +9,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -20,7 +20,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWH^3}^{(2)}",
@@ -32,7 +34,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -43,7 +45,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leBH^3}",
@@ -55,7 +59,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -66,7 +70,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGH^3}",
@@ -78,7 +84,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -89,7 +95,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWH^3}^{(1)}",
@@ -101,7 +109,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -112,7 +120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWH^3}^{(2)}",
@@ -124,7 +134,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -135,7 +145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quBH^3}",
@@ -147,7 +159,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -158,7 +170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGH^3}",
@@ -170,7 +184,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -181,7 +195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWH^3}^{(1)}",
@@ -193,7 +209,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -204,7 +220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWH^3}^{(2)}",
@@ -216,7 +234,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -227,7 +245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdBH^3}",
@@ -239,7 +259,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -250,7 +270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^2D^3}^{(1)}",
@@ -273,7 +295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^2D^3}^{(2)}",
@@ -296,7 +320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^2D^3}^{(3)}",
@@ -319,7 +345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^2D^3}^{(4)}",
@@ -342,7 +370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2H^2D^3}^{(1)}",
@@ -365,7 +395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2H^2D^3}^{(2)}",
@@ -388,7 +420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^2D^3}^{(1)}",
@@ -411,7 +445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^2D^3}^{(2)}",
@@ -434,7 +470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^2D^3}^{(3)}",
@@ -457,7 +495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^2D^3}^{(4)}",
@@ -480,7 +520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2H^2D^3}^{(1)}",
@@ -503,7 +545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2H^2D^3}^{(2)}",
@@ -526,7 +570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2H^2D^3}^{(1)}",
@@ -549,7 +595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2H^2D^3}^{(2)}",
@@ -572,7 +620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udH^2D^3}",
@@ -584,7 +634,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -595,7 +645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^5}",
@@ -607,7 +659,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -618,7 +670,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^5}",
@@ -630,7 +684,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -641,7 +695,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^5}",
@@ -653,7 +709,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -664,7 +720,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^4D}^{(1)}",
@@ -687,7 +745,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^4D}^{(2)}",
@@ -710,7 +770,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^4D}^{(3)}",
@@ -733,7 +795,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2H^4D}^{(4)}",
@@ -756,7 +820,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2H^4D}",
@@ -779,7 +845,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^4D}^{(1)}",
@@ -802,7 +870,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^4D}^{(2)}",
@@ -825,7 +895,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^4D}^{(3)}",
@@ -848,7 +920,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2H^4D}^{(4)}",
@@ -871,7 +945,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2H^4D}",
@@ -894,7 +970,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2H^4D}",
@@ -917,7 +995,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udH^4D}",
@@ -929,7 +1009,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -940,7 +1020,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2G^2D}^{(1)}",
@@ -963,7 +1045,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2G^2D}^{(2)}",
@@ -986,7 +1070,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2G^2D}^{(3)}",
@@ -1009,7 +1095,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2W^2D}^{(1)}",
@@ -1032,7 +1120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2W^2D}^{(2)}",
@@ -1055,7 +1145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2B^2D}",
@@ -1078,7 +1170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2G^2D}^{(1)}",
@@ -1101,7 +1195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2G^2D}^{(2)}",
@@ -1124,7 +1220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2G^2D}^{(3)}",
@@ -1147,7 +1245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2W^2D}",
@@ -1170,7 +1270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2B^2D}",
@@ -1193,7 +1295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2G^2D}^{(1)}",
@@ -1216,7 +1320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2G^2D}^{(2)}",
@@ -1239,7 +1345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2G^2D}^{(3)}",
@@ -1262,7 +1370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2W^2D}",
@@ -1285,7 +1395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2B^2D}",
@@ -1308,7 +1420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2G^2D}^{(4)}",
@@ -1331,7 +1445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2G^2D}^{(5)}",
@@ -1354,7 +1470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GWD}^{(1)}",
@@ -1377,7 +1495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GWD}^{(2)}",
@@ -1400,7 +1520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GWD}^{(3)}",
@@ -1423,7 +1545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GWD}^{(4)}",
@@ -1446,7 +1570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GBD}^{(1)}",
@@ -1469,7 +1595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GBD}^{(2)}",
@@ -1492,7 +1620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GBD}^{(3)}",
@@ -1515,7 +1645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GBD}^{(4)}",
@@ -1538,7 +1670,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2W^2D}^{(3)}",
@@ -1561,7 +1695,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2W^2D}^{(4)}",
@@ -1584,7 +1720,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WBD}^{(1)}",
@@ -1607,7 +1745,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WBD}^{(2)}",
@@ -1630,7 +1770,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WBD}^{(3)}",
@@ -1653,7 +1795,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WBD}^{(4)}",
@@ -1676,7 +1820,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2G^2D}^{(4)}",
@@ -1699,7 +1845,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2G^2D}^{(5)}",
@@ -1722,7 +1870,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GBD}^{(1)}",
@@ -1745,7 +1895,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GBD}^{(2)}",
@@ -1768,7 +1920,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GBD}^{(3)}",
@@ -1791,7 +1945,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GBD}^{(4)}",
@@ -1814,7 +1970,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2G^2D}^{(4)}",
@@ -1837,7 +1995,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2G^2D}^{(5)}",
@@ -1860,7 +2020,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GBD}^{(1)}",
@@ -1883,7 +2045,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GBD}^{(2)}",
@@ -1906,7 +2070,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GBD}^{(3)}",
@@ -1929,7 +2095,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GBD}^{(4)}",
@@ -1952,7 +2120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2G^2D}",
@@ -1975,7 +2145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2W^2D}^{(1)}",
@@ -1998,7 +2170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2W^2D}^{(2)}",
@@ -2021,7 +2195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2B^2D}",
@@ -2044,7 +2220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2G^2D}",
@@ -2067,7 +2245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2W^2D}",
@@ -2090,7 +2270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2B^2D}",
@@ -2113,7 +2295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2W^2D}^{(3)}",
@@ -2136,7 +2320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2W^2D}^{(4)}",
@@ -2159,7 +2345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WBD}^{(1)}",
@@ -2182,7 +2370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WBD}^{(2)}",
@@ -2205,7 +2395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WBD}^{(3)}",
@@ -2228,7 +2420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WBD}^{(4)}",
@@ -2251,7 +2445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2WH^2D}^{(1)}",
@@ -2274,7 +2470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2WH^2D}^{(2)}",
@@ -2297,7 +2495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2WH^2D}^{(3)}",
@@ -2320,7 +2520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2WH^2D}^{(4)}",
@@ -2343,7 +2545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2BH^2D}^{(1)}",
@@ -2366,7 +2570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2BH^2D}^{(2)}",
@@ -2389,7 +2595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2BH^2D}^{(3)}",
@@ -2412,7 +2620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2BH^2D}^{(4)}",
@@ -2435,7 +2645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GH^2D}^{(1)}",
@@ -2458,7 +2670,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GH^2D}^{(2)}",
@@ -2481,7 +2695,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GH^2D}^{(3)}",
@@ -2504,7 +2720,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2GH^2D}^{(4)}",
@@ -2527,7 +2745,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2WH^2D}^{(1)}",
@@ -2550,7 +2770,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2WH^2D}^{(2)}",
@@ -2573,7 +2795,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2WH^2D}^{(3)}",
@@ -2596,7 +2820,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2WH^2D}^{(4)}",
@@ -2619,7 +2845,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2BH^2D}^{(1)}",
@@ -2642,7 +2870,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2BH^2D}^{(2)}",
@@ -2665,7 +2895,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2BH^2D}^{(3)}",
@@ -2688,7 +2920,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2BH^2D}^{(4)}",
@@ -2711,7 +2945,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GH^2D}^{(1)}",
@@ -2734,7 +2970,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GH^2D}^{(2)}",
@@ -2757,7 +2995,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GH^2D}^{(3)}",
@@ -2780,7 +3020,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2GH^2D}^{(4)}",
@@ -2803,7 +3045,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2WH^2D}^{(1)}",
@@ -2826,7 +3070,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2WH^2D}^{(2)}",
@@ -2849,7 +3095,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2WH^2D}^{(3)}",
@@ -2872,7 +3120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2WH^2D}^{(4)}",
@@ -2895,7 +3145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2BH^2D}^{(1)}",
@@ -2918,7 +3170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2BH^2D}^{(2)}",
@@ -2941,7 +3195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2BH^2D}^{(3)}",
@@ -2964,7 +3220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^2BH^2D}^{(4)}",
@@ -2987,7 +3245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udGH^2}^{(1)}",
@@ -2999,7 +3259,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3010,7 +3270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udGH^2}^{(2)}",
@@ -3022,7 +3284,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3033,7 +3295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udWH^2}^{(1)}",
@@ -3045,7 +3309,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3056,7 +3320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udWH^2}^{(2)}",
@@ -3068,7 +3334,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3079,7 +3345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udBH^2}^{(1)}",
@@ -3091,7 +3359,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3102,7 +3370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{udBH^2}^{(2)}",
@@ -3114,7 +3384,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 2,
   "fields": {
    "N_f": 2,
@@ -3125,7 +3395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(1)}",
@@ -3148,7 +3420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(2)}",
@@ -3171,7 +3445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(3)}",
@@ -3194,7 +3470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(4)}",
@@ -3217,7 +3495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(5)}",
@@ -3240,7 +3520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(6)}",
@@ -3263,7 +3545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(7)}",
@@ -3286,7 +3570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(8)}",
@@ -3309,7 +3595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(9)}",
@@ -3332,7 +3620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(10)}",
@@ -3355,7 +3645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(11)}",
@@ -3378,7 +3670,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2WH^2D}^{(12)}",
@@ -3401,7 +3695,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(1)}",
@@ -3424,7 +3720,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(2)}",
@@ -3447,7 +3745,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(3)}",
@@ -3470,7 +3770,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(4)}",
@@ -3493,7 +3795,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(5)}",
@@ -3516,7 +3820,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(6)}",
@@ -3539,7 +3845,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(7)}",
@@ -3562,7 +3870,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2BH^2D}^{(8)}",
@@ -3585,7 +3895,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(1)}",
@@ -3608,7 +3920,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(2)}",
@@ -3631,7 +3945,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(3)}",
@@ -3654,7 +3970,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(4)}",
@@ -3677,7 +3995,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(5)}",
@@ -3700,7 +4020,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(6)}",
@@ -3723,7 +4045,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(7)}",
@@ -3746,7 +4070,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2GH^2D}^{(8)}",
@@ -3769,7 +4095,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(1)}",
@@ -3792,7 +4120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(2)}",
@@ -3815,7 +4145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(3)}",
@@ -3838,7 +4170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(4)}",
@@ -3861,7 +4195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(5)}",
@@ -3884,7 +4220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(6)}",
@@ -3907,7 +4245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(7)}",
@@ -3930,7 +4270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(8)}",
@@ -3953,7 +4295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(9)}",
@@ -3976,7 +4320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(10)}",
@@ -3999,7 +4345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(11)}",
@@ -4022,7 +4370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2WH^2D}^{(12)}",
@@ -4045,7 +4395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(1)}",
@@ -4068,7 +4420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(2)}",
@@ -4091,7 +4445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(3)}",
@@ -4114,7 +4470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(4)}",
@@ -4137,7 +4495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(5)}",
@@ -4160,7 +4520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(6)}",
@@ -4183,7 +4545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(7)}",
@@ -4206,7 +4570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2BH^2D}^{(8)}",
@@ -4229,7 +4595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWHD^2}^{(1)}",
@@ -4241,7 +4609,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4252,7 +4620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWHD^2}^{(2)}",
@@ -4264,7 +4634,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4275,7 +4645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWHD^2}^{(3)}",
@@ -4287,7 +4659,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4298,7 +4670,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leBHD^2}^{(1)}",
@@ -4310,7 +4684,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4321,7 +4695,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leBHD^2}^{(2)}",
@@ -4333,7 +4709,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4344,7 +4720,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leBHD^2}^{(3)}",
@@ -4356,7 +4734,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4367,7 +4745,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGHD^2}^{(1)}",
@@ -4379,7 +4759,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4390,7 +4770,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGHD^2}^{(2)}",
@@ -4402,7 +4784,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4413,7 +4795,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGHD^2}^{(3)}",
@@ -4425,7 +4809,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4436,7 +4820,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWHD^2}^{(1)}",
@@ -4448,7 +4834,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4459,7 +4845,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWHD^2}^{(2)}",
@@ -4471,7 +4859,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4482,7 +4870,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWHD^2}^{(3)}",
@@ -4494,7 +4884,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4505,7 +4895,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quBHD^2}^{(1)}",
@@ -4517,7 +4909,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4528,7 +4920,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quBHD^2}^{(2)}",
@@ -4540,7 +4934,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4551,7 +4945,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quBHD^2}^{(3)}",
@@ -4563,7 +4959,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4574,7 +4970,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGHD^2}^{(1)}",
@@ -4586,7 +4984,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4597,7 +4995,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGHD^2}^{(2)}",
@@ -4609,7 +5009,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4620,7 +5020,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGHD^2}^{(3)}",
@@ -4632,7 +5034,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4643,7 +5045,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWHD^2}^{(1)}",
@@ -4655,7 +5059,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4666,7 +5070,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWHD^2}^{(2)}",
@@ -4678,7 +5084,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4689,7 +5095,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWHD^2}^{(3)}",
@@ -4701,7 +5109,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4712,7 +5120,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdBHD^2}^{(1)}",
@@ -4724,7 +5134,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4735,7 +5145,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdBHD^2}^{(2)}",
@@ -4747,7 +5159,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4758,7 +5170,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdBHD^2}^{(3)}",
@@ -4770,7 +5184,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4781,7 +5195,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(1)}",
@@ -4793,7 +5209,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4804,7 +5220,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(2)}",
@@ -4816,7 +5234,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4827,7 +5245,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(3)}",
@@ -4839,7 +5259,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4850,7 +5270,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(4)}",
@@ -4862,7 +5284,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4873,7 +5295,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(5)}",
@@ -4885,7 +5309,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4896,7 +5320,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leH^3D^2}^{(6)}",
@@ -4908,7 +5334,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4919,7 +5345,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(1)}",
@@ -4931,7 +5359,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4942,7 +5370,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(2)}",
@@ -4954,7 +5384,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4965,7 +5395,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(3)}",
@@ -4977,7 +5409,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -4988,7 +5420,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(4)}",
@@ -5000,7 +5434,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5011,7 +5445,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(5)}",
@@ -5023,7 +5459,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5034,7 +5470,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quH^3D^2}^{(6)}",
@@ -5046,7 +5484,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5057,7 +5495,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(1)}",
@@ -5069,7 +5509,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5080,7 +5520,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(2)}",
@@ -5092,7 +5534,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5103,7 +5545,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(3)}",
@@ -5115,7 +5559,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5126,7 +5570,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(4)}",
@@ -5138,7 +5584,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5149,7 +5595,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(5)}",
@@ -5161,7 +5609,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5172,7 +5620,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdH^3D^2}^{(6)}",
@@ -5184,7 +5634,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -5195,7 +5645,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdH^2}^{(1)}",
@@ -5207,7 +5659,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5220,7 +5672,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdH^2}^{(2)}",
@@ -5232,7 +5686,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5245,7 +5699,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2udH^2}",
@@ -5257,7 +5713,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5270,7 +5726,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequH^2}^{(5)}",
@@ -5282,7 +5740,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5295,7 +5753,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(5)}",
@@ -5307,7 +5767,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5320,7 +5780,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(6)}",
@@ -5332,7 +5794,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -5345,7 +5807,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdD^2}^{(1)}",
@@ -5357,7 +5821,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -5370,7 +5834,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdD^2}^{(2)}",
@@ -5382,7 +5848,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -5395,7 +5861,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4H^2}^{(1)}",
@@ -5420,7 +5888,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4H^2}^{(2)}",
@@ -5445,7 +5915,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4H^2}^{(1)}",
@@ -5470,7 +5942,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4H^2}^{(2)}",
@@ -5495,7 +5969,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4H^2}^{(3)}",
@@ -5520,7 +5996,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2H^2}^{(1)}",
@@ -5545,7 +6023,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2H^2}^{(2)}",
@@ -5570,7 +6050,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2H^2}^{(3)}",
@@ -5595,7 +6077,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2H^2}^{(4)}",
@@ -5620,7 +6104,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2H^2}^{(5)}",
@@ -5645,7 +6131,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4H^2}^{(5)}",
@@ -5670,7 +6158,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{e^4H^2}",
@@ -5695,7 +6185,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^4H^2}",
@@ -5720,7 +6212,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^4H^2}",
@@ -5745,7 +6239,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2H^2}",
@@ -5770,7 +6266,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2H^2}",
@@ -5795,7 +6293,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2H^2}^{(1)}",
@@ -5820,7 +6320,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2H^2}^{(2)}",
@@ -5845,7 +6347,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2H^2}^{(1)}",
@@ -5870,7 +6374,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2H^2}^{(2)}",
@@ -5895,7 +6401,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2H^2}^{(1)}",
@@ -5920,7 +6428,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2H^2}^{(2)}",
@@ -5945,7 +6455,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2H^2}^{(1)}",
@@ -5970,7 +6482,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2H^2}^{(2)}",
@@ -5995,7 +6509,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2H^2}^{(1)}",
@@ -6020,7 +6536,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2H^2}^{(2)}",
@@ -6045,7 +6563,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(1)}",
@@ -6070,7 +6590,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(2)}",
@@ -6095,7 +6617,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(3)}",
@@ -6120,7 +6644,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(4)}",
@@ -6145,7 +6671,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(1)}",
@@ -6170,7 +6698,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(2)}",
@@ -6195,7 +6725,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(3)}",
@@ -6220,7 +6752,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(4)}",
@@ -6245,7 +6779,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(1)}",
@@ -6257,7 +6793,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6270,7 +6806,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(2)}",
@@ -6282,7 +6820,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6295,7 +6833,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(3)}",
@@ -6307,7 +6847,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6320,7 +6860,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udH^2}^{(4)}",
@@ -6332,7 +6874,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6345,7 +6887,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequH^2}^{(1)}",
@@ -6357,7 +6901,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6370,7 +6914,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequH^2}^{(2)}",
@@ -6382,7 +6928,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6395,7 +6941,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequH^2}^{(3)}",
@@ -6407,7 +6955,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6420,7 +6968,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequH^2}^{(4)}",
@@ -6432,7 +6982,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6445,7 +6995,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2H^2}^{(3)}",
@@ -6457,7 +7009,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6470,7 +7022,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdH^2}^{(3)}",
@@ -6482,7 +7036,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6495,7 +7049,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leqdH^2}^{(4)}",
@@ -6507,7 +7063,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6520,7 +7076,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(5)}",
@@ -6532,7 +7090,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6545,7 +7103,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2H^2}^{(6)}",
@@ -6557,7 +7117,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6570,7 +7130,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(5)}",
@@ -6582,7 +7144,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6595,7 +7157,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2H^2}^{(6)}",
@@ -6607,7 +7171,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -6620,7 +7184,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4W}^{(1)}",
@@ -6645,7 +7211,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4W}^{(2)}",
@@ -6670,7 +7238,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4G}^{(1)}",
@@ -6695,7 +7265,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4G}^{(2)}",
@@ -6720,7 +7292,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4G}^{(3)}",
@@ -6745,7 +7319,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4G}^{(4)}",
@@ -6770,7 +7346,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4W}^{(1)}",
@@ -6795,7 +7373,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4W}^{(2)}",
@@ -6820,7 +7400,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4W}^{(3)}",
@@ -6845,7 +7427,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4W}^{(4)}",
@@ -6870,7 +7454,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2G}^{(1)}",
@@ -6895,7 +7481,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2G}^{(2)}",
@@ -6920,7 +7508,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2G}^{(3)}",
@@ -6945,7 +7535,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2G}^{(4)}",
@@ -6970,7 +7562,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(1)}",
@@ -6995,7 +7589,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(2)}",
@@ -7020,7 +7616,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(3)}",
@@ -7045,7 +7643,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(4)}",
@@ -7070,7 +7670,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(5)}",
@@ -7095,7 +7697,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2W}^{(6)}",
@@ -7120,7 +7724,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2B}^{(1)}",
@@ -7145,7 +7751,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2B}^{(2)}",
@@ -7170,7 +7778,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2B}^{(3)}",
@@ -7195,7 +7805,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2B}^{(4)}",
@@ -7220,7 +7832,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4B}^{(1)}",
@@ -7245,7 +7859,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{l^4B}^{(2)}",
@@ -7270,7 +7886,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{q^4B}^{(1)}",
@@ -7295,7 +7913,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{q^4B}^{(2)}",
@@ -7320,7 +7940,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{q^4B}^{(3)}",
@@ -7345,7 +7967,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{q^4B}^{(4)}",
@@ -7370,7 +7994,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{u^4G}^{(1)}",
@@ -7395,7 +8021,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^4G}^{(2)}",
@@ -7420,7 +8048,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^4G}^{(1)}",
@@ -7445,7 +8075,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^4G}^{(2)}",
@@ -7470,7 +8102,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2G}^{(1)}",
@@ -7495,7 +8129,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2G}^{(2)}",
@@ -7520,7 +8156,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2B}^{(1)}",
@@ -7545,7 +8183,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2B}^{(2)}",
@@ -7570,7 +8210,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2G}^{(1)}",
@@ -7595,7 +8237,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2G}^{(2)}",
@@ -7620,7 +8264,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2B}^{(1)}",
@@ -7645,7 +8291,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2B}^{(2)}",
@@ -7670,7 +8318,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(1)}",
@@ -7695,7 +8345,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(2)}",
@@ -7720,7 +8372,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(3)}",
@@ -7745,7 +8399,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(4)}",
@@ -7770,7 +8426,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(5)}",
@@ -7795,7 +8453,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(6)}",
@@ -7820,7 +8480,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(7)}",
@@ -7845,7 +8507,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2G}^{(8)}",
@@ -7870,7 +8534,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2B}^{(1)}",
@@ -7895,7 +8561,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2B}^{(2)}",
@@ -7920,7 +8588,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2B}^{(3)}",
@@ -7945,7 +8615,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2B}^{(4)}",
@@ -7970,7 +8642,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^4B}^{(1)}",
@@ -7995,7 +8669,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{e^4B}^{(2)}",
@@ -8020,7 +8696,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{u^4B}^{(1)}",
@@ -8045,7 +8723,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{u^4B}^{(2)}",
@@ -8070,7 +8750,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{d^4B}^{(1)}",
@@ -8095,7 +8777,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{d^4B}^{(2)}",
@@ -8120,7 +8804,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": false,
+  "no_vertex_reason": "vanishes for a flavour-universal coefficient"
  },
  {
   "label": "Q_{l^2e^2W}^{(1)}",
@@ -8145,7 +8831,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2W}^{(2)}",
@@ -8170,7 +8858,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2B}^{(1)}",
@@ -8195,7 +8885,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2B}^{(2)}",
@@ -8220,7 +8912,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2G}^{(1)}",
@@ -8245,7 +8939,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2G}^{(2)}",
@@ -8270,7 +8966,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2W}^{(1)}",
@@ -8295,7 +8993,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2W}^{(2)}",
@@ -8320,7 +9020,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2B}^{(1)}",
@@ -8345,7 +9047,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2B}^{(2)}",
@@ -8370,7 +9074,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2G}^{(1)}",
@@ -8395,7 +9101,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2G}^{(2)}",
@@ -8420,7 +9128,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2W}^{(1)}",
@@ -8445,7 +9155,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2W}^{(2)}",
@@ -8470,7 +9182,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2B}^{(1)}",
@@ -8495,7 +9209,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2B}^{(2)}",
@@ -8520,7 +9236,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2G}^{(1)}",
@@ -8545,7 +9263,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2G}^{(2)}",
@@ -8570,7 +9290,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2W}^{(1)}",
@@ -8595,7 +9317,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2W}^{(2)}",
@@ -8620,7 +9344,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2B}^{(1)}",
@@ -8645,7 +9371,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2B}^{(2)}",
@@ -8670,7 +9398,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(1)}",
@@ -8695,7 +9425,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(2)}",
@@ -8720,7 +9452,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(3)}",
@@ -8745,7 +9479,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(4)}",
@@ -8770,7 +9506,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(5)}",
@@ -8795,7 +9533,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(6)}",
@@ -8820,7 +9560,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(7)}",
@@ -8845,7 +9587,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2G}^{(8)}",
@@ -8870,7 +9614,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2W}^{(1)}",
@@ -8895,7 +9641,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2W}^{(2)}",
@@ -8920,7 +9668,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2W}^{(3)}",
@@ -8945,7 +9695,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2W}^{(4)}",
@@ -8970,7 +9722,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2B}^{(1)}",
@@ -8995,7 +9749,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2B}^{(2)}",
@@ -9020,7 +9776,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2B}^{(3)}",
@@ -9045,7 +9803,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2B}^{(4)}",
@@ -9070,7 +9830,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(1)}",
@@ -9095,7 +9857,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(2)}",
@@ -9120,7 +9884,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(3)}",
@@ -9145,7 +9911,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(4)}",
@@ -9170,7 +9938,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(5)}",
@@ -9195,7 +9965,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(6)}",
@@ -9220,7 +9992,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(7)}",
@@ -9245,7 +10019,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2G}^{(8)}",
@@ -9270,7 +10046,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2W}^{(1)}",
@@ -9295,7 +10073,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2W}^{(2)}",
@@ -9320,7 +10100,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2W}^{(3)}",
@@ -9345,7 +10127,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2W}^{(4)}",
@@ -9370,7 +10154,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2B}^{(1)}",
@@ -9395,7 +10181,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2B}^{(2)}",
@@ -9420,7 +10208,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2B}^{(3)}",
@@ -9445,7 +10235,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2B}^{(4)}",
@@ -9470,7 +10262,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqG}^{(1)}",
@@ -9482,7 +10276,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9495,7 +10289,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqG}^{(2)}",
@@ -9507,7 +10303,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9520,7 +10316,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqW}^{(1)}",
@@ -9532,7 +10330,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9545,7 +10343,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqW}^{(2)}",
@@ -9557,7 +10357,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9570,7 +10370,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqB}^{(1)}",
@@ -9582,7 +10384,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9595,7 +10397,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{ledqB}^{(2)}",
@@ -9607,7 +10411,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9620,7 +10424,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(1)}",
@@ -9632,7 +10438,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9645,7 +10451,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(2)}",
@@ -9657,7 +10465,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9670,7 +10478,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(3)}",
@@ -9682,7 +10492,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9695,7 +10505,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(4)}",
@@ -9707,7 +10519,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9720,7 +10532,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(5)}",
@@ -9732,7 +10546,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9745,7 +10559,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udG}^{(6)}",
@@ -9757,7 +10573,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9770,7 +10586,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udW}^{(1)}",
@@ -9782,7 +10600,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9795,7 +10613,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udW}^{(2)}",
@@ -9807,7 +10627,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9820,7 +10640,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udW}^{(3)}",
@@ -9832,7 +10654,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9845,7 +10667,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udB}^{(1)}",
@@ -9857,7 +10681,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9870,7 +10694,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udB}^{(2)}",
@@ -9882,7 +10708,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9895,7 +10721,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udB}^{(3)}",
@@ -9907,7 +10735,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9920,7 +10748,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequG}^{(1)}",
@@ -9932,7 +10762,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9945,7 +10775,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequG}^{(2)}",
@@ -9957,7 +10789,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9970,7 +10802,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequG}^{(3)}",
@@ -9982,7 +10816,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -9995,7 +10829,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequW}^{(1)}",
@@ -10007,7 +10843,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10020,7 +10856,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequW}^{(2)}",
@@ -10032,7 +10870,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10045,7 +10883,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequW}^{(3)}",
@@ -10057,7 +10897,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10070,7 +10910,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequB}^{(1)}",
@@ -10082,7 +10924,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10095,7 +10937,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequB}^{(2)}",
@@ -10107,7 +10951,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10120,7 +10964,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequB}^{(3)}",
@@ -10132,7 +10978,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -10145,7 +10991,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(1)}",
@@ -10165,7 +11013,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(2)}",
@@ -10185,7 +11035,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(3)}",
@@ -10205,7 +11057,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(4)}",
@@ -10225,7 +11079,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(5)}",
@@ -10245,7 +11101,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(6)}",
@@ -10265,7 +11123,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(7)}",
@@ -10285,7 +11145,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(8)}",
@@ -10305,7 +11167,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^4}^{(9)}",
@@ -10325,7 +11189,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(1)}",
@@ -10345,7 +11211,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(2)}",
@@ -10365,7 +11233,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(3)}",
@@ -10385,7 +11255,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(4)}",
@@ -10405,7 +11277,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(5)}",
@@ -10425,7 +11299,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^4}^{(6)}",
@@ -10445,7 +11321,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^4}^{(1)}",
@@ -10465,7 +11343,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^4}^{(2)}",
@@ -10485,7 +11365,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^4}^{(3)}",
@@ -10505,7 +11387,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3B}^{(1)}",
@@ -10525,7 +11409,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3B}^{(2)}",
@@ -10545,7 +11431,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3B}^{(3)}",
@@ -10565,7 +11453,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3B}^{(4)}",
@@ -10585,7 +11475,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(1)}",
@@ -10605,7 +11497,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(2)}",
@@ -10625,7 +11519,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(3)}",
@@ -10645,7 +11541,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(4)}",
@@ -10665,7 +11563,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(5)}",
@@ -10685,7 +11585,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(6)}",
@@ -10705,7 +11607,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2W^2}^{(7)}",
@@ -10725,7 +11629,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(1)}",
@@ -10745,7 +11651,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(2)}",
@@ -10765,7 +11673,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(3)}",
@@ -10785,7 +11695,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(4)}",
@@ -10805,7 +11717,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(5)}",
@@ -10825,7 +11739,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(6)}",
@@ -10845,7 +11761,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2B^2}^{(7)}",
@@ -10865,7 +11783,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(1)}",
@@ -10885,7 +11805,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(2)}",
@@ -10905,7 +11827,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(3)}",
@@ -10925,7 +11849,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(4)}",
@@ -10945,7 +11871,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(5)}",
@@ -10965,7 +11893,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(6)}",
@@ -10985,7 +11915,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2B^2}^{(7)}",
@@ -11005,7 +11937,9 @@
    "N_X": 4,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^8}",
@@ -11025,7 +11959,9 @@
    "N_X": 0,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^6}^{(1)}",
@@ -11045,7 +11981,9 @@
    "N_X": 0,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^6}^{(2)}",
@@ -11065,7 +12003,9 @@
    "N_X": 0,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^4}^{(1)}",
@@ -11085,7 +12025,9 @@
    "N_X": 0,
    "N_D": 4
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^4}^{(2)}",
@@ -11105,7 +12047,9 @@
    "N_X": 0,
    "N_D": 4
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{H^4}^{(3)}",
@@ -11125,7 +12069,9 @@
    "N_X": 0,
    "N_D": 4
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^3eHD}^{(1)}",
@@ -11137,7 +12083,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11150,7 +12096,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^3eHD}^{(2)}",
@@ -11162,7 +12110,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11175,7 +12123,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^3eHD}^{(3)}",
@@ -11187,7 +12137,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11200,7 +12150,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{le^3HD}^{(1)}",
@@ -11212,7 +12164,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11225,7 +12177,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(1)}",
@@ -11237,7 +12191,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11250,7 +12204,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(2)}",
@@ -11262,7 +12218,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11275,7 +12231,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(3)}",
@@ -11287,7 +12245,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11300,7 +12258,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(4)}",
@@ -11312,7 +12272,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11325,7 +12285,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(5)}",
@@ -11337,7 +12299,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11350,7 +12312,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leq^2HD}^{(6)}",
@@ -11362,7 +12326,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11375,7 +12339,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leu^2HD}^{(1)}",
@@ -11387,7 +12353,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11400,7 +12366,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leu^2HD}^{(2)}",
@@ -11412,7 +12380,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11425,7 +12393,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leu^2HD}^{(3)}",
@@ -11437,7 +12407,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11450,7 +12420,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{led^2HD}^{(1)}",
@@ -11462,7 +12434,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11475,7 +12447,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{led^2HD}^{(2)}",
@@ -11487,7 +12461,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11500,7 +12474,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{led^2HD}^{(3)}",
@@ -11512,7 +12488,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11525,7 +12501,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leudHD}^{(1)}",
@@ -11537,7 +12515,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11550,7 +12528,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leudHD}^{(2)}",
@@ -11562,7 +12542,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11575,7 +12555,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leudHD}^{(3)}",
@@ -11587,7 +12569,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11600,7 +12582,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{le^3HD}^{(2)}",
@@ -11612,7 +12596,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11625,7 +12609,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(1)}",
@@ -11637,7 +12623,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11650,7 +12636,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(2)}",
@@ -11662,7 +12650,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11675,7 +12663,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(3)}",
@@ -11687,7 +12677,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11700,7 +12690,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(4)}",
@@ -11712,7 +12704,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11725,7 +12717,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(5)}",
@@ -11737,7 +12731,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11750,7 +12744,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2quHD}^{(6)}",
@@ -11762,7 +12758,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11775,7 +12771,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2quHD}^{(1)}",
@@ -11787,7 +12785,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11800,7 +12798,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2quHD}^{(2)}",
@@ -11812,7 +12812,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11825,7 +12825,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2quHD}^{(3)}",
@@ -11837,7 +12839,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11850,7 +12852,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(1)}",
@@ -11862,7 +12866,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11875,7 +12879,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(2)}",
@@ -11887,7 +12893,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11900,7 +12906,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(3)}",
@@ -11912,7 +12920,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11925,7 +12933,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(4)}",
@@ -11937,7 +12947,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11950,7 +12960,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(5)}",
@@ -11962,7 +12974,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -11975,7 +12987,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3uHD}^{(6)}",
@@ -11987,7 +13001,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12000,7 +13014,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^3HD}^{(1)}",
@@ -12012,7 +13028,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12025,7 +13041,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^3HD}^{(2)}",
@@ -12037,7 +13055,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12050,7 +13068,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^3HD}^{(3)}",
@@ -12062,7 +13082,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12075,7 +13095,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(1)}",
@@ -12087,7 +13109,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12100,7 +13122,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(2)}",
@@ -12112,7 +13136,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12125,7 +13149,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(3)}",
@@ -12137,7 +13163,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12150,7 +13176,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(4)}",
@@ -12162,7 +13190,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12175,7 +13203,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(5)}",
@@ -12187,7 +13217,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12200,7 +13230,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qud^2HD}^{(6)}",
@@ -12212,7 +13244,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12225,7 +13257,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(1)}",
@@ -12237,7 +13271,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12250,7 +13284,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(2)}",
@@ -12262,7 +13298,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12275,7 +13311,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(3)}",
@@ -12287,7 +13325,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12300,7 +13338,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(4)}",
@@ -12312,7 +13352,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12325,7 +13365,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(5)}",
@@ -12337,7 +13379,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12350,7 +13392,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2qdHD}^{(6)}",
@@ -12362,7 +13406,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12375,7 +13419,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2qdHD}^{(1)}",
@@ -12387,7 +13433,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12400,7 +13446,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2qdHD}^{(2)}",
@@ -12412,7 +13460,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12425,7 +13473,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2qdHD}^{(3)}",
@@ -12437,7 +13487,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12450,7 +13500,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(1)}",
@@ -12462,7 +13514,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12475,7 +13527,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(2)}",
@@ -12487,7 +13541,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12500,7 +13554,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(3)}",
@@ -12512,7 +13568,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12525,7 +13581,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(4)}",
@@ -12537,7 +13595,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12550,7 +13608,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(5)}",
@@ -12562,7 +13622,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12575,7 +13635,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^3dHD}^{(6)}",
@@ -12587,7 +13649,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12600,7 +13662,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(1)}",
@@ -12612,7 +13676,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12625,7 +13689,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(2)}",
@@ -12637,7 +13703,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12650,7 +13716,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(3)}",
@@ -12662,7 +13730,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12675,7 +13743,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(4)}",
@@ -12687,7 +13757,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12700,7 +13770,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(5)}",
@@ -12712,7 +13784,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12725,7 +13797,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qu^2dHD}^{(6)}",
@@ -12737,7 +13811,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12750,7 +13824,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qd^3HD}^{(1)}",
@@ -12762,7 +13838,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12775,7 +13851,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qd^3HD}^{(2)}",
@@ -12787,7 +13865,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12800,7 +13878,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qd^3HD}^{(3)}",
@@ -12812,7 +13892,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -12825,7 +13905,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4D^2}^{(1)}",
@@ -12850,7 +13932,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^4D^2}^{(2)}",
@@ -12875,7 +13959,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4D^2}^{(1)}",
@@ -12900,7 +13986,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4D^2}^{(2)}",
@@ -12925,7 +14013,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4D^2}^{(3)}",
@@ -12950,7 +14040,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^4D^2}^{(4)}",
@@ -12975,7 +14067,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2D^2}^{(1)}",
@@ -13000,7 +14094,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2D^2}^{(2)}",
@@ -13025,7 +14121,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2D^2}^{(3)}",
@@ -13050,7 +14148,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2q^2D^2}^{(4)}",
@@ -13075,7 +14175,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^4D^2}",
@@ -13100,7 +14202,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^4D^2}^{(1)}",
@@ -13125,7 +14229,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^4D^2}^{(2)}",
@@ -13150,7 +14256,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^4D^2}^{(1)}",
@@ -13175,7 +14283,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{d^4D^2}^{(2)}",
@@ -13200,7 +14310,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2D^2}^{(1)}",
@@ -13225,7 +14337,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2u^2D^2}^{(2)}",
@@ -13250,7 +14364,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2D^2}^{(1)}",
@@ -13275,7 +14391,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{e^2d^2D^2}^{(2)}",
@@ -13300,7 +14418,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2D^2}^{(1)}",
@@ -13325,7 +14445,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2D^2}^{(2)}",
@@ -13350,7 +14472,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2D^2}^{(3)}",
@@ -13375,7 +14499,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{u^2d^2D^2}^{(4)}",
@@ -13400,7 +14526,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2D^2}^{(1)}",
@@ -13425,7 +14553,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2e^2D^2}^{(2)}",
@@ -13450,7 +14580,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2D^2}^{(1)}",
@@ -13475,7 +14607,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2u^2D^2}^{(2)}",
@@ -13500,7 +14634,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2D^2}^{(1)}",
@@ -13525,7 +14661,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{l^2d^2D^2}^{(2)}",
@@ -13550,7 +14688,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2D^2}^{(1)}",
@@ -13575,7 +14715,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2e^2D^2}^{(2)}",
@@ -13600,7 +14742,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2D^2}^{(1)}",
@@ -13625,7 +14769,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2D^2}^{(2)}",
@@ -13650,7 +14796,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2D^2}^{(3)}",
@@ -13675,7 +14823,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2u^2D^2}^{(4)}",
@@ -13700,7 +14850,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2D^2}^{(1)}",
@@ -13725,7 +14877,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2D^2}^{(2)}",
@@ -13750,7 +14904,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2D^2}^{(3)}",
@@ -13775,7 +14931,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2d^2D^2}^{(4)}",
@@ -13800,7 +14958,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udD^2}^{(1)}",
@@ -13812,7 +14972,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13825,7 +14985,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udD^2}^{(2)}",
@@ -13837,7 +14999,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13850,7 +15012,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{q^2udD^2}^{(3)}",
@@ -13862,7 +15026,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13875,7 +15039,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequD^2}^{(1)}",
@@ -13887,7 +15053,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13900,7 +15066,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequD^2}^{(2)}",
@@ -13912,7 +15080,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13925,7 +15093,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lequD^2}^{(3)}",
@@ -13937,7 +15107,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -13950,7 +15120,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3H^2}^{(1)}",
@@ -13970,7 +15142,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^3H^2}^{(2)}",
@@ -13990,7 +15164,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^3H^2}^{(1)}",
@@ -14010,7 +15186,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^3H^2}^{(2)}",
@@ -14030,7 +15208,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2BH^2}^{(1)}",
@@ -14050,7 +15230,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2BH^2}^{(2)}",
@@ -14070,7 +15252,9 @@
    "N_X": 3,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2H^4}^{(1)}",
@@ -14090,7 +15274,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2H^4}^{(2)}",
@@ -14110,7 +15296,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^4}^{(1)}",
@@ -14130,7 +15318,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^4}^{(2)}",
@@ -14150,7 +15340,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^4}^{(3)}",
@@ -14170,7 +15362,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^4}^{(4)}",
@@ -14190,7 +15384,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^4}^{(1)}",
@@ -14210,7 +15406,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^4}^{(2)}",
@@ -14230,7 +15428,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^2H^4}^{(1)}",
@@ -14250,7 +15450,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^2H^4}^{(2)}",
@@ -14270,7 +15472,9 @@
    "N_X": 2,
    "N_D": 0
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2H^2D^2}^{(1)}",
@@ -14290,7 +15494,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2H^2D^2}^{(2)}",
@@ -14310,7 +15516,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{G^2H^2D^2}^{(3)}",
@@ -14330,7 +15538,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(1)}",
@@ -14350,7 +15560,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(2)}",
@@ -14370,7 +15582,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(3)}",
@@ -14390,7 +15604,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(4)}",
@@ -14410,7 +15626,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(5)}",
@@ -14430,7 +15648,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{W^2H^2D^2}^{(6)}",
@@ -14450,7 +15670,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(1)}",
@@ -14470,7 +15692,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(2)}",
@@ -14490,7 +15714,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(3)}",
@@ -14510,7 +15736,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(4)}",
@@ -14530,7 +15758,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(5)}",
@@ -14550,7 +15780,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WBH^2D^2}^{(6)}",
@@ -14570,7 +15802,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^2H^2D^2}^{(1)}",
@@ -14590,7 +15824,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^2H^2D^2}^{(2)}",
@@ -14610,7 +15846,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{B^2H^2D^2}^{(3)}",
@@ -14630,7 +15868,9 @@
    "N_X": 2,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WH^4D^2}^{(1)}",
@@ -14650,7 +15890,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WH^4D^2}^{(2)}",
@@ -14670,7 +15912,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WH^4D^2}^{(3)}",
@@ -14690,7 +15934,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{WH^4D^2}^{(4)}",
@@ -14710,7 +15956,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{BH^4D^2}^{(1)}",
@@ -14730,7 +15978,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{BH^4D^2}^{(2)}",
@@ -14750,7 +16000,9 @@
    "N_X": 1,
    "N_D": 2
   },
-  "gens": []
+  "gens": [],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leG^2H}^{(1)}",
@@ -14762,7 +16014,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14773,7 +16025,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leG^2H}^{(2)}",
@@ -14785,7 +16039,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14796,7 +16050,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leW^2H}^{(1)}",
@@ -14808,7 +16064,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14819,7 +16075,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leW^2H}^{(2)}",
@@ -14831,7 +16089,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14842,7 +16100,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leW^2H}^{(3)}",
@@ -14854,7 +16114,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14865,7 +16125,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quG^2H}^{(1)}",
@@ -14877,7 +16139,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14888,7 +16150,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quG^2H}^{(2)}",
@@ -14900,7 +16164,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14911,7 +16175,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quG^2H}^{(3)}",
@@ -14923,7 +16189,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14934,7 +16200,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quG^2H}^{(4)}",
@@ -14946,7 +16214,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14957,7 +16225,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quG^2H}^{(5)}",
@@ -14969,7 +16239,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -14980,7 +16250,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGWH}^{(1)}",
@@ -14992,7 +16264,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15003,7 +16275,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGWH}^{(2)}",
@@ -15015,7 +16289,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15026,7 +16300,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGWH}^{(3)}",
@@ -15038,7 +16314,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15049,7 +16325,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGBH}^{(1)}",
@@ -15061,7 +16339,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15072,7 +16350,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGBH}^{(2)}",
@@ -15084,7 +16364,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15095,7 +16375,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quGBH}^{(3)}",
@@ -15107,7 +16389,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15118,7 +16400,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quW^2H}^{(1)}",
@@ -15130,7 +16414,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15141,7 +16425,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quW^2H}^{(2)}",
@@ -15153,7 +16439,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15164,7 +16450,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quW^2H}^{(3)}",
@@ -15176,7 +16464,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15187,7 +16475,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWBH}^{(3)}",
@@ -15199,7 +16489,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15210,7 +16500,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWBH}^{(1)}",
@@ -15222,7 +16514,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15233,7 +16525,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quWBH}^{(2)}",
@@ -15245,7 +16539,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15256,7 +16550,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quB^2H}^{(1)}",
@@ -15268,7 +16564,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15279,7 +16575,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{quB^2H}^{(2)}",
@@ -15291,7 +16589,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15302,7 +16600,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWBH}^{(1)}",
@@ -15314,7 +16614,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15325,7 +16625,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWBH}^{(2)}",
@@ -15337,7 +16639,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15348,7 +16650,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leWBH}^{(3)}",
@@ -15360,7 +16664,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15371,7 +16675,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leB^2H}^{(1)}",
@@ -15383,7 +16689,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15394,7 +16700,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{leB^2H}^{(2)}",
@@ -15406,7 +16714,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15417,7 +16725,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdG^2H}^{(1)}",
@@ -15429,7 +16739,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15440,7 +16750,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdG^2H}^{(2)}",
@@ -15452,7 +16764,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15463,7 +16775,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdG^2H}^{(3)}",
@@ -15475,7 +16789,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15486,7 +16800,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdG^2H}^{(4)}",
@@ -15498,7 +16814,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15509,7 +16825,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdG^2H}^{(5)}",
@@ -15521,7 +16839,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15532,7 +16850,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGWH}^{(1)}",
@@ -15544,7 +16864,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15555,7 +16875,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGWH}^{(2)}",
@@ -15567,7 +16889,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15578,7 +16900,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGWH}^{(3)}",
@@ -15590,7 +16914,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15601,7 +16925,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGBH}^{(1)}",
@@ -15613,7 +16939,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15624,7 +16950,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGBH}^{(2)}",
@@ -15636,7 +16964,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15647,7 +16975,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdGBH}^{(3)}",
@@ -15659,7 +16989,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15670,7 +17000,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdW^2H}^{(1)}",
@@ -15682,7 +17014,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15693,7 +17025,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdW^2H}^{(2)}",
@@ -15705,7 +17039,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15716,7 +17050,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdW^2H}^{(3)}",
@@ -15728,7 +17064,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15739,7 +17075,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWBH}^{(1)}",
@@ -15751,7 +17089,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15762,7 +17100,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWBH}^{(2)}",
@@ -15774,7 +17114,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15785,7 +17125,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdWBH}^{(3)}",
@@ -15797,7 +17139,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15808,7 +17150,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdB^2H}^{(1)}",
@@ -15820,7 +17164,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15831,7 +17175,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{qdB^2H}^{(2)}",
@@ -15843,7 +17189,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re odd, Im even",
   "n_terms": 1,
   "fields": {
    "N_f": 2,
@@ -15854,7 +17200,9 @@
   "gens": [
    "p",
    "r"
-  ]
+  ],
+  "vertex": true,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudH^2}^{(1)}",
@@ -15866,7 +17214,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -15879,7 +17227,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudH^2}^{(2)}",
@@ -15891,7 +17241,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -15904,7 +17254,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uH^2}",
@@ -15916,7 +17268,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -15929,7 +17281,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3H^2}^{(1)}",
@@ -15941,7 +17295,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -15954,7 +17308,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3H^2}^{(2)}",
@@ -15966,7 +17322,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -15979,7 +17335,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dH^2}",
@@ -15991,7 +17349,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16004,7 +17362,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3H^2}^{(3)}",
@@ -16016,7 +17376,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16029,7 +17389,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqu^2H^2}",
@@ -16041,7 +17403,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16054,7 +17416,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqd^2H^2}",
@@ -16066,7 +17430,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16079,7 +17443,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2dH^2}",
@@ -16091,7 +17457,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16104,7 +17470,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudD^2}^{(1)}",
@@ -16116,7 +17484,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -16129,7 +17497,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudD^2}^{(2)}",
@@ -16141,7 +17511,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 4,
   "fields": {
    "N_f": 4,
@@ -16154,7 +17524,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uD^2}",
@@ -16166,7 +17538,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16179,7 +17551,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3D^2}",
@@ -16191,7 +17565,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16204,7 +17578,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dD^2}^{(1)}",
@@ -16216,7 +17592,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16229,7 +17605,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dD^2}^{(2)}",
@@ -16241,7 +17619,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16254,7 +17632,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudG}^{(1)}",
@@ -16266,7 +17646,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16279,7 +17659,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudG}^{(2)}",
@@ -16291,7 +17673,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16304,7 +17686,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudG}^{(3)}",
@@ -16316,7 +17700,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16329,7 +17713,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudG}^{(4)}",
@@ -16341,7 +17727,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16354,7 +17740,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudW}^{(1)}",
@@ -16366,7 +17754,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16379,7 +17767,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudW}^{(2)}",
@@ -16391,7 +17781,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16404,7 +17794,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudB}^{(1)}",
@@ -16416,7 +17808,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16429,7 +17821,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lqudB}^{(2)}",
@@ -16441,7 +17835,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16454,7 +17848,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uG}^{(1)}",
@@ -16466,7 +17862,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16479,7 +17875,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uG}^{(2)}",
@@ -16491,7 +17889,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16504,7 +17902,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uW}^{(1)}",
@@ -16516,7 +17916,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16529,7 +17929,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uB}^{(1)}",
@@ -16541,7 +17943,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16554,7 +17956,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3G}^{(1)}",
@@ -16566,7 +17970,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16579,7 +17983,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3G}^{(2)}",
@@ -16591,7 +17997,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16604,7 +18010,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3W}^{(1)}",
@@ -16616,7 +18024,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16629,7 +18037,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3W}^{(2)}",
@@ -16641,7 +18051,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16654,7 +18064,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3B}^{(1)}",
@@ -16666,7 +18078,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16679,7 +18091,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dG}^{(1)}",
@@ -16691,7 +18105,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16704,7 +18118,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dG}^{(2)}",
@@ -16716,7 +18132,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16729,7 +18145,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dG}^{(3)}",
@@ -16741,7 +18159,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16754,7 +18172,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dB}^{(1)}",
@@ -16766,7 +18186,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16779,7 +18199,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eu^2dB}^{(2)}",
@@ -16791,7 +18213,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16804,7 +18226,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uW}^{(2)}",
@@ -16816,7 +18240,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16829,7 +18253,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^2uB}^{(2)}",
@@ -16841,7 +18267,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16854,7 +18280,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3G}^{(3)}",
@@ -16866,7 +18294,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 2,
   "fields": {
    "N_f": 4,
@@ -16879,7 +18307,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3G}^{(4)}",
@@ -16891,7 +18321,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16904,7 +18334,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3W}^{(3)}",
@@ -16916,7 +18348,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16929,7 +18361,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^3B}^{(2)}",
@@ -16941,7 +18375,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16954,7 +18388,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lu^2dHD}^{(1)}",
@@ -16966,7 +18402,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -16979,7 +18415,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lu^2dHD}^{(2)}",
@@ -16991,7 +18429,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17004,7 +18442,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lud^2HD}^{(1)}",
@@ -17016,7 +18456,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17029,7 +18469,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lud^2HD}^{(2)}",
@@ -17041,7 +18483,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17054,7 +18496,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2uHD}^{(1)}",
@@ -17066,7 +18510,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17079,7 +18523,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2uHD}^{(2)}",
@@ -17091,7 +18537,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17104,7 +18550,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2uHD}^{(3)}",
@@ -17116,7 +18564,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17129,7 +18577,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2dHD}^{(1)}",
@@ -17141,7 +18591,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17154,7 +18604,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2dHD}^{(2)}",
@@ -17166,7 +18618,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17179,7 +18631,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{lq^2dHD}^{(3)}",
@@ -17191,7 +18645,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17204,7 +18658,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{eq^3HD}",
@@ -17216,7 +18672,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17229,7 +18685,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{equ^2HD}^{(1)}",
@@ -17241,7 +18699,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17254,7 +18712,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{equ^2HD}^{(2)}",
@@ -17266,7 +18726,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17279,7 +18739,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{equdHD}^{(1)}",
@@ -17291,7 +18753,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17304,7 +18766,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{equdHD}^{(2)}",
@@ -17316,7 +18780,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17329,7 +18793,9 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  },
  {
   "label": "Q_{equdHD}^{(3)}",
@@ -17341,7 +18807,7 @@
   "plus_hc": true,
   "hc_mode": "complex",
   "conjugacy": "complex",
-  "cp": "Re/Im",
+  "cp": "Re even, Im odd",
   "n_terms": 1,
   "fields": {
    "N_f": 4,
@@ -17354,6 +18820,8 @@
    "r",
    "s",
    "t"
-  ]
+  ],
+  "vertex": null,
+  "no_vertex_reason": null
  }
 ]

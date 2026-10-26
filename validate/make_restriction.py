@@ -18,10 +18,14 @@ makes MadGraph drop every coefficient that the card sets to zero, together with 
 whose couplings then vanish, so the resulting model contains only the kept operators and the
 Standard Model, whatever process is generated afterwards.  Pure Python: no Mathematica needed.
 
-MadGraph's rules for the card: a parameter set to 0 is removed from the model, one set to
-exactly 1 is frozen at 1, and external parameters with identical values are merged into one.
-The kept coefficients are therefore given distinct placeholder values 0.100, 0.101, ... which
-carry no meaning: set the physical values in the run's param_card.dat as usual.  The
+MadGraph's rules for the card (models/import_ufo.py, detect_special_parameters and
+detect_identical_parameters): a parameter set to 0 is removed from the model, one set to exactly
+1 is frozen at 1, and external parameters of one block whose values are equal or opposite are
+merged into one.  The kept coefficients are therefore given placeholder values 0.100, 0.101, ...
+that skip 0, 1 and every value, of either sign, another parameter of the same block already has.
+They carry no meaning: set the physical values in the run's param_card.dat as usual.  (The
+sequence once ran on to exactly 1.000 at the 901st kept coefficient, so the dim68_is card "both",
+978 of them, froze c8quG2Hx5Re at 1 in every run, 2026-10-25.)  The
 dimension-six coefficients of a model that has them are set to zero in the same way unless they
 are selected with dim6 or dim6:<name>, and the selected ones get placeholder values too.
 Everything else (masses, inputs, the scales Lam and Lam6) is copied from the UFO's defaults.
@@ -118,6 +122,21 @@ def main(argv):
     def num(v):
         try: return float(eval(v, {"__builtins__": {}}, {"cmath": __import__("cmath")}))
         except Exception: return 0.0
+    # the printed values each block already holds, from the parameters that keep their defaults
+    taken = {}
+    for _, pname, value, blk, codes in ext:
+        if not ((blk == "DIM8" and pname.startswith("c8")) or (blk == "DIM6" and pname in ufo_dim6)):
+            taken.setdefault(blk, set()).add(f"{abs(num(value)):.6e}")
+    def placeholder(blk):
+        """The next value of 0.100, 0.101, ... that MadGraph neither freezes nor merges in blk."""
+        nonlocal k
+        while True:
+            v = 0.1 + 0.001 * k
+            k += 1
+            t = f"{v:.6e}"
+            if t not in (f"{0.0:.6e}", f"{1.0:.6e}") and t not in taken.setdefault(blk, set()):
+                taken[blk].add(t)
+                return float(t)
     for b in seen:
         out.append(f"Block {b} ")
         for _, pname, value, blk, codes in ext:
@@ -125,10 +144,10 @@ def main(argv):
             code = " ".join(c.strip() for c in codes.split(","))
             v = num(value)
             if b == "DIM8" and pname.startswith("c8"):   # the scale Lam shares the block and must stay
-                if pname in keep: v = 0.1 + 0.001 * k; k += 1; kept += 1
+                if pname in keep: v = placeholder(b); kept += 1
                 else: v = 0.0; zeroed += 1
             elif b == "DIM6" and pname in ufo_dim6:      # Lam6 shares the block and must stay
-                if pname in keep6: v = 0.1 + 0.001 * k; k += 1; kept6 += 1
+                if pname in keep6: v = placeholder(b); kept6 += 1
                 else: v = 0.0; zeroed += 1
             out.append(f"  {code} {v:.6e} # {pname} ")
     for _, pname, value, blk, codes in ext:

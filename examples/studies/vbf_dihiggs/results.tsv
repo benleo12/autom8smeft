@@ -1,5 +1,4 @@
 process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
-p p > h h j j QCD=0	dim8_is-bosonic	NP=0	0.000973	8.13e-06	2000	79.824	dim8_all=0 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0.lhe.gz
 p p > h h j j QCD=0	dim8_is-bosonic	NP^2==2	2.079e-05	1.802e-06	2000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_2__2.lhe.gz
 p p > h h j j QCD=0	dim8_is-cls2	NP^2==2	3.882e-05	2.231e-07	2000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls2_NP_2__2.lhe.gz
 p p > h h j j QCD=0	dim8_is-cls2	NP<=2 NP^2==4	2.033e-06	1.2e-08	1000	79.824	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismcls2_NP__2_NP_2__4.lhe.gz
@@ -34,5 +33,6 @@ p p > h h j j QCD=0	dim8_is-cls20	NP^2==2	NOT_INTEGRATED	-	0		diagram generation
 p p > h h j j QCD=0	dim8_is-cls21	NP^2==2	NOT_INTEGRATED	-	0		diagram generation only	
 p p > h h j j QCD=0	dim8_is-cls5	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
 p p > h h j j QCD=0	dim8_is-cls9	NP^2==2	NO_DIAGRAMS	-	0		diagram generation only	
-p p > h h j j QCD=0	dim8_is-bosonic	NP=0 on	0.001026	8.019e-06	2000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0_on.lhe.gz
 p p > h h j j QCD=0	dim8_is-bosonic	NP<=2 NP^2==4	0.02688	0.0001305	1000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP__2_NP_2__4.lhe.gz
+p p > h h j j QCD=0 	dim8_is-bosonic	NP=0	0.0008297	5.079e-06	5000	79.824	dim8_all=0 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0.lhe.gz
+p p > h h j j QCD=0 	dim8_is-bosonic	NP=0 on	0.0008716	3.958e-06	5000	79.455	dim8_all=1 Lam=1000	lhe/p_p___h_h_j_j_QCD_0__dim8_ismbosonic_NP_0_on.lhe.gz

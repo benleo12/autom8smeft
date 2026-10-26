@@ -31,19 +31,30 @@ Print["[sm] ", Length[smv], " vertices"];
    ones. *)
 vdirs = StringTrim /@ StringSplit[If[Environment["DIM8_VDIR"] === $Failed,
     $root <> "/build/vertices", Environment["DIM8_VDIR"]], ";"];
+(* A file whose base name has a dot, such as L6cl5.herm.mx, the dump of a Hermiticity check, holds
+   no vertex list and is skipped, as the writer skips it.  Loaded as a block it left FR$Vert
+   undefined, the index entry unevaluated, and the export failed after truncating the old index. *)
 files = Select[Flatten[FileNames["*.mx", #] & /@ vdirs],
-  ! StringStartsQ[FileNameTake[#], "._"] && ! StringStartsQ[FileBaseName[#], "base_"] &];
+  ! StringStartsQ[FileNameTake[#], "._"] && ! StringStartsQ[FileBaseName[#], "base_"] &&
+  ! StringContainsQ[FileBaseName[#], "."] &];
 Print["[blocks] ", Length[files], " cached blocks from ", Length[vdirs], " cache director",
   If[Length[vdirs] === 1, "y", "ies"]];
 idx = Association[];
 Do[Module[{nm},
    nm = FileBaseName[z8file];
    If[FileByteCount[z8file] == 0, Continue[]];   (* an empty file holds no vertex list *)
+   ClearAll[FR$Vert];
    Get[z8file];
+   If[! ListQ[FR$Vert], Print["[abort] ", z8file, " holds no vertex list; nothing written"]; Quit[1]];
    idx[nm] = DeleteDuplicates[fields /@ FR$Vert];
    ClearAll[FR$Vert];
   ], {z8file, files}];
-Export[$root <> "/build/vertex_index.json", idx, "JSON"];
+(* write to a temporary file and move it into place only when the export succeeded, so that a
+   failed export can never leave an empty index behind *)
+z8put[z8path_, z8data_] := If[Export[z8path <> ".tmp", z8data, "JSON"] === $Failed,
+  Print["[abort] could not write ", z8path, "; the previous file is kept"]; Quit[1],
+  RenameFile[z8path <> ".tmp", z8path, OverwriteTarget -> True]];
+z8put[$root <> "/build/vertex_index.json", idx];
 Print["[blocks] wrote ", Length[idx], " blocks to build/vertex_index.json"];
 
 (* The internal lines of a diagram.  For one dimension-eight insertion they are pure Standard
@@ -64,5 +75,5 @@ If[z8d6 =!= {},
   Print["[internal] ", Length[z8d6], " dimension-six blocks joined the internal-line set: ",
     Length[z8int], " field contents (Standard Model alone had ", Length[DeleteDuplicates[fields /@ smv]], ")"],
   Print["[internal] Standard Model only: ", Length[z8int], " field contents"]];
-Export[$root <> "/build/sm_vertices.json", z8int, "JSON"];
+z8put[$root <> "/build/sm_vertices.json", z8int];
 Print["[alldone]"];

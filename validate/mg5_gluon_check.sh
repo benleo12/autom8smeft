@@ -86,8 +86,9 @@ for i, b in enumerate(blocks):
     m = re.match(r"\s*(\w+) = Parameter\(name = '(\w+)',\s*nature = 'external'", b)
     if not m: continue
     name = m.group(2)
-    if which in ("dim8", "both") and name.startswith("c8") and re.search(r"value = 0,?\s*$", b, re.M):
-        blocks[i] = re.sub(r"value = 0(,?\s*)$", r"value = 0.7\1", b, count=1, flags=re.M); n8 += 1
+    # a zero default is "0" from FeynRules under Mathematica 14 and "0." under Mathematica 15
+    if which in ("dim8", "both") and name.startswith("c8") and re.search(r"value = 0\.?0*,?\s*$", b, re.M):
+        blocks[i] = re.sub(r"value = 0\.?0*(,?\s*)$", r"value = 0.7\1", b, count=1, flags=re.M); n8 += 1
     elif which in ("dim6", "both") and "lhablock = 'DIM6'" in b and name != "Lam6" and not name.endswith("Ph"):
         blocks[i] = re.sub(r"value = [^,]*,", "value = %s," % spread[n6 % len(spread)], b, count=1); n6 += 1
 open(p, "w").write("\n\n".join(blocks))

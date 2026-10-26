@@ -1,4 +1,4 @@
-(* Common headless initialisation for FeynRules 2.3 (the build uses 2.3.49) on Mathematica 14.x.
+(* Common headless initialisation for FeynRules 2.3 (the build uses 2.3.49) on Mathematica 14 and 15.
    Usage (in a .wls, with $root the repository):   Get[$root <> "/tests/fr_env/fr_headless_init.m"]
    Set FR$PathOverride before Get to the FeynRules directory; the scripts in validate/ set it to
    external/feynrules/feynrules-current under $root.
@@ -17,12 +17,21 @@ If[!ValueQ[FR$NKernels], FR$NKernels = 4];
    (True only if f[x] actually evaluates) in Core/ExtractVertexTools.m:71 (NameIndices),
    Core/FRFormat.m:90,106 (IntLor/Int), Core/ClassDeclarations.m:1873-1877 (AddOrderBlock/MGOrder),
    Interfaces/UFO/PYIntVertices.m:730,896.  The legacy method gives those semantics at all of
-   these places at once.  Both settings are applied on the master kernel and on every subkernel. *)
-FRFix[] := (Unprotect[System`MatrixSymbol]; ClearAll[System`MatrixSymbol]; SetOptions[ValueQ, Method -> "Legacy"];);
+   these places at once.
+   Setting 3: Mathematica 15 ships a Protected System`Commutator.  FeynRules defines its own in
+   Core/ExtractVertexTools.m:110-135, the contraction rules of fields with creation operators that
+   FeynmanRules extracts every vertex with, so the built-in is unprotected and cleared as well.  It
+   is addressed by name, so that on Mathematica 14, which has no such symbol, nothing is created.
+   All settings are applied on the master kernel and on every subkernel. *)
+FRFix[] := (Unprotect[System`MatrixSymbol]; ClearAll[System`MatrixSymbol];
+  If[Names["System`Commutator"] =!= {}, Unprotect["System`Commutator"]; ClearAll["System`Commutator"]];
+  SetOptions[ValueQ, Method -> "Legacy"];);
 FRFix[];
 If[FR$NKernels > 0,
   LaunchKernels[FR$NKernels];
-  ParallelEvaluate[Unprotect[System`MatrixSymbol]; ClearAll[System`MatrixSymbol]; SetOptions[ValueQ, Method -> "Legacy"];];
+  ParallelEvaluate[Unprotect[System`MatrixSymbol]; ClearAll[System`MatrixSymbol];
+    If[Names["System`Commutator"] =!= {}, Unprotect["System`Commutator"]; ClearAll["System`Commutator"]];
+    SetOptions[ValueQ, Method -> "Legacy"];];
   FR$Parallel = True;
   FR$KernelNumber = 0;  (* FeynRules.m calls LaunchKernels[FR$KernelNumber]: 0 -> it reuses the kernels launched above *)
   ,

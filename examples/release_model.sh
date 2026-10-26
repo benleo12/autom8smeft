@@ -3,7 +3,8 @@
 #   usage: examples/release_model.sh <UFO dir written by the writer> <release name, e.g. dim8_is>
 # Steps: copy to a staging directory, drop caches and logs, set the author in __init__.py, raise
 # the NP expansion order to 4 so that double insertions can be requested (the writer sets 2), drop
-# the identically vanishing Lorentz structures, write an annotated parameter-card template, write
+# the identically vanishing Lorentz structures, write the decimal literals as exact fractions
+# (validate/exact_literals.py), write an annotated parameter-card template, write
 # the standard restriction cards (one per class of the Murphy basis, plus bosonic, cpeven, cpodd
 # and all, and dim6 and both when the model carries a dimension-six sector), check that the model
 # files are well formed and that MadGraph imports them, swap the result into models/<name>, and
@@ -32,6 +33,36 @@ p = f"{d}/coupling_orders.py"; s = open(p).read()
 s2 = re.sub(r"(NP = CouplingOrder\(name = 'NP',\s*expansion_order = )\d+", r"\g<1>4", s)
 assert s2 != s or "expansion_order = 4" in s, "NP order block not found"
 open(p, "w").write(s2); print("coupling_orders.py: NP expansion_order = 4")
+# FeynRules copies its own UFO helper files into every model, and its object_library.py still has
+# the Python 2 form `raise UFOError, "..."`.  Python 3 cannot import such a model, so every later
+# step that imports it would stop.  MadGraph rewrites the file the first time it imports a model,
+# which is why a UFO that had already been through MadGraph released without this step and a fresh
+# one from the writer did not.  Rewrite the form here, then require every file to compile.
+import glob
+p = f"{d}/object_library.py"; s = open(p).read()
+s2 = re.sub(r'raise (\w+),\s*("[^"\n]*")', r'raise \1(\2)', s)
+if s2 != s: open(p, "w").write(s2); print("object_library.py: Python 2 raise statements rewritten")
+bad = []
+for f in sorted(glob.glob(f"{d}/*.py")):
+    try: compile(open(f).read(), f, "exec")
+    except SyntaxError as e: bad.append(f"{os.path.basename(f)}, line {e.lineno}: {e.msg}")
+if bad: sys.exit("release stopped: model files that are not Python 3:\n  " + "\n  ".join(bad))
+print("every model file compiles under Python 3")
+# The Higgs quartic is the internal parameter lam.  MadGraph ignores case in parameter names, so it
+# writes the scale Lam into the parameter card as lam__2, and "set Lam 3000" at its launch prompt is
+# then accepted without effect, leaving the run at the default scale.  The quartic is renamed, which
+# no user sees, so that the scale keeps its own name.
+files = sorted(glob.glob(f"{d}/*.py"))
+assert not any(re.search(r"\blamH\b", open(f).read()) for f in files), "lamH is already taken"
+n = 0
+for f in files:
+    s = open(f).read()
+    s2, k = re.subn(r"\blam\b", "lamH", s)
+    if k:
+        open(f, "w").write(s2); n += k
+assert re.search(r"^lamH = Parameter\(name = 'lamH'", open(f"{d}/parameters.py").read(), re.M), \
+    "the quartic lam was not found in parameters.py"
+print(f"the Higgs quartic lam renamed lamH ({n} occurrences), so that MadGraph keeps the name Lam")
 EOF
 # Zeros that FeynRules writes without checking, removed in three stages.  An identically vanishing
 # Lorentz structure, a group of structures in one vertex whose couplings are equal up to sign and
@@ -42,6 +73,11 @@ EOF
 # message that points at the process rather than at the structure.  Every test evaluates the
 # Dirac structures as well and imposes momentum conservation, at random values of every input.
 $(command -v python3.13 || command -v python3) $ROOT/validate/drop_zero_structures.py $DEST
+# FeynRules writes a leading negative rational coefficient as a decimal, -0.16666666666666666*(...),
+# and MadGraph's Fortran writer prints a decimal to seven digits, so in the compiled matrix element
+# the coupling is off by 2e-7 and cancellations between couplings fail: the photon and Z exchanges in
+# u_R u_R~ > W+ W- by 2e-7 s/MZ^2.  The decimals are written as the fractions they are.
+python3 $ROOT/validate/exact_literals.py $DEST
 python3 - $DEST <<'EOF'
 import re, sys, os
 d = sys.argv[1]
@@ -108,7 +144,8 @@ print(' '.join(e['block'] for e in idx if int(e['block'][4:])<=674 and not any(c
 # CP parity comes from gen/cp_parity.py, which READS the field-by-field C x P derivation stored
 # in the catalogue.  Counting dual field strengths is not the CP parity at dimension eight.  It
 # disagrees with the derivation on 170 of the 438 operators with a real coefficient, and
-# validate/cp_rates.py measures the difference as a 1.2 pb interference where zero is required.
+# validate/cp_rates.py measures the difference as a 1.2 pb interference (coefficients at one, Lam = 1 TeV)
+# where zero is required.
 # So the cards ask the classifier and do not re-derive the rule or count anything.
 $MR cpeven $(python3 -c "
 import sys; sys.path.insert(0,'$ROOT/gen'); import cp_parity, json
@@ -129,10 +166,15 @@ $MR all all | grep -E "WARNING|^note:" || true
 if grep -q "lhablock = 'DIM6'" $DEST/parameters.py && \
    python3 -c "import re,sys; sys.exit(0 if re.search(r\"value = '[^']*\\bc(HG|HW|HB|dH|uH|eH|qq1|ll)\\b\", open('$DEST/couplings.py').read()) else 1)"; then
   $MR dim6 dim6 | grep -E "WARNING|^note:" || true
+  # In a model with both sectors "all" would read as both, and it keeps the dimension-eight one
+  # alone, so the card has the name of what it keeps.  dim6 + dim8 = both at NP^2==2, since the
+  # two sectors first meet at NP^2==3.
+  $MR dim8 all | grep -E "WARNING|^note:" || true
   $MR both all dim6 | grep -E "WARNING|^note:" || true
+  rm -f $DEST/restrict_all.dat
 fi
 ls $DEST/restrict_*.dat | wc -l | xargs echo "restriction cards:"
-for extra in $FINAL/restrict_*.dat; do [ -f "$extra" ] || continue; b=$(basename $extra); [ -f $DEST/$b ] || cp $extra $DEST/$b; done   # cards this script does not write, such as only_q2H4D and ten, carry over from the current release (guard: a first release has no old directory and the glob stays literal)
+for extra in $FINAL/restrict_*.dat; do [ -f "$extra" ] || continue; b=$(basename $extra); [ -f $DEST/$b ] || { [ "$b" = restrict_all.dat ] && [ -f $DEST/restrict_dim8.dat ]; } || cp $extra $DEST/$b; done   # cards this script does not write, such as only_q2H4D and ten, carry over from the current release (guard: a first release has no old directory and the glob stays literal)
 # Nothing is swapped in until the model has been read back.  FeynRules does not stop when an
 # evaluation fails inside WriteUFO.  It writes the failure into the file, for instance a
 # "ClassAttributeCreation[couplings, ...TerminatedEvaluation...]" in place of the couplings of a

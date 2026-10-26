@@ -157,15 +157,8 @@ def main(argv) -> int:
         if not r["ok"]:
             print(f"[BAD] {r['name']:32s} {r['wc']:16s} {'; '.join(r['problems'])}")
     print(f"structural: {len(results) - nbad} pass, {nbad} fail, of {len(results)} operators")
-    # The three expected failures: Q_{lq^2uHD}^{(1,2,3)} violate baryon number and are not SU(2)
-    # invariant as written in the Murphy basis (an epsilon contracts an upper with a lower index).
-    # They are outside the released models, whose 674 operators all pass.
-    known = {"Q_{lq^2uHD}^{(1)}", "Q_{lq^2uHD}^{(2)}", "Q_{lq^2uHD}^{(3)}"}
-    failed = {r["name"] for r in results if not r["ok"]}
-    if failed and failed <= known:
-        print("            the failures are the three baryon-number-violating operators that are not SU(2)\n"
-              "            invariant as written in the Murphy basis; every operator of the released models passes")
-        return 0
+    # Q_{lq^2uHD}^{(1,2,3)}, not SU(2) covariant as printed in the Murphy basis, are encoded in their
+    # one covariant reading (gen/murphy_patches.py), so every operator must pass.
     return 0 if nbad == 0 else 1
 
 

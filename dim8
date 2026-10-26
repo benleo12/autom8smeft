@@ -137,6 +137,70 @@ INPUT_SCHEME_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c
 # shift matters the vertex test above already lists the operator.
 INPUT_RELATION_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
                       "c8l2H4Dx2", "c8l2H4Dx4"]
+# The same eight enter the relations of both schemes (gen/input_scheme_formulae.json and _mw.json).
+# In the {alpha, MZ, GF} scheme they shift the derived W mass, in the {MW, MZ, GF} scheme the derived
+# electromagnetic coupling.  dim8_plain has no input relations: it drops the two-point terms of
+# these operators, which then act only through their vertices.
+SCHEME_LABEL = {"alpha": "{alpha, MZ, GF}", "mw": "{MW, MZ, GF}"}
+# The dimension-six coefficients of the input relations, for a model with a dimension-six sector.
+# C_{ll}' (the flavour entry 1221, which enters muon decay) and C_{Hl}^{(3)} shift G_F, and C_{HD}
+# and C_{HWB} shift M_Z and the neutral rotation, so the four enter every electroweak amplitude,
+# whether or not they also have a vertex in the process.  C_{HW} and C_{HB} enter g_2 and g_1 too, but
+# only to undo the rescaling of the W and B fields by their vacuum pieces: switched on in
+# models/dim68_is they move no gauge or gauge-fermion vertex at linear order, while each of the
+# four moves every W and Z vertex (2026-10-23), so they act through their Higgs vertices alone.
+DIM6_INPUT_RELATION = [("Q_{HD}", "cHDD"), ("Q_{HWB}", "cHWB"), ("Q_{Hl}^{(3)}", "cHl3"), ("Q_{ll}'", "cll1")]
+# The dimension-six coefficients every input-scheme model carries, in its base Lagrangian
+# (gen/make_dim6.py, IN_BASE).  A model with more has a dimension-six sector of its own.
+DIM6_IN_BASE = {"Lam6", "cH", "cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "cHbox"}
+RELEASED = ("dim8_is", "dim8_mw", "dim8_plain", "dim68_is")
+SCHEME_MODEL = {"alpha": "dim8_is", "mw": "dim8_mw", "plain": "dim8_plain"}
+
+
+def _model_inputs(model):
+    """External parameter -> LHA block of a UFO, read from its parameters.py."""
+    import re
+    out = {}
+    path = os.path.join(model, "parameters.py")
+    if not os.path.isfile(path):
+        return out
+    for b in re.split(r"\n(?=\w+ = Parameter\()", open(path, errors="replace").read()):
+        m = re.match(r"\w+ = Parameter\(name = '(\w+)',\s*nature = 'external'", b)
+        blk = re.search(r"lhablock = '(\w+)'", b)
+        if m and blk:
+            out[m.group(1)] = blk.group(1)
+    return out
+
+
+def _scheme(inputs):
+    """'mw' when M_W is an input, 'alpha' when the model carries the input-scheme dimension-six
+    block, and 'plain' otherwise."""
+    if inputs.get("MW") == "SMINPUTS":
+        return "mw"
+    return "alpha" if "DIM6" in inputs.values() else "plain"
+
+
+def _for_model(vi, model):
+    """The vertex index as the released model `model` has it.  build/vertex_index.json follows the
+    input-scheme models.  build/vertex_index_absorbed.json, written by validate/index_vs_ufo.py
+    --write, lists the vertices that an input scheme absorbs, with the models that carry them: the
+    three-gluon vertex of Q_{G^2H^4}^{(1)} and the gauge vertices of Q_{W^2H^4}^{(1)}, which only
+    dim8_plain has, and the W-lepton vertex of Q_{l^2H^4D}^{(2,4)}, which dim8_mw lacks."""
+    path = os.path.join(ROOT, "build", "vertex_index_absorbed.json")
+    if not os.path.exists(path):
+        return vi
+    data = json.load(open(path))
+    if model not in data["models"]:
+        return vi
+    vi = {b: list(v) for b, v in vi.items()}
+    for e in data["absorbed"]:
+        legs = sorted(e["fields"])
+        kept = [v for v in vi.get(e["block"], []) if sorted(v) != legs]
+        if model in e["carried_by"]:
+            kept.append(list(e["fields"]))
+        if e["block"] in vi or kept:
+            vi[e["block"]] = kept
+    return vi
 
 
 def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
@@ -148,8 +212,9 @@ def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
     return {by_wc[w] for w in wcs}
 
 
-def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
-    """Operators the process can see.  The B-violating classes 18-21 are dropped unless
+def _select(proc, collapse=True, with_bviol=False, two_insertions=False, model="dim8_is"):
+    """Operators the process can see, with the vertices of the released model `model` (one of
+    RELEASED).  The B-violating classes 18-21 are dropped unless
     asked for: their four-fermion vertices violate fermion flow, and MadGraph's ALOHA
     refuses helicity routines for 4-point flow-violating interactions (for u u > e+ d~ from
     Q_{eu^2dH^2} the diagrams are generated and the check stops with ALOHAERROR).  They are
@@ -157,6 +222,7 @@ def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
     import process as P
 
     vi, sm = P.load_data(ROOT)
+    vi = _for_model(vi, model)
     idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
     if not with_bviol:
         vi = {k: v for k, v in vi.items() if idx.get(k, {}).get("cls", 0) < 18 or not _is_bviol(idx[k])}
@@ -164,14 +230,14 @@ def _select(proc, collapse=True, with_bviol=False, two_insertions=False):
     # release step removes it (validate/drop_zero_structures.py), although FeynRules' vertex lists
     # still name it.  The four-fermion field-strength operators with two identical currents are the
     # case.  They are dropped here, so that the selection and the released model agree.
-    dead = _operators_without_vertex(idx)
+    dead = _operators_without_vertex(idx, model)
     vi = {k: v for k, v in vi.items() if k not in dead}
     return P.select(proc, vi, sm, collapse=collapse, two_insertions=two_insertions), vi
 
 
-def _operators_without_vertex(idx):
-    """Dimension-eight blocks none of whose coefficients appears in a coupling of models/dim8_is."""
-    path = os.path.join(ROOT, "models", "dim8_is", "couplings.py")
+def _operators_without_vertex(idx, model="dim8_is"):
+    """Dimension-eight blocks none of whose coefficients appears in a coupling of models/<model>."""
+    path = os.path.join(ROOT, "models", model, "couplings.py")
     if not os.path.exists(path):
         return set()
     import re
@@ -185,12 +251,25 @@ def _is_bviol(entry):
 
 def cmd_select(a):
     import process as P
+    import lambda_routes as LR
 
-    hits, vi = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    # The model the card is for decides the scheme of the second group and which vertices an input
+    # scheme has absorbed.  A model that is not one of the four released ones is read as the
+    # released model of its scheme.
+    model = os.path.abspath(a.model)
+    inputs = _model_inputs(model)
+    scheme = _scheme(inputs)
+    ref = os.path.basename(model) if os.path.basename(model) in RELEASED else SCHEME_MODEL[scheme]
+    full6 = any(blk == "DIM6" and k not in DIM6_IN_BASE for k, blk in inputs.items())
+    with6 = full6 or getattr(a, "with_dim6", False)
+    hits, vi = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
+                       two_insertions=getattr(a, 'two_insertions', False), model=ref)
     idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
     slots = P.parse_process(a.process, collapse=not a.all_flavours)
     print(f"process : {a.process}")
     print(f"external: {'  '.join('|'.join(s) for s in slots)}   (FeynRules all-incoming convention)")
+    print(f"model   : {os.path.relpath(model, ROOT) if model.startswith(ROOT) else model}"
+          + (f", {SCHEME_LABEL[scheme]} scheme" if scheme in SCHEME_LABEL else ", no input relations"))
     # DIM8_VDIR may name several cache directories separated by ";", as the writer and the index
     # dumper allow, and base_<hash>.mx is the cached base-model vertex list rather than a block.
     cached = set()
@@ -200,9 +279,10 @@ def cmd_select(a):
             cached |= {f[:-3] for f in os.listdir(_d)
                        if f.endswith(".mx") and not f.startswith(".") and not f.startswith("base_")}
     # dimension-eight operators and dimension-six classes are different units, so they are counted
-    # separately
+    # separately.  The dimension-six classes are reported only for a model that has them, under
+    # their Warsaw names, the four blocks of psi^4 as one class.
     n8 = sum(1 for b in hits if b.startswith("L8op"))
-    n6 = len(hits) - n8
+    n6 = len({LR.DIM6[b][0] for b in hits if b in LR.DIM6}) if full6 else 0
     # The vertex test alone is a LOWER BOUND on the operators that affect the process: an
     # operator that acts through the electroweak input relations shifts gw, g1, the vev and MW
     # in every amplitude whether or not it has a vertex among the external legs.  In
@@ -216,13 +296,29 @@ def cmd_select(a):
         class, so the names that are not L8op<n> sort by name."""
         return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
 
-    extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey)
+    # The input relations shift the Standard-Model amplitude, so they enter only where there is one.
+    sm_tree = P.sm_tree(a.process, json.load(open(os.path.join(ROOT, "build/sm_vertices.json"))),
+                        collapse=not a.all_flavours)
+    label = SCHEME_LABEL.get(scheme)
+    extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey) if sm_tree and label else []
+    extra6 = [(op, wc) for op, wc in DIM6_INPUT_RELATION if wc in inputs] if sm_tree and label and with6 else []
     print(f"selected: {n8} of the 674 dimension-eight operators through a vertex of the process"
-          + (f", and {n6} of the dimension-six classes" if n6 else "")
-          + f", plus {len(extra)} that enter through the {{alpha, MZ, GF}} input relations")
-    print("          (complete at tree level with one insertion: nothing else can change the")
-    print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
-    print("           the couplings and the W mass of every electroweak amplitude)")
+          + (f", and {n6} of the eight dimension-six classes" if n6 else "")
+          + (f", plus {len(extra)} that enter through the {label} input relations" if sm_tree and label else ""))
+    if sm_tree and label:
+        print("          (complete at tree level with one insertion: nothing else can change the")
+        print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
+        print("           the couplings " + ("and the W mass " if scheme == "alpha" else "")
+              + "of every electroweak amplitude)")
+    elif sm_tree:
+        print("          (complete at tree level with one insertion.  This model has no input")
+        print("           relations, so an operator acts only through its own vertices and there")
+        print("           is no second group)")
+    else:
+        print("          The Standard Model has no tree diagram for this process, so nothing interferes")
+        print("          at 1/Lambda^4 (NP^2==2 vanishes) and the leading term is the square, of order")
+        print("          1/Lambda^8.  The operators that act only through the input relations shift the")
+        print("          Standard-Model amplitude, which is absent, so none of them is listed.")
     # The selector can only see blocks that are in build/vertex_index.json.  If the cache has
     # grown since the index was written, every count below is an UNDERCOUNT.  The test compares
     # names against the FULL index, not counts against the B-conserving view, because the
@@ -236,22 +332,67 @@ def cmd_select(a):
         print(f"WARNING: {len(missing)} cached blocks are not in the vertex index ({', '.join(missing[:6])}"
               f"{', ...' if len(missing) > 6 else ''}); the selection is incomplete. Run ./dim8 index to regenerate it.")
     print()
+    # Each operator is printed with the vertex of its leading tree and that tree's power of lambda
+    # (gen/lambda_routes.py), not with the first vertex that fits: when an operator reaches the
+    # process through vertices with different numbers of legs, the powers differ.  A tree through
+    # a Yukawa coupling of a quark or lepton is not counted, since it is suppressed by the fermion
+    # mass, so an operator that reaches the process only that way is printed with the vertex
+    # that fits and flagged.
+    n_ext = len(slots)
+    cat = {e["block"]: e for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json")))}
+    cheap = LR.Cheapest(P.standard_model_vertices(P.load_data(ROOT)[1]))
+    assignments = sorted({tuple(sorted(x)) for x in P._product(slots)})
+
+    def lead(b):
+        if b.startswith("L8op"):
+            n_h = cat.get(b, {}).get("fields", {}).get("N_H")
+            return None if n_h is None else LR.leading(vi[b], 8, n_h, assignments, cheap)
+        return LR.leading(vi[b], 6, LR.DIM6[b][1], assignments, cheap) if b in LR.DIM6 else None
+
+    # an operator of the second group that also has a vertex here is marked where it is listed
+    ir = _input_scheme_blocks(INPUT_RELATION_WCS) if label else set()
+    print(f"each operator with the vertex of its leading tree and that tree's power of lambda, where")
+    print(f"(Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) and the Standard Model amplitude is "
+          f"lambda^{2 * n_ext - 8}:")
     byclass = {}
     for b in sorted(hits, key=_bkey):
+        if b.startswith("L6cl"):
+            if not full6:
+                continue
+            # the four blocks of psi^4 are one class, printed with the leading tree of the four
+            name = LR.DIM6[b][0]
+            got = lead(b)
+            old = next((r for r in byclass.get("dim6", []) if r[0] == name), None)
+            if old is None:
+                byclass.setdefault("dim6", []).append([name, f"class {b[4:5]}", hits[b], got, False])
+            elif got is not None and (old[3] is None or got[0] < old[3][0]):
+                old[3] = got
+            continue
         meta = idx.get(b, {})
-        # the dimension-six blocks have no entry in the dimension-eight catalogue, so they would
-        # otherwise land in a nameless "class 0"
-        cls = "dim6" if b.startswith("L6cl") else meta.get("cls", 0)
-        byclass.setdefault(cls, []).append((meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b]))
+        byclass.setdefault(meta.get("cls", 0), []).append(
+            [meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b], lead(b), b in ir])
     for cls in sorted(byclass, key=lambda c: (1, 0) if c == "dim6" else (0, c)):
-        print("dimension six:" if cls == "dim6" else f"class {cls}:")
-        for name, wc, legs in byclass[cls]:
-            print(f"  {name:34s} {wc:16s} via {' '.join(legs)}")
+        print("dimension six, Warsaw classes:" if cls == "dim6" else f"class {cls}:")
+        for name, wc, legs, got, also in byclass[cls]:
+            if got is None:
+                print(f"  {name:34s} {wc:16s} {'':10s} via {' '.join(legs)}"
+                      + ("   (the input relations, and this vertex only through a quark or lepton Yukawa coupling)"
+                         if also else "   (only through a quark or lepton Yukawa coupling)"))
+            else:
+                print(f"  {name:34s} {wc:16s} {'lambda^' + str(got[0]):10s} via {' '.join(got[2])}"
+                      + ("   (and the input relations)" if also else ""))
+    # A shift of the input relations multiplies the Standard Model amplitude by v^4/Lambda^4, that
+    # is lambda^8, at dimension eight and by v^2/Lambda^2, lambda^4, at dimension six.
     if extra:
-        print("through the input relations, with no vertex in this process:")
+        print(f"through the {label} input relations, with no vertex in this process:")
         for b in extra:
             meta = idx.get(b, {})
-            print(f"  {meta.get('ops', [b])[0]:34s} {meta.get('wcs', [''])[0]:16s} class {meta.get('cls', '?')}")
+            print(f"  {meta.get('ops', [b])[0]:34s} {meta.get('wcs', [''])[0]:16s} "
+                  f"{'lambda^' + str(2 * n_ext):10s} class {meta.get('cls', '?')}")
+    if extra6:
+        print(f"dimension six, through the {label} input relations (and their own vertices, if any):")
+        for op, wc in extra6:
+            print(f"  {op:34s} {wc:16s} {'lambda^' + str(2 * n_ext - 4):10s}")
     if a.out:
         p = os.path.join(ROOT, "build", a.out + ".blocks")
         open(p, "w").write("\n".join(sorted(set(hits) | set(extra), key=_bkey)) + "\n")
@@ -283,7 +424,11 @@ def cmd_model(a):
     """Write a FeynRules model holding only the operators the process can see."""
     from emit_fr import emit_model_fragment
 
-    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    # without --input-scheme the model is written on the plain base, with --input-scheme on the
+    # base of the {alpha, MZ, GF} scheme, and the vertices are those of the released model of each
+    ref = "dim8_is" if getattr(a, "input_scheme", False) else "dim8_plain"
+    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
+                      two_insertions=getattr(a, 'two_insertions', False), model=ref)
     ops = _parse_all()
     # the dimension-six classes the selector also returns live in the base model, not in OPS
     keep = {int(b[4:]) - 1 for b in hits if b.startswith("L8op")}
@@ -293,7 +438,7 @@ def cmd_model(a):
     os.makedirs(out, exist_ok=True)
     open(os.path.join(out, "dim8.fr"), "w").write(
         f"(* dimension-eight operators contributing to:  {a.process}\n"
-        f"   {len(sub)} of {len(ops)} operators, selected by tree-level reachability.\n"
+        f"   {len(sub)} of {len(ops)} operators, each with a vertex in a tree diagram of the process.\n"
         f"   Generated by dim8auto, do not edit. *)\n\n" + txt)
     json.dump(index, open(os.path.join(out, "block_index.json"), "w"), indent=1)
     open(os.path.join(out, "PROCESS"), "w").write(a.process + "\n")
@@ -301,7 +446,9 @@ def cmd_model(a):
 
 
 def cmd_ufo(a):
-    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol, two_insertions=getattr(a, 'two_insertions', False))
+    ref = "dim8_is" if getattr(a, "input_scheme", False) else "dim8_plain"
+    hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
+                      two_insertions=getattr(a, 'two_insertions', False), model=ref)
     if getattr(a, "input_scheme", False):
         extra = _input_scheme_blocks() - set(hits)
         for b in extra:

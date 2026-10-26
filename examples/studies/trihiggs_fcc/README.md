@@ -15,18 +15,19 @@ make your own.
 No event generator is needed for this step.
 
     $ ./dim8 select "p p > h h h"
-    selected: 28 of the 674 dimension-eight operators, and 4 of the dimension-six classes
-    class 2: ...  class 3: ...  class 4: ...  class 6: ...  class 7: ...  class 8: ...
-    class 11: ...  class 12: ...  class 17: ...
+    selected: 27 of the 674 dimension-eight operators through a vertex of the process, plus 6 that enter through the {alpha, MZ, GF} input relations
+    class 2: ...  class 3: ...  class 4: ...  class 6: ...  class 7: ...  class 11: ...
+    class 12: ...  class 17: ...
 
     $ ./dim8 count "X^2H^2D^2"
     X^2H^2D^2    lambda^4 at four legs, lambda^6 at five legs, lambda^8 at six legs
     $ ./dim8 count "X^2H^4"
     X^2H^4       lambda^6 at four legs, lambda^7 at five legs, lambda^8 at six legs
 
-The summary line of `select`, shortened above, also counts the six operators that enter through
-the input relations with no vertex in this process, and the full output lists them under their
-own heading.
+The summary line of `select` also counts the six operators that enter through the input
+relations with no vertex in this process. The full output, shortened above, lists them under their
+own heading, and prints beside every operator of the first group the vertex of its leading tree and
+that tree's power of lambda.
 
 A smaller power of lambda is a larger contribution, so the classes with derivatives are the ones
 that grow fastest with energy.

@@ -76,6 +76,15 @@ def mw_of(model, settings, cls=None):
     return _mw_cache[key]
 
 
+def lam_tex(rows, col):
+    """The scale of a block of rows for its caption, read from the rows' own settings: "1 TeV" or
+    "3 TeV" when they share one, otherwise a statement that it differs from row to row."""
+    lams = {m.group(1) for r in rows for m in [re.search(r"\bLam=([-\d.eE+]+)", r[col["settings"]])] if m}
+    if len(lams) == 1:
+        return f"$\\Lambda = {float(lams.pop()) / 1000:g}$ TeV"
+    return "$\\Lambda$ as recorded in each row" if lams else "$\\Lambda$ at the model's default"
+
+
 def fmt(x):
     try: x = float(x)
     except (TypeError, ValueError): return str(x)
@@ -107,14 +116,14 @@ def main(argv):
         sm = next((r for r in R if r[col["order"]] == "NP=0"), None)
         sm_x = float(sm[col["sigma_pb"]]) if sm and re.match(r"^-?[\d.]", sm[col["sigma_pb"]]) else float("nan")
         md.append(f"\n### {proc.strip()}\n")
-        md.append(f"Standard Model: {fmt(sm_x)} pb" + (f" (+- {fmt(sm[col['error_pb']])})" if sm else "") + f", M_W = {mw_of(model, 'dim8_all=0 Lam=1000'):.2f} GeV\n")
+        md.append(f"Standard Model: {fmt(sm_x)} pb" + (f" (+- {fmt(sm[col['error_pb']])})" if sm else "") + f", M_W = {mw_of(model, 'dim8_all=0'):.2f} GeV\n")
         md.append("| operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |")
         md.append("|---|---|---|---|---|")
         # footnotesize with tight columns: the deviation column carries powers of ten and the
         # widest process labels push a \small lrrrr table past the margin
         tex.append(f"\\begin{{table}}[t]\\centering\\footnotesize\\setlength{{\\tabcolsep}}{{4pt}}\n"
                    f"\\begin{{tabular}}{{@{{}}lrrrr@{{}}}}\\hline")
-        tex.append(f"\\multicolumn{{5}}{{l}}{{{tex_proc(proc)}, $\\sigma_{{\\rm SM}} = {fmt(sm_x)}$ pb, $\\Lambda = 1$ TeV, $C_i = 1$}}\\\\")
+        tex.append(f"\\multicolumn{{5}}{{l}}{{{tex_proc(proc)}, $\\sigma_{{\\rm SM}} = {fmt(sm_x)}$ pb, {lam_tex([r for r in R if r[col['order']] != 'NP=0'], col)}, $C_i = 1$}}\\\\")
         tex.append("operators & $\\sigma_{1/\\Lambda^4}$ [pb] & deviation [\\%] & $\\sigma_{1/\\Lambda^8}$ [pb] & $M_W$ [GeV]\\\\\\hline")
         def line(label, tag):
             i, s = get(tag, "NP^2==2"), get(tag, "NP<=2 NP^2==4")
@@ -135,7 +144,7 @@ def main(argv):
                 else:
                     m, e = f"{dev:+.1e}".split("e")
                     ratio = f"{m}\\times 10^{{{int(e)}}}"
-            settings = (i or s or {}) and (i or s)[col["settings"]] if (i or s) else "dim8_all=1 Lam=1000"
+            settings = (i or s)[col["settings"]] if (i or s) else "dim8_all=1"
             cls = int(tag.rsplit("-cls", 1)[1]) if "-cls" in tag else None
             mw = mw_of(model, settings, cls) if (i or s) else float("nan")
             md.append(f"| {label} | {val(i)} | {ratio} | {val(s)} | {mw:.2f} |")
@@ -183,7 +192,7 @@ def main(argv):
         md.append(f"\n### {proc.strip()}: one operator at a time ({len(ranked)} operators that can enter, ranked by |interference|)\n")
         md.append("| operator | class | coefficient | interference [pb] | deviation from SM [%] | squared [pb] |"); md.append("|---|---|---|---|---|---|")
         tex.append("\\begin{table}[t]\\centering\\small\n\\begin{tabular}{lcrrr}\\hline")
-        tex.append(f"\\multicolumn{{5}}{{l}}{{{tex_proc(proc)}, one operator at a time; $\\sigma_{{\\rm SM}} = {fmt(sm_x)}$ pb, $\\Lambda = 1$ TeV, $C_i = 1$}}\\\\")
+        tex.append(f"\\multicolumn{{5}}{{l}}{{{tex_proc(proc)}, one operator at a time; $\\sigma_{{\\rm SM}} = {fmt(sm_x)}$ pb, {lam_tex(R, col)}, $C_i = 1$}}\\\\")
         tex.append("operator & class & $\\sigma_{1/\\Lambda^4}$ [pb] & deviation [\\%] & $\\sigma_{1/\\Lambda^8}$ [pb]\\\\\\hline")
         TOP = 20   # the LaTeX table keeps the twenty largest; the markdown table has them all
         for n_, (wc, d) in enumerate(ranked):

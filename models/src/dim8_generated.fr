@@ -5214,7 +5214,7 @@ L8op133 := Module[{z8lagH,z8lagN,z8lagS,z8fmgr,z8mu,z8nu,z8rho,z8sig,z8ka,z8la,z
   z8lagH = 0;
   z8lagN = ExpandIndices[
     (* Q_{udWH^2}^{(1)} *)
-    c8udWH2x1/Lam^4 (0),
+    c8udWH2x1/Lam^4 ((2 (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] FS[Wi,z8nu,z8mu,3] Ga[z8mu,z8s1,z8s2] Phi[2]) + ((-2 I) (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] FS[Wi,z8nu,z8mu,2] Ga[z8mu,z8s1,z8s2] Phi[1]) + (-2 (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] FS[Wi,z8nu,z8mu,1] Ga[z8mu,z8s1,z8s2] Phi[1]) + ((-2 I) (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] FS[Wi,z8nu,z8mu,2] Ga[z8mu,z8s1,z8s2] Phi[2]) + (2 (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] FS[Wi,z8nu,z8mu,1] Ga[z8mu,z8s1,z8s2] Phi[2]) + (2 (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] FS[Wi,z8nu,z8mu,3] Ga[z8mu,z8s1,z8s2] Phi[1])),
     FlavorExpand -> {SU2W, SU2D}] /. z8fmgr;
   z8lagN = OptimizeIndex[z8lagN] /. Eps[args__] :> Signature[{args}] Eps[Sequence @@ Sort[{args}]];
   z8lagN = z8lagN /. del[a_, m1_] del[a_, m2_] Eps[n1__, m1_, n2__, m2_, n3__] :> 0;
@@ -5230,7 +5230,7 @@ L8op134 := Module[{z8lagH,z8lagN,z8lagS,z8fmgr,z8mu,z8nu,z8rho,z8sig,z8ka,z8la,z
   z8lagH = 0;
   z8lagN = ExpandIndices[
     (* Q_{udWH^2}^{(2)} *)
-    c8udWH2x2/Lam^4 (0),
+    c8udWH2x2/Lam^4 (((uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,3] Ga[z8mu,z8s1,z8s2] Phi[2]) + ((-I) (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,2] Ga[z8mu,z8s1,z8s2] Phi[1]) + (-1 (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[1],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,1] Ga[z8mu,z8s1,z8s2] Phi[1]) + ((-I) (uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,2] Ga[z8mu,z8s1,z8s2] Phi[2]) + ((uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,1] Ga[z8mu,z8s1,z8s2] Phi[2]) + ((uRbar[z8s1,z8f1,z8c1].dR[z8s2,z8f1,z8c1]) DC[Phi[2],z8nu] Eps[z8nu,z8mu,z8rho,z8sig] FS[Wi,z8rho,z8sig,3] Ga[z8mu,z8s1,z8s2] Phi[1])),
     FlavorExpand -> {SU2W, SU2D}] /. z8fmgr;
   z8lagN = OptimizeIndex[z8lagN] /. Eps[args__] :> Signature[{args}] Eps[Sequence @@ Sort[{args}]];
   z8lagN = z8lagN /. del[a_, m1_] del[a_, m2_] Eps[n1__, m1_, n2__, m2_, n3__] :> 0;
@@ -14654,7 +14654,7 @@ L8op723 := Module[{z8lagH,z8lagN,z8lagS,z8fmgr,z8mu,z8nu,z8rho,z8sig,z8ka,z8la,z
   z8lagH = 0;
   z8lagN = ExpandIndices[
     (* Q_{lq^2uHD}^{(1)} *)
-    c8lq2uHDx1/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + (I (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2])),
+    c8lq2uHDx1/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + (I (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2])),
     FlavorExpand -> {SU2W, SU2D}] /. z8fmgr;
   z8lagN = OptimizeIndex[z8lagN] /. Eps[args__] :> Signature[{args}] Eps[Sequence @@ Sort[{args}]];
   z8lagN = z8lagN /. del[a_, m1_] del[a_, m2_] Eps[n1__, m1_, n2__, m2_, n3__] :> 0;
@@ -14670,7 +14670,7 @@ L8op724 := Module[{z8lagH,z8lagN,z8lagS,z8fmgr,z8mu,z8nu,z8rho,z8sig,z8ka,z8la,z
   z8lagH = 0;
   z8lagN = ExpandIndices[
     (* Q_{lq^2uHD}^{(2)} *)
-    c8lq2uHDx2/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + (I (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2])),
+    c8lq2uHDx2/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + (I (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,2,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,2,z8f2]) DC[Phibar[2],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (CC[QLbar][z8s3,1,z8f2,z8c3].LL[z8s3,1,z8f2]) DC[Phibar[1],z8mu] Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2])),
     FlavorExpand -> {SU2W, SU2D}] /. z8fmgr;
   z8lagN = OptimizeIndex[z8lagN] /. Eps[args__] :> Signature[{args}] Eps[Sequence @@ Sort[{args}]];
   z8lagN = z8lagN /. del[a_, m1_] del[a_, m2_] Eps[n1__, m1_, n2__, m2_, n3__] :> 0;
@@ -14686,7 +14686,7 @@ L8op725 := Module[{z8lagH,z8lagN,z8lagS,z8fmgr,z8mu,z8nu,z8rho,z8sig,z8ka,z8la,z
   z8lagH = 0;
   z8lagN = ExpandIndices[
     (* Q_{lq^2uHD}^{(3)} *)
-    c8lq2uHDx3/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,2,z8f2,z8c3],z8mu].LL[z8s3,2,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[1]) + ((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,1,z8f2,z8c3],z8mu].LL[z8s3,2,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,2,z8f2,z8c3],z8mu].LL[z8s3,1,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[1]) + (I (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,1,z8f2,z8c3],z8mu].LL[z8s3,1,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[2])),
+    c8lq2uHDx3/Lam^4 (((-I) (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,2,z8f2,z8c3],z8mu].LL[z8s3,2,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[2]) + (I (CC[QLbar][z8s1,1,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,1,z8f2,z8c3],z8mu].LL[z8s3,2,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[1]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,2,z8f2,z8c3],z8mu].LL[z8s3,1,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[2]) + ((-I) (CC[QLbar][z8s1,2,z8f1,z8c1].uR[z8s2,z8f1,z8c2]) (DC[CC[QLbar][z8s3,1,z8f2,z8c3],z8mu].LL[z8s3,1,z8f2]) Eps[z8c1,z8c2,z8c3] Ga[z8mu,z8s1,z8s2] Phibar[1])),
     FlavorExpand -> {SU2W, SU2D}] /. z8fmgr;
   z8lagN = OptimizeIndex[z8lagN] /. Eps[args__] :> Signature[{args}] Eps[Sequence @@ Sort[{args}]];
   z8lagN = z8lagN /. del[a_, m1_] del[a_, m2_] Eps[n1__, m1_, n2__, m2_, n3__] :> 0;

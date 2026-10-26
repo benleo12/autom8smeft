@@ -54,8 +54,8 @@ result at 0.7 sigma and its 86 single-operator interferences at 0.5 sigma, which
 additivity test over 86 independent MadGraph runs.
 
 The same Ward identities with the dimension-six sector on instead: the 64 real coefficients of
-block `DIM6`, thirty processes, at `NP<=1` and at `NP<=2`, sixty checks passing at the 1e-13
-level on the released `dim68_is`. And the two-point terms, which no
+block `DIM6`, thirty processes, at `NP<=1` and at `NP<=2`, the fifty-eight checks with an
+amplitude passing at the 1e-13 level on the released `dim68_is` (`ve ve~ > a z` has none). And the two-point terms, which no
 Ward identity on a `Z` or a Higgs can see: `validate/check_bilinears.wls` shows the twelve kinetic
 and mass terms of the gauge bosons and the Higgs canonical through `1/Lambda^4` with nine
 dimension-six coefficients on, in both input schemes. "The dimension-six sector" below says what
@@ -77,7 +77,7 @@ survives in the input relations, which are the part that is supposed to stop at 
 is a statement about the parameters and not about the cross section, and the difference between
 the two is the subject of "Operators that act only through the input relations" below.
 
-## Four things that are easy to get wrong, and how the model handles them
+## Five things that are easy to get wrong, and how the model handles them
 
 **Every coupling that depends on a coefficient carries an `NP` order.** The input scheme shifts the
 gauge couplings, the vev, the Yukawas and the Higgs quartic. If any of these shifts sat inside a
@@ -120,9 +120,9 @@ that differ by a swap of two dummy indices inside one `Epsilon` and carry the sa
 `validate/drop_zero_structures.py` groups the structures of every vertex by coupling, removes a group
 whose sum vanishes, and sets to zero every coefficient whose whole contribution vanishes. Every
 vertex of the released models equals the vertex FeynRules wrote at a common random point with all
-coefficients on, so nothing live is removed. With the three operators that vanish by their SU(2)
-structure or for flavour-universal coefficients, fifteen of the 674 have no vertex
-("The fifteen operators that vanish", below). `validate/zero_vertex.py --wcs` evaluates every
+coefficients on, so nothing live is removed. With `Q_{q^4H^2}^{(5)}`, which vanishes for a
+flavour-universal coefficient as well, thirteen of the 674 have no vertex ("The thirteen operators
+that vanish", below). `validate/zero_vertex.py --wcs` evaluates every
 coefficient's vertices at one common point and finds no cancelling coefficient in a released model.
 
 **No identically-zero Lorentz structure ships.** ALOHA reduces such a structure to zero and then
@@ -173,8 +173,30 @@ field by field, sits in `gen/cp_parity.py` and disagrees with dual counting on 1
 operators with a real coefficient, most sharply in `Q_{q^2W^2D}^{(1..4)}` where the member carrying
 NO dual is the CP-odd one. `validate/cp_rates.py` is the test: switch on what a card calls the
 CP-odd set and the interference with the Standard Model in a total rate must vanish. A set chosen
-by counting duals gives -1.2 pb on `p p > w+ w-`. If you want to break something here, check the
+by counting duals gives -1.2 pb on `p p > w+ w-`, with its coefficients at one and `Lam` = 1 TeV. If you want to break something here, check the
 derivation itself against your own C and P assignments for a class we have not quoted.
+
+**No coupling reaches MadGraph's Fortran as a seven-digit decimal.** FeynRules writes a coupling
+whose leading coefficient is a negative fraction as a decimal,
+`-0.16666666666666666*(cw*complex(0,1)*g1SM)`, and every other coefficient as a fraction,
+`(...)/6.`. Python reads the decimal as the nearest double, so every check that evaluates the UFO in
+Python, the comparisons in `validate/` included, sees the right number. MadGraph's Fortran writer
+prints the same literal as `-1.666667D-01`, and in the compiled matrix element the photon's
+hypercharge coupling to the quark doublet is off by 2e-7. A cancellation that coupling takes part in
+then fails by 2e-7 times the factor the cancellation suppresses the result by. In `u u~ > w+ w-` the
+right-handed amplitude is the difference of the photon and Z exchanges, smaller than either by
+M_Z^2/s, and the interference of `Q_{u^2W^2D}` with it came out high by 2.4e-5 at 1 TeV, 9.6e-5 at 2
+TeV and 2.2e-4 at 3 TeV, growing like s. `Q_{u^2H^2D^3}^{(1)}` on the same amplitude moved the same
+way, while `Q_{q^2W^2D}^{(1)}` on the left-handed one stayed at 1e-8. A comparison of compiled
+matrix elements with the Matchete UFO found it, since that model writes its literals as integers.
+`validate/exact_literals.py` writes each decimal as the fraction it is, `(1./6.)`, which Python
+evaluates to the same double and MadGraph writes as an exact quotient. After it every ratio in that
+check is a clean number to 4e-13. `examples/release_model.sh` calls it, and
+`tests/test_exact_literals.py` fails if a shipped model holds a literal MadGraph would truncate. The
+models released before 23 October 2026 held 2,306 to 2,313 such literals, all 1/3, 1/6, 1/12 or
+1/24, and the rates in `examples/studies` were computed with them. Their smallest Monte Carlo error
+is 1.1e-3, five times the largest shift above, so they stand. An amplitude that cancels more
+strongly than this one, at a higher energy, would show more.
 
 ## The dimension-six sector
 
@@ -267,9 +289,14 @@ scheme is defined at fixed G_F and a 1/Lambda^8 remainder is beyond the truncati
 the coupling-order label is not a complete bookkeeping of the Lambda expansion in this model.
 Disagreeing with that reading would be a real finding.
 
-**The fifteen operators that vanish.** Twelve of them contract two identical currents, symmetric
-in their Lorentz indices, with an antisymmetric field strength, `Q_{q^4H^2}^{(5)}` vanishes for a
-flavour-universal coefficient as well, and two vanish by their SU(2) structure. I claim this is a consequence of taking one flavour-universal coefficient per operator
+**The thirteen operators that vanish.** Twelve of them contract two identical currents, symmetric
+in their Lorentz indices, with an antisymmetric field strength, and `Q_{q^4H^2}^{(5)}` vanishes for
+a flavour-universal coefficient as well. Two more, `Q_{udWH^2}^{(1,2)}`, vanish as printed in the
+Murphy basis whatever the flavour, since `\widetilde H^\dag \overleftrightarrow D^I H` sandwiches the
+symmetric matrix epsilon tau^I between identical doublets. The Hilbert series counts two operators of
+that field content, so the model encodes D^mu of the triplet bilinear, `D^\mu(\widetilde H^\dag \tau^I H)
+W^I_{\mu\nu}` and its dual, which have vertices (`gen/murphy_patches.py`; `tests/test_emit.py` fails if
+the vanishing form returns). I claim the thirteen are a consequence of taking one flavour-universal coefficient per operator
 and not a defect, and the argument is short enough to check independently in ten minutes. If any of
 them should be nonzero the whole flavour-universal simplification is in question.
 

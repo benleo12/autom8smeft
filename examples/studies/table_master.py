@@ -4,8 +4,8 @@
     examples/studies/table_master.py > paper/tables/master.tex
 
 The per-process tables say what each class does in one process.  This one says what the 21
-classes do across four processes at once.  A class with no vertex reachable in the process has
-no diagram at all, and the table shows that as a dash rather than as a small number.  The energy
+classes do across four processes at once.  A class with no vertex that fits a diagram of the process
+has no diagram at all, and the table shows that as a dash rather than as a small number.  The energy
 counting of each class is tabulated separately, in the catalogue summary of the paper.
 
 Columns per process are the interference in units of 1e-4 of the Standard Model at the paper's
@@ -167,6 +167,9 @@ def main():
                 x = i[0] / s0 / UNIT
                 pct = (r"$\circ$" if abs(x) < 0.005 else f"${x:+.0f}$" if abs(x) >= 100
                        else f"${x:+.1f}$" if abs(x) >= 10 else f"${x:+.2f}$")
+                # parentheses mark a Monte Carlo error above a tenth of the entry, as in the grid
+                if pct != r"$\circ$" and i[1] and abs(i[1] / i[0]) > 0.1:
+                    pct = "$(" + pct.strip("$") + ")$"
             else:
                 pct = "--"
             if not isinstance(q[0], float) or not isinstance(i[0], float) or i[0] == 0:
@@ -191,13 +194,13 @@ def main():
         body.append(label(c) + " & " + " & ".join(cells) + r" \\")
     tail = (r"\bottomrule" "\n" r"\end{tabular}" "\n"
             r"\caption{Every dimension-eight class in four processes, as the term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}. "
-            r"$\delta$ is the interference with the Standard Model in units of $10^{-4}$ of its rate, at $\Lambda = 3$~TeV and unit coefficients, with an open circle where it is below $0.01$ in these units and a dagger where the class produces diagrams but was not run in these studies. "
+            r"$\delta$ is the interference with the Standard Model in units of $10^{-4}$ of its rate, at $\Lambda = 3$~TeV and unit coefficients, with an open circle where it is below $0.01$ in these units, a dagger where the class produces diagrams but was not run in these studies, and parentheses where the Monte Carlo error exceeds a tenth of the entry. In a $\Lambda_{\min}$ column, a dagger beside a value of $\delta$ means that the squared term was not run, and an open circle means that the square vanishes as well. "
             r"$\Lambda_{\min}$, in TeV, is the scale above which the square of the class is smaller than its interference at unit coefficient in this inclusive sample, which is a self-consistency scale of the $1/\Lambda^4$ truncation and not a validity bound. "
             r"It is $\Lambda$ times the fourth root of $\sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$, which does not depend on $\Lambda$ since that ratio scales as $\Lambda^{-4}$ at fixed kinematics. "
-            r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the bracketed number beside it is the scale above which that square is smaller than the Standard-Model rate. "
+            r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the number in square brackets beside it is the scale above which that square is smaller than the Standard-Model rate. "
             r"A dash means the class produces no diagram in that process. All entries are at $13.6$~TeV with every coefficient of the class at one, and $\delta$ at another $\Lambda$ is the entry times $(3~\mathrm{TeV}/\Lambda)^4$. "
             r"The power counting of each class at four, five and six legs is in \cref{tab:catalogue-summary}, and \cref{sec:routes} explains which of its vertices a process uses. "
-            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are the classes the text discusses.}" "\n"
+            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded rows are $X^4$, discussed in \cref{sec:classes}, and the classes that lead $pp \to W^+W^-$, $pp \to HHjj$ and $pp \to e^+e^-$ in \cref{sec:truncation}.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")
     print(head)
     print("\n".join(body))

@@ -616,6 +616,10 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
              " | tEval " <> ToString[te] <> " | tVert " <> ToString[tv] <> " | tHerm " <> ToString[th] <>
              If[z9maxlegs === None, "", " | maxlegs " <> ToString[z9maxlegs]] <>
              If[z9minlegs === None, "", " | minlegs " <> ToString[z9minlegs]], "Text"];
+  (* the stamp of the source the block was built from (validate/cache_source.py), so that a model
+     is never written from a block whose operator has changed since *)
+  If[Run["python3 '" <> $root <> "/validate/cache_source.py' stamp '" <> vdir <> "' " <> nm <> " > /dev/null"] =!= 0,
+    Print["[warn] ", nm, " could not be stamped with its source"]];
   Print["[done] ", nm, " | vertices ", nv, " | nonhermitian ", nh,
         " | tEval ", te, " | tVert ", tv, " | tHerm ", th];
   ClearAll[FR$Vert]; Clear[lagX];

@@ -13,7 +13,7 @@ Everything here runs with MadGraph5_aMC@NLO alone. No Mathematica, no FeynRules.
 
 Install: copy or symlink the model directory into MadGraph's `models/` folder under the same
 name, which is what the example scripts assume, or give `import model` an absolute path. The
-import takes about 30 seconds and 1.1 GB of memory (MG5_aMC 3.5.3, Apple silicon), once per
+import takes about 30 seconds and 1.1 GB of memory (MG5_aMC 3.5.6, Apple silicon), once per
 session. Diagram generation is what the full basis costs: `p p > w+ w- NP<=2` is 9 subprocesses
 and 458 diagrams in 25 seconds, `p p > w+ w- z NP<=2` is fine too, but `p p > h h j j QCD=0
 NP<=2` on the unrestricted model is 166 subprocesses and 298888 diagrams in four and a half

@@ -9,8 +9,9 @@
 # runs its full rows on the bosonic card) and classes.txt (one restriction-card name per line,
 # for cards that ship with the model or that validate/make_restriction.py writes into the model
 # directory).  Optionally coefficients.txt gives "NAME=VALUE" assignments applied at every launch.
-# The default is every dimension-eight coefficient at 1 with Lam at 1000 GeV, which is what the
-# study means by "the full model switched on".
+# The default is every dimension-eight coefficient at 1 with Lam at 3000 GeV, the scale at which the
+# paper quotes every entry, which is what the study means by "the full model switched on".  The
+# tables read each row's own Lam from its settings column.
 #
 # The flow is generate, `output`, edit the cards with set_cards.py, then bin/generate_events,
 # rather than MadGraph's interactive `launch` prompt.  Two reasons.  A `set` typed at that prompt
@@ -37,7 +38,12 @@ OUT=$ST/results.tsv; [ -f $OUT ] || printf "process\tmodel\torder\tsigma_pb\terr
 # or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 6.8 per cent with every
 # coefficient at 1 and Lam at 1 TeV).  See docs/HOW_TO_BREAK_IT.md.
 ORDERS=("NP=0" "NP=0 on" "NP^2==2" "NP<=2 NP^2==4")
-SETS="dim8_all=1 Lam=1000"; [ -f $ST/coefficients.txt ] && SETS=$(grep -v "^#" $ST/coefficients.txt | tr '\n' ' ')
+# $DIM8_ORDERS, a ';'-separated subset such as "NP=0;NP=0 on", reruns only those orders of the
+# full-model rows (the class rows are interference and square and are not affected by it)
+if [ -n "${DIM8_ORDERS:-}" ]; then IFS=';' read -r -a ORDERS <<< "$DIM8_ORDERS"; fi
+SETS="dim8_all=1 Lam=3000"; [ -f $ST/coefficients.txt ] && SETS=$(grep -v "^#" $ST/coefficients.txt | tr '\n' ' ')
+# the scale of this study's rows, for the W-mass evaluation of a restricted model below
+LAMSET=$(echo " $SETS " | grep -o ' Lam=[^ ]*' | tail -1); LAMSET=${LAMSET:- Lam=3000}
 
 run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   local proc=${1%%|*}; local rest=""; [[ "$1" == *"|"* ]] && rest=${1#*|}
@@ -47,7 +53,7 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   local tag=$(echo "${proc}_${2##*/}_$3" | sed 's/+/p/g; s/-/m/g' | tr -c 'A-Za-z0-9_\n' '_'); local d=$RUNS/$tag
   # "NP=0 on" generates the same NP=0 amplitude and runs it with the coefficients on.
   local gen="$3"; local sets="$SETS"
-  [ "$3" = "NP=0" ]    && sets="dim8_all=0 Lam=1000"
+  [ "$3" = "NP=0" ]    && sets="dim8_all=0$LAMSET"
   [ "$3" = "NP=0 on" ] && gen="NP=0"
   # The squared rows are there for the cross section, not for distributions (only the leading
   # classes' squares are ever plotted), and a tiny, peaked squared term can spend an hour
@@ -65,7 +71,10 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
     echo "$(date +%H:%M) $proc | ${2##*/} | $3 -> $why, see $RUNS/$tag.log"; return
   fi
   printf 'run_mode = 2\nnb_core = %s\nautomatic_html_opening = False\n' "$CORES" >> $d/Cards/me5_configuration.txt
-  if ! $PY $HERE/set_cards.py $d nevents=$nev ebeam1=6800 ebeam2=6800 hel_recycling=False $sets $extra >> $RUNS/$tag.log 2>&1; then
+  # MadGraph sets the scale to H_T/2 (dynamical_scale_choice=3) by itself for any process with the
+  # ^2 order syntax and leaves its default for NP=0, so every order is run at H_T/2 here and the
+  # interference and the Standard-Model rate it is divided by share one scale.
+  if ! $PY $HERE/set_cards.py $d nevents=$nev ebeam1=6800 ebeam2=6800 hel_recycling=False dynamical_scale_choice=3 $sets $extra >> $RUNS/$tag.log 2>&1; then
     printf "%s\t%s\t%s\tBAD_SETTING\t-\t%s\t-\t%s\t-\n" "$proc" "${2##*/}" "$3" "$NEV" "$sets" >> $OUT
     echo "$(date +%H:%M) $proc | ${2##*/} | $3 -> $(tail -1 $RUNS/$tag.log)"; rm -rf $d; return
   fi
@@ -83,8 +92,8 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   # DIM8 entries); the unrestricted model takes the settings as they are.
   local mwsets="$sets"
   if [[ "$2" == *-* ]] && [ -f "$MODEL/restrict_${2##*-}.dat" ]; then
-    mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} b=="DIM8" && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")" Lam=1000"
-    [[ "$sets" == *dim8_all=0* ]] && mwsets="dim8_all=0 Lam=1000"
+    mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} b=="DIM8" && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")"$LAMSET"
+    [[ "$sets" == *dim8_all=0* ]] && mwsets="dim8_all=0$LAMSET"
   fi
   # only NAME=number settings can be model parameters.  A run-card cut such as pt_min_pdg={25:100}
   # is not one, and passing it would make the evaluation fail and the column read "-".

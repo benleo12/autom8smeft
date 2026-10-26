@@ -2,11 +2,14 @@
    (1) WC = 0: the variant must equal base.fr numerically and its LSM vertex CONTENTS must be
        base.fr's 31 plus, at most, entries whose couplings are numerically zero.
    (2) dim-6 = 0, dim-8 on, Lam = 3 TeV: in the MERGED Lagrangian LSM + the class-3 and class-6
-       blocks that carry the input-scheme coefficients, the spurious photon couplings
-       {A,A,H}, {A,H,Z}, {A,nu,nubar} must be O((v^4/Lam^4)^2) ~ 1e-9 relative, while a genuine
-       dim-8 shift (the h W W coupling) is O(v^4/Lam^4) ~ 4.5e-5, and the photon-fermion
-       ratio A l lbar / A uq uqbar stays -3/2.  LSM alone does not test this: the rotation
-       cancels against terms that live in the OPERATOR blocks, not in LSM.
+       blocks that carry the input-scheme coefficients, the non-derivative photon couplings of
+       {A,A,H}, {A,H,Z} and {A,nu,nubar} vanish through 1/Lambda^4, while {A,A,H} and {A,H,Z} keep
+       the derivative couplings h F_{mu nu} F^{mu nu} and h Z_{mu nu} F^{mu nu} of the X^2H^4
+       operators, of order v^3/Lam^4.  The term-by-term truncation the UFO writer applies
+       (validate/np_truncate.m) must therefore remove {A,nu,nubar} and only the non-derivative
+       pieces of the other two.  A genuine dim-8 shift (the h W W coupling) is O(v^4/Lam^4)
+       ~ 4.5e-5, and the photon-fermion ratio A l lbar / A uq uqbar stays -3/2.  LSM alone does
+       not test this: the rotation cancels against terms that live in the OPERATOR blocks.
    (3) the Yukawa compensation: the top two-point term of LYukawa + Q_{quH^5} stays at ymt with c8quH5Re = 5. *)
 $root = Environment["DIM8_ROOT"];
 FR$NKernels = 0; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
@@ -42,7 +45,16 @@ If[StringContainsQ[z9base, "inputscheme"],
   z9ops = FeynmanRules[L8op469 + L8op470 + L8op595 + L8op597 + L8op599 + L8op601, ScreenOutput -> False];
   z9all = MergeVertices[FeynmanRules[LSM, ScreenOutput -> False], z9ops];
   Print["[merged] vertices ", Length[z9all]];
-  Print["[spurious] merged |coupling|: {A,A,H} ", z9mag[z9all, {A, A, H}], "  {A,H,Z} ", z9mag[z9all, {A, H, Z}], "  {A,vl,vlbar} ", z9mag[z9all, {A, vl, vlbar}], "   (expect ~1e-9 x scale, i.e. O((v^4/Lam^4)^2))"];
+  Get[$root <> "/validate/np_truncate.m"];
+  {z9kept, z9rep} = ztTruncate[z9all];
+  ztPrintReport[z9rep];
+  z9deriv[z9w_, z9f_List] := Module[{z9s = z9find[z9w, z9f]},
+    If[z9s === {}, "absent", ToString[Union[Cases[ztSplit /@ (If[Head[#] === Plus, List @@ #, {#}] &[Expand[z9s[[1, 2]]]]),
+      {z9st_, _} :> If[FreeQ[z9st, FV | SP], "metric", "derivative"]]]]]];
+  Print["[photon] after the truncation, structures left: {A,A,H} ", z9deriv[z9kept, {A, A, H}], "  {A,H,Z} ", z9deriv[z9kept, {A, H, Z}],
+        "  {A,vl,vlbar} ", z9deriv[z9kept, {A, vl, vlbar}], "   (must be {derivative}, {derivative}, absent)"];
+  Print["[photon] |coupling| of what is left: {A,A,H} ", z9mag[z9kept, {A, A, H}], "  {A,H,Z} ", z9mag[z9kept, {A, H, Z}],
+        "   (order v^3/Lam^4 ~ 1e-7 GeV^-1)"];
   Print["[physical] merged |coupling|: {H,W,Wbar} ", z9mag[z9all, {H, W, Wbar}], "  SM value ", z9mag[z9v, {H, W, Wbar}], "   (dim-8 shift expected at relative O(v^4/Lam^4) ~ 4.5e-5)"];
   z9e = z9find[z9all, {A, l, lbar}]; z9u = z9find[z9all, {A, uq, uqbar}];
   If[z9e =!= {} && z9u =!= {}, Print["[ward] merged ratio (A l lbar)/(A uq uqbar) = ", ToString[Simplify[(z9e[[1, 2]] /. z9rules)/(z9u[[1, 2]] /. z9rules)], InputForm], "   (must be -3/2 x deltas)"]];

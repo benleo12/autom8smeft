@@ -6,8 +6,8 @@
 About half an hour on two cores. Writes `results.tsv` here. Expected, all 1030 coefficients at 1
 and Lambda at 1 TeV, 13.6 TeV:
 
-    dim8_is        NP=0             68.2  pb     Standard Model
-    dim8_is        NP=0 on          69.5  pb     the same, operators on
+    dim8_is        NP=0             68.1  pb     Standard Model
+    dim8_is        NP=0 on          69.4  pb     the same, operators on
     dim8_is        NP^2==2          -4.0  pb     dimension-eight interference
     dim8_is        NP<=2 NP^2==4  4000    pb     dimension-eight squared
     dim8_is-cls14  NP^2==2          -2.38 pb     class 14 alone
