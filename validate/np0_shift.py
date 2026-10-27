@@ -36,6 +36,8 @@ PY = "python3.11"
 MODEL = os.environ.get("DIM8_MODEL", os.path.join(ROOT, "models", "dim8_is"))   # any copy of the released model
 WORK = os.path.join(os.environ.get("DIM8_BUILD", os.path.expanduser("~/dim8auto_build")), "np0")
 NICE = ["nice", "-n", "19"]
+# the brackets are measured at 1 TeV, where they stand well above their Monte Carlo errors
+LAM_BRACKET = 1000
 
 
 def class_wcs(n):
@@ -113,7 +115,7 @@ def main(argv) -> int:
             have = set(re.findall(r"=\s*(\w+)", open(os.path.join(d, "Cards", "run_card.dat")).read()))
             common = [a for a in common if a.split("=")[0] in have or a.startswith("hel_recycling")]
             if run([PY, os.path.join(ROOT, "examples", "studies", "set_cards.py"), d]
-                   + common + sets + ["Lam=1000"], log):
+                   + common + sets + [f"Lam={LAM_BRACKET}"], log):
                 print(f"[{tag}] {name}: card error, see {log}", flush=True)
                 continue
             before = os.path.getsize(log)
@@ -145,9 +147,13 @@ def report(out, tex=None, study=None, multi=False) -> int:
             for r in R:
                 if r[ci["order"]] == "NP^2==2" and "-cls" not in r[ci["model"]] \
                    and "-op_" not in r[ci["model"]] and re.match(r"^-?[\d.]", r[ci["sigma_pb"]]):
-                    tagged[r[ci["process"]].strip()] = (float(r[ci["sigma_pb"]]),
-                                                        float(r[ci["error_pb"]]))
-    print(f"\n{'process':<22s} {'set':<8s} {'NP=0':>12s} {'bracket':>12s} {'error':>9s} "
+                    # brought to the bracket's Lambda from the Lam= of its own run, as 1/Lambda^4
+                    lam = re.search(r"Lam=([\d.]+)", r[ci["settings"]])
+                    k = (float(lam.group(1)) / LAM_BRACKET) ** 4 if lam else 1.0
+                    tagged[r[ci["process"]].strip()] = (k * float(r[ci["sigma_pb"]]),
+                                                        k * float(r[ci["error_pb"]]))
+    print(f"\nat Lambda = {LAM_BRACKET / 1000:g} TeV, the tagged interference brought there from its own run")
+    print(f"{'process':<22s} {'set':<8s} {'NP=0':>12s} {'bracket':>12s} {'error':>9s} "
           f"{'tagged':>12s} {'total':>12s}")
     lines = []
     for p in sorted({k[0] for k in by}):

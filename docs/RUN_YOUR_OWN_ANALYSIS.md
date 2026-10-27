@@ -92,7 +92,7 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
     sigma(1/Lambda^4) = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
 On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.40 pb against
-an interference of -3.998. It vanishes for every process in which no W is produced or exchanged.
+an interference of -4.0 pb. It vanishes for every process in which no W is produced or exchanged.
 It does not vanish in vector-boson fusion, where the W sits in the t-channel propagators: 6.8 per
 cent of the cross section in `p p > h h j j QCD=0`.
 

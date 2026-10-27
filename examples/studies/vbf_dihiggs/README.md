@@ -3,7 +3,7 @@
 Cross sections at 13.6 TeV for the processes in `processes.txt`, in the Standard Model
 (`NP=0`, every Wilson coefficient at zero), at 1/Lambda^4 (`NP^2==2`) and at the
 dimension-eight-squared order (`NP<=2 NP^2==4`), first with the full model and every
-coefficient at 1 with Lam at 1 TeV, then one operator class at a time through the restriction
+coefficient at 1 with Lam at 3 TeV, then one operator class at a time through the restriction
 cards listed in `classes.txt`. Running one class at a time is what isolates the classes that
 dominate and shows where the squared term overtakes the interference, as in the study of
 dimension eight in vector-boson-fusion Higgs production, arXiv:2410.21563.
@@ -32,9 +32,9 @@ used, which is the signal to raise the event count if the factor is far from one
 
 One caution about the row with every coefficient at one, which runs on the `bosonic` card in
 this study. The W mass is derived in the {alpha, MZ, GF} scheme, so switching coefficients on
-moves it: with all 1030 at 1 and Lam at 1 TeV the model derives 79.33 GeV instead of the
-tree-level 79.82 of the {alpha, MZ, GF} scheme. The squared term of that row comes out
-twenty-eight times the Standard Model, which is not a regime where the expansion means anything.
+moves it: with every coefficient of that card at 1 and Lam at 3 TeV the model derives 79.820 GeV
+instead of the tree-level 79.824 of the {alpha, MZ, GF} scheme. The squared term of that row comes
+out twenty times the interference, so the truncation is not self-consistent for it.
 That row is a linearity check, since the class interferences must add up to it, rather than a
 prediction. The
 physics is in the per-class rows, where only a handful of operators are on and the shift is
