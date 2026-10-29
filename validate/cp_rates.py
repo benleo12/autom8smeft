@@ -24,7 +24,8 @@ through its two card entries: its real part multiplies Q + Q^dagger and its imag
 i(Q - Q^dagger), whose parities are eta and -eta, so the part with parity -1 goes into the CP-odd
 set and the other into the CP-even one (44 of the 236 have a CP-odd real part).
 
-The scale is Lam = 3 TeV unless --lam says otherwise, and the results of each scale are kept in their
+The model is models/dim8_is unless DIM8_MODEL names another, whose results go to
+validate/cp_results_<model>_lam<Lam>.tsv.  The scale is Lam = 3 TeV unless --lam says otherwise, and the results of each scale are kept in their
 own file, validate/cp_results_lam<Lam>.tsv; validate/v11_results.tsv holds the runs at 1 TeV.
 
 The reference point is the CP-even set run the same way, whose interference is large.  Without
@@ -41,14 +42,18 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MG = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3"))
 PY = "python3.11"
-MODEL = os.path.join(ROOT, "models", "dim8_is")
-WORK = os.path.join(os.environ.get("DIM8_BUILD", os.path.expanduser("~/dim8auto_build")), "v11")
+MODEL = os.environ.get("DIM8_MODEL", os.path.join(ROOT, "models", "dim8_is"))
+# another model (DIM8_MODEL=models/dim8_mw) keeps its own process directories and results files
+MTAG = "" if os.path.basename(MODEL.rstrip("/")) == "dim8_is" else "_" + os.path.basename(MODEL.rstrip("/"))
+WORK = os.path.join(os.environ.get("DIM8_BUILD", os.path.expanduser("~/dim8auto_build")), "v11" + MTAG)
 OUT = os.path.join(ROOT, "validate", "v11_results.tsv")
 
 
 def out_path(lam):
     """The results file of one scale: the runs at 1 TeV are the original v11_results.tsv."""
-    return OUT if float(lam) == 1000 else os.path.join(ROOT, "validate", f"cp_results_lam{int(float(lam))}.tsv")
+    if float(lam) == 1000 and not MTAG:
+        return OUT
+    return os.path.join(ROOT, "validate", f"cp_results{MTAG}_lam{int(float(lam))}.tsv")
 NICE = ["nice", "-n", "19"]
 
 # Which processes are a CP test and which are not.  A CP-odd operator cannot interfere with the

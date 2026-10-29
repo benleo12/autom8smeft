@@ -9,7 +9,6 @@ Everything here runs with MadGraph5_aMC@NLO alone. No Mathematica, no FeynRules.
 | `dim68_is` | the dimension-eight operators of `dim8_is` together with SMEFTsim's dimension-six operators in the U(3)^5 flavour-symmetric framework, on the same base and in the same input scheme | any calculation that needs the dimension-six sector, whose square enters `NP^2==2` beside the dimension-eight interference (see `docs/DIM6.md`) |
 | `dim8_is` | all 674 baryon-number-conserving dimension-eight operators of the Murphy basis on top of the Standard Model, in the {alpha, MZ, GF} input scheme with canonically normalised fields, truncated at 1/Lambda^4 in the input relations | the dimension-eight sector on its own. Every example here uses it |
 | `dim8_mw` | the same dimension-eight sector in the {MW, MZ, GF} input scheme, in which alpha is derived and no mass moves with a coefficient | dimension eight with no W-mass shift. Set `MW` to 79.82435975 to put it on the numerical point of `dim8_is` |
-| `dim8_plain` | the same operators on the plain FeynRules Standard Model, no input-scheme corrections | cross-checks only. Operators that shift a kinetic term (for instance `Q_{G^2H^4}^{(1)}`) are not gauge-consistent here once the two-point vertex is dropped by the UFO format |
 
 Install: copy or symlink the model directory into MadGraph's `models/` folder under the same
 name, which is what the example scripts assume, or give `import model` an absolute path. The

@@ -29,6 +29,15 @@ compile.  So, within each vertex and colour structure, the entries are grouped b
 sign, each group's signed sum is evaluated at a common random point, and a group that vanishes is
 removed.
 
+The same cancellation can be split over two vertices.  In the input-scheme models the vacuum piece
+of Q_{G^2H^4}^{(1)} on the four-gluon vertex and the d8fG term that cancels it in the gluon kinetic
+term are written into two vertices with the same legs, V_29 and V_30 of dim8_mw, with the colour
+spelled f(-1,1,3)*f(-1,2,4) in one and f(-1,1,3)*f(2,4,-1) in the other.  The two are equal by
+cyclicity, so the pair contributes nothing, but it leaves c8G2H4x1 on the four-gluon vertex for
+anyone reading vertices.py to take as a shift of alpha_s.  So the groups are formed across every
+vertex with the same legs in the same order, and colours are compared in a canonical spelling
+(colour_key) with the sign that spelling costs.
+
 A coefficient can also vanish as a whole without any single group doing so.  The field-strength
 operators with two identical currents, such as Q_{q^4B}^{(2)}, are symmetric in the Lorentz
 indices of an antisymmetric field strength and vanish for flavour-universal coefficients, but
@@ -129,14 +138,34 @@ def random_point(P, seed):
     return v, ns
 
 
+def colour_key(s: str):
+    """A colour string in canonical spelling, and the sign that spelling costs.
+
+    f is totally antisymmetric and d and Identity are symmetric, so f(2,4,-1) is f(-1,2,4) and
+    f(2,1,3) is minus f(1,2,3).  Factors are put in a fixed order.  Dummy indices are not renamed,
+    so two strings that differ only in their dummies stay apart, which can miss a cancellation but
+    never invent one."""
+    sign, out = 1, []
+    for fac in s.replace(" ", "").split("*"):
+        m = re.fullmatch(r"(f|d|Identity)\((-?\d+(?:,-?\d+)*)\)", fac)
+        if m:
+            idx = [int(x) for x in m.group(2).split(",")]
+            if m.group(1) == "f":
+                sign *= (-1) ** sum(1 for i in range(len(idx)) for j in range(i + 1, len(idx)) if idx[i] > idx[j])
+            fac = f"{m.group(1)}({','.join(map(str, sorted(idx)))})"
+        out.append(fac)
+    return "*".join(sorted(out)), sign
+
+
 def cancelling_entries(ufo: str) -> dict:
     """Vertex name -> set of (colour, lorentz) entries whose same-coupling group sums to zero.
 
     Couplings are evaluated with every external parameter at a distinct random value, so two
-    couplings are grouped only if they are equal up to sign as expressions.  Each group's signed
-    sum of structures is then evaluated at three common kinematic points; a group is removed only
-    if it vanishes at all three to 1e-9 of the size of its terms, which for a multilinear form is
-    proof."""
+    couplings are grouped only if they are equal up to sign as expressions.  A group collects the
+    entries of every vertex with the same legs in the same order and the same colour in canonical
+    spelling.  Each group's signed sum of structures is then evaluated at three common kinematic
+    points; a group is removed only if it vanishes at all three to 1e-9 of the size of its terms,
+    which for a multilinear form is proof."""
     import cmath, math, random
     sys.path.insert(0, HERE)
     import numpy as np
@@ -156,31 +185,36 @@ def cancelling_entries(ufo: str) -> dict:
     txt = open(os.path.join(ufo, "lorentz.py")).read()
     for name, st in re.findall(r"(\w+) = Lorentz\(name = '\w+',\s*spins = \[[^\]]*\],\s*structure = '([^']*)'\)", txt):
         struct[name] = st
-    hits = {}
+    # every entry of every vertex, filed under its legs and its colour in canonical spelling
+    legs = {}
     for vx in V.all_vertices:
-        groups = {}
         for (ci, li), cp in vx.couplings.items():
             g = gval.get(cp.name, complex("nan"))
             if g != g or g == 0:
                 continue
-            key = None
-            for (cj, ref) in groups:
-                if cj == ci and abs(abs(g) - abs(ref)) <= 1e-12 * abs(ref) and (abs(g - ref) <= 1e-12 * abs(ref) or abs(g + ref) <= 1e-12 * abs(ref)):
-                    key = (cj, ref)
+            ck, cs = colour_key(vx.color[ci])
+            legs.setdefault((tuple(p.name for p in vx.particles), ck), []).append(
+                (vx.name, ci, li, vx.lorentz[li].name, cs * g))
+    hits = {}
+    for (parts, _), entries in legs.items():
+        groups = []                                  # [reference value, members]
+        for vn, ci, li, ln, g in entries:
+            for grp in groups:
+                ref = grp[0]
+                if abs(g - ref) <= 1e-12 * abs(ref) or abs(g + ref) <= 1e-12 * abs(ref):
+                    grp[1].append((vn, ci, li, ln, 1 if abs(g - ref) <= 1e-12 * abs(ref) else -1))
                     break
-            if key is None:
-                key = (ci, g)
-                groups[key] = []
-            groups[key].append((li, 1 if abs(g - key[1]) <= 1e-12 * abs(key[1]) else -1))
-        for (ci, ref), members in groups.items():
+            else:
+                groups.append([g, [(vn, ci, li, ln, 1)]])
+        for ref, members in groups:
             if len(members) < 2:
                 continue
             dead = True
             for rep in range(3):
                 tot, scale = 0j, 0.0
-                for li, sign in members:
-                    st = struct.get(vx.lorentz[li].name)
-                    e = None if st is None else Z.evaluate(Z.parse(st), np.random.default_rng(500 + rep), len(vx.particles))
+                for vn, ci, li, ln, sign in members:
+                    st = struct.get(ln)
+                    e = None if st is None else Z.evaluate(Z.parse(st), np.random.default_rng(500 + rep), len(parts))
                     if e is None:
                         dead = False
                         break
@@ -190,7 +224,8 @@ def cancelling_entries(ufo: str) -> dict:
                     dead = False
                     break
             if dead:
-                hits.setdefault(vx.name, set()).update((ci, li) for li, _ in members)
+                for vn, ci, li, ln, sign in members:
+                    hits.setdefault(vn, set()).add((ci, li))
     return hits
 
 

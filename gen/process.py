@@ -481,6 +481,29 @@ def sm_tree(proc: str, sm_vertices: Sequence[Sequence[str]], collapse: bool = Tr
     return False
 
 
+# the fields of a vertex that carries g_s alone
+QCD_FIELDS = {"G", "uq", "uqbar", "dq", "dqbar"}
+
+
+def sm_electroweak(proc: str, sm_vertices: Sequence[Sequence[str]], collapse: bool = True) -> bool:
+    """Whether some Standard-Model tree diagram of the process has an electroweak vertex.
+
+    The input relations shift g_2, g_1, the vev, the neutral rotation and, in the {alpha, MZ, GF}
+    scheme, the W mass, so they reach every vertex with a W, Z, photon or Higgs leg.  They reach no
+    vertex of quarks and gluons alone, whose one coupling g_s = sqrt(4 pi alpha_s) is itself an
+    input.  A process whose tree diagrams are all built from those (g g > g g, u u~ > g g,
+    g g > t t~) is therefore untouched by them, while u u~ > d d~ is not, since a photon or a Z can
+    join its two quark lines.  The test asks, for each electroweak vertex of the Standard Model,
+    whether a tree diagram of the process contains it, with the selector's own criterion."""
+    sm = standard_model_vertices(sm_vertices)
+    sel = Selector(sm)
+    ew = [v for v in sm if not set(v) <= QCD_FIELDS]
+    for ext in sorted({tuple(sorted(a)) for a in _product(parse_process(proc, collapse=collapse))}):
+        if any(sel.vertex_fits(v, ext) for v in ew):
+            return True
+    return False
+
+
 def _product(slots: List[List[str]]):
     if not slots:
         yield ()

@@ -137,7 +137,7 @@ That is not the same as counting dual field strengths, and the difference is 170
 operators with a real coefficient. The clearest case is `Q_{q^2W^2D}^{(1..4)}`, where the
 derivation gives even, ODD, even, even: the member with no dual is the CP-odd one. The CP test
 `validate/cp_rates.py` checks the card. A CP-odd set must give zero interference in a total rate,
-and a set chosen by counting duals gives 1.2 pb on `p p > w+ w-`, with its coefficients at one
+and a set chosen by counting duals gives -1.2 pb on `p p > w+ w-`, with its coefficients at one
 and `Lam` = 1 TeV. `gen/cp_parity.py` is the single
 place the parity is decided.
 
@@ -192,8 +192,7 @@ The 60 baryon-number-violating operators are not included.
 `models/dim8_is` is the dimension-eight sector alone, `models/dim8_mw` is the same sector in the
 `{MW, MZ, GF}` input scheme, in which both masses are inputs, alpha is derived and no mass moves
 with a coefficient (so the `NP=0` bracket above is absent, and its `NP=0` matrix element is
-identical to every digit with the coefficients on and off), and `models/dim8_plain` puts the same
-operators on the plain FeynRules Standard Model, for cross-checks. Set `MW` to 79.82435975 in
+identical to every digit with the coefficients on and off). Set `MW` to 79.82435975 in
 `dim8_mw` to put it on the same numerical point as `dim8_is`, whose derived W mass that is. The param card of `dim8_is`
 also has a block `DIM6`, with the eight dimension-six coefficients its input relations are
 written in. Leave them at zero there: that model has their effect on the inputs and not the

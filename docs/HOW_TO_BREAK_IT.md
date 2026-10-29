@@ -118,7 +118,13 @@ four-fermion field-strength operators with two identical currents, those of `l^4
 vanish for flavour-universal coefficients, yet FeynRules writes some of them as pairs of structures
 that differ by a swap of two dummy indices inside one `Epsilon` and carry the same coupling.
 `validate/drop_zero_structures.py` groups the structures of every vertex by coupling, removes a group
-whose sum vanishes, and sets to zero every coefficient whose whole contribution vanishes. Every
+whose sum vanishes, and sets to zero every coefficient whose whole contribution vanishes. A group can
+span two vertices. FeynRules writes the vacuum piece of `Q_{G^2H^4}^{(1)}` on the four-gluon vertex
+and the `d8fG` term that cancels it into two vertices with the same legs, with the colour spelled
+`f(-1,1,3)*f(-1,2,4)` in one and `f(-1,1,3)*f(2,4,-1)` in the other, so the groups are formed over
+every vertex with the same legs and the colours are compared in a canonical spelling. Left in, that
+pair changes no amplitude, but it puts `c8G2H4x1` on `g g g g`, where it reads as a shift of
+alpha_s. `tests/test_gluon_normalisation.py` fails on it. Every
 vertex of the released models equals the vertex FeynRules wrote at a common random point with all
 coefficients on, so nothing live is removed. With `Q_{q^4H^2}^{(5)}`, which vanishes for a
 flavour-universal coefficient as well, thirteen of the 674 have no vertex ("The thirteen operators

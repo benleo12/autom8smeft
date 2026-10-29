@@ -172,6 +172,16 @@ def _model_inputs(model):
     return out
 
 
+def _model_dir(arg):
+    """The UFO directory --model names: a path, or the bare name of a model in models/.  Anything
+    else stops, since a directory without parameters.py reads as a model with no input relations and
+    the second group would silently disappear (2026-10-27: --model dim8_mw did that)."""
+    for d in (os.path.abspath(arg), os.path.join(ROOT, "models", arg)):
+        if os.path.isfile(os.path.join(d, "parameters.py")):
+            return d
+    sys.exit(f"{arg} is neither a UFO directory (no parameters.py) nor a model in models/")
+
+
 def _scheme(inputs):
     """'mw' when M_W is an input, 'alpha' when the model carries the input-scheme dimension-six
     block, and 'plain' otherwise."""
@@ -256,7 +266,7 @@ def cmd_select(a):
     # The model the card is for decides the scheme of the second group and which vertices an input
     # scheme has absorbed.  A model that is not one of the four released ones is read as the
     # released model of its scheme.
-    model = os.path.abspath(a.model)
+    model = _model_dir(a.model)
     inputs = _model_inputs(model)
     scheme = _scheme(inputs)
     ref = os.path.basename(model) if os.path.basename(model) in RELEASED else SCHEME_MODEL[scheme]
@@ -296,20 +306,28 @@ def cmd_select(a):
         class, so the names that are not L8op<n> sort by name."""
         return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
 
-    # The input relations shift the Standard-Model amplitude, so they enter only where there is one.
-    sm_tree = P.sm_tree(a.process, json.load(open(os.path.join(ROOT, "build/sm_vertices.json"))),
-                        collapse=not a.all_flavours)
+    # The input relations shift the Standard-Model amplitude, so they enter only where there is one,
+    # and only through its electroweak vertices: a process whose tree diagrams are built from quark
+    # and gluon vertices alone carries g_s, which is the input alpha_s (g g > g g, u u~ > g g).
+    smv = json.load(open(os.path.join(ROOT, "build/sm_vertices.json")))
+    sm_tree = P.sm_tree(a.process, smv, collapse=not a.all_flavours)
+    sm_ew = sm_tree and P.sm_electroweak(a.process, smv, collapse=not a.all_flavours)
     label = SCHEME_LABEL.get(scheme)
-    extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey) if sm_tree and label else []
-    extra6 = [(op, wc) for op, wc in DIM6_INPUT_RELATION if wc in inputs] if sm_tree and label and with6 else []
+    extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey) if sm_ew and label else []
+    extra6 = [(op, wc) for op, wc in DIM6_INPUT_RELATION if wc in inputs] if sm_ew and label and with6 else []
     print(f"selected: {n8} of the 674 dimension-eight operators through a vertex of the process"
           + (f", and {n6} of the eight dimension-six classes" if n6 else "")
-          + (f", plus {len(extra)} that enter through the {label} input relations" if sm_tree and label else ""))
-    if sm_tree and label:
+          + (f", plus {len(extra)} that enter through the {label} input relations" if sm_ew and label else ""))
+    if sm_ew and label:
         print("          (complete at tree level with one insertion: nothing else can change the")
         print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
         print("           the couplings " + ("and the W mass " if scheme == "alpha" else "")
               + "of every electroweak amplitude)")
+    elif sm_tree and label:
+        print("          (complete at tree level with one insertion.  Every Standard-Model tree diagram")
+        print("           of this process is built from quark and gluon vertices, whose coupling g_s")
+        print(f"           is the input alpha_s, so the {label} input relations do not enter and")
+        print("           there is no second group)")
     elif sm_tree:
         print("          (complete at tree level with one insertion.  This model has no input")
         print("           relations, so an operator acts only through its own vertices and there")
@@ -350,7 +368,7 @@ def cmd_select(a):
         return LR.leading(vi[b], 6, LR.DIM6[b][1], assignments, cheap) if b in LR.DIM6 else None
 
     # an operator of the second group that also has a vertex here is marked where it is listed
-    ir = _input_scheme_blocks(INPUT_RELATION_WCS) if label else set()
+    ir = _input_scheme_blocks(INPUT_RELATION_WCS) if label and sm_ew else set()
     print(f"each operator with the vertex of its leading tree and that tree's power of lambda, where")
     print(f"(Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) and the Standard Model amplitude is "
           f"lambda^{2 * n_ext - 8}:")
@@ -364,23 +382,26 @@ def cmd_select(a):
             got = lead(b)
             old = next((r for r in byclass.get("dim6", []) if r[0] == name), None)
             if old is None:
-                byclass.setdefault("dim6", []).append([name, f"class {b[4:5]}", hits[b], got, False])
+                byclass.setdefault("dim6", []).append([name, f"class {b[4:5]}", hits[b], got, False, False])
             elif got is not None and (old[3] is None or got[0] < old[3][0]):
                 old[3] = got
             continue
         meta = idx.get(b, {})
         byclass.setdefault(meta.get("cls", 0), []).append(
-            [meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b], lead(b), b in ir])
+            [meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b], lead(b), b in ir,
+             cat.get(b, {}).get("redundant_one_generation", False)])
     for cls in sorted(byclass, key=lambda c: (1, 0) if c == "dim6" else (0, c)):
         print("dimension six, Warsaw classes:" if cls == "dim6" else f"class {cls}:")
-        for name, wc, legs, got, also in byclass[cls]:
+        for name, wc, legs, got, also, red in byclass[cls]:
+            # the Murphy basis lists it as redundant for one generation: say so wherever it is listed
+            note = "   (redundant for one generation, Murphy basis class 20)" if red else ""
             if got is None:
                 print(f"  {name:34s} {wc:16s} {'':10s} via {' '.join(legs)}"
                       + ("   (the input relations, and this vertex only through a quark or lepton Yukawa coupling)"
-                         if also else "   (only through a quark or lepton Yukawa coupling)"))
+                         if also else "   (only through a quark or lepton Yukawa coupling)") + note)
             else:
                 print(f"  {name:34s} {wc:16s} {'lambda^' + str(got[0]):10s} via {' '.join(got[2])}"
-                      + ("   (and the input relations)" if also else ""))
+                      + ("   (and the input relations)" if also else "") + note)
     # A shift of the input relations multiplies the Standard Model amplitude by v^4/Lambda^4, that
     # is lambda^8, at dimension eight and by v^2/Lambda^2, lambda^4, at dimension six.
     if extra:
@@ -407,9 +428,7 @@ def cmd_select(a):
         # a dimension-six sector kept by accident would enter NP^2==2 through its square.
         import make_restriction as MR
 
-        model = os.path.abspath(a.model)
-        if not os.path.isfile(os.path.join(model, "parameters.py")):
-            sys.exit(f"{a.model} is not a UFO directory (no parameters.py)")
+        model = _model_dir(a.model)
         sels = [b for b in sorted(set(hits) | set(extra), key=_bkey) if b.startswith("L8op")]
         if getattr(a, "with_dim6", False):
             sels.append("dim6")
@@ -576,7 +595,8 @@ def main():
                                 "FeynRules has already been run, the released model carries every vertex "
                                 "of every operator, and MadGraph applies the card at import")
             p.add_argument("--model", default="models/dim8_is", metavar="DIR",
-                           help="the released UFO the card is written into (default models/dim8_is)")
+                           help="the released UFO the card is written into, a path or a name in models/ "
+                                "(default models/dim8_is)")
             p.add_argument("--with-dim6", action="store_true",
                            help="also keep the model's dimension-six coefficients in the card. Without it "
                                 "they are zeroed, like in the released class cards, so that NP^2==2 is the "

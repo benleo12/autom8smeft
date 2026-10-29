@@ -54,10 +54,7 @@ with `-o`. The two groups together are the complete list at tree level with one 
 
 The second group follows the model named by `--model` (default `models/dim8_is`). With
 `models/dim8_mw` the same eight shift the electromagnetic coupling instead of the W mass and the
-heading names the {MW, MZ, GF} scheme. `models/dim8_plain` has no input relations, so there is no
-second group, and it carries vertices that the input schemes absorb, such as the three-gluon
-vertex of `Q_{G^2H^4}^{(1)}`, which the selector then uses (`build/vertex_index_absorbed.json`,
-written by `validate/index_vs_ufo.py --write`). With `models/dim68_is` the selector also lists the
+heading names the {MW, MZ, GF} scheme. With `models/dim68_is` the selector also lists the
 dimension-six classes under their Warsaw names and the four dimension-six coefficients of the input
 relations, `C_HD`, `C_HWB`, `C_Hl^(3)` and `C_ll'`.
 `validate/eval_ufo_params.py <model> <coefficient>=1 Lam=1000` prints the shifts any coefficient

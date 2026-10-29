@@ -21,10 +21,6 @@ GC_3 = Coupling(name = 'GC_3',
                 value = 'complex(0,1)*G**2',
                 order = {'QCD':2})
 
-GC_4 = Coupling(name = 'GC_4',
-                value = 'd8fG*complex(0,1)*G**2',
-                order = {'NP':2,'QCD':2})
-
 GC_5 = Coupling(name = 'GC_5',
                 value = '-(1./6.)*(cw*complex(0,1)*g1SM)',
                 order = {'QED':1})
@@ -43888,10 +43884,6 @@ GC_11010 = Coupling(name = 'GC_11010',
 GC_11011 = Coupling(name = 'GC_11011',
                     value = '(c8WH4D2x2*ee**2*complex(0,1)*vev**4)/(8.*cw*Lam**4)',
                     order = {'NP':2,'QED':-2})
-
-GC_11013 = Coupling(name = 'GC_11013',
-                    value = '-((c8G2H4x1*complex(0,1)*G**2*vev**4)/Lam**4)',
-                    order = {'NP':2,'QCD':2,'QED':-4})
 
 GC_11014 = Coupling(name = 'GC_11014',
                     value = '(c8H4x2*ee**4*complex(0,1)*vev**4)/(4.*Lam**4*sw**4)',

@@ -81,7 +81,10 @@ from check_legs import DIM6  # noqa: E402  the dimension-six coefficients by cla
 from lambda_routes import DIM6 as DIM6_BLOCKS  # noqa: E402  L6cl block -> class
 
 DIM6_NAMES = {w for ws in DIM6.values() for w in ws.split()}
-DIM8_MODELS = ["dim8_is", "dim8_plain", "dim8_mw", "dim68_is"]
+# dim8_plain is the raw model kept for vertex comparisons and is not in the public tree, so the
+# models compared are the ones present
+DIM8_MODELS = [m for m in ["dim8_is", "dim8_plain", "dim8_mw", "dim68_is"]
+               if os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", m, "parameters.py"))]
 IS_MODELS = ["dim8_is", "dim8_mw", "dim68_is"]
 PLAIN_MODEL = "dim8_plain"
 DIM6_MODEL = "dim68_is"
