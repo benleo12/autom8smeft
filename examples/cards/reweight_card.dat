@@ -15,6 +15,5 @@ launch --rwgt_name=c8q2WH2Dx1_1
   set c8q2W2Dx1 0.0
   set c8q2WH2Dx1 1.0
 launch --rwgt_name=Lam_2TeV
-# "set Lam 2000" is silently ignored: MadGraph lowercases the name, the Standard Model already
-# has a "lam", and the written card therefore calls the scale lam__2.  Address it by block and id.
+# the scale, addressed by block and id
   set dim8 0 2000

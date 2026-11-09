@@ -19,10 +19,12 @@ Two things are tested here that zero_lorentz.py cannot reach.
                  that vanishes only on shell is correctly kept.
 
   --wcs          the whole vertex, sum over (colour, Lorentz) of coupling times structure, per
-                 Wilson coefficient, every term at the same random point.  This is the test that
+                 Wilson coefficient, every term at the same random point, each structure with
+                 the sign MadGraph gives a four-fermion structure whose fermion flow is crossed
+                 (flow_sign), so that the sum is the vertex MadGraph computes.  This is the test that
                  catches a coefficient whose every vertex cancels between live structures, as
                  the four-fermion field-strength operators with two identical currents do for
-                 flavour-universal coefficients.  validate/drop_zero_structures.py removes such
+                 flavour-diagonal currents.  validate/drop_zero_structures.py removes such
                  coefficients at release, so on a released model this test finds none.
 
 Default runs both.  A structure or coefficient is reported when it vanishes at every random
@@ -30,6 +32,8 @@ point to 1e-9 of the size of its own terms, which for a multilinear form is proo
 """
 import itertools, os, re, sys
 import numpy as np
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from generic_inputs import generic_value  # noqa: E402
 
 G = np.diag([1.0, -1.0, -1.0, -1.0])
 EPS = np.zeros((4, 4, 4, 4))
@@ -159,9 +163,85 @@ def chain_arrays(tens, spin):
     return out
 
 
-def evaluate(parsed, rng, nlegs=None):
-    """Value at one random point, or None if the term uses something unsupported."""
+def fermion_flow(tens):
+    """The fermion flow of one term as MadGraph reads it (aloha_fct.get_fermion_flow): each open
+    chain runs from its column index into its row index, {column: row}.  Empty for a term with no
+    Dirac factor, None if the spinor indices are not open chains between external legs."""
+    nxt = {}
+    for n, li, si in tens:
+        if SHAPE[n][1] != 2: continue
+        if si[0] in nxt: return None
+        nxt[si[0]] = si[1]
+    flow = {}
+    for start in [r for r in nxt if r > 0]:
+        cur, seen = start, set()
+        while True:
+            if cur in seen or cur not in nxt: return None
+            seen.add(cur); cur = nxt[cur]
+            if cur > 0: break
+        flow[cur] = start
+    return flow
+
+
+def flow_sign(flow):
+    """The sign MadGraph puts on the coupling of a structure with four fermions or more whose flow is
+    not 1->2, 3->4, ... (models/import_ufo.py, get_sign_flow): that of the permutation taking the
+    legs to the order of the flows, incoming then outgoing, by increasing incoming leg.  A crossed
+    four-fermion structure, Gamma(-1,2,-2)*Gamma(-1,4,-3)*ProjM(-3,1)*ProjM(-2,3), has flows 1->4
+    and 3->2 and takes the sign -1, which is how FeynRules' spelling of two identical fermions, both
+    pairings with one coupling, gives twice the direct term in MadGraph rather than its Fierz zero.
+    None if the flows do not cover legs 1..2n, which MadGraph does not accept."""
+    nb = 2 * len(flow)
+    if nb < 4: return 1
+    switch = {}
+    for i in range(1, nb + 1):
+        if i not in flow: continue
+        switch[i] = len(switch)
+        switch[flow[i]] = len(switch)
+    if sorted(switch) != list(range(1, nb + 1)): return None
+    order = [switch[i] for i in range(1, nb + 1)]
+    sign = 1
+    for k in range(nb):
+        for l in range(k + 1, nb):
+            if order[l] < order[k]: sign = -sign
+    return sign
+
+
+def structure_sign(struct):
+    """flow_sign of a Lorentz structure given as text, or None where it cannot be parsed or its terms differ
+    in flow (which MadGraph refuses)."""
+    p = parse(struct)
+    if p is None: return None
+    flows = [fermion_flow(t) for _, t in p]
+    if any(f is None for f in flows) or any(f != flows[0] for f in flows): return None
+    return flow_sign(flows[0])
+
+
+def order_sign(legs):
+    """The sign of the permutation that lists the fermion legs `legs` (their positions in the vertex, taken in
+    a canonical order of the particles) in the order of the vertex.  A tool that gives each particle its own
+    wavefunction, whatever its position, compares a vertex listed in two orders through it: MadGraph takes the
+    fermion lines of a vertex as legs 1->2, 3->4 in the order listed, and the sign of the diagram follows."""
+    inv = sum(1 for i in range(len(legs)) for j in range(i + 1, len(legs)) if legs[i] > legs[j])
+    return -1 if inv % 2 else 1
+
+
+def evaluate(parsed, rng, nlegs=None, flow=True):
+    """Value at one random point, or None if the term uses something unsupported.
+
+    With flow (the default) the value is the one MadGraph's amplitude carries: the contraction times
+    flow_sign, which MadGraph's import puts on the coupling.  Tests of whether terms of a vertex
+    cancel need it, since a crossed four-fermion structure enters with the opposite sign of its
+    contraction.  Without it the value is the contraction alone, what ALOHA reduces when it writes
+    the routine of one structure, and whether a single structure vanishes does not depend on it."""
     if parsed is None: return None
+    sign = 1
+    if flow:
+        flows = [fermion_flow(tens) for _, tens in parsed]
+        # MadGraph refuses a structure whose terms have different flows
+        if any(f is None for f in flows) or any(f != flows[0] for f in flows): return None
+        sign = flow_sign(flows[0])
+        if sign is None: return None
     legs, plegs = set(), set()
     for _, tens in parsed:
         for n, li, si in tens:
@@ -219,7 +299,7 @@ def evaluate(parsed, rng, nlegs=None):
         for arr in arrays:
             nat *= float(np.linalg.norm(np.asarray(arr).ravel()))
         scale = max(scale, nat)
-    return total, scale
+    return sign * total, scale
 
 
 def zero_structures(ufo, verbose=True):
@@ -232,7 +312,8 @@ def zero_structures(ufo, verbose=True):
             hits.append(name); continue
         nlegs = len([x for x in spins.split(",") if x.strip()])
         p = parse(struct)
-        vals = [evaluate(p, rng, nlegs) for _ in range(4)]
+        # the contraction alone: a structure on its own vanishes or not whatever its sign
+        vals = [evaluate(p, rng, nlegs, flow=False) for _ in range(4)]
         if any(v is None for v in vals):
             skipped += 1; continue
         tested += 1
@@ -257,7 +338,8 @@ def dead_coefficients(ufo, zeros, verbose=True):
 
     wcs = [p.name for p in P.all_parameters
            if p.nature == "external" and p.name.startswith("c8") and p.name != "Lam"]
-    base = {p.name: float(p.value) for p in P.all_parameters if p.nature == "external"}
+    # an input that is zero on the card, a light mass or cabi, at a value of its own (generic_inputs.py)
+    base = {p.name: generic_value(p.name, float(p.value), p.lhablock) for p in P.all_parameters if p.nature == "external"}
     ns = {"cmath": cmath, "math": math, "complex": complex,
           "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
 

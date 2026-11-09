@@ -67,10 +67,7 @@ def write_script(a, values, path, outdir) -> None:
                   "  set hel_recycling False",
                   f"  set iseed {a.seed + i}"]
         if a.scale8:
-            # the dimension-eight scale is lam__2 in the param card, not lam: the external Lam
-            # lowercases onto the Standard Model's quartic coupling lam, and MadGraph resolves
-            # the clash by appending __2
-            lines.append(f"  set lam__2 {a.scale8}")
+            lines.append(f"  set Lam {a.scale8}")
         if a.scale6:
             lines.append(f"  set lam6 {a.scale6}")
         lines.append(f"  set {a.coeff} {v!r}")

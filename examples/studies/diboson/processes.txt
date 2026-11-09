@@ -1,5 +1,7 @@
 # process | extra launch settings (cuts) ; 13.6 TeV, on-shell bosons
+# Z Z runs with sde_strategy=2, which run_study.sh explains: with the default channel weights MadGraph
+# stops on its class-11 square ("All amp2 are zero but not the total matrix-element").
 p p > w+ w-
 p p > w+ z
 p p > w- z
-p p > z z
+p p > z z | sde_strategy=2

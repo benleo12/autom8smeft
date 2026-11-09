@@ -106,11 +106,9 @@ for a in range(8):
         assert all(acom[i][j] == rhs2[i][j] for i in range(3) for j in range(3))
         for c in range(8):
             assert f[a][b][c] == qscale(f[b][a][c], -1) == f[b][c][a] and d[a][b][c] == d[b][a][c] == d[b][c][a]
-print("[su3] exact f and d tables pass [T,T]=ifT, {T,T}=delta/3+dT, f123=1, f458=sqrt3/2, d118=1/sqrt3")
 
 # ---------- Route A: the colour 4-forms -----------------------------------------------------
 quads = list(itertools.combinations(range(8), 4))
-perms4 = [(p, _sign(p)) if False else p for p in itertools.permutations(range(4))]
 def sign(p):
     s = 1
     for i in range(len(p)):
@@ -129,26 +127,30 @@ def wedge(a, b):
             acc = qadd(acc, qscale(v, s))
         if not qzero(acc): W[I] = acc
     return W
-W = [[wedge(a, b) for b in range(8)] for a in range(8)]
 def formadd(F, G, s=(1, 0)):
     H = dict(F)
     for I, v in G.items():
         H[I] = qadd(H.get(I, Q0), qmul(v, s))
     return {I: v for I, v in H.items() if not qzero(v)}
-J = {}
-for a in range(8): J = formadd(J, W[a][a])
-n428 = sum(1 for a in range(8) for b in range(8) if W[a][b])
-V = []
-for e in range(8):
-    Ve = {}
-    for a in range(8):
-        for b in range(8):
-            if W[a][b] and not qzero(d[a][b][e]): Ve = formadd(Ve, W[a][b], d[a][b][e])
-    V.append(Ve)
-print(f"[routeA] sum_a f^a^f^a (Pontryagin quartic, must vanish by Jacobi): {len(J)} non-zero components")
-print(f"[routeA] f^a^f^b: {n428} of 64 pairs non-zero; f^1^f^1 has {len(W[0][0])} non-zero components -> 428 eight-gluon piece {'NON-ZERO' if n428 else 'zero'}")
-print(f"[routeA] V^e = d^{{abe}} f^a^f^b: non-zero components per e = {[len(v) for v in V]} -> 432 eight-gluon piece {'NON-ZERO' if any(V) else 'zero'}")
-assert len(J) == 0
+def route_a():
+    """The colour 4-forms of the eight-gluon pieces, with what they say printed"""
+    W = [[wedge(a, b) for b in range(8)] for a in range(8)]
+    J = {}
+    for a in range(8): J = formadd(J, W[a][a])
+    n428 = sum(1 for a in range(8) for b in range(8) if W[a][b])
+    V = []
+    for e in range(8):
+        Ve = {}
+        for a in range(8):
+            for b in range(8):
+                if W[a][b] and not qzero(d[a][b][e]): Ve = formadd(Ve, W[a][b], d[a][b][e])
+        V.append(Ve)
+    print(f"[routeA] sum_a f^a^f^a (Pontryagin quartic, must vanish by Jacobi): {len(J)} non-zero components")
+    print(f"[routeA] f^a^f^b: {n428} of 64 pairs non-zero; f^1^f^1 has {len(W[0][0])} non-zero components -> 428 eight-gluon piece {'NON-ZERO' if n428 else 'zero'}")
+    print(f"[routeA] V^e = d^{{abe}} f^a^f^b: non-zero components per e = {[len(v) for v in V]} -> 432 eight-gluon piece {'NON-ZERO' if any(V) else 'zero'}")
+    assert len(J) == 0
+    return n428, V
+
 
 # ---------- Route B: plane waves ---------------------------------------------------------------
 eps4 = {p: sign(p) for p in itertools.permutations(range(4))}
@@ -332,61 +334,68 @@ def fmt(x):
     a, b = x
     return f"{a}" if b == 0 else (f"{b}*sqrt3" if a == 0 else f"{a} + {b}*sqrt3")
 
-# ---- validation of route B on Yang-Mills -----------------------------------------------------
-rng = random.Random(20260905)
-for trial in range(2):
-    w3 = random_waves(3, rng)
-    cache = {}
-    def ev3(S):
-        A, G1, G2 = fields(w3, S); return ym_piece(G1, G2, 3)
-    m3 = multilinear(w3, 3, ev3)
-    h3 = ym3_byhand(w3); t3 = ym3_textbook(w3)
-    print(f"[ym3] trial {trial}: plane-wave {fmt(m3)} | by hand {fmt(h3)} | textbook form {fmt(t3)}")
-    assert m3 == h3 and not qzero(m3), "plane-wave extraction disagrees with the hand-derived 3-gluon coefficient"
-    assert m3 == t3 or m3 == qscale(t3, -1), "3-gluon coefficient is not +-(textbook form)"
-    w4 = random_waves(4, rng)
-    def ev4(S):
-        A, G1, G2 = fields(w4, S); return ym_piece(G1, G2, 4)
-    m4 = multilinear(w4, 4, ev4)
-    h4 = ym4_byhand(w4)
-    print(f"[ym4] trial {trial}: plane-wave {fmt(m4)} | by hand {fmt(h4)}")
-    assert m4 == h4 and not qzero(m4), "plane-wave extraction disagrees with the hand-derived 4-gluon coefficient"
-print("[routeB] validated: 3- and 4-gluon Yang-Mills coefficients match the hand derivation exactly, non-zero, and the 3-gluon one is +-(textbook form)")
-
-# ---- the nine G^4 operators --------------------------------------------------------------------
-NPTS = int(sys.argv[1]) if len(sys.argv) > 1 else 3
-OPLIST = sorted(OPS)
-results = {}
-for n in range(4, 9):
-    for trial in range(NPTS):
-        waves = random_waves(n, rng)
-        t0 = time.time()
+def main():
+    print("[su3] exact f and d tables pass [T,T]=ifT, {T,T}=delta/3+dT, f123=1, f458=sqrt3/2, d118=1/sqrt3")
+    n428, V = route_a()
+    # ---- validation of route B on Yang-Mills -----------------------------------------------------
+    rng = random.Random(20260905)
+    for trial in range(2):
+        w3 = random_waves(3, rng)
         cache = {}
-        def XYof(S):
-            if S not in cache:
-                A, G1, G2 = fields(waves, S)
-                X, Y = XYpieces(G1, G2)
-                tr4 = Q0
-                for a in range(8): tr4 = qadd(tr4, X[4][a][a])
-                assert qzero(tr4), "sum_a X4^{aa} is not zero: evaluator or f table wrong"
-                cache[S] = (X, Y)
-            return cache[S]
-        line = []
-        for op in OPLIST:
-            m = multilinear(waves, n, lambda S, op=op: op_piece(op, *XYof(S), n))
-            results.setdefault((op, n), []).append(m)
-            line.append(f"{op}:{'0' if qzero(m) else 'NZ'}")
-        print(f"[n={n}] point {trial} ({time.time()-t0:.1f}s) | " + " ".join(line))
+        def ev3(S):
+            A, G1, G2 = fields(w3, S); return ym_piece(G1, G2, 3)
+        m3 = multilinear(w3, 3, ev3)
+        h3 = ym3_byhand(w3); t3 = ym3_textbook(w3)
+        print(f"[ym3] trial {trial}: plane-wave {fmt(m3)} | by hand {fmt(h3)} | textbook form {fmt(t3)}")
+        assert m3 == h3 and not qzero(m3), "plane-wave extraction disagrees with the hand-derived 3-gluon coefficient"
+        assert m3 == t3 or m3 == qscale(t3, -1), "3-gluon coefficient is not +-(textbook form)"
+        w4 = random_waves(4, rng)
+        def ev4(S):
+            A, G1, G2 = fields(w4, S); return ym_piece(G1, G2, 4)
+        m4 = multilinear(w4, 4, ev4)
+        h4 = ym4_byhand(w4)
+        print(f"[ym4] trial {trial}: plane-wave {fmt(m4)} | by hand {fmt(h4)}")
+        assert m4 == h4 and not qzero(m4), "plane-wave extraction disagrees with the hand-derived 4-gluon coefficient"
+    print("[routeB] validated: 3- and 4-gluon Yang-Mills coefficients match the hand derivation exactly, non-zero, and the 3-gluon one is +-(textbook form)")
 
-print()
-print("SUMMARY (n-gluon vertex of each Q_{G^4} block over the random points; NONZERO = proven, zero = at every point):")
-for op in OPLIST:
-    row = []
+    # ---- the nine G^4 operators --------------------------------------------------------------------
+    NPTS = int(sys.argv[1]) if len(sys.argv) > 1 else 3
+    OPLIST = sorted(OPS)
+    results = {}
     for n in range(4, 9):
-        vals = results[(op, n)]
-        nz = sum(1 for v in vals if not qzero(v))
-        row.append(f"{n}g:{'zero' if nz == 0 else 'NONZERO'}")
-    print(f"  L8op{op} Q_G4^({op-424}) {'capped ' if op in CAPPED else 'full   '}: " + "  ".join(row))
-print("Route A (exact structure of the 8-gluon piece): 426 zero (Jacobi), 428 %s, 432 %s; 429 zero (its X factor is the Pontryagin quartic)" % (
-    "NON-ZERO" if n428 else "zero", "NON-ZERO" if any(V) else "zero"))
-print("Consistency: the uncapped blocks 425, 427, 431 have 7- and 8-gluon vertices in the cache, so they must read NONZERO above.")
+        for trial in range(NPTS):
+            waves = random_waves(n, rng)
+            t0 = time.time()
+            cache = {}
+            def XYof(S):
+                if S not in cache:
+                    A, G1, G2 = fields(waves, S)
+                    X, Y = XYpieces(G1, G2)
+                    tr4 = Q0
+                    for a in range(8): tr4 = qadd(tr4, X[4][a][a])
+                    assert qzero(tr4), "sum_a X4^{aa} is not zero: evaluator or f table wrong"
+                    cache[S] = (X, Y)
+                return cache[S]
+            line = []
+            for op in OPLIST:
+                m = multilinear(waves, n, lambda S, op=op: op_piece(op, *XYof(S), n))
+                results.setdefault((op, n), []).append(m)
+                line.append(f"{op}:{'0' if qzero(m) else 'NZ'}")
+            print(f"[n={n}] point {trial} ({time.time()-t0:.1f}s) | " + " ".join(line))
+
+    print()
+    print("SUMMARY (n-gluon vertex of each Q_{G^4} block over the random points; NONZERO = proven, zero = at every point):")
+    for op in OPLIST:
+        row = []
+        for n in range(4, 9):
+            vals = results[(op, n)]
+            nz = sum(1 for v in vals if not qzero(v))
+            row.append(f"{n}g:{'zero' if nz == 0 else 'NONZERO'}")
+        print(f"  L8op{op} Q_G4^({op-424}) {'capped ' if op in CAPPED else 'full   '}: " + "  ".join(row))
+    print("Route A (exact structure of the 8-gluon piece): 426 zero (Jacobi), 428 %s, 432 %s; 429 zero (its X factor is the Pontryagin quartic)" % (
+        "NON-ZERO" if n428 else "zero", "NON-ZERO" if any(V) else "zero"))
+    print("Consistency: the uncapped blocks 425, 427, 431 have 7- and 8-gluon vertices in the cache, so they must read NONZERO above.")
+
+
+if __name__ == "__main__":
+    main()

@@ -29,7 +29,15 @@
    The pieces above NP 2 of a structure with genuine content at NP <= 2 are kept, since no
    NP^2==2 or NP<=2 run selects them.  A comparison of two structures that are equal only through
    momentum conservation or a Lorentz identity is not made, so such a cancellation is kept, never
-   removed: the test can leave a zero in the model but cannot remove a genuine coupling. *)
+   removed: the test can leave a zero in the model but cannot remove a genuine coupling.
+
+   DIM8_GEO_N=n, for the models whose vertices with at most three legs are complete to 1/Lambda^(2n)
+   (gen/towers.py): those vertices keep their pieces through NP n, and every other vertex its pieces
+   through NP 2, the order its four-or-more-leg content is complete to.  Pieces above that order are
+   removed whatever else the structure holds, so that an NP <= n run does not pick up an incomplete one.
+   Unset, the order is 2 for every vertex and the rules above hold unchanged. *)
+ztGeoN = If[Environment["DIM8_GEO_N"] === $Failed, None, ToExpression[Environment["DIM8_GEO_N"]]];
+ztCap[ztFields_List] := If[ztGeoN =!= None && Length[ztFields] <= 3, ztGeoN, 2];
 
 ztNPof[ztOpts_List] := Module[{ztIO = InteractionOrder /. ztOpts},
   If[ztIO === InteractionOrder, 0,
@@ -95,11 +103,12 @@ ztTruncate[ztMerged_List] := Module[{ztOrig, ztTerms, ztSplits, ztOrders, ztV1, 
             ztR = Max[ztS1/ztA1, ztS2/ztA2];
             If[ztR <= 10^-10, AppendTo[ztZero, ztKey]; ztWorstZero = Max[ztWorstZero, ztR],
               ztBestKept = Min[ztBestKept, ztR]]]]], ztIdx];
-      (* structures with a nonzero piece at NP <= 2 *)
-      ztLive = AssociationThread[Select[Complement[Keys[ztIdx], ztZero], #[[2]] <= 2 &][[All, 1]] -> True];
+      (* structures with a nonzero piece at NP <= 2, or at NP <= the cap of the vertex under DIM8_GEO_N *)
+      ztLive = AssociationThread[Select[Complement[Keys[ztIdx], ztZero], #[[2]] <= ztCap[ztFields] &][[All, 1]] -> True];
       ztZero = AssociationThread[ztZero -> True];
       ztKeep = Select[Range[Length[ztKeys]],
-        ! KeyExistsQ[ztZero, ztKeys[[#]]] && KeyExistsQ[ztLive, ztKeys[[#, 1]]] &];
+        ! KeyExistsQ[ztZero, ztKeys[[#]]] && KeyExistsQ[ztLive, ztKeys[[#, 1]]] &&
+        (ztGeoN === None || ztKeys[[#, 2]] <= ztCap[ztFields]) &];
       If[Length[ztKeep] < Length[ztKeys],
         AppendTo[ztReport, {ztFields, Length[ztKeys] - Length[ztKeep], Length[ztKeys],
           Sort[DeleteDuplicates[ztKeys[[Complement[Range[Length[ztKeys]], ztKeep], 2]]]],

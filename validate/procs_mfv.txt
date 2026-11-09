@@ -1,0 +1,30 @@
+# Ward-identity processes for the flavour structures of block DIM8F, for validate/mg5_gluon_check.sh with
+# WARD_INPUTS=generic, beside validate/procs_ew.txt and the gluon list.  The structures carry Y Y^dag on a
+# fermion current (light quarks and leptons, and the top and bottom quarks), Y_u^dag Y_d on a right-handed
+# charged current, the second flavour contraction of four-fermion operators with two identical currents, and
+# y^4 on both bilinears, so the processes have external t and b, light fermions of every generation, charged
+# currents across generations through the Cabibbo angle, and four external fermions of two flavours of one
+# kind, each with an external photon or gluon whose polarisation a boost shifts by its momentum.  On the
+# default card, light fermions massless and cabi = 0, every structure that needs a light Yukawa coupling or
+# the Cabibbo angle vanishes in these processes, so the list is for generic inputs.
+# a fermion current with a Yukawa insertion, by flavour
+d d~ > a z
+s s~ > h a
+c c~ > h g
+b b~ > a h
+t t~ > a h
+g g > t t~
+mu+ mu- > a z
+ta+ ta- > a h
+# right-handed and cross-generation charged currents
+u s~ > w+ a
+c s~ > w+ g
+t b~ > w+ a
+ta+ vt > w+ a
+# four external fermions: crossed contractions of two currents of one kind, insertions on both, and y^4
+u u~ > t t~ g
+d d~ > b b~ a
+u u~ > c c~ g
+u u~ > e+ e- a
+u d~ > e+ ve a
+e+ e- > ta+ ta- a

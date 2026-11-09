@@ -5,10 +5,11 @@ Evaluates  sum_{i,j} C_{ij} Color_i Lorentz_j  for every vertex whose coupling s
 given Wilson coefficient, at random momenta, as an explicit tensor in the external spinor and
 Lorentz indices.  Reports max|component| relative to the max over individual terms.
 """
-import re, sys, itertools
+import os, re, sys, itertools
 import numpy as np
 
-UFO = sys.argv[1] if len(sys.argv) > 1 else '${DIM8_ROOT:-.}/models/dim8_is'
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+UFO = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'models', 'dim8_is')
 WCPAT = sys.argv[2] if len(sys.argv) > 2 else r'c8(e|l|q|u|d)4B'
 
 G = np.diag([1.,-1,-1,-1])

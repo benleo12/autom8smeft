@@ -8,13 +8,14 @@ The script then evaluates the vertex of Tr(B^4) and compares it with
 (1/2)(B.B)^2 + (1/4)(B.Btilde)^2, the combination that expresses Tr(B^4) through the two
 invariants.
 """
-import sys, re, itertools
+import os, sys, re, itertools
 import numpy as np
-sys.path.insert(0,'${DIM8_ROOT:-.}/validate')
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, 'validate'))
 import zero_lorentz as Z
 
 G=Z.G; EPS=Z.EPS
-UFO='${DIM8_ROOT:-.}/models/dim8_is'
+UFO = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'models', 'dim8_is')
 L=open(UFO+'/lorentz.py').read()
 def struct(n):
     return re.search(rf"{n} = Lorentz\(.*?structure = '([^']*)'",L,re.S).group(1)

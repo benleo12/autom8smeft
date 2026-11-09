@@ -9,10 +9,14 @@
      wolframscript -file fr_worker.wls <shard> <nshards> [nblocks] [nkernels] [recursionlimit]
      wolframscript -file fr_worker.wls 43,49,54 0 [nblocks] [nkernels]      (explicit blocks)
 
-   Caching and resumption: a block whose .mx already exists is skipped, so the sweep can
-   be killed and restarted, re-sharded across a different number of processes, or extended
-   after the catalogue changes, without recomputing anything.  Delete the .mx to force a
-   rebuild.
+   Caching and resumption: a block whose vertices (.mx or .wxf) and .status already exist is
+   skipped, so the sweep can be killed and restarted, re-sharded across a different number of
+   processes, or extended after the catalogue changes, without recomputing anything.  The
+   exception is a block whose stamp says that it was built from a different source than it has
+   now (validate/cache_source.py), which is rebuilt, so that a corrected operator is recomputed
+   without anybody deleting its files, with the leg range its status line records.  Delete the .mx
+   to force the rebuild of any other block.  A worker holds the source files as they were when it
+   started, so it stops, with the blocks still to do left missing, when one of them changes under it.
 
    Outputs, per block:
      build/vertices/<block>.mx        DumpSave of  FR$Vert  (the vertex list)
@@ -52,7 +56,9 @@ z9split = Environment["DIM8_SPLIT"] === "1";
    computed.  Opt-in fallback for the class-1 operators whose seven- and eight-gluon vertices
    exceed the memory of a node; an n-point vertex only enters tree amplitudes with at least n
    external legs, so a cap at 6 leaves every amplitude with up to six legs exact.  Recorded in
-   the status line as "maxlegs n"; the whole-block CheckHermiticity path ignores it. *)
+   the status line as "maxlegs n"; the whole-block CheckHermiticity path ignores it.  It acts on
+   every block of this worker, so ./dim8 build gives the six G^4 operators that need it (CAPPED_WCS
+   there) a worker of their own, and validate/g4_highleg.py writes their seven and eight gluons. *)
 (* DIM8_EPSEPS (default on, 0 to disable): replace the product of two Lorentz Levi-Civita tensors in a monomial by the
    4D identity Eps[a,b,c,d] Eps[e,f,g,h] = -Det[ME[i,j]] (24 metric products; the sign of
    eps_{0123} squares away, so the identity holds in either convention).  With the two Eps
@@ -71,6 +77,28 @@ z9minlegs = If[Environment["DIM8_MINLEGS"] === $Failed, None, ToExpression[Envir
    and a restart resumes from there (the chunk list is fingerprinted), so a block that needs more
    than one 24 h job still completes *)
 z9checkpoint = Environment["DIM8_CHECKPOINT"] === "1";
+(* DIM8_PART: one block by several processes at once.  Feynman rules are linear in the Lagrangian and
+   the chunks below are independent, so
+     DIM8_PART=prep    expands the block once and saves its chunks in <vdir>/<block>.chunks.mx,
+     DIM8_PART=expand/i/n and then DIM8_PART=prep/n do the same in n processes: each expands the monomials
+                       i, i+n, ... into <vdir>/<block>.exp<i>of<n>.mx, and prep/n joins them in the order of
+                       the monomials, after checking that each is there once, into the chunks prep saves,
+     DIM8_PART=i/n     computes the chunks i, i+n, i+2n, ... from that file and saves their vertices,
+                       chunk by chunk, in <vdir>/<block>.part<i>of<n>.mx, without writing the block,
+     DIM8_PART=merge/n joins the n part files in the order of the chunks, after checking that every part
+                       was computed from the same chunks and that each chunk is there once, and finishes
+                       the block exactly as a single run would (MergeVertices, canonicalisation, status, stamp).
+   hpc/run_parts.sh runs the three steps.  Only for the term-wise path. *)
+z9part = If[Environment["DIM8_PART"] === $Failed, None, Environment["DIM8_PART"]];
+z9partI = If[z9part =!= None && StringMatchQ[z9part, DigitCharacter .. ~~ "/" ~~ DigitCharacter ..], ToExpression /@ StringSplit[z9part, "/"], None];
+z9partN = Which[z9partI =!= None, z9partI[[2]],
+  z9part =!= None && StringMatchQ[z9part, "merge/" ~~ DigitCharacter ..], ToExpression[StringDrop[z9part, 6]], True, None];
+z9expI = If[z9part =!= None && StringMatchQ[z9part, "expand/" ~~ DigitCharacter .. ~~ "/" ~~ DigitCharacter ..],
+  ToExpression /@ Rest[StringSplit[z9part, "/"]], None];
+z9prepN = If[z9part =!= None && StringMatchQ[z9part, "prep/" ~~ DigitCharacter ..], ToExpression[StringDrop[z9part, 5]], None];
+If[z9part =!= None && z9part =!= "prep" && z9partN === None && z9expI === None && z9prepN === None,
+  Print["[part] FATAL: DIM8_PART must be expand/i/n, prep, prep/n, i/n or merge/n, not ", z9part]; Quit[2]];
+If[z9part =!= None && Environment["DIM8_TERMWISE"] === "0", Print["[part] FATAL: DIM8_PART needs the term-wise path"]; Quit[2]];
 (* the option list is built after FeynRules is loaded (below), else MaxParticles is a Global` symbol *)
 
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
@@ -89,7 +117,18 @@ t0 = AbsoluteTime[];
    base assembled from more than one model file loads here too.  That is how the dimension-six
    sector arrives: "base_inputscheme.fr;dim6_smeftsim.fr". *)
 z8bases = StringTrim /@ StringSplit[z8base, ";"];
-LoadModel[Sequence @@ Append[z8bases, "gen.fr"]];
+(* A stamp is the hash of the source on disk when a block is finished, and the vertices come from the
+   source in memory, which is the source on disk when the worker started.  So a file that changes in
+   between would give vertices of the old code the stamp of the new code, and the block would read as
+   current.  The worker compares the files before each block and before each stamp, and stops.  The
+   hash is taken before LoadModel, so that a change while it loads counts as well. *)
+(* gen_flavour.fr declares the general flavour coefficients z8F<wc> of the fermionic operators
+   (gen/emit_flavour.py): their blocks are built with it and cached in that general form *)
+z9models = Join[z8bases, {"gen.fr"}, If[FileExistsQ[$root <> "/tests/gen_smoke/gen_flavour.fr"], {"gen_flavour.fr"}, {}]];
+z9srcFiles = ($root <> "/tests/gen_smoke/" <> #) & /@ z9models;
+z9srcHash = FileHash /@ z9srcFiles;
+z9srcMovedQ[] := (FileHash /@ z9srcFiles) =!= z9srcHash;
+LoadModel[Sequence @@ z9models];
 (* the subkernels keep Mathematica's default $RecursionLimit = 2500 unless told otherwise,
    and CheckHermiticity on a 334-vertex Feynman-gauge class-11 block exceeds it *)
 Unprotect[$RecursionLimit]; $RecursionLimit = z8rlWanted;
@@ -491,17 +530,86 @@ z9pieces[nm_String] := Module[{z9body, z9sets},
       Return[{False, #} & /@ If[Head[z9ev] === Plus, List @@ z9ev, {z9ev}]]]];
   Flatten[Table[With[{z9hcQ = z9set[[1]] =!= Hold[z8lagH], z9ev = Expand[ReleaseHold[z9set[[2]]]]},
       {z9hcQ, #} & /@ If[Head[z9ev] === Plus, List @@ z9ev, {z9ev}]], {z9set, z9sets}], 1]];
-z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, z9hs, z9fm, z9tot, z9L, z9t, z9c, z9i, z9start, z9ck, z9sig},
+z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, z9hs, z9fm, z9tot, z9L, z9t, z9c, z9i, z9start, z9ck, z9sig,
+    z9cf, z9def, z9mine, z9pv, z9ph, z9pf, z9parts},
   z9fm = If[Not[FeynmanGauge], {G0|GP|GPbar -> 0}, {}];
   z9tE = z9tV = z9tH = 0;
+  z9cf = vdir <> "/" <> nm <> ".chunks.mx";
+  z9def = Hash[{Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold], z9chunk, z9maxlegs, z9minlegs, z9epseps, z9split, z9herm}];
+  If[z9partN =!= None,
+    (* a part or the merge: the chunks are those that DIM8_PART=prep saved for this definition of the block *)
+    If[! FileExistsQ[z9cf], Print["[part] FATAL: ", nm, " has no chunk file; run DIM8_PART=prep first"]; Quit[2]];
+    Clear[z9cfDef, z9cfChunks, z9cfTE, z9cfAllHC]; Get[z9cf];
+    If[z9cfDef =!= z9def, Print["[part] FATAL: ", nm, ": the chunk file was saved for another definition of the block or other options"]; Quit[2]];
+    z9chunks = z9cfChunks; z9tE = z9cfTE; z9allHC = z9cfAllHC;
+    If[z9partI =!= None,
+      z9mine = Range[z9partI[[1]], Length[z9chunks], z9partI[[2]]];
+      Print["[part] ", nm, " part ", z9part, ": chunks ", z9mine];
+      z9pv = <||>; z9ph = <||>;
+      Do[z9c = z9chunks[[z9i]]; z9L = Total[z9c[[All, 2]]];
+         z9tot = If[z9c[[1, 1]], z9L + z9hc[z9L], z9L];
+         z9t = AbsoluteTime[]; z9pv[z9i] = FeynmanRules[z9tot, ScreenOutput -> False, Sequence @@ z9frOpts]; z9tV += AbsoluteTime[] - z9t;
+         If[z9herm, z9t = AbsoluteTime[]; z9ph[z9i] = FeynmanRules[z9norm[z9tot] - z9norm[HC[z9tot]], ScreenOutput -> False, Sequence @@ z9frOpts]; z9tH += AbsoluteTime[] - z9t],
+         {z9i, z9mine}];
+      z9pf = vdir <> "/" <> nm <> ".part" <> ToString[z9partI[[1]]] <> "of" <> ToString[z9partI[[2]]] <> ".mx";
+      z9partDef = z9def; z9partV = z9pv; z9partH = z9ph; z9partTV = z9tV; z9partTH = z9tH;
+      DumpSave[z9pf <> ".tmp", {z9partDef, z9partV, z9partH, z9partTV, z9partTH}]; RenameFile[z9pf <> ".tmp", z9pf, OverwriteTarget -> True];
+      Print["[part] ", nm, " part ", z9part, " saved: FeynmanRules ", Round[z9tV, 0.1], " s, Hermiticity ", Round[z9tH, 0.1], " s"];
+      Return[$z9PartDone]];
+    (* the merge: every chunk from exactly one part, all computed from this chunk list *)
+    z9vs = <||>; z9hs = <||>;
+    Do[z9pf = vdir <> "/" <> nm <> ".part" <> ToString[z9i] <> "of" <> ToString[z9partN] <> ".mx";
+       If[! FileExistsQ[z9pf], Print["[part] FATAL: ", nm, " part ", z9i, " of ", z9partN, " is missing"]; Quit[2]];
+       Clear[z9partDef, z9partV, z9partH, z9partTV, z9partTH]; Get[z9pf];
+       If[z9partDef =!= z9def, Print["[part] FATAL: ", nm, " part ", z9i, " was computed from another definition"]; Quit[2]];
+       If[Intersection[Keys[z9vs], Keys[z9partV]] =!= {}, Print["[part] FATAL: ", nm, " a chunk is in two parts"]; Quit[2]];
+       z9vs = Join[z9vs, z9partV]; z9hs = Join[z9hs, z9partH]; z9tV += z9partTV; z9tH += z9partTH,
+       {z9i, z9partN}];
+    If[Sort[Keys[z9vs]] =!= Range[Length[z9chunks]] || (z9herm && Sort[Keys[z9hs]] =!= Range[Length[z9chunks]]),
+      Print["[part] FATAL: ", nm, " the parts do not hold every chunk once"]; Quit[2]];
+    z9vs = Join @@ Table[z9vs[z9i], {z9i, Length[z9chunks]}];
+    z9hs = If[z9herm, Join @@ Table[z9hs[z9i], {z9i, Length[z9chunks]}], {}];
+    Print["[part] ", nm, " merged ", z9partN, " parts, ", Length[z9chunks], " chunks"];
+    Return[{If[z9vs === {}, {}, MergeVertices[z9vs]], If[z9hs === {}, {}, MergeVertices[z9hs]]}]];
   z9t = AbsoluteTime[];
   z9ps = z9pieces[nm];
-  If[z9epseps, z9ps = {#[[1]], Expand[#[[2]] /. z9epsepsRule]} & /@ z9ps;
-    Print["[epseps] ", nm, " monomials after the Eps-pair rewrite ", Total[z9nt[#[[2]]] & /@ z9ps]]];
-  z9lags = {#[[1]], z9post[ExpandIndices[#[[2]], FlavorExpand -> {SU2W, SU2D}] /. z9fm]} & /@ z9ps;
+  (* every piece in a bucket that adds its h.c.: the block is Hermitian by construction *)
+  z9allHC = AllTrue[z9ps, First];
+  (* one monomial to the terms FeynmanRules takes: the Eps-pair rewrite, the expansion of the indices
+     and the leg range, each on this monomial alone, so that the monomials can be expanded side by side *)
+  z9expand[z9p_] := Module[{z9q = z9p},
+    If[z9epseps, z9q = {z9q[[1]], Expand[z9q[[2]] /. z9epsepsRule]}];
+    z9q = {z9q[[1]], z9post[ExpandIndices[z9q[[2]], FlavorExpand -> {SU2W, SU2D}] /. z9fm]};
+    If[(z9maxlegs =!= None || z9minlegs =!= None) && z9q[[2]] =!= 0, z9q = {z9q[[1]], z9legFilter[z9q[[2]]]}];
+    z9q];
+  z9dropped = 0;
+  Which[
+    z9expI =!= None,
+    (* DIM8_PART=expand/i/n: the monomials i, i+n, ... of this definition of the block, saved by number *)
+    z9mine = Range[z9expI[[1]], Length[z9ps], z9expI[[2]]];
+    z9expDef = z9def; z9expNP = Length[z9ps]; z9expL = Association[(# -> z9expand[z9ps[[#]]]) & /@ z9mine];
+    z9expT = AbsoluteTime[] - z9t; z9expDropped = z9dropped;
+    z9pf = vdir <> "/" <> nm <> ".exp" <> ToString[z9expI[[1]]] <> "of" <> ToString[z9expI[[2]]] <> ".mx";
+    DumpSave[z9pf <> ".tmp", {z9expDef, z9expNP, z9expL, z9expT, z9expDropped}]; RenameFile[z9pf <> ".tmp", z9pf, OverwriteTarget -> True];
+    Print["[part] ", nm, " expansion ", z9part, ": ", Length[z9mine], " of ", Length[z9ps], " monomials in ", Round[z9expT, 0.1], " s"];
+    Return[$z9PartDone],
+    z9prepN =!= None,
+    (* DIM8_PART=prep/n: the n expansions joined in the order of the monomials, each monomial from one *)
+    z9lags = <||>; z9tE = AbsoluteTime[] - z9t;
+    Do[z9pf = vdir <> "/" <> nm <> ".exp" <> ToString[z9i] <> "of" <> ToString[z9prepN] <> ".mx";
+       If[! FileExistsQ[z9pf], Print["[part] FATAL: ", nm, " expansion ", z9i, " of ", z9prepN, " is missing"]; Quit[2]];
+       Clear[z9expDef, z9expNP, z9expL, z9expT, z9expDropped]; Get[z9pf];
+       If[z9expDef =!= z9def || z9expNP =!= Length[z9ps], Print["[part] FATAL: ", nm, " expansion ", z9i, " was made from another definition"]; Quit[2]];
+       If[Intersection[Keys[z9lags], Keys[z9expL]] =!= {}, Print["[part] FATAL: ", nm, " a monomial is in two expansions"]; Quit[2]];
+       z9lags = Join[z9lags, z9expL]; z9tE += z9expT; z9dropped += z9expDropped,
+       {z9i, z9prepN}];
+    If[Sort[Keys[z9lags]] =!= Range[Length[z9ps]], Print["[part] FATAL: ", nm, " the expansions do not hold every monomial once"]; Quit[2]];
+    z9lags = Table[z9lags[z9i], {z9i, Length[z9ps]}],
+    True,
+    z9lags = z9expand /@ z9ps];
   z9lags = Select[z9lags, #[[2]] =!= 0 &];
+  If[z9epseps, Print["[epseps] ", nm, " Eps pairs rewritten before the expansion"]];
   If[z9maxlegs =!= None || z9minlegs =!= None,
-    z9dropped = 0; z9lags = {#[[1]], z9legFilter[#[[2]]]} & /@ z9lags; z9lags = Select[z9lags, #[[2]] =!= 0 &];
     Print["[legs] ", nm, " leg range ", {z9minlegs, z9maxlegs}, ": terms dropped before FeynmanRules ", z9dropped, ", kept ", Total[z9nt[#[[2]]] & /@ z9lags]]];
   If[z9split, z9lags = Flatten[Table[If[Head[z9l[[2]]] === Plus, {z9l[[1]], #} & /@ (List @@ z9l[[2]]), {z9l}], {z9l, z9lags}], 1];
     Print["[split] ", nm, " monomial structure flattened: ", Length[z9lags], " expanded terms are the chunk units"]];
@@ -510,10 +618,18 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
        AppendTo[z9chunks, z9cur]; z9cur = {}; z9n = 0];
      AppendTo[z9cur, z9l]; z9n += z9nt[z9l[[2]]], {z9l, z9lags}];
   If[z9cur =!= {}, AppendTo[z9chunks, z9cur]];
-  z9tE = Round[AbsoluteTime[] - z9t, 0.1];
+  z9tE = Round[If[z9prepN =!= None, z9tE, AbsoluteTime[] - z9t], 0.1];
   Print["[termwise] ", nm, " monomials ", Length[z9ps], " expanded terms ", Total[z9nt[#[[2]]] & /@ z9lags], " chunks ", Length[z9chunks], " tExpand ", z9tE];
+  If[z9part === "prep" || z9prepN =!= None,
+    z9cfDef = z9def; z9cfChunks = z9chunks; z9cfTE = z9tE; z9cfAllHC = z9allHC;
+    DumpSave[z9cf <> ".tmp", {z9cfDef, z9cfChunks, z9cfTE, z9cfAllHC}]; RenameFile[z9cf <> ".tmp", z9cf, OverwriteTarget -> True];
+    Print["[part] ", nm, " chunks saved: ", Length[z9chunks]];
+    Return[$z9PartDone]];
   z9vs = {}; z9hs = {}; z9start = 1;
-  z9ck = vdir <> "/" <> nm <> ".partial.mx"; z9sig = Hash[{Length /@ z9chunks, z9chunk, z9maxlegs, z9minlegs, z9epseps, z9hermOnly, z9split}];
+  (* the definition of the block is in the fingerprint, so that a partial file of an operator that has
+     changed since is not resumed, even when the chunks have the same lengths *)
+  z9ck = vdir <> "/" <> nm <> ".partial.mx"; z9sig = Hash[{Length /@ z9chunks, z9chunk, z9maxlegs, z9minlegs, z9epseps, z9hermOnly, z9split,
+    Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold]}];
   If[z9checkpoint && FileExistsQ[z9ck],
     Quiet[Get[z9ck]];
     If[ValueQ[z9ckSig] && z9ckSig === z9sig, z9vs = z9ckVs; z9hs = z9ckHs; z9tV = z9ckTV; z9tH = z9ckTH; z9start = z9ckDone + 1;
@@ -552,9 +668,19 @@ z9firstOrder[z9vs_List] := If[! (ListQ[DIM6$FirstOrder] && DIM6$FirstOrder =!= {
     Print["[firstorder] ", Length[z9vs], " vertices cut at first order in ", DIM6$FirstOrder, ", ",
           Count[z9out, {_, 0}], " of them vanish"];
     DeleteCases[z9out, {_, 0}]]];
+(* Whether the stamp of a cached block differs from the current source of the block.  The stale
+   command of validate/cache_source.py exits 0 exactly in that case, so that any failure to run it,
+   a machine without python3 for one, reads as not stale: the block is then skipped as it would be
+   without the stamps, and the writer, which makes the same comparison before it loads anything,
+   stops on it or says that it cannot check. *)
+z9staleQ[nm_String] := Run["python3 '" <> $root <> "/validate/cache_source.py' stale '" <> vdir <> "' " <> nm <> " > /dev/null 2>&1"] === 0;
 runblk[n_Integer] := runblk["L8op" <> ToString[n]];
-runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
+runblk[nm_String] := Module[{mx, wx, st, tt, lagX, te, tv, th, nv, nh, nraw, z9keepRange = False},
+  If[z9srcMovedQ[],
+    Print["[stopped] before ", nm, ": a source file has changed since this worker loaded it, and the blocks left would be built from its old text.  Run the worker again."];
+    Quit[3]];
   mx = vdir <> "/" <> nm <> ".mx";
+  wx = vdir <> "/" <> nm <> ".wxf";
   st = vdir <> "/" <> nm <> ".status";
   (* DIM8_HERMONLY: revisit blocks built with the check deferred (status "nonhermitian -1")
      and run only the Hermiticity test on them, leaving the cached vertices alone. *)
@@ -589,8 +715,35 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
        RegularExpression["tHerm [0-9.]+"] -> "tHerm " <> ToString[th]}], "Text"];
     Print["[herm] ", nm, " | nonhermitian ", nh, " | tHerm ", th];
     Return[Null]];
-  If[FileExistsQ[mx] && FileExistsQ[st],
-    Print["[skip] ", nm, " cached"]; Return[Null]];
+  (* A stale block goes before the rebuild starts, its vertices with its status line, so that a
+     kernel that dies during the rebuild leaves a block that is missing and not one that reads as
+     unstamped and passes the writer.  A cached .wxf counts as cached, as it does for the writer and
+     for validate/cache_source.py.  The rebuild writes a .mx, and the writer refuses a block held in
+     two files, so a .wxf without a status line goes too. *)
+  If[z9part === "prep" || z9partI =!= None || z9expI =!= None || z9prepN =!= None,
+    If[! z9termwise, Print["[part] FATAL: DIM8_PART needs the term-wise path"]; Quit[2]];
+    z9vertsTermwise[nm]; Return[Null]];
+  If[(FileExistsQ[mx] || FileExistsQ[wx]) && FileExistsQ[st],
+    If[! z9staleQ[nm], Print["[skip] ", nm, " cached"]; Return[Null]];
+    Print["[stale] ", nm, " was built from a different source than it has now, rebuilding"];
+    (* A block built with a leg range is rebuilt with it, and in the Levi-Civita form with the chunks
+       that a leg cap goes with (CAP_ENV of ./dim8), whoever runs the worker.  Otherwise a worker run alone
+       would take a stale capped G^4 operator to its seven- and eight-gluon vertices, past the memory
+       of a node, after deleting the status line that holds the cap.  A range, a form or a chunk size this
+       worker was given comes first. *)
+    If[z9maxlegs === None && z9minlegs === None,
+      z9stCap = StringCases[Import[st, "Text"], "maxlegs " ~~ z9d : DigitCharacter .. :> ToExpression[z9d]];
+      z9stMin = StringCases[Import[st, "Text"], "minlegs " ~~ z9d : DigitCharacter .. :> ToExpression[z9d]];
+      If[z9stCap =!= {} || z9stMin =!= {},
+        z9keepRange = True;
+        {z9maxSaved, z9minSaved, z9epsSaved, z9chunkSaved} = {z9maxlegs, z9minlegs, z9epseps, z9chunk};
+        If[z9stCap =!= {}, z9maxlegs = First[z9stCap]]; If[z9stMin =!= {}, z9minlegs = First[z9stMin]];
+        If[Environment["DIM8_EPSEPS"] === $Failed, z9epseps = False];
+        If[Environment["DIM8_CHUNK"] === $Failed, z9chunk = 25];
+        z9frOpts = z9mkFrOpts[];
+        Print["[stale] ", nm, " keeps the leg range of its status line: ", {z9minlegs, z9maxlegs}]]];
+    DeleteFile[Select[{mx, st}, FileExistsQ]]];
+  If[FileExistsQ[wx], DeleteFile[wx]];
 
   If[z9termwise,
     {z9rawV, z9rawH} = z9vertsTermwise[nm]; te = z9tE;
@@ -599,7 +752,9 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
     nv = Length[FR$Vert];
     DumpSave[mx, FR$Vert];
     tt = AbsoluteTime[];
-    nh = If[z9herm, Length[Select[canonVerts[z9rawH], z9lorentzKeepQ]], -1];
+    (* with the check off, a block whose every piece adds its h.c. (the general flavour form of a
+       fermionic operator, gen/emit_flavour.py) is Hermitian by construction, "nonhermitian hc" *)
+    nh = If[z9herm, Length[Select[canonVerts[z9rawH], z9lorentzKeepQ]], If[TrueQ[z9allHC], "hc", -1]];
     th = If[z9herm, Round[z9tH + AbsoluteTime[] - tt, 0.1], 0],
     (* whole-block path *)
     tt = AbsoluteTime[]; lagX = Symbol[nm]; te = Round[AbsoluteTime[] - tt, 0.1];
@@ -612,6 +767,10 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
     nh = If[z9herm, Length[Select[canonVerts[CheckHermiticity[lagX, ScreenOutput -> False]], z9lorentzKeepQ]], -1];
     th = If[z9herm, Round[AbsoluteTime[] - tt, 0.1], 0]];
 
+  If[z9srcMovedQ[],
+    Print["[stopped] ", nm, ": a source file changed while it was being built, so its vertices are dropped.  Run the worker again."];
+    DeleteFile[mx];
+    Quit[3]];
   Export[st, nm <> " | vertices " <> ToString[nv] <> " | rawvertices " <> ToString[nraw] <> " | nonhermitian " <> ToString[nh] <>
              " | tEval " <> ToString[te] <> " | tVert " <> ToString[tv] <> " | tHerm " <> ToString[th] <>
              If[z9maxlegs === None, "", " | maxlegs " <> ToString[z9maxlegs]] <>
@@ -622,6 +781,9 @@ runblk[nm_String] := Module[{mx, st, tt, lagX, te, tv, th, nv, nh, nraw},
     Print["[warn] ", nm, " could not be stamped with its source"]];
   Print["[done] ", nm, " | vertices ", nv, " | nonhermitian ", nh,
         " | tEval ", te, " | tVert ", tv, " | tHerm ", th];
+  If[z9keepRange,
+    {z9maxlegs, z9minlegs, z9epseps, z9chunk} = {z9maxSaved, z9minSaved, z9epsSaved, z9chunkSaved};
+    z9frOpts = z9mkFrOpts[]];
   ClearAll[FR$Vert]; Clear[lagX];
 ];
 

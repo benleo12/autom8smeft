@@ -26,7 +26,7 @@ drive it yourself, the whole model in one process is
     set ebeam1 6800
     set ebeam2 6800
     set hel_recycling False
-    set lam__2 1000
+    set Lam 1000
     set c8q2W2Dx1 1.0
     done
 
@@ -53,9 +53,11 @@ At the level of cross sections, the 21 class interferences of `p p > w+ w-` sum 
 result at 0.7 sigma and its 86 single-operator interferences at 0.5 sigma, which is a real
 additivity test over 86 independent MadGraph runs.
 
-The same Ward identities with the dimension-six sector on instead: the 64 real coefficients of
-block `DIM6`, thirty processes, at `NP<=1` and at `NP<=2`, the fifty-eight checks with an
-amplitude passing at the 1e-13 level on the released `dim68_is` (`ve ve~ > a z` has none). And the two-point terms, which no
+The same Ward identities with the dimension-six sector on instead: the 66 coefficients of
+block `DIM6` and the phases of the complex ones, thirty processes, at `NP<=1` and at `NP<=2`. In
+both combined models the twenty-nine with an amplitude pass at `NP<=1` (`ve ve~ > a z` has none),
+and at `NP<=2` all of them but `u u~ > t t~ g` and `u u~ > t t~ a`, which MadGraph 3.5.6 cannot
+evaluate in this check (the header of `validate/mg5_gluon_check.sh` says why), the worst at 3e-12. And the two-point terms, which no
 Ward identity on a `Z` or a Higgs can see: `validate/check_bilinears.wls` shows the twelve kinetic
 and mass terms of the gauge bosons and the Higgs canonical through `1/Lambda^4` with nine
 dimension-six coefficients on, in both input schemes. "The dimension-six sector" below says what
@@ -105,8 +107,8 @@ does by default (its linearised option uses dummy fields and a custom propagator
 warns that expanding a mass shift inside a propagator distorts the W line shape). So the complete
 1/Lambda^4 prediction is the `NP^2==2` cross section plus the difference of the `NP=0` cross
 section with the coefficients on and off. That bracket is zero in any process in which no W is
-produced or exchanged. VBF di-Higgs has no W in its final state and the bracket is 6.8 per cent of
-its cross section, through the W mass in its two t-channel propagators. Since the `NP=0` row is
+produced or exchanged. VBF di-Higgs has no W in its final state and the bracket is 5.9 per cent of
+its cross section (every coefficient at 1, Lambda at 1 TeV, `ptj` = 25 GeV, `etaj` = 5, `mmjj` = 400 GeV), through the W mass in its two t-channel propagators. Since the `NP=0` row is
 the cheapest one in any study, run it both ways rather than guess. In the {M_W, M_Z, G_F} scheme
 the bracket is absent by construction.
 
@@ -115,7 +117,7 @@ and cancel, when they carry couplings equal up to sign, and MadGraph then merges
 routine that ALOHA reduces to zero. A coefficient can also vanish as a whole. The twelve
 four-fermion field-strength operators with two identical currents, those of `l^4B`, `q^4B`, `e^4B`,
 `u^4B` and `d^4B`, are symmetric in the Lorentz indices of an antisymmetric field strength and
-vanish for flavour-universal coefficients, yet FeynRules writes some of them as pairs of structures
+vanish once the currents are flavour diagonal, yet FeynRules writes some of them as pairs of structures
 that differ by a swap of two dummy indices inside one `Epsilon` and carry the same coupling.
 `validate/drop_zero_structures.py` groups the structures of every vertex by coupling, removes a group
 whose sum vanishes, and sets to zero every coefficient whose whole contribution vanishes. A group can
@@ -126,8 +128,8 @@ every vertex with the same legs and the colours are compared in a canonical spel
 pair changes no amplitude, but it puts `c8G2H4x1` on `g g g g`, where it reads as a shift of
 alpha_s. `tests/test_gluon_normalisation.py` fails on it. Every
 vertex of the released models equals the vertex FeynRules wrote at a common random point with all
-coefficients on, so nothing live is removed. With `Q_{q^4H^2}^{(5)}`, which vanishes for a
-flavour-universal coefficient as well, thirteen of the 674 have no vertex ("The thirteen operators
+coefficients on, so nothing live is removed. With `Q_{q^4H^2}^{(5)}`, which vanishes with
+flavour-diagonal currents as well, thirteen of the 674 have no vertex ("The thirteen operators
 that vanish", below). `validate/zero_vertex.py --wcs` evaluates every
 coefficient's vertices at one common point and finds no cancelling coefficient in a released model.
 
@@ -249,7 +251,7 @@ To repeat these checks:
 
     WARD_ON=dim6 WARD_ORDER="NP<=1" validate/mg5_gluon_check.sh models/dim68_is "" validate/procs_dim6.txt
     WARD_ON=dim6 WARD_ORDER="NP<=2" validate/mg5_gluon_check.sh models/dim68_is "" validate/procs_dim6.txt
-    wolframscript -file validate/check_bilinears.wls
+    DIM8_ROOT=$PWD wolframscript -file validate/check_bilinears.wls
     python3.11 validate/gf_closure.py models/dim68_is
 
 The last is the one with a physical observable in it: muon decay, which must not move when a
@@ -296,33 +298,96 @@ the coupling-order label is not a complete bookkeeping of the Lambda expansion i
 Disagreeing with that reading would be a real finding.
 
 **The thirteen operators that vanish.** Twelve of them contract two identical currents, symmetric
-in their Lorentz indices, with an antisymmetric field strength, and `Q_{q^4H^2}^{(5)}` vanishes for
-a flavour-universal coefficient as well. Two more, `Q_{udWH^2}^{(1,2)}`, vanish as printed in the
+in their Lorentz indices, with an antisymmetric field strength, and `Q_{q^4H^2}^{(5)}` vanishes with
+flavour-diagonal currents as well. Two more, `Q_{udWH^2}^{(1,2)}`, vanish as printed in the
 Murphy basis whatever the flavour, since `\widetilde H^\dag \overleftrightarrow D^I H` sandwiches the
 symmetric matrix epsilon tau^I between identical doublets. The Hilbert series counts two operators of
 that field content, so the model encodes D^mu of the triplet bilinear, `D^\mu(\widetilde H^\dag \tau^I H)
-W^I_{\mu\nu}` and its dual, which have vertices (`gen/murphy_patches.py`; `tests/test_emit.py` fails if
-the vanishing form returns). I claim the thirteen are a consequence of taking one flavour-universal coefficient per operator
-and not a defect, and the argument is short enough to check independently in ten minutes. If any of
-them should be nonzero the whole flavour-universal simplification is in question.
+W^I_{\mu\nu}` and its dual, which have vertices. I claim the thirteen are a consequence of taking one coefficient per operator with flavour-diagonal
+currents, as both flavour modes of `gen/emit_fr.py` do, and not a defect, and the argument is short enough to check independently in ten minutes. If any of
+them should be nonzero the whole one-coefficient simplification is in question.
 
-**Class 1 at high multiplicity.** `Q_{G^4}^{(4)}` and `Q_{G^4}^{(8)}` carry no seven- or
-eight-gluon vertex in the shipped model. Nothing below seven external gluons can see it, so it
-does not affect any realistic process, but it is a genuine hole rather than a physical zero.
+**Class 1 at high multiplicity.** FeynRules exceeds 122 GB on the seven- and eight-gluon vertices of
+the six `Q_{G^4}` operators with a dual field strength, so `validate/g4_highleg.py` writes them from
+the operators as a sum over the assignments of the legs to the fields. `Q_{G^4}^{(2)}` has neither and
+`Q_{G^4}^{(5)}` has no eight-gluon vertex, by the Jacobi identity. Break it by changing a sign or a factor
+of the sum: `check` compares the sum with FeynRules at every number of gluons FeynRules reaches, on all
+nine operators, and with the exact plane-wave coefficient of `validate/dualdual_highleg.py` at all of
+them, and `ufo` repeats the second comparison on a written model.
 
-**Conventions against an external implementation.** The bosonic classes 1 to 8 are compared with
-SmeftFR's dimension-eight files vertex by vertex (`validate/smeftfr_by_class/`). That comparison
-runs in unitary gauge with our covariant derivative on both sides, so it tests the operators as
-written and not the derivative sign or the Goldstone sector. No cross section has been compared
+**Conventions against an external implementation.** The bosonic classes 2 and 4 to 8 are compared
+with SmeftFR's dimension-eight files vertex by vertex (`validate/smeftfr_by_class/`), 44 pairs and 851
+vertices of the difference, none surviving. Each vertex of the difference is contracted at random
+points, every free index with a dense random vector of its own and the arithmetic exact, three times
+(`validate/fr_compare.wls`). An earlier version drew single values of the indices, which can miss a
+sparse tensor, so a report older than 2026-11-01 means less than this one. The test stops if it fails any of
+ten cases at load, among them a wrong relative sign, a colour tensor on six gluons and the Jacobi identity.
+Break it by planting a wrong norm or a mismatched pair in a pair list. The X^4 operators of class 1 are
+compared as polynomials in the field strengths (`validate/x4_polynomial.wls` and `.py`), which holds at
+every number of legs, since FeynRules cannot reach the difference there. All 43 agree, and each differs
+from the other 42, which must fail. Nine of them without a dual go through FeynRules as well
+(`class1_nodual.m`). Class 3 is left out, as `validate/smeftfr_pairs.m` explains, since the two bases differ
+there. All of this runs in unitary gauge with our covariant derivative on both sides, so it tests the
+operators as written and not the derivative sign or the Goldstone sector. No cross section has been compared
 against an independent dimension-eight implementation. The overlap with the Eboli and
 Gonzalez-Garcia quartic-gauge operators is the obvious target, and a single matched cross section
 would either close a convention question or open a real one.
 
+**The powers of lambda.** `./dim8 select` prints beside each operator the power of lambda of its
+leading tree, and `./dim8 series` writes the amplitude out topology by topology, in the energy
+counting of arXiv:2504.10617, (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1). A power predicts
+which operators grow fastest with energy. It is not a bound, and fitting an energy exponent to a
+cross section does not test it. Chirality decides which trees count. A massless quark or lepton
+keeps its chirality along a fermion line, since only its mass or its Yukawa coupling flips it, and
+the counting keeps those of the top quark alone, a top mass insertion costing one power of lambda.
+A photon or Z line between a right-handed current and a W-pair vertex of the Standard Model costs
+two more powers, since a right-handed fermion couples to them through the hypercharge boson alone,
+which has no W-pair vertex, so the two trees cancel up to M_Z^2/E^2. MadGraph's polarisation marks
+name a channel: a W or Z marked `{0}` is counted by the equivalence theorem, as its Goldstone boson
+at no cost or as the gauge boson at one power of lambda, and `{T}`, like no mark, is transverse.
+
+The claim I would attack is the interference test of `./dim8 series`, because it is sharp. A term is
+kept only where its tree gives the massless external quarks and leptons the chiralities of some
+Standard Model tree, and is marked as interfering k powers down where the Standard Model trees with
+those chiralities lie k powers above the leading ones (right-handed quarks in `u u~ > w+ w-` are two
+powers down). So a class the series leaves out must give no interference once the light fermions
+are massless. The model carries their masses (`MU` is 2.55 MeV in the card), so import it with the
+card of the left-out class (`dim8_is-cls10` for
+psi^2XH^3 in `u u~ > w+ w-`, say), generate `NP^2==2`, and set the masses and Yukawa couplings of the
+light quarks, the b included, and of the leptons to zero in the param card (blocks `MASS` and
+`YUKAWA`) before the run. MadGraph takes the same polarisation marks, so the test also runs channel
+by channel. A nonzero rate is a term the series left out that interferes after all. The same holds
+for an operator that
+`./dim8 select` flags "only through the Yukawa coupling or the mass of a light quark or a lepton",
+unless it also enters the input relations: with those couplings at zero it has no amplitude in the
+process at all. The other place to look is the on-shell rule. A three-point vertex of two light
+fermions that vanishes between massless spinors, or that is proportional to the square k^2 of its
+boson's momentum, cancels a propagator and leaves a local term of the same power, so a wrong verdict
+puts a term in the wrong topology or drops it. `validate/onshell_zero.py` decides each vertex
+numerically and writes the verdicts to `build/onshell_zero.json`. The class to check by hand is
+psi^2H^2D^3: its q qbar h vertex should vanish between massless spinors, and its q qbar Z vertex
+should be k^2 times a remainder, since Q + Q^dag couples the Z to the total derivative of the quark
+current.
+
+**The dimension-six selection.** `./dim8 select --with-dim6` says which dimension-six coefficients can
+change a process at 1/Lambda^4, and a complement of the selection cannot test that: couplings that
+cancel between vertex objects leave diagrams that vanish, and a coefficient that enters only together
+with a selected one does nothing while that one is zeroed. So
+`validate/select_complement6.py "your process" --model models/dim68_mw` compares matrix elements. At
+random coefficient values and phase-space points, in every subprocess, at `NP^2==1` and at `NP^2==2`,
+|M|^2 with every dimension-six coefficient on must equal |M|^2 with only the kept ones on, to 1e-10. A
+process where it does not is a coefficient the selector misses. `--drop cHW` on `p p > w+ w-` takes a kept
+coefficient out and shows that the check can fail.
+
 ## Traps that look like physics failures
 
-`set Lam 1000` at the launch prompt does nothing at all and prints no error. MadGraph lowercases
-parameter names, `lam` is already the Higgs quartic, and the card therefore calls the scale
-`lam__2`. Use `set lam__2 1000` or `set dim8 0 1000`.
+A restriction card is more than a list of what to keep. MadGraph evaluates the couplings at the
+values of the card and fuses any two of one order that agree there up to sign, to about ten digits,
+into one, which keeps the formula of the first at any values of the run, and it removes a coupling
+that vanishes there with its vertices. A card written by hand with round numbers can do this and say
+nothing: `cHbox` at 0.106 and `cee` at 0.159 fuse `-3 cHbox` on `H H H H` with `2 cee` on `e e mu mu`.
+`validate/make_restriction.py` and `./dim8 select --card` write values with no such relation, so use
+them, and `validate/make_restriction.py --renew <model>` gives those values to the cards of a model.
 
 `hel_recycling` defaults to on in MadGraph 3.5 and fails at event generation on these Lorentz
 structures with "split amp are not supported for spin2 and 3/2". Set it to `False`. The default
@@ -350,10 +415,13 @@ gets classes 11, 13, 14 and 15.
 the full cross section as its weight and sigma is the mean of the weights rather than the sum.
 Normalise histograms to the banner's integrated weight.
 
-Diagram generation is what the full basis costs. `p p > w+ w- NP<=2` is 458 diagrams in 25
-seconds, but `p p > h h j j QCD=0 NP<=2` on the unrestricted model is 166 subprocesses and 298888
-diagrams in four and a half minutes followed by hours of code generation, because every
-four-fermion and psi^2XH operator adds a contact term. Restrict first.
+Diagram generation is what the full basis costs. Measured on `dim8_mw` with `NP^2==2` on a Mac mini:
+`p p > w+ w-` is 452 diagrams and a 32-second session on the unrestricted model, but
+`p p > h h j j QCD=0` is 268104 diagrams and a 2.2-hour session, of which 1.7 hours are the generate
+step. Any restriction card cuts this, because MadGraph drops the couplings that vanish with it (for
+example those proportional to the zero light-quark Yukawa couplings): with `dim8_mw-all`, which keeps
+every operator, HHjj is 173928 diagrams in 47 minutes, and with the selector's card the same 173928
+diagrams in 39 minutes. Restrict first.
 
 Use Python 3.11. Python 3.12 generates events but disables reweighting and 3.13 breaks
 `model_reader`.

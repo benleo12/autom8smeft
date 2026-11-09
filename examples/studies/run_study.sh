@@ -2,11 +2,12 @@
 # Driver for the paper's studies: cross sections at 13.6 TeV for a list of processes, at each
 # order of the Lambda expansion, for the full model and for one operator class at a time.
 #   usage: examples/studies/run_study.sh <study dir> [model dir] [nevents]
+# The model is models/dim8_mw, the {MW, MZ, GF} scheme, unless [model dir] names another.
 # <study dir> holds processes.txt (one MadGraph process per line, run-card settings after a '|'
 # as "ptj=20 mmjj=500", and after a second '|' optionally the restriction card to use for the
-# "full model" rows of that process: p p > h h j j QCD=0 NP<=2 on the unrestricted model is
-# 298888 diagrams in 166 subprocesses, hours of code generation per order, so the VBF study
-# runs its full rows on the bosonic card) and classes.txt (one restriction-card name per line,
+# "full model" rows of that process: p p > h h j j QCD=0 NP^2==2 on the unrestricted dim8_mw is
+# 268104 diagrams and a 2.2-hour MadGraph session (Mac mini, 2026-10-30), so the VBF study runs its
+# full rows on the bosonic card) and classes.txt (one restriction-card name per line,
 # for cards that ship with the model or that validate/make_restriction.py writes into the model
 # directory).  Optionally coefficients.txt gives "NAME=VALUE" assignments applied at every launch.
 # The default is every dimension-eight coefficient at 1 with Lam at 3000 GeV, the scale at which the
@@ -22,7 +23,7 @@
 # ~/dim8auto_build/mg5runs).  $DIM8_CORES (default 2) caps the number of cores.  Results append
 # to <study dir>/results.tsv.
 set -u
-ST=$(cd "${1:?study dir}" && pwd); MODEL=$(cd "${2:-models/dim8_is}" && pwd); NEV=${3:-5000}
+ST=$(cd "${1:?study dir}" && pwd); MODEL=$(cd "${2:-models/dim8_mw}" && pwd); NEV=${3:-5000}
 MG=${MG5_DIR:-${MG5_DIR:-/path/to/MG5_aMC}}; PY=$(command -v python3.11 || command -v python3)
 RUNS=${DIM8_RUNS:-$HOME/dim8auto_build/mg5runs}; CORES=${DIM8_CORES:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -35,9 +36,15 @@ OUT=$ST/results.tsv; [ -f $OUT ] || printf "process\tmodel\torder\tsigma_pb\terr
 # cannot tag it.  The complete 1/Lambda^4 prediction is
 #     sigma_int = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 # and the bracket is what this row measures.  It is zero in a process in which no W is produced
-# or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 6.8 per cent with every
-# coefficient at 1 and Lam at 1 TeV).  See docs/HOW_TO_BREAK_IT.md.
+# or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 5.9 per cent with every
+# coefficient at 1 and Lam at 1 TeV, ptj = 25 GeV, etaj = 5, mmjj = 400 GeV).  See docs/HOW_TO_BREAK_IT.md.
 ORDERS=("NP=0" "NP=0 on" "NP^2==2" "NP<=2 NP^2==4")
+# The bracket exists only where M_W is derived.  In a model that takes M_W as an input (dim8_mw)
+# no mass depends on a coefficient, so the "NP=0 on" row would repeat the NP=0 row to every digit
+# (it did, in all twelve processes of the 2026-10-29 studies), and it is not run.
+if grep -A1 "^MW = Parameter(name = 'MW'," "$MODEL/parameters.py" | grep -q "nature = 'external'"; then
+  ORDERS=("NP=0" "NP^2==2" "NP<=2 NP^2==4")
+fi
 # $DIM8_ORDERS, a ';'-separated subset such as "NP=0;NP=0 on", reruns only those orders of the
 # full-model rows (the class rows are interference and square and are not affected by it)
 if [ -n "${DIM8_ORDERS:-}" ]; then IFS=';' read -r -a ORDERS <<< "$DIM8_ORDERS"; fi
@@ -79,6 +86,17 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
     echo "$(date +%H:%M) $proc | ${2##*/} | $3 -> $(tail -1 $RUNS/$tag.log)"; rm -rf $d; return
   fi
   $d/bin/generate_events -f run_01 >> $RUNS/$tag.log 2>&1 < /dev/null
+  # MadGraph's integration channels are the diagrams with three-point vertices, weighted by default by
+  # their squared amplitudes.  With the light fermions massless they can all vanish while a contact
+  # diagram does not (in g g > e+ e- at NP^2==4 the only such channel is a Higgs that couples to the
+  # electron), and the run stops with "All amp2 are zero but not the total matrix-element".  Such a
+  # run is done again with each channel weighted by its propagators alone (sde_strategy=2, as in
+  # validate/cp_rates.py), which changes how the phase space is sampled and not the cross section.
+  local rn=run_01
+  if ! grep -q "Cross-section :" $RUNS/$tag.log && grep -qs "All amp2 are zero" $RUNS/$tag.log $d/run_01_tag_1_debug.log; then
+    rn=run_02; echo "   all amp2 zero in run_01, run again with sde_strategy=2" >> $RUNS/$tag.log
+    $PY $HERE/set_cards.py $d sde_strategy=2 >> $RUNS/$tag.log 2>&1 && $d/bin/generate_events -f $rn >> $RUNS/$tag.log 2>&1 < /dev/null
+  fi
   local xs=$(grep -h "Cross-section :" $RUNS/$tag.log | tail -1 | sed 's/.*Cross-section : *//' | awk '{print $1"\t"$3}')
   # The W mass is derived in the {alpha, MZ, GF} scheme, so switching coefficients on moves it and
   # MadGraph says so.  Record it: with every one of the 1030 coefficients at 1 and Lam at 1 TeV it
@@ -89,10 +107,11 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   # has no MW shift and reports the input value).
   # For a restricted model only the card's coefficients exist, whatever dim8_all= says, so the
   # W mass is evaluated with just those switched on (the names come from the card's nonzero
-  # DIM8 entries); the unrestricted model takes the settings as they are.
+  # DIM8 and DIM8F entries, since the further flavour structures of c8l4H2x1 enter muon decay);
+  # the unrestricted model takes the settings as they are.
   local mwsets="$sets"
   if [[ "$2" == *-* ]] && [ -f "$MODEL/restrict_${2##*-}.dat" ]; then
-    mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} b=="DIM8" && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")"$LAMSET"
+    mwsets=$(awk 'toupper($1)=="BLOCK"{b=toupper($2)} (b=="DIM8" || b=="DIM8F") && $1 ~ /^[0-9]+$/ && $2+0 != 0 && $4 != "Lam" {printf "%s=1 ", $4}' "$MODEL/restrict_${2##*-}.dat")"$LAMSET"
     [[ "$sets" == *dim8_all=0* ]] && mwsets="dim8_all=0$LAMSET"
   fi
   # only NAME=number settings can be model parameters.  A run-card cut such as pt_min_pdg={25:100}
@@ -100,8 +119,8 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   local mwextra=""; for tok in $extra; do [[ "$tok" =~ ^[A-Za-z_0-9]+=[-+0-9.eE]+$ ]] && mwextra="$mwextra $tok"; done
   local mw=$($PY $HERE/../../validate/eval_ufo_params.py $MODEL $mwsets $mwextra --show=MW 2>/dev/null | awk '$1=="MW" && $2=="="{printf "%.3f", $3; exit}')
   local lhe="-"
-  if [ -f $d/Events/run_01/unweighted_events.lhe.gz ]; then
-    cp $d/Events/run_01/unweighted_events.lhe.gz $ST/lhe/$tag.lhe.gz; lhe=lhe/$tag.lhe.gz
+  if [ -f $d/Events/$rn/unweighted_events.lhe.gz ]; then
+    cp $d/Events/$rn/unweighted_events.lhe.gz $ST/lhe/$tag.lhe.gz; lhe=lhe/$tag.lhe.gz
   fi
   # An amplitude that integrates to exactly zero is a physics answer, not a failure: class 11
   # (psi^2H^2D^3) does that in p p > e+ e-, where MadGraph generates the diagrams and the survey

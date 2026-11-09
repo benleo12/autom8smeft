@@ -33,8 +33,12 @@ def main() -> int:
     sw2 = (1 - math.sqrt(1 - 4*math.pi*aEW/(math.sqrt(2)*Gf*MZ**2)))/2
     env = dict(vevSM=1/math.sqrt(math.sqrt(2)*Gf), gwSM=math.sqrt(4*math.pi*aEW)/math.sqrt(sw2),
                g1SM=math.sqrt(4*math.pi*aEW)/math.sqrt(1-sw2))
+    # y_e^2 + y_mu^2 of the muon-decay relation, as the model computes it from the masses (gen/input_scheme.py)
+    env["ylsq"] = 2*(0.000511**2 + 0.10566**2)/env["vevSM"]**2
+    # the flavour structures of block DIM8F that reach muon decay are coefficients like the others
     zero = {c: 0.0 for c in ["cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "c8W2H4x1", "c8W2H4x3",
-                             "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2", "c8l2H4Dx2", "c8l2H4Dx4"]}
+                             "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2", "c8l2H4Dx2", "c8l2H4Dx4",
+                             "c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E"]}
     def derived(wc, L6, L8):
         e = {**env, **wc, "L6": L6, "L8": L8}
         d = {k: env[f"{k}SM"]*(1 + ev(F[f"{k}1"], e) + ev(F[f"{k}2"], e)) for k in ("gw", "g1", "vev")}
@@ -84,6 +88,9 @@ def main() -> int:
     on = derived({**zero, "cHl3": 1.0}, 1e-6, 1e-12)
     if abs(on["vev"]-ref["vev"])/ref["vev"] < 1e-9:
         print("  WARNING: cHl3 = 1 did not move vev; the formulae are not wired in"); bad = True
+    on8 = derived({**zero, "c8l4H2x1Fx00": 1.0}, 1e-6, 1e-12)
+    if abs(on8["vev"]-ref["vev"])/ref["vev"] < 1e-12:
+        print("  WARNING: c8l4H2x1Fx00 = 1 did not move vev; the DIM8F structures are not wired in"); bad = True
     print("input scheme: " + ("FAIL" if bad else "PASS"))
     return 1 if bad else 0
 

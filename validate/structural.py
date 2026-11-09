@@ -12,6 +12,9 @@ invariance  gauge invariance by construction:
       * every Lorentz index pair is contracted (already in the dimension check).
     Together with "all tensors are invariant tensors" this is equivalent to gauge invariance.
 
+./dim8 build runs these checks on gen/operators.py before it writes the Lagrangian, and stops when an
+operator fails, so that an edited operator is checked like the others.
+
 Usage:   python3 validate/structural.py                 every operator of gen/operators.py
          python3 validate/structural.py <module.py>     any module defining OPS: list[Operator]
 """
@@ -96,6 +99,8 @@ def gauge_variance_check(term: Term, kind: str) -> list:
 
 def check_operator(op: Operator) -> dict:
     res = {"name": op.name, "wc": op.wc, "ok": True, "problems": []}
+    if not op.terms:
+        return dict(res, ok=False, problems=["the operator has no term"], field_content={})
     d = op.mass_dimension()
     if d != 8:
         res["ok"] = False
@@ -142,24 +147,29 @@ def load_ops(path: str):
     return mod.OPS
 
 
-def main(argv) -> int:
-    """Both checks over the whole encoding, or over a module that defines OPS.
-
-        validate/structural.py                      every operator of gen/operators.py
-        validate/structural.py <module.py>          a module defining OPS
-    """
-    import json
-    root = Path(__file__).resolve().parent.parent
-    ops = load_ops(argv[1] if len(argv) > 1 and argv[1].endswith(".py") else str(root / "gen" / "operators.py"))
+def report(ops) -> int:
+    """Both checks over a list of operators: print the failures and the count, and return the number
+    of operators that fail."""
     results = [check_operator(o) for o in ops]
     nbad = sum(not r["ok"] for r in results)
     for r in results:
         if not r["ok"]:
             print(f"[BAD] {r['name']:32s} {r['wc']:16s} {'; '.join(r['problems'])}")
     print(f"structural: {len(results) - nbad} pass, {nbad} fail, of {len(results)} operators")
+    return nbad
+
+
+def main(argv) -> int:
+    """Both checks over the whole encoding, or over a module that defines OPS.
+
+        validate/structural.py                      every operator of gen/operators.py
+        validate/structural.py <module.py>          a module defining OPS
+    """
+    root = Path(__file__).resolve().parent.parent
+    ops = load_ops(argv[1] if len(argv) > 1 and argv[1].endswith(".py") else str(root / "gen" / "operators.py"))
     # Q_{lq^2uHD}^{(1,2,3)}, not SU(2) covariant as printed in the Murphy basis, are encoded in their
-    # one covariant reading (gen/murphy_patches.py), so every operator must pass.
-    return 0 if nbad == 0 else 1
+    # one covariant reading, so every operator must pass.
+    return 0 if report(ops) == 0 else 1
 
 
 if __name__ == "__main__":

@@ -28,14 +28,15 @@ def main():
     rows, skipped = [], []
     for st, pr, h in T.PROCS:
         d = data[st]
-        allon = [(m, x) for (p_, m, o), x in d.items()
+        mod = T.study_model(d, st)
+        allon =[(m, x) for (p_, m, o), x in d.items()
                  if p_ == pr and o == T.INT and "-cls" not in m and isinstance(x[0], float)]
         for m, (a, ea) in allon:
             which = BOSONIC if m.endswith("-bosonic") else set(T.CLASSES)
             tot = var = 0.0
             miss = []
             for c in which:
-                v = d.get((pr, f"dim8_is-cls{c}", T.INT), (None, None))
+                v = d.get((pr, f"{mod}-cls{c}", T.INT), (None, None))
                 if isinstance(v[0], float):
                     tot += v[0]
                     var += v[1] ** 2

@@ -19,7 +19,13 @@ import itertools
 import math
 import zlib
 
+import os
+import sys
+
 import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import zero_vertex as Z  # noqa: E402
 
 # ------------------------------------------------------------------ numeric Lorentz and colour
 G = np.diag([1.0, -1.0, -1.0, -1.0])
@@ -191,7 +197,6 @@ def evaluate(expr, namespace):
 
 
 # ------------------------------------------------------------------ external states
-SPIN = {}   # pdg -> spin (1 scalar, 2 fermion, 3 vector), from the PDG code
 COLOUR = {}  # pdg -> colour representation (1, 3, -3, 8)
 
 
@@ -250,6 +255,19 @@ def vertex_numbers(entries, need, draws=2, maxlegs=None):
                     inv = sum(1 for i in range(len(pg)) for j in range(i + 1, len(pg)) if pg[i] > pg[j])
                     sign *= -1 if inv % 2 else 1
             perms.append((perm, sign))
+        # With four fermions or more, each structure takes the sign MadGraph puts on its coupling when its
+        # fermion flow is crossed, and the vertex the sign of the order of its fermion legs (validate/zero_vertex.py),
+        # so that the number is the vertex MadGraph computes.  FeynRules writes a vertex of identical fermions as
+        # both pairings with one coupling, which without the signs sums to its Fierz zero in either model.
+        ferm = [order[j] for j in range(len(srt)) if spin_of(srt[j]) == 2]
+        eps = Z.order_sign(ferm) if len(ferm) >= 4 else 1
+        fsign = {}
+        for _, struct, _ in ents:
+            if struct not in fsign:
+                s = Z.structure_sign(struct) if len(ferm) >= 4 else 1
+                if s is None:
+                    raise ValueError(f"no fermion flow for the structure {struct} of {names}")
+                fsign[struct] = eps * s
         reps = {}
         for d in range(draws):
             pol, spn, col, mom = wavefunctions(srt, d)
@@ -266,7 +284,7 @@ def vertex_numbers(entries, need, draws=2, maxlegs=None):
                     c = evaluate(colour, ext.colour_ns(reps))
                     if c == 0:
                         continue
-                    tot += sign * c * evaluate(struct, ext.lorentz_ns())
+                    tot += sign * fsign[struct] * c * evaluate(struct, ext.lorentz_ns())
                 out.setdefault((vi, ei), []).append(tot)
     return out
 

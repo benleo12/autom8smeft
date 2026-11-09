@@ -4,39 +4,133 @@ From a process to cross sections. Needs MadGraph5_aMC@NLO 3.5 and Python 3.11.
 
 ## 1. Install
 
-    ln -s /path/to/autom8smeft/models/dim68_is  /path/to/MG5_aMC/models/dim68_is
+    ln -s /path/to/autom8smeft/models/dim8_mw   /path/to/MG5_aMC/models/dim8_mw
     ln -s /path/to/autom8smeft/models/dim8_is   /path/to/MG5_aMC/models/dim8_is
+    ln -s /path/to/autom8smeft/models/dim68_mw  /path/to/MG5_aMC/models/dim68_mw
+    ln -s /path/to/autom8smeft/models/dim68_is  /path/to/MG5_aMC/models/dim68_is
 
-`dim68_is` carries both sectors, `dim8_is` the dimension-eight one alone and so generates far
-fewer diagrams. Everything below works with either; the examples name `dim8_is` because its
-numbers are the checked ones. The study driver of section 4 finds MadGraph through `MG5_DIR`:
+`dim8_mw` and `dim8_is` carry the dimension-eight sector alone, in the {MW, MZ, GF} and the
+{alpha, MZ, GF} scheme, and so generate far fewer diagrams. `dim68_mw` and `dim68_is` carry both
+sectors, in the same two schemes. Everything below works with any of them. The selector and the study
+driver default to `dim8_mw`, and an example that names `dim8_is` quotes that model's numbers. The
+study driver of section 4 finds MadGraph through `MG5_DIR`:
 
     export MG5_DIR=/path/to/MG5_aMC
 
 ## 2. Which operators enter
 
-    ./dim8 select "u c > u c h"
-    ./dim8 select "u c > u c h" --card vbfh
+    ./dim8 select "u c > u c h" --model models/dim8_is
+    ./dim8 select "u c > u c h" --model models/dim8_is --card vbfh
 
-prints the operators with a tree-level vertex in that process, by class and with the vertex
-each enters through, and then a second group: the operators with no vertex in the process that
+prints the operators with a tree-level vertex in that process, by class and with the vertex of
+each one's leading tree, and then a second group: the operators with no vertex in the process that
 still move its prediction because they enter the {alpha, MZ, GF} relations (c8B2H4x1, c8H6x1,
 c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4 are the eight that can). On
 p p > w+ w- three of them have no vertex in any diagram, and two of those, c8l2H4Dx2 and
 c8l2H4Dx4, carry a third of the effect. The two groups together are complete at tree level with
 one insertion.
 
-`--card NAME` writes `restrict_NAME.dat` into the model (`--model`, default `models/dim8_is`),
-keeping both groups, and `import model dim8_is-NAME` applies it. Nothing is rebuilt at this
-step: FeynRules has already been run, the shipped model carries every vertex of every operator,
-and MadGraph drops the zeroed coefficients and the vertices whose couplings vanish at import.
-The dimension-six coefficients are zeroed unless you add `--with-dim6`, as in the class cards,
-and the kept coefficients carry placeholder values until the param card sets them (section 4).
-`validate/select_complement.py "p p > w+ w-"` checks the selection with MadGraph as the judge:
-a card keeping the complement of the selection generates no diagram. Do not compare diagram
-COUNTS between the full and a restricted model instead: MadGraph drops from a restricted model
+`--card NAME` writes `restrict_NAME.dat` into the model that `--model` names (`models/dim8_mw`, the
+{MW, MZ, GF} scheme, without the option), keeping both groups, and `import model dim8_is-NAME`
+applies it. Nothing is rebuilt at this step: FeynRules has already been run, the shipped model
+carries all its operators, and MadGraph drops the zeroed coefficients and the vertices
+whose couplings vanish at import. With `--model models/dim68_is` the selector lists the
+dimension-six coefficients as well, one by one under their Warsaw classes, from the vertices of each
+coefficient in `build/dim6_index.json`, which `python3 validate/dim6_index.py` writes from the
+released models. The vertices of a coefficient include the Standard Model vertices it rescales, as
+C_HBox rescales h W W, h Z Z and the Yukawa couplings through the normalisation of the Higgs field,
+and such a vertex counts at the power of the Standard Model vertex and four more, v^2/Lambda^2. A
+coefficient with no vertex in a tree of the process can still enter at 1/Lambda^4 where the Standard
+Model has a tree, through a tree with a second dimension-six vertex or through a vertex at `NP=2`
+that multiplies it by a second coefficient or by itself, and is flagged "only with a second
+dimension-six insertion, of this coefficient or another". In g g > t t~, whose Standard Model trees
+the input relations do not shift, C_Hl^(3) and C_ll' still enter that way, since their shift of the
+vev multiplies the chromomagnetic vertex of C_uG. The dimension-six coefficients are zeroed in the
+card unless you add `--with-dim6`, as in the class cards. With it the card keeps exactly the
+dimension-six coefficients listed, those of the input relations included. A model without a
+dimension-six sector of its own, `dim8_mw` or `dim8_is`, refuses the option, since it fixes the
+dimension-six coefficients of its input relations at zero: set alone they would be half a calculation.
+The kept coefficients carry placeholder values until the param card sets them (section 4).
+`validate/select_complement.py "p p > w+ w-"` checks the dimension-eight selection with MadGraph as
+the judge: a card keeping the complement of the selection generates no diagram. It does not check
+the dimension-six selection, since a coefficient whose couplings cancel between vertex objects, as
+the gauge vertices of C_HW cancel against the rescaling of the W field, keeps those couplings in a
+restricted model, where MadGraph would draw diagrams that vanish.
+`validate/select_complement6.py "p p > w+ w-" --model models/dim68_mw` checks that one by matrix
+elements: at random coefficient values and phase-space points, in every subprocess, at `NP^2==1` and at
+`NP^2==2`, |M|^2 with every dimension-six coefficient on must equal |M|^2 with only the kept ones on. Do not compare
+diagram COUNTS between the full and a restricted model instead: MadGraph drops from a restricted model
 every vertex whose couplings evaluate to zero with the card (the u-b-W vertex with the
 Cabibbo-only CKM, for one), and keeps such vertices, and their vanishing diagrams, in the full model.
+
+The power of lambda beside each operator of the first group is that of its leading tree, in the
+energy counting of arXiv:2504.10617, (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1). A Standard
+Model three-point vertex counts lambda^-2 with a momentum or a fermion pair and lambda^-1 with a vev,
+a four-point vertex lambda^0, a propagator lambda^4, and a vertex of an operator of mass dimension d
+with m legs and p Higgs fields set to the vev lambda^(d-12+2m+p). The header gives the power of the
+Standard Model amplitude in the channel the powers are counted in, an unmarked W or Z being
+transverse: lambda^0 in p p > w+ w-, and lambda^1 in u u~ > z h, whose unpolarised amplitude is
+lambda^0 through the longitudinal Z. No Standard Model tree of n external particles lies below
+lambda^(2n-8), and a smaller power is a larger contribution in the tails. The second group multiplies the
+Standard Model amplitude by v^4/Lambda^4 and sits eight powers above it (four for the dimension-six
+coefficients of `dim68_is`, by v^2/Lambda^2). The power predicts which operators grow fastest in
+the tails, E >> v. It says nothing about the inclusive rate, nor about whether the operator
+interferes with the Standard Model, which `./dim8 series` answers below.
+
+Chirality decides which trees count. A massless quark or lepton keeps its chirality along a fermion
+line, since only its mass or its Yukawa coupling flips it, and the counting keeps those of the top
+quark alone, a top mass insertion costing one power of lambda (m_t ~ v stands where pslash ~ E
+would). A tree that needs a light fermion, the b quark included, to flip is therefore not counted,
+and an operator that reaches the process only that way is printed with the remark "only through the
+Yukawa coupling or the mass of a light quark or a lepton". A right-handed quark or lepton couples to
+the photon and the Z through the hypercharge boson alone, which has no vertex with a W pair, so a
+photon or Z line between a right-handed current and the W-pair vertices of the Standard Model costs
+two more powers of lambda: there the photon and Z trees cancel up to M_Z^2/E^2. The dimension-six
+sector of `dim68_is` follows SMEFTsim's U(3)^5 framework, in which an operator whose fermion
+bilinear joins two different fields carries a Yukawa matrix, so its dipoles and Yukawa-like
+operators count for the top quark alone and its scalar four-fermion operators not at all.
+`examples/14_which_operators.md` gives the selector's other remarks.
+
+MadGraph's polarisation marks on a W or a Z name a channel, as in
+`./dim8 select "u u~ > w+{0} w-{T}"`. `{T}`, like no mark, is transverse. `{0}` is longitudinal and
+is counted by the equivalence theorem: its Goldstone boson takes its place at no cost, or it keeps
+its gauge leg, whose polarisation vector is of order M_W/E and costs one power of lambda. The header
+then gives the Standard Model amplitude of the channel, found the same way, which can lie above
+lambda^(2n-8), as W_L W_T does at lambda^1. The selection, and with it the card, is that of the
+unpolarised process. A `{0}` mark needs the Feynman-gauge vertex lists, `build/vertex_index_fg.json`
+and `build/sm_vertices_fg.json`, which are made in Feynman gauge with Mathematica and FeynRules and
+ship in `build/` with the release. Without them the selector prints the operators and writes the
+card with no powers, and says why. The dimension-six coefficients of `dim68_is` are printed with no
+powers in every `{0}` channel, with those lists or without them, and a note says why: their vertices
+come from `build/dim6_index.json`, which is read from the unitary-gauge model and holds no Goldstone
+vertex. MadGraph's helicity marks `{L}` and `{R}` are refused, since the counting does not tell them
+apart from `{T}`.
+
+    ./dim8 series "u u~ > w+ w-"
+
+writes the same counting out topology by topology. For the s channel, the t channel (with the u
+channel merged into it, as for any quark-antiquark initial state) and the contact terms it gives
+the smallest power of every class, with the products of Standard Model couplings that reach it,
+beside the Standard Model's own terms. A term is kept only where it can interfere with the Standard
+Model, that is, where its tree gives the massless external quarks and leptons the chiralities of a
+Standard Model tree, since amplitudes of different helicities do not interfere. Where the Standard
+Model trees with those chiralities lie k powers of lambda above the leading ones, the term
+interferes k powers down and is marked so: right-handed quarks in u u~ > w+ w- are two powers down,
+since their photon and Z trees cancel up to M_Z^2/E^2. An external top quark of the other chirality
+costs m_t/E, and the term is marked so too. The classes left out are listed at the end. A star marks
+a dimension-eight term at most four powers of lambda above the Standard Model, which grows at least
+as E^4/Lambda^4 relative to it. The command takes the same marks, `--latex` writes the series as an
+align block and `--vbf` gives vector-boson fusion in the effective-W approximation. Without the
+Feynman-gauge lists it counts with the unitary-gauge ones,
+and without `build/onshell_zero.json`, which `python3 validate/onshell_zero.py` writes, it counts a
+three-point vertex of two light fermions even where that vertex vanishes on shell. The output says
+so in both cases.
+
+To test what the series leaves out, import the model with the card of a class it leaves out (a
+chirality-flipping class such as psi^2XH^3, `dim8_is-cls10`, in `u u~ > w+ w-`) and generate
+`NP^2==2` with the masses and Yukawa couplings of the light quarks and leptons set to zero in the
+param card. The interference must vanish. [HOW_TO_BREAK_IT.md](HOW_TO_BREAK_IT.md) has the other
+ways to attack the counting.
 
 ## 3. Set up a study
 
@@ -49,8 +143,9 @@ A directory with two or three text files.
     p p > e+ e- | mmll=200
     p p > h h j j QCD=0 | ptj=20 mmjj=500 | bosonic
 
-Restrict heavy processes. `p p > h h j j QCD=0 NP<=2` unrestricted is 166 subprocesses and 298888
-diagrams, hours of code generation.
+Restrict heavy processes. `p p > h h j j QCD=0 NP^2==2` on the unrestricted `dim8_mw` is 268104
+diagrams and a 2.2-hour MadGraph session, and 173928 diagrams in 47 minutes with any restriction card
+(on a Mac mini).
 
 `classes.txt`, one restriction card per line:
 
@@ -91,10 +186,11 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
 
     sigma(1/Lambda^4) = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.40 pb against
-an interference of -4.0 pb. It vanishes for every process in which no W is produced or exchanged.
-It does not vanish in vector-boson fusion, where the W sits in the t-channel propagators: 6.8 per
-cent of the cross section in `p p > h h j j QCD=0`.
+On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.19 +- 0.13 pb
+against an interference of -3.6 pb. It vanishes for every process in which no W is produced or exchanged.
+It does not vanish in vector-boson fusion, where the W sits in the t-channel propagators: 5.9 per
+cent of the cross section in `p p > h h j j QCD=0` with `ptj` = 25 GeV, `etaj` = 5 and
+`mmjj` = 400 GeV.
 
 ## 5. Output
 
@@ -115,8 +211,10 @@ then put those card names in `classes.txt`.
 
 ## 7. MadGraph practicalities
 
-`set Lam 1000` at the launch prompt is accepted and does nothing. The card calls the scale
-`lam__2`, because MadGraph lowercases names and `lam` is already the Higgs quartic.
+Write restriction cards with `validate/make_restriction.py` or `--card`, not by hand. MadGraph fuses
+couplings that agree at the values of the card, and removes those that vanish there, whatever values
+the run then sets, so round numbers can give the wrong amplitude with no message. The values these
+two write satisfy no such relation.
 
 `hel_recycling` defaults to on in 3.5 and fails on these Lorentz structures. Set it False. The
 default run card lacks the key, so it has to be appended.

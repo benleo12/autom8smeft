@@ -17,6 +17,7 @@ def main(argv):
     vals = {}
     for p in P.all_parameters:
         if p.nature == "external": vals[p.name] = float(p.value)
+    internal = {p.name for p in P.all_parameters if p.nature == "internal"}
     for a in argv[2:]:
         if a.startswith("--show"): show += a.split("=", 1)[1].split(",") if "=" in a else []
         elif a.startswith("dim8_all="):   # every dimension-eight coefficient at once, as the studies set them
@@ -25,6 +26,7 @@ def main(argv):
                 if k.startswith("c8"): vals[k] = v
         elif "=" in a:
             k, v = a.split("=", 1); vals[k] = float(v)
+            if k in internal: print(f"warning: {k} is an internal parameter of this UFO, and the value given changes nothing", file=sys.stderr)
     ns = {"cmath": cmath, "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z, "complex": complex, "math": math}
     for p in P.all_parameters:
         if p.nature == "internal":

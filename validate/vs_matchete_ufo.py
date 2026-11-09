@@ -12,12 +12,13 @@ the scheme of dim8_mw.  It is not shipped here; download it and give its path.
 Pairing.  Our coefficient c8<stem>x<k> (c8<stem> for a class with one operator) is theirs
 c<stem><k> (c<stem>).  Their fermionic coefficients carry flavour indices: c<stem><k>_pp for a
 bilinear, and for four fermions c<stem><k>_ppss and the crossed c<stem><k>_pssp.  Our
-flavour-universal coefficient identifies p with r and s with t, so it is all of their entries with
+coefficient of a flavour-diagonal operator identifies p with r and s with t, so it is all of their entries with
 p = r (and s = t) at once, and the derivative along it is the sum of the derivatives along those
 entries; the crossed entries are another flavour structure and are left at zero.  Their coefficients carry the scale, ours c/Lam^4, so
-theirs are divided by Lam^4 with Lam = 1 TeV.  Their model has no operator of the classes that flip
-chirality (psi^2X^2H, psi^2XH^3, psi^2H^5, psi^2XHD^2, psi^2H^3D^2 and parts of psi^4H^2,
-psi^4HD and psi^4D^2), so those coefficients are listed and not compared.
+theirs are divided by Lam^4 with Lam = 1 TeV.  Their model writes the complex coefficients of the
+classes that flip chirality (psi^2X^2H, psi^2XH^3, psi^2H^5, psi^2XHD^2, psi^2H^3D^2 and parts of
+psi^4H^2, psi^4HD and psi^4D^2) as Re_c<stem>... and Im_c<stem>...  This script reads the real names
+alone, so those coefficients are listed and not compared.
 
 The inputs are theirs: M_W, M_Z, G_F, alpha_s, m_h, m_t, the top and bottom Yukawas and the widths,
 the other fermions massless, no CKM mixing.  The vertices are compared as in
@@ -75,7 +76,7 @@ def pairs(theirs):
     coefficients with no counterpart."""
     have = their_coefficients(theirs)
     # Their entries are C_pr for a bilinear and C_prst for four fermions, the latter both p=r, s=t
-    # (1122) and the crossed p=t, r=s (1221).  Our flavour-universal coefficient identifies p with r
+    # (1122) and the crossed p=t, r=s (1221).  Our coefficient of a flavour-diagonal operator identifies p with r
     # and s with t (gen/operators.py, flavor_pairs), so it is their entries with p = r and s = t;
     # the crossed ones are another flavour structure and stay at zero.
     flav = collections.defaultdict(list)
@@ -84,9 +85,10 @@ def pairs(theirs):
         if m and m.group(2)[0] == m.group(2)[1] and (len(m.group(2)) == 2 or m.group(2)[2] == m.group(2)[3]):
             flav[m.group(1)].append(n)
     idx = json.load(open(os.path.join(ROOT, "docs", "block_index.json")))
+    bviol = {e["block"] for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json"))) if e["b_violating"]}
     out, unpaired = [], []
     for e in idx:
-        if int(e["block"][4:]) > 674:
+        if e["block"] in bviol:
             continue
         for w in e["wcs"]:
             m = re.match(r"c8(\w+?)(?:x(\d+))?$", w)

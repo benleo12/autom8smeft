@@ -6,13 +6,13 @@ counts powers of `1/Lambda^2` across them with a single coupling order. Cite arX
 SMEFTsim and arXiv:2012.11343 for its flavour framework.
 
 `gen/make_dim6.py` writes `tests/gen_smoke/dim6_smeftsim.fr` from SMEFTsim's own sources and takes
-every operator from them unchanged. It declares the 73 coefficients our base does not already have,
-at zero rather than SMEFTsim's default of one, together with the 17 complex coefficients SMEFTsim
+every operator from them unchanged. It declares the 77 coefficients our base does not already have,
+at zero rather than SMEFTsim's default of one, together with the 19 complex coefficients SMEFTsim
 builds from their `Abs` and `Ph` parts. It connects three symbols to our side of the model, and
 says what each operator is evaluated on: the corrected couplings and the canonical fields of our
 input scheme, to first order, which is what makes the combined model complete and gauge invariant at
 `1/Lambda^4` (see "What an operator is evaluated on" below). With the eight coefficients the base
-already declares that is 81 in block `DIM6`, plus `Lam6` at index 1.
+already declares that is 85 in block `DIM6`, plus `Lam6` at index 1.
 
 ## Why this works at all
 
@@ -27,7 +27,10 @@ eight dimension-six coefficients in block `DIM6` under SMEFTsim's own names, `cH
 cHl3 cll1 cHbox cH`, because the `{alpha, M_Z, G_F}` relations need them, and it carries the
 dimension-six **squared** terms as well, `cHl3^2`, `cHl3 cll1`, `cll1^2` and the rest, so the
 scheme is complete to `1/Lambda^4` across both sectors. Those eight feed the operators and the
-input relations from the same external parameter.
+input relations from the same external parameter. A model built on that base without the operators,
+`dim8_is` or `dim8_mw`, has no use for them and would be half a calculation with one of them set, so
+the release fixes the eight at zero there, as internal parameters that no card can set
+(`validate/freeze_dim6_inputs.py`).
 
 ## The three connections
 
@@ -112,21 +115,22 @@ The dimension-six classes are cached as blocks, exactly like the 674 dimension-e
 nothing in the merge logic is special-cased:
 
     python3 gen/make_dim6.py                     # writes tests/gen_smoke/dim6_smeftsim.fr
-    env DIM8_BASE="base_inputscheme.fr;dim6_smeftsim.fr" \
+    env DIM8_ROOT=$PWD DIM8_BASE="base_inputscheme.fr;dim6_smeftsim.fr" \
         DIM8_VDIR=~/dim8auto_build/vertices6 DIM8_HERM=0 \
         wolframscript -file validate/fr_worker.wls \
         L6cl1,L6cl2,L6cl3,L6cl4,L6cl5,L6cl6,L6cl7,L6cl8a,L6cl8b,L6cl8c,L6cl8d 0 674 2
 
 About twenty minutes for 198 vertices, class 1 taking fifteen of them. The cache is keyed on the
-block name alone, so **an operator file that has changed needs an empty cache directory**. The
-worker writes into each block's `.status` the stamp of the code it was built from, and the writer
-runs `validate/cache_source.py check` on every cache it reads and stops on a stale block, so a
-forgotten directory can no longer reach a model. A block built before the stamps existed is
-counted and let through. Then
+block name alone, so the worker writes into each block's `.status` the stamp of the code it was built
+from. A block whose operator file or base has changed since is rebuilt rather than skipped, and the
+writer runs `validate/cache_source.py check` on every cache it reads and stops on a stale block, so a
+forgotten directory can no longer reach a model. A block without a stamp is counted and let through.
+`./dim8 rebuild` takes no such block, and it runs the steps after `gen/make_dim6.py` for both combined
+models, from `gen/operators.py` to `models/` (`models/src/README.md`). By hand,
 the combined UFO, with both caches and a list of the blocks that go in, the 674
 baryon-number-conserving dimension-eight ones and the eleven above:
 
-    env DIM8_BASE="base_inputscheme.fr;dim6_smeftsim.fr" \
+    env DIM8_ROOT=$PWD DIM8_BASE="base_inputscheme.fr;dim6_smeftsim.fr" DIM8_TRUNCATE=1 \
         DIM8_VDIR="~/dim8auto_build/vertices;~/dim8auto_build/vertices6" \
         wolframscript -file validate/fr_writeufo.wls dim68_is blocks.txt
 
@@ -138,6 +142,20 @@ check, would be loaded as if it were a block, and the block after it would enter
 
 For a quick look at the dimension-six sector alone, give the writer the eleven names only. That
 model takes twenty minutes rather than nine hours.
+
+The same steps on the {MW, MZ, GF} base give `dim68_mw`. The dimension-six operators are evaluated
+on the first-order shifts of the base, which differ between the schemes, so the blocks are built
+again into a cache of their own, and the stamp of a dimension-six block hashes the base that
+`DIM8_BASE` names: a cache built on one scheme reads as stale when a model is written on the other,
+and the writer stops. The dimension-eight cache does not depend on the base and is shared.
+
+    env DIM8_ROOT=$PWD DIM8_BASE="base_inputscheme_mw.fr;dim6_smeftsim.fr" \
+        DIM8_VDIR=~/dim8auto_build/vertices6_mw \
+        wolframscript -file validate/fr_worker.wls \
+        L6cl1,L6cl2,L6cl3,L6cl4,L6cl5,L6cl6,L6cl7,L6cl8a,L6cl8b,L6cl8c,L6cl8d 0 674 3
+    env DIM8_ROOT=$PWD DIM8_BASE="base_inputscheme_mw.fr;dim6_smeftsim.fr" DIM8_TRUNCATE=1 \
+        DIM8_VDIR="~/dim8auto_build/vertices;~/dim8auto_build/vertices6_mw" \
+        wolframscript -file validate/fr_writeufo.wls dim68_mw blocks.txt
 
 ## Orders
 
@@ -161,7 +179,8 @@ them, switch one sector off in the param card.
 tags couplings and not masses, and in this scheme `M_W` moves when a coefficient moves, which no
 tag can express. The vev, the Yukawas and the Higgs quartic are written as tagged sums, so the
 `W` mass is the one quantity left. On `p p > w+ w-` the piece missing from the tagged
-dimension-eight interference measures +1.40 +- 0.25 pb. Use `validate/order_fit.py`, which scans one coefficient with no `NP^2`
+dimension-eight interference measures +1.19 +- 0.13 pb, with every dimension-eight coefficient at 1 and
+Lambda at 1 TeV. Use `validate/order_fit.py`, which scans one coefficient with no `NP^2`
 constraint and fits the polynomial:
 
     validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale6 1000
@@ -195,17 +214,23 @@ changes sign. For the same reason the tagged bin at `cHq1 = 1`, 6.544 pb, is not
 Five things, in the order of what they can see.
 
 **Gauge invariance, with the dimension-six coefficients on.** `validate/mg5_gluon_check.sh` with
-`WARD_ON=dim6` switches on all 64 real coefficients of block `DIM6` and runs MadGraph's
+`WARD_ON=dim6` switches on all 66 coefficients of block `DIM6`, with the phases of the 19 complex
+ones, and runs MadGraph's
 `check lorentz` on the thirty processes of `validate/procs_dim6.txt`, eight gluonic, fifteen with
 a photon and seven without a massless vector, at `WARD_ORDER="NP<=1"` and at `"NP<=2"`. The
-`dim68_is` released on 2026-10-25 passes all fifty-eight checks that have an amplitude, the worst at
-1.6e-13, and the seven electroweak processes of `validate/procs_ew.txt` pass with `WARD_ON=both` as
-well. The thirtieth process, `ve ve~ > a z`, has no diagram at `NP<=1` and only a zero one at
+`dim68_is` and `dim68_mw` released on 2026-11-04 pass all twenty-nine processes that have an
+amplitude at `NP<=1` and at `NP<=2`, the worst at 3e-12, and the seven
+electroweak processes of `validate/procs_ew.txt` pass with `WARD_ON=both` as well. Two of them at
+`NP<=2`, `u u~ > t t~ g` and `u u~ > t t~ a`, need the fix of ALOHA routine names that every model
+carries in its `__init__.py` (`examples/mg5_fixes.py`): without it MadGraph 3.5.6 stops on them
+with the hashed-name error that the header of `validate/mg5_gluon_check.sh` describes, with the
+coefficients off as well. With it both pass in both models, with the coefficients on and off
+(2026-11-05). One process, `ve ve~ > a z`, has no diagram at `NP<=1` and only a zero one at
 `NP<=2` with the dimension-eight coefficients off: its neutrino-photon vertices vanish by charge,
 and the release no longer writes them (earlier releases did, with zero couplings, and the check
-then passed on amplitudes that were zero). (The control run with the
-coefficients off prints `Failed` for `ve ve~ > h a`. That process has no Standard Model
-amplitude, and the verdict is the ratio of two numbers of order 1e-36.) The check switches on the
+then passed on amplitudes that were zero). The control run with the coefficients off reports
+`ve ve~ > h a`, `g g > h g` and `g g > h h` as not checked, since they have no Standard Model
+amplitude. The check switches on the
 dimension-six coefficients themselves, because a Ward check with only the dimension-eight
 coefficients on does not test this sector at all.
 
@@ -395,13 +420,15 @@ at order `cHG^2`, which is 0.24250 at `cHG = 1`, `Lam6 = 1 TeV`:
 
 on one seed, so the errors are correlated and the ratio is good to better than they suggest.
 
-## Every linear vertex against SMEFTsim's alpha-scheme model
+## Every linear vertex against SMEFTsim's model of the same scheme
 
 `validate/dim6_vs_smeftsim.py` compares every dimension-six vertex of `models/dim68_is` with
-SMEFTsim's U(3)^5 `{alpha, M_Z, G_F}` UFO, version 3.0.2, which is our input scheme exactly. It is
-not shipped here (github.com/SMEFTsim/SMEFTsim, `UFO_models/SMEFTsim_U35_alphaScheme_UFO`):
+SMEFTsim's U(3)^5 `{alpha, M_Z, G_F}` UFO, version 3.0.2, and of `models/dim68_mw` with its
+`{M_W, M_Z, G_F}` UFO. They are not shipped here (github.com/SMEFTsim/SMEFTsim,
+`UFO_models/SMEFTsim_U35_alphaScheme_UFO` and `UFO_models/SMEFTsim_U35_MwScheme_UFO`):
 
     python3 validate/dim6_vs_smeftsim.py /path/to/SMEFTsim_U35_alphaScheme_UFO
+    python3 validate/dim6_vs_smeftsim.py /path/to/SMEFTsim_U35_MwScheme_UFO --ours models/dim68_mw
 
 Both models are evaluated at SMEFTsim's default inputs, with the CKM matrix the unit matrix and
 Lambda = 1 TeV. For every coefficient, a complex one along its real and its imaginary direction,
@@ -415,13 +442,13 @@ basis, two orderings of one colour structure). Our model carries the dimension-s
 input relations and SMEFTsim does not, so only the linear term is compared, and the derivative is
 taken from symmetric differences combined so that the quadratic and cubic terms cancel.
 
-Result, on the `dim68_is` released on 2026-10-25 from the stamped dimension-six cache (and on the
-release of 2026-10-19 before it, built from the same blocks): all 81 directions (every real coefficient, and the real and imaginary parts of the complex ones) agree
-on all 1513 vertices they move, to 1e-6 of the vertex. That includes the six
-coefficients of the input relations, which shift `M_W` in this scheme, and the coefficients with
-no tree-level effect in a simple proton process, `cH`, `cll`, `cee`, `cle` and `ceH`. Two
-coefficients of SMEFTsim's file, `cquqd11` and `cquqd81`, have no counterpart in the 2018 U(3)^5
-operator files this port is built on. The tool also checks itself: a model compared with itself
+Result, on the `dim68_is` and `dim68_mw` released on 2026-11-04: all 85 directions (every real
+coefficient, and the real and imaginary parts of the complex ones) agree on all 1573 vertices they
+move in `dim68_is` and all 1582 in `dim68_mw`, to 1e-6 of the vertex. That includes the six
+coefficients of the input relations, which shift `M_W` in the first scheme. The 85 include
+`cquqd11` and `cquqd81`, the second flavour contraction of `Q_quqd^(1,8)`, which SMEFTsim's file has
+and the 2018 U(3)^5 operator files this port is built on do not: `gen/make_dim6.py` adds them, and
+the releases before 2026-11-04 lacked them, with 81 directions. The tool also checks itself: a model compared with itself
 agrees on every vertex, and a sign planted on one coefficient (`--plant cHWB`) is reported on
 every vertex that coefficient moves.
 

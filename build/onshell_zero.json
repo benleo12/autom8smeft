@@ -1,0 +1,305 @@
+{
+ "disagreements": [],
+ "feynman_gauge_model": "tests/gen_smoke/onshell_fg",
+ "models": [
+  "models/dim8_plain",
+  "models/dim68_is",
+  "models/dim8_plain_murphy",
+  "models/dim68_is_murphy"
+ ],
+ "outcomes": {
+  "L6cl5": {
+   "H dq dqbar": "generic",
+   "H l lbar": "generic",
+   "H uq uqbar": "generic"
+  },
+  "L6cl6": {
+   "A dq dqbar": "generic",
+   "A l lbar": "generic",
+   "A uq uqbar": "generic",
+   "G dq dqbar": "generic",
+   "G uq uqbar": "generic",
+   "W dq uqbar": "generic",
+   "W l vlbar": "generic",
+   "Wbar dqbar uq": "generic",
+   "Wbar lbar vl": "generic",
+   "Z dq dqbar": "generic",
+   "Z l lbar": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L6cl7": {
+   "G0 dq dqbar": "zero",
+   "G0 l lbar": "zero",
+   "G0 uq uqbar": "zero",
+   "G0 vl vlbar": "zero",
+   "GP dq uqbar": "zero",
+   "GP l vlbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "GPbar lbar vl": "zero",
+   "W dq uqbar": "generic",
+   "W l vlbar": "generic",
+   "Wbar dqbar uq": "generic",
+   "Wbar lbar vl": "generic",
+   "Z dq dqbar": "generic",
+   "Z l lbar": "generic",
+   "Z uq uqbar": "generic",
+   "Z vl vlbar": "generic"
+  },
+  "L8op1": {
+   "A l lbar": "generic",
+   "W l vlbar": "generic",
+   "Wbar lbar vl": "generic",
+   "Z l lbar": "generic"
+  },
+  "L8op10": {
+   "A dq dqbar": "generic",
+   "Z dq dqbar": "generic"
+  },
+  "L8op11": {
+   "A dq dqbar": "generic",
+   "Z dq dqbar": "generic"
+  },
+  "L8op12": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "H l lbar": "zero",
+   "H vl vlbar": "zero",
+   "Z l lbar": "k2",
+   "Z vl vlbar": "k2"
+  },
+  "L8op13": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "H l lbar": "zero",
+   "H vl vlbar": "zero",
+   "Z l lbar": "k2",
+   "Z vl vlbar": "k2"
+  },
+  "L8op14": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "GP l vlbar": "zero",
+   "GPbar lbar vl": "zero",
+   "H l lbar": "zero",
+   "H vl vlbar": "zero",
+   "W l vlbar": "k2",
+   "Wbar lbar vl": "k2",
+   "Z l lbar": "k2",
+   "Z vl vlbar": "k2"
+  },
+  "L8op15": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "GP l vlbar": "zero",
+   "GPbar lbar vl": "zero",
+   "H l lbar": "zero",
+   "H vl vlbar": "zero",
+   "W l vlbar": "k2",
+   "Wbar lbar vl": "k2",
+   "Z l lbar": "k2",
+   "Z vl vlbar": "k2"
+  },
+  "L8op16": {
+   "G0 l lbar": "zero",
+   "H l lbar": "zero",
+   "Z l lbar": "k2"
+  },
+  "L8op17": {
+   "G0 l lbar": "zero",
+   "H l lbar": "zero",
+   "Z l lbar": "k2"
+  },
+  "L8op18": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "H dq dqbar": "zero",
+   "H uq uqbar": "zero",
+   "Z dq dqbar": "k2",
+   "Z uq uqbar": "k2"
+  },
+  "L8op19": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "H dq dqbar": "zero",
+   "H uq uqbar": "zero",
+   "Z dq dqbar": "k2",
+   "Z uq uqbar": "k2"
+  },
+  "L8op2": {
+   "A l lbar": "generic",
+   "Z l lbar": "generic"
+  },
+  "L8op20": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "H dq dqbar": "zero",
+   "H uq uqbar": "zero",
+   "W dq uqbar": "k2",
+   "Wbar dqbar uq": "k2",
+   "Z dq dqbar": "k2",
+   "Z uq uqbar": "k2"
+  },
+  "L8op21": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "H dq dqbar": "zero",
+   "H uq uqbar": "zero",
+   "W dq uqbar": "k2",
+   "Wbar dqbar uq": "k2",
+   "Z dq dqbar": "k2",
+   "Z uq uqbar": "k2"
+  },
+  "L8op22": {
+   "G0 uq uqbar": "zero",
+   "H uq uqbar": "zero",
+   "Z uq uqbar": "k2"
+  },
+  "L8op23": {
+   "G0 uq uqbar": "zero",
+   "H uq uqbar": "zero",
+   "Z uq uqbar": "k2"
+  },
+  "L8op24": {
+   "G0 dq dqbar": "zero",
+   "H dq dqbar": "zero",
+   "Z dq dqbar": "k2"
+  },
+  "L8op25": {
+   "G0 dq dqbar": "zero",
+   "H dq dqbar": "zero",
+   "Z dq dqbar": "k2"
+  },
+  "L8op26": {
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "W dq uqbar": "k2",
+   "Wbar dqbar uq": "k2"
+  },
+  "L8op27": {
+   "G0 l lbar": "generic",
+   "GP l vlbar": "generic",
+   "GPbar lbar vl": "absent",
+   "H l lbar": "generic"
+  },
+  "L8op28": {
+   "G0 uq uqbar": "generic",
+   "GP dq uqbar": "generic",
+   "GPbar dqbar uq": "absent",
+   "H uq uqbar": "generic"
+  },
+  "L8op29": {
+   "G0 dq dqbar": "generic",
+   "GP dq uqbar": "absent",
+   "GPbar dqbar uq": "generic",
+   "H dq dqbar": "generic"
+  },
+  "L8op3": {
+   "A l lbar": "generic",
+   "Z l lbar": "generic"
+  },
+  "L8op30": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "Z l lbar": "generic",
+   "Z vl vlbar": "generic"
+  },
+  "L8op31": {
+   "G0 l lbar": "zero",
+   "G0 vl vlbar": "zero",
+   "GP l vlbar": "zero",
+   "GPbar lbar vl": "zero",
+   "W l vlbar": "generic",
+   "Wbar lbar vl": "generic",
+   "Z l lbar": "generic",
+   "Z vl vlbar": "generic"
+  },
+  "L8op32": {
+   "GP l vlbar": "zero",
+   "GPbar lbar vl": "zero",
+   "W l vlbar": "generic",
+   "Wbar lbar vl": "generic"
+  },
+  "L8op33": {
+   "GP l vlbar": "zero",
+   "GPbar lbar vl": "zero",
+   "W l vlbar": "generic",
+   "Wbar lbar vl": "generic"
+  },
+  "L8op34": {
+   "G0 l lbar": "zero",
+   "Z l lbar": "generic"
+  },
+  "L8op35": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "Z dq dqbar": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L8op36": {
+   "G0 dq dqbar": "zero",
+   "G0 uq uqbar": "zero",
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic",
+   "Z dq dqbar": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L8op37": {
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic"
+  },
+  "L8op38": {
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic"
+  },
+  "L8op39": {
+   "G0 uq uqbar": "zero",
+   "Z uq uqbar": "generic"
+  },
+  "L8op4": {
+   "G uq uqbar": "generic"
+  },
+  "L8op40": {
+   "G0 dq dqbar": "zero",
+   "Z dq dqbar": "generic"
+  },
+  "L8op41": {
+   "GP dq uqbar": "zero",
+   "GPbar dqbar uq": "zero",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic"
+  },
+  "L8op5": {
+   "A uq uqbar": "generic",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L8op6": {
+   "A uq uqbar": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L8op7": {
+   "A uq uqbar": "generic",
+   "Z uq uqbar": "generic"
+  },
+  "L8op8": {
+   "G dq dqbar": "generic"
+  },
+  "L8op9": {
+   "A dq dqbar": "generic",
+   "W dq uqbar": "generic",
+   "Wbar dqbar uq": "generic",
+   "Z dq dqbar": "generic"
+  }
+ }
+}

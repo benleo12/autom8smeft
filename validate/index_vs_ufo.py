@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """The selector's vertex list against the vertices of the released models.
 
-    python3 validate/index_vs_ufo.py [--models DIR] [--write]
+    python3 validate/index_vs_ufo.py [--models DIR] [--index FILE] [--write]
     python3 validate/index_vs_ufo.py --linear MODEL_A MODEL_B
 
 ./dim8 select decides which operators reach a process from build/vertex_index.json, the field
 content of every vertex FeynRules derives for each operator block.  This compares that list with
 the released models: for each block and field content, does each model have a vertex of that
 content whose coupling depends on the block's coefficient?  The dimension-eight blocks are checked
-against all four released models, the dimension-six classes against models/dim68_is, the only one
-that carries them (the four-fermion class at the level of the class, since the list splits it into
-four blocks).
+against every model in models/ (dim8_plain and the four released ones), the dimension-six classes
+against models/dim68_is (the four-fermion class at the level of the class, since the list splits it
+into four blocks).  models/dim68_mw carries the same classes, and validate/dim6_vs_smeftsim.py
+compares its dimension-six vertices with those of SMEFTsim's {M_W, M_Z, G_F} model one by one.
 
 Four outcomes.
   missing       a model has a vertex the list lacks.  The selector would drop an operator that
@@ -25,14 +26,16 @@ Four outcomes.
   absorbed      some models lack a vertex of an input-relation coefficient (INPUT_SCHEME_WCS of
                 ./dim8), because their input scheme absorbs it.  Every input-scheme model puts the
                 vacuum piece of (H^dag H)^2 G G into the normalisation of the gluon and so has no
-                three-gluon vertex of Q_{G^2H^4}^{(1)}, and dim8_mw, where G_F and M_W fix the
-                W-lepton coupling, has no W-lepton vertex of Q_{l^2H^4D}^{(2,4)}.  Expected, not an
-                error.
+                three-gluon vertex of Q_{G^2H^4}^{(1)}, and the {M_W, M_Z, G_F} models, dim8_mw and
+                dim68_mw, where G_F and M_W fix the W-lepton coupling, have no W-lepton vertex of
+                Q_{l^2H^4D}^{(2,4)}.  Expected, not an error.
 --write removes the absent entries from build/vertex_index.json, and the absorbed ones that only
 dim8_plain has, so that the list follows the input-scheme models, and writes every absorbed vertex
 with the models that carry it to build/vertex_index_absorbed.json, from which ./dim8 select gives
 each released model its own vertices.  It refuses to while there is an error.  The exit status is
-1 when there is an error.
+1 when there is an error.  --index reads and writes another file in place of build/vertex_index.json,
+as ./dim8 rebuild does with the lists it has just written, which replace the ones ./dim8 select reads
+only when this has passed.
 
 Whether a model has a vertex is decided from the linear response of its couplings.  Each
 coefficient is switched on alone, along 1 and along i, and the response is the derivative at zero,
@@ -46,15 +49,22 @@ count as no vertex.  A relation that cancels identically leaves about 1e-16 of t
 dependence at least 1e-2 of it.  A model has a vertex that the list should carry when the vertex is
 live and the coefficient appears in one of its couplings by name, as FeynRules writes an operator's
 own vertices, so that the shifts the input scheme spreads over the SM vertices do not count as an
-operator's own.  The models are read as text and evaluated with cmath, so no MadGraph is needed.
+operator's own.  A coefficient counts for its block whether it is the operator's own or that of a
+further flavour structure (the flavour entries of docs/block_index.json), since a structure can give
+a vertex the operator's own coefficient does not: Q_{q^4B}^{(4)} vanishes with two flavour-diagonal
+currents and lives with Y_u Y_u^dag on one of them.  The responses are taken at the card's inputs,
+except that an input the card sets to zero, the mass of a light quark or lepton or the Cabibbo
+angle, takes a value of its own (validate/generic_inputs.py): the card is massless there, and a
+vertex proportional to a light Yukawa coupling is a vertex of the model all the same.  The models
+are read as text and evaluated with cmath, so no MadGraph is needed.
 
 --linear compares two models coupling by coupling instead of vertex by vertex.  For every vertex
 (by field content) and every dimension-eight coefficient, switched on alone to 1 and to i, it takes
 the change of each coupling entry, and the two models must agree on the signed sum of those changes
 and on their sorted moduli, to 1e-6 of the largest.  An operator's own vertices do not depend on
 the input scheme or on the dimension-six sector at linear order, so dim8_plain, dim8_is and
-dim68_is must agree on every coefficient except the thirteen of the input relations (the
-INPUT_SCHEME_WCS of ./dim8), whose vertices carry the compensating terms of the scheme.  Those are
+dim68_is must agree on every coefficient except those of the input relations (the
+INPUT_SCHEME_WCS of ./dim8 and their flavour structures), whose vertices carry the compensating terms of the scheme.  Those are
 listed separately, by vertex, since two models in the same scheme must agree on them too.  This
 catches a vertex that exists in both models but has lost a coupling, or carries a different one,
 which the vertex lists alone cannot see.  The exit status is 1 on any other difference.  Two
@@ -77,16 +87,31 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "validate"))
 sys.path.insert(0, os.path.join(ROOT, "gen"))
+import basis  # noqa: E402
+import dsl  # noqa: E402
+from generic_inputs import generic_value  # noqa: E402
 from check_legs import DIM6  # noqa: E402  the dimension-six coefficients by class
 from lambda_routes import DIM6 as DIM6_BLOCKS  # noqa: E402  L6cl block -> class
 
 DIM6_NAMES = {w for ws in DIM6.values() for w in ws.split()}
-# dim8_plain is the raw model kept for vertex comparisons and is not in the public tree, so the
-# models compared are the ones present
-DIM8_MODELS = [m for m in ["dim8_is", "dim8_plain", "dim8_mw", "dim68_is"]
-               if os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", m, "parameters.py"))]
-IS_MODELS = ["dim8_is", "dim8_mw", "dim68_is"]
+# dim8_plain is the raw model kept for vertex comparisons and is not in models/ of the public tree, so the
+# models compared are the ones present: the models of the default basis and, where they are present, those of
+# the Murphy basis (gen/basis.py), which carry the suffix _murphy.  A block is compared with the models of its
+# basis, and an operator common to the two bases with all of them.
+DIM8_MODELS = [m + s for s in ("", "_murphy") for m in ["dim8_is", "dim8_plain", "dim8_mw", "dim68_is", "dim68_mw"]
+               if os.path.isfile(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "models", m + s, "parameters.py"))]
+IS_MODELS = [m for m in DIM8_MODELS if not m.startswith("dim8_plain")]
 PLAIN_MODEL = "dim8_plain"
+
+
+def model_basis(m):
+    return "murphy" if m.endswith("_murphy") else "geo"
+
+
+def models_of(wcs, models):
+    """The models among `models` in which a block with the coefficients wcs belongs."""
+    b = basis.of_wcs(wcs)
+    return [m for m in models if b is None or model_basis(m) == b]
 DIM6_MODEL = "dim68_is"
 TOL = 1e-8
 # The response to a coefficient is its derivative at zero, from symmetric differences at +-EPS and
@@ -94,9 +119,13 @@ TOL = 1e-8
 # a dimension-eight one squared), and a change taken at c = 1 counts them as a vertex, for instance
 # on the photon's charge coupling in the {alpha, M_Z, G_F} models, which moves only as c^3 there.
 EPS = 1e-3
+# the directions of a pair of coefficients along which read_model takes a mixed second derivative,
+# each coefficient along 1 or along i, which together see a coefficient that enters complex conjugated
+DIRS2 = ((1.0, 1.0), (1.0, 1j), (1j, 1.0), (1j, 1j))
 
 # UFO particle names -> the selector's labels: FeynRules class names, with bar for the antiparticle
-LABEL = {"a": "A", "Z": "Z", "H": "H", "g": "G", "W+": "W", "W-": "Wbar"}
+LABEL = {"a": "A", "Z": "Z", "H": "H", "g": "G", "W+": "W", "W-": "Wbar",
+         "G0": "G0", "G+": "GP", "G-": "GPbar"}    # the Goldstone bosons only with read_model(goldstones=True)
 for _cls, _members in (("uq", "u c t"), ("dq", "d s b"), ("l", "e- mu- ta-"), ("vl", "ve vm vt")):
     for _m in _members.split():
         LABEL[_m] = _cls
@@ -155,17 +184,34 @@ def _compile(expr, bound=False):
     return compile(tree, "<coupling>", "eval")
 
 
-def read_model(model, inputs=None, only=None, coeffs=None):
+def read_model(model, inputs=None, only=None, coeffs=None, goldstones=False, pairs=None, generic=False):
     """Read a UFO as text and evaluate it with cmath.  `inputs` overrides external parameters by
-    name, `only` restricts the coefficients probed to those names, and `coeffs` names the
+    name, `generic` gives an input that is zero on the card, a light mass or cabi, a value of its
+    own (validate/generic_inputs.py), so that what exists is decided away from the massless limit,
+    `only` restricts the coefficients probed to those names, and `coeffs` names the
     coefficients of a model written with other conventions, whose names neither start with c8 nor
-    are SMEFTsim's (validate/dim6_vs_smeftsim.py and validate/vs_matchete_ufo.py use them).  A
-    dict with
+    are SMEFTsim's (validate/dim6_vs_smeftsim.py and validate/vs_matchete_ufo.py use them).  The
+    vertices with a Goldstone boson are skipped, as the selector's unitary-gauge list has none,
+    unless goldstones is True (validate/onshell_zero.py on a Feynman-gauge model).  `pairs`, a set
+    of couplings, asks for the second derivatives of those couplings as well (pair_dep and live2
+    below).  A dict with
       own     {sorted labels: coefficients that appear by name in a coupling of a vertex of that
                content and move it}, the operator's own vertices as FeynRules writes them
       live    {sorted labels: coefficients whose linear response, summed over every vertex of that
                content per canonical (Lorentz, colour) structure, does not vanish}
       lin     {(sorted labels, coefficient, 1 or 1j): [(structure, colour, change) per entry]}
+      dep     {coupling: the coefficients that appear in it by name and move it}, from which own is
+               gathered, for a reader that needs the couplings apart (validate/dim6_index.py keeps
+               those of interaction order NP=1)
+      moved   {coupling: the coefficients that move it, by name or through an internal parameter},
+               the same test without the name, which validate/dim6_index.py reads for a coefficient
+               that moves Standard Model vertices through the normalisation of a field, as C_HBox
+               moves every vertex with one Higgs boson through that of the Higgs field
+      pair_dep {coupling named in pairs: the pairs (n1, n2) of coefficients, n1 <= n2 and a
+               coefficient paired with itself included, whose mixed second derivative at zero moves it}
+      live2   {sorted labels: the pairs whose mixed second derivative, summed over every vertex of
+               that content per canonical (Lorentz, colour) structure, does not vanish}, over the
+               couplings named in pairs
       failed  [couplings that could not be evaluated]
       entries [(UFO particle names, PDG codes, [(colour, Lorentz structure, coupling)]) per vertex]
       resp    {(coupling, coefficient, 1 or 1j): its derivative at zero}
@@ -173,7 +219,20 @@ def read_model(model, inputs=None, only=None, coeffs=None):
     A coefficient that enters a coupling through an internal parameter, as the input-scheme
     coefficients do through the gluon normalisation d8fG or the shift of g2, is followed: those
     parameters are recomputed with the coefficient on.  Two vertices whose couplings cancel, one
-    carrying the coefficient by name and one through such a parameter, are then not live."""
+    carrying the coefficient by name and one through such a parameter, are then not live.
+
+    The second derivatives are meant for couplings that vanish with every coefficient at zero and are
+    products of two of them, as the couplings of interaction order NP=2 of a dimension-six sector are
+    (a linear vertex times an input shift or a field normalisation).  Such a coupling has no first
+    derivative at zero, and its mixed second derivatives say which coefficients it multiplies.  For
+    each pair of the coefficients that reach the coupling, by name or through internal parameters,
+    the two are set together to (+-e v1, +-e v2), every internal parameter that either enters being
+    recomputed, with v1 and v2 along 1 or along i, so that a coefficient that enters complex
+    conjugated is seen too, and the second differences at e = EPS and EPS/2 are combined so that the
+    quartic term cancels.  The pair moves the coupling when the largest of them exceeds 1e-8 of the
+    largest value of the coupling's triangle-inequality bound at the points evaluated, over EPS^2,
+    and the same bound, summed over the vertex objects of a content, measures whether the summed
+    response survives there, as for the first derivatives."""
     rd = lambda f: open(os.path.join(model, f + ".py")).read()  # noqa: E731
     ns = {"cmath": cmath, "complex": complex, "pi": cmath.pi}
     for m in re.finditer(r"(\w+) = Function\(\s*name = '\w+',\s*arguments = \(([^)]*)\),\s*expression = '([^']*)'",
@@ -193,7 +252,7 @@ def read_model(model, inputs=None, only=None, coeffs=None):
     todo = []
     for name, nature, value, rest in params:
         if nature == "external":
-            ns[name] = 0.0 if name in coef else complex(eval(value))
+            ns[name] = 0.0 if name in coef else complex(generic_value(name, eval(value)) if generic else eval(value))
             if inputs and name in inputs:
                 ns[name] = complex(inputs[name])
         else:
@@ -242,7 +301,29 @@ def read_model(model, inputs=None, only=None, coeffs=None):
             ns[n] = k0
         return shifted[(n, v)]
 
+    pos = {p: i for i, (p, _) in enumerate(order)}
+    shifted2 = {}
+
+    def setting2(n1, x1, n2, x2):
+        """The internal parameters that move with coefficients n1 and n2 set to x1 and x2 together, at
+        their new values, recomputed in evaluation order.  A coefficient paired with itself (n1 == n2)
+        is set to x1 + x2."""
+        if (n1, x1, n2, x2) not in shifted2:
+            todo = sorted(dict(chain[n1] + chain[n2]).items(), key=lambda pc: pos[pc[0]])
+            keep, k1, k2 = {p: ns[p] for p, _ in todo}, ns[n1], ns[n2]
+            if n1 == n2:
+                ns[n1] = x1 + x2
+            else:
+                ns[n1], ns[n2] = x1, x2
+            for p, c in todo:
+                ns[p] = eval(c, ns)
+            shifted2[(n1, x1, n2, x2)] = {p: ns[p] for p, _ in todo}
+            ns.update(keep)
+            ns[n1], ns[n2] = k1, k2
+        return shifted2[(n1, x1, n2, x2)]
+
     dep, failed, resp, scale, reach, value = {}, [], {}, {}, {}, {}
+    moved, pair_dep, plist, resp2, scale2 = {}, {}, {}, {}, {}
     for g, expr in re.findall(r"(GC_\w+) = Coupling\(\s*name = '\w+',\s*value = '([^']*)'", rd("couplings")):
         try:
             value[g] = complex(eval(expr, ns))
@@ -255,9 +336,11 @@ def read_model(model, inputs=None, only=None, coeffs=None):
             lit, allc = lit & only, allc & only
         reach[g] = allc
         if not allc:
-            dep[g] = set()
+            dep[g] = moved[g] = set()
             continue
-        hit = set()
+        if pairs is not None and g in pairs:
+            plist[g] = list(itertools.combinations_with_replacement(sorted(allc), 2))
+        hit, moves = set(), set()
         try:
             code, bcode = _compile(expr), _compile(expr, bound=True)
             b0 = eval(bcode, ns)
@@ -279,12 +362,43 @@ def read_model(model, inputs=None, only=None, coeffs=None):
                     d2 = (val[EPS / 2] - val[-EPS / 2]) / EPS
                     resp[(g, n, v)] = (4 * d2 - d1) / 3
                 change = max(abs(resp[(g, n, 1.0)]), abs(resp[(g, n, 1j)]))
-                if n in lit and scale[(g, n)] > 0 and change > TOL * scale[(g, n)]:
-                    hit.add(n)
+                if scale[(g, n)] > 0 and change > TOL * scale[(g, n)]:
+                    moves.add(n)
+                    if n in lit:
+                        hit.add(n)
+            for n1, n2 in plist.get(g, ()):
+                big, sc = 0.0, 0.0
+                for v1, v2 in DIRS2:
+                    d = {}
+                    for e in (EPS, EPS / 2):
+                        acc = 0j
+                        for s1, s2 in ((1, 1), (1, -1), (-1, 1), (-1, -1)):
+                            x1, x2 = s1 * e * v1, s2 * e * v2
+                            over = setting2(n1, x1, n2, x2)
+                            keep, k1, k2 = {p: ns[p] for p in over}, ns[n1], ns[n2]
+                            ns.update(over)
+                            if n1 == n2:
+                                ns[n1] = x1 + x2
+                            else:
+                                ns[n1], ns[n2] = x1, x2
+                            acc += s1 * s2 * eval(code, ns)
+                            if e == EPS:
+                                sc = max(sc, eval(bcode, ns) - b0)
+                            ns.update(keep)
+                            ns[n1], ns[n2] = k1, k2
+                        d[e] = acc / (4 * e * e)
+                    # second differences at EPS and EPS/2, combined so that the quartic term cancels
+                    resp2[(g, n1, n2, v1, v2)] = r2 = (4 * d[EPS / 2] - d[EPS]) / 3
+                    big = max(big, abs(r2))
+                scale2[(g, n1, n2)] = sc / EPS ** 2
+                if sc > 0 and big > TOL * scale2[(g, n1, n2)]:
+                    pair_dep.setdefault(g, set()).add((n1, n2))
         except Exception:                    # counted, and an error: never silently skipped
             failed.append(g)
-            hit = set(lit)
-        dep[g] = hit
+            hit, moves = set(lit), set(allc)
+            if g in plist:
+                pair_dep[g] = set(plist[g])
+        dep[g], moved[g] = hit, moves
     label, pdg = {}, {}
     ptxt = rd("particles")
     for var, code, name, anti in re.findall(r"(\w+) = Particle\(\s*pdg_code = (-?\d+),\s*name = '([^']*)',\s*antiname = '([^']*)'", ptxt):
@@ -297,6 +411,8 @@ def read_model(model, inputs=None, only=None, coeffs=None):
     lin = collections.defaultdict(list)
     tot = collections.defaultdict(lambda: collections.defaultdict(complex))
     bound = collections.defaultdict(float)
+    tot2 = collections.defaultdict(lambda: collections.defaultdict(complex))
+    bound2 = collections.defaultdict(float)
     lstruct = dict(re.findall(r"(\w+) = Lorentz\(\s*name = '\w+',\s*spins = \[[^\]]*\],\s*structure = '([^']*)'",
                               rd("lorentz")))
     for parts, col, lor, cpl in re.findall(
@@ -305,7 +421,8 @@ def read_model(model, inputs=None, only=None, coeffs=None):
         pvars = re.findall(r"P\.(\w+)", parts)
         names = [label[p] for p in pvars]
         codes = [pdg[p] for p in pvars]
-        if any(n.startswith("gh") or n in ("G0", "G+", "G-") or abs(c) in (250, 251) for n, c in zip(names, codes)):
+        if any(n.startswith("gh") for n in names) or (not goldstones and any(
+                n in ("G0", "G+", "G-") or abs(c) in (250, 251) for n, c in zip(names, codes))):
             continue                         # ghosts and Goldstones, which the selector ignores too
         lors = re.findall(r"L\.(\w+)", lor)
         cols = re.findall(r"'([^']*)'", col)
@@ -327,14 +444,23 @@ def read_model(model, inputs=None, only=None, coeffs=None):
                     lin[(key, n, v)].append((struct, cols[int(ci)], d))
                     tot[(key, n)][(form, ccol, v)] += d * c0 * csign
                 bound[(key, n)] += scale.get((g, n), 0.0) * abs(c0)
+            for pr in plist.get(g, ()):      # the pairs, for the couplings named in pairs
+                for v1, v2 in DIRS2:
+                    tot2[(key, pr)][(form, ccol, v1, v2)] += resp2.get((g,) + pr + (v1, v2), 0j) * c0 * csign
+                bound2[(key, pr)] += scale2.get((g,) + pr, 0.0) * abs(c0)
     # a vertex content is live in a coefficient when the response summed over all its vertex
     # objects survives on some structure: 1e-16 of the bound is a cancellation, 1e-2 a coupling
     live = collections.defaultdict(set)
     for (key, n), per in tot.items():
         if bound[(key, n)] > 0 and max(abs(z) for z in per.values()) > TOL * bound[(key, n)]:
             live[key].add(n)
-    return {"own": own, "live": live, "lin": lin, "failed": failed, "entries": entries, "resp": resp,
-            "value": value}
+    # and live in a pair when the mixed second derivative summed so survives
+    live2 = collections.defaultdict(set)
+    for (key, pr), per in tot2.items():
+        if bound2[(key, pr)] > 0 and max(abs(z) for z in per.values()) > TOL * bound2[(key, pr)]:
+            live2[key].add(pr)
+    return {"own": own, "live": live, "lin": lin, "dep": dep, "failed": failed, "entries": entries,
+            "resp": resp, "value": value, "moved": moved, "pair_dep": pair_dep, "live2": live2}
 
 
 def _poly(expr):
@@ -477,15 +603,18 @@ def _resolved(entries):
 
 
 def input_scheme_wcs():
-    """The coefficients of the input relations, read from ./dim8 so the two lists cannot drift."""
+    """The coefficients of the input relations, read from ./dim8 so the two lists cannot drift, with the
+    flavour structures of their operators (the flavour entries of docs/block_index.json, without Re and Im)."""
     m = re.search(r"^INPUT_SCHEME_WCS = \[([^\]]*)\]", open(os.path.join(ROOT, "dim8")).read(), re.M | re.S)
-    return set(re.findall(r'"(\w+)"', m.group(1)))
+    names = set(re.findall(r'"(\w+)"', m.group(1)))
+    idx = json.load(open(os.path.join(ROOT, "docs", "block_index.json")))
+    return names | {re.sub(r"(Re|Im)$", "", f) for e in idx if set(e["wcs"]) & names for f in e.get("flavour", [])}
 
 
 def compare_linear(path_a, path_b, tol=1e-6):
     """Exit status 1 if two models differ in the linear dependence of a vertex on a coefficient
     outside the input relations."""
-    ra, rb = read_model(path_a), read_model(path_b)
+    ra, rb = read_model(path_a, generic=True), read_model(path_b, generic=True)
     fa, la, fb, lb = ra["failed"], ra["lin"], rb["failed"], rb["lin"]
     if fa or fb:
         print(f"couplings that could not be evaluated: {len(fa)} in A, {len(fb)} in B")
@@ -555,14 +684,48 @@ def by_block(model_vertices, block_of):
     return out
 
 
+def no_vertex_problems(models_dir, models, catalogue):
+    """Which operators a model lacks and should have, or has and should lack.  A count of the basis cannot see an
+    operator whose vertices all vanish, so every baryon-number-conserving coefficient must occur in couplings.py of
+    each model, apart from the operators of dsl.NO_VERTEX, which must not, and so must the coefficient of every
+    further flavour structure (docs/block_index.json), which vanishes on the card where it carries a light Yukawa
+    coupling and must stay in the model all the same."""
+    out = []
+    flavour = {e["ops"][0]: sorted({re.sub(r"(Re|Im)$", "", f) for f in e.get("flavour", [])})
+               for e in json.load(open(os.path.join(ROOT, "docs", "block_index.json")))}
+    # A name occurs when a whole word of the file is the name, or the name with Re or Im.  The words that begin as
+    # the names do are read once per model: one search of a file of half a gigabyte per name took twenty minutes a
+    # model, against six seconds.
+    names = [e["wc"] for e in catalogue if not e["b_violating"]] + [f for fs in flavour.values() for f in fs]
+    word = re.compile(r"\b(?:" + "|".join(sorted({re.escape(n[:2]) for n in names})) + r")\w*")
+    for m in models:
+        words = set(word.findall(open(os.path.join(models_dir, m, "couplings.py"), errors="replace").read()))
+
+        def occurs(name):
+            return any(name + s in words for s in ("", "Re", "Im"))
+        for e in catalogue:
+            if e["b_violating"] or not models_of([e["wc"]], [m]):
+                continue
+            has = occurs(e["wc"])
+            if has == (e["label"] in dsl.NO_VERTEX):
+                out.append(f"{m}: {e['label']} ({e['wc']}) " + ("has a coupling and should vanish" if has else "has no coupling"))
+            for f in flavour.get(e["label"], []):
+                if not occurs(f):
+                    out.append(f"{m}: {e['label']}, flavour structure {f}, has no coupling")
+    return out
+
+
 def main(argv):
     if "--linear" in argv:
         i = argv.index("--linear")
         return compare_linear(argv[i + 1], argv[i + 2])
     models_dir = argv[argv.index("--models") + 1] if "--models" in argv else os.path.join(ROOT, "models")
-    index_path = os.path.join(ROOT, "build", "vertex_index.json")
+    index_path = argv[argv.index("--index") + 1] if "--index" in argv else os.path.join(ROOT, "build", "vertex_index.json")
     index = json.load(open(index_path))
-    wc8 = {w: e["block"] for e in json.load(open(os.path.join(ROOT, "docs", "block_index.json"))) for w in e["wcs"]}
+    # an operator's own coefficients and those of its further flavour structures (block DIM8F)
+    wc8 = {re.sub(r"(Re|Im)$", "", w) if w in e.get("flavour", []) else w: e["block"]
+           for e in json.load(open(os.path.join(ROOT, "docs", "block_index.json"))) for w in e["wcs"] + e.get("flavour", [])}
+    bviol = {e["block"] for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json"))) if e["b_violating"]}
     cls6 = {w: c for c, ws in DIM6.items() for w in ws.split()}
     block6 = {}
     for b, (c, _) in DIM6_BLOCKS.items():
@@ -575,10 +738,15 @@ def main(argv):
         c = cls6.get(n) or cls6.get(re.sub(r"(Abs|Ph|Re|Im)$", "", n))
         return block6.get(c)
 
+    lost = no_vertex_problems(models_dir, IS_MODELS, json.load(open(os.path.join(ROOT, "docs", "catalogue.json"))))
+    for line in lost:
+        print("[no vertex] " + line)
+    if lost:
+        return 1
     # own: a vertex carrying the coefficient by name that is also live; live: the vertex exists
     own8, live8, own6, live6, failures = {}, {}, None, None, 0
     for m in DIM8_MODELS:
-        r = read_model(os.path.join(models_dir, m))
+        r = read_model(os.path.join(models_dir, m), generic=True)
         failures += len(r["failed"])
         if r["failed"]:
             print(f"{m}: {len(r['failed'])} couplings could not be evaluated, e.g. {r['failed'][:3]}")
@@ -593,31 +761,39 @@ def main(argv):
     # as the three-gluon vertex of Q_{G^2H^4}^{(1)}, whose vacuum piece the scheme puts into the
     # normalisation of the gluon.  The list follows the input-scheme models.
     scheme_blocks = {block8(w) for w in input_scheme_wcs()}
-    missing, inconsistent, absent, absorbed = [], [], [], []
+    wcs_of = {e["block"]: e["wcs"] for e in json.load(open(os.path.join(ROOT, "docs", "block_index.json")))}
+    missing, inconsistent, absent, absorbed, uncompared = [], [], [], [], []
     for b, verts in index.items():
         listed = {tuple(sorted(v)) for v in verts}
         if b.startswith("L8op"):
-            if int(b[4:]) >= 675:          # baryon-number violating, in no released model
+            if b in bviol:                 # baryon-number violating, in no released model
                 continue
-            own = {m: own8[m].get(b, set()) for m in DIM8_MODELS}
-            live = {m: live8[m].get(b, set()) for m in DIM8_MODELS}
+            # the models of the block's basis.  The list keeps, unchecked, the vertices of a block whose basis
+            # has no model here.
+            ms = models_of(wcs_of.get(b, []), DIM8_MODELS)
+            if not ms:
+                uncompared.append(b)
+                continue
+            ism = [m for m in IS_MODELS if m in ms]
+            own = {m: own8[m].get(b, set()) for m in ms}
+            live = {m: live8[m].get(b, set()) for m in ms}
             scheme = b in scheme_blocks
-            for m in DIM8_MODELS:
+            for m in ms:
                 for k in sorted(own[m] - listed):
-                    if m == PLAIN_MODEL and scheme and not any(k in live[x] for x in IS_MODELS):
-                        absorbed.append((b, k, IS_MODELS, "not listed"))
+                    if m.startswith(PLAIN_MODEL) and scheme and not any(k in live[x] for x in ism):
+                        absorbed.append((b, k, ism, "not listed"))
                     else:
                         missing.append((b, m, k))
             for k in sorted(listed):
-                where = [m for m in DIM8_MODELS if k in live[m]]
+                where = [m for m in ms if k in live[m]]
                 if not where:
                     absent.append((b, k))
-                elif len(where) < len(DIM8_MODELS):
+                elif len(where) < len(ms):
                     if scheme:
-                        absorbed.append((b, k, sorted(set(DIM8_MODELS) - set(where)),
-                                         "dropped" if where == [PLAIN_MODEL] else "kept"))
+                        absorbed.append((b, k, sorted(set(ms) - set(where)),
+                                         "dropped" if all(m.startswith(PLAIN_MODEL) for m in where) else "kept"))
                     else:
-                        inconsistent.append((b, k, sorted(set(DIM8_MODELS) - set(where))))
+                        inconsistent.append((b, k, sorted(set(ms) - set(where))))
         else:
             key = "L6cl8" if b.startswith("L6cl8") else b
             if not b.startswith("L6cl8"):  # a four-fermion sub-block holds part of the class only
@@ -646,6 +822,9 @@ def main(argv):
           f"have no vertex in any model)")
     show("absorbed by an input scheme (an input-relation coefficient; expected)", absorbed,
          lambda r: f"{r[0]:8s} {' '.join(r[1])}   lacking in {', '.join(r[2])}, {r[3]}")
+    if uncompared:
+        print(f"\nnot compared, no model of their basis in {models_dir}: {len(uncompared)} blocks, kept as listed "
+              f"({' '.join(sorted(uncompared, key=lambda b: int(b[4:])))})")
     bad = missing or inconsistent or failures
     if "--write" in argv:
         if bad:

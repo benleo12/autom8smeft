@@ -4,8 +4,9 @@
 ``docs/catalogue.json`` is the catalogue: one entry per operator of the Murphy basis, with the
 label, the coefficient name, the name of its FeynRules Lagrangian, the class, the baryon number,
 the conjugacy, the CP parity and the field content.  ``gen/operators.py`` holds the same operators
-as objects of gen/dsl.py, which is the form the generation chain reads.  Both ship, and a script
-that needs only the classification calls ``derived()``.
+as objects of gen/dsl.py, which is the form the generation chain reads, and ./dim8 build rewrites the
+catalogue from it (gen/catalogue_json.py).  Both ship, and a script that needs only the classification
+calls ``derived()``.
 
 ``docs/murphy_parsed.json`` is a working file of the authors that also carries the LaTeX form of
 each operator.  It is not distributed.  A script that needs it calls ``parsed()``, which exits
@@ -44,7 +45,3 @@ def parsed():
     if os.path.exists(PARSED):
         return json.load(open(PARSED))
     sys.exit(NEED_SOURCE)
-
-
-def have_source() -> bool:
-    return os.path.exists(PARSED)

@@ -19,7 +19,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from table_master import at_paper_scale  # noqa: E402
+from table_master import at_paper_scale, study_model  # noqa: E402
 
 # (study, process, column head).  Order: the four body processes first, then the rest.
 PROCS = [
@@ -101,9 +101,8 @@ def cell(sig, err, sm, square=None):
 
 
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
-# find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 set Lambda_min in diboson, VBF and Drell-Yan
-# (the energy-growth subsection), and X^4 carries the asterisk discussion and the +13.3% in
-# W+W-W+ (the subsection on which classes contribute).  Keep this set in step with the phenomenology section of the paper.
+# find them: psi^2X^2D, X^2H^2D^2 and psi^4D^2 are discussed in the truncation subsection, and X^4
+# carries the asterisk discussion (the subsection on which classes contribute).  Keep this set in step with the phenomenology section of the paper.
 HIGHLIGHT = {1, 7, 14, 21}
 
 
@@ -117,6 +116,7 @@ def label(c):
 
 def main():
     data = {s: read(s) for s in {p[0] for p in PROCS}}
+    M = {s: study_model(d, s) for s, d in data.items()}
     sm = [sm_of(data, s, p) for s, p, _ in PROCS]
 
     n = len(PROCS)
@@ -138,20 +138,20 @@ def main():
     for c in sorted(CLASSES):
         cells = []
         for (study, proc, _), s0 in zip(PROCS, sm):
-            sig, err = data[study].get((proc, f"dim8_is-cls{c}", INT), (None, None))
-            sq = data[study].get((proc, f"dim8_is-cls{c}", "NP<=2 NP^2==4"), (None, None))[0]
+            sig, err = data[study].get((proc, f"{M[study]}-cls{c}", INT), (None, None))
+            sq = data[study].get((proc, f"{M[study]}-cls{c}", "NP<=2 NP^2==4"), (None, None))[0]
             cells.append(cell(sig, err, s0, sq))
         out.append(label(c) + " & " + " & ".join(cells) + r" \\")
     out += [r"\bottomrule", r"\end{tabular}}",
-            r"\caption{The term \MG\ returns at \code{NP\^{}2==2}, which excludes the $W$-mass bracket of \cref{eq:np0}, for every class in every process of "
-            r"\cref{sec:pheno}, in units of $10^{-4}$ of that process's Standard-Model rate, at "
-            r"$13.6$~TeV, $\Lambda = 3$~TeV and every coefficient of the class at one. A dash "
+            r"\caption{Which dimension-eight classes interfere in each of the twelve processes of \cref{sec:pheno}, and by how much. "
+            r"Each entry is the interference \MG\ returns at \code{NP\^{}2==2}, in units of $10^{-4}$ of that process's Standard-Model rate, "
+            r"for proton-proton collisions at the LHC with a centre-of-mass energy of $13.6$~TeV, with $\Lambda = 3$~TeV and every coefficient of the class at one. A dash "
             r"is no diagram rather than a small number, and the pattern of dashes follows from the "
             r"number of legs of \cref{eq:legs} and the field content of the vertices, "
-            r"as \cref{sec:routes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
-            r"diagram but interferes below $10^{-6}$ of the Standard-Model rate, a dagger one that produces "
-            r"diagrams but was not run in these studies, and "
-            r"parentheses mark a Monte Carlo error above a tenth of the entry. "
+            r"as \cref{sec:classes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
+            r"diagram but interferes below $5\times10^{-7}$ of the Standard-Model rate, "
+            + (r"a dagger one that produces diagrams but was not run in these studies, " if r"\dagger" in "\n".join(out) else "")
+            + r"and parentheses mark a Monte Carlo error above a tenth of the entry. "
             r"The Drell-Yan processes carry $m_{ee}>200$~GeV, $p_T^\ell>10$~GeV, $|\eta_\ell|<2.5$ and "
             r"$\Delta R(\ell,\ell)>0.4$, the photon channel additionally $p_T^\gamma>20$~GeV, "
             r"$|\eta_\gamma|<2.5$ and $\Delta R(\gamma,\ell)>0.4$, and $HHjj$ is generated with "

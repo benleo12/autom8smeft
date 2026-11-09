@@ -7,26 +7,25 @@ Everything here runs with MadGraph5_aMC@NLO alone. No Mathematica, no FeynRules.
 | model directory | what it is | use it for |
 |---|---|---|
 | `dim68_is` | the dimension-eight operators of `dim8_is` together with SMEFTsim's dimension-six operators in the U(3)^5 flavour-symmetric framework, on the same base and in the same input scheme | any calculation that needs the dimension-six sector, whose square enters `NP^2==2` beside the dimension-eight interference (see `docs/DIM6.md`) |
+| `dim68_mw` | the same two sectors as `dim68_is` in the {MW, MZ, GF} input scheme, in which alpha is derived and no mass moves with a coefficient | the dimension-six sector in that scheme, the model `./dim8 select --with-dim6` names for `dim8_mw` |
 | `dim8_is` | all 674 baryon-number-conserving dimension-eight operators of the Murphy basis on top of the Standard Model, in the {alpha, MZ, GF} input scheme with canonically normalised fields, truncated at 1/Lambda^4 in the input relations | the dimension-eight sector on its own. Every example here uses it |
 | `dim8_mw` | the same dimension-eight sector in the {MW, MZ, GF} input scheme, in which alpha is derived and no mass moves with a coefficient | dimension eight with no W-mass shift. Set `MW` to 79.82435975 to put it on the numerical point of `dim8_is` |
 
 Install: copy or symlink the model directory into MadGraph's `models/` folder under the same
 name, which is what the example scripts assume, or give `import model` an absolute path. The
-import takes about 30 seconds and 1.1 GB of memory (MG5_aMC 3.5.6, Apple silicon), once per
-session. Diagram generation is what the full basis costs: `p p > w+ w- NP<=2` is 9 subprocesses
-and 458 diagrams in 25 seconds, `p p > w+ w- z NP<=2` is fine too, but `p p > h h j j QCD=0
-NP<=2` on the unrestricted model is 166 subprocesses and 298888 diagrams in four and a half
-minutes, followed by hours of code generation, because every four-fermion and psi^2 X H operator
-adds contact terms. For 2 to 4 processes restrict first (`import model dim8_is-bosonic` for the
+import takes about two minutes, once per session (MG5_aMC 3.5.6, Apple silicon). It needs 7.7 GB
+of memory the first time, when Python compiles the model files, and 2.4 GB after that. Diagram generation is what the full basis costs: with `NP^2==2` on `dim8_mw`, `p p > w+ w-`
+is 452 diagrams in a 32-second session, but `p p > h h j j QCD=0` on the unrestricted model is
+268104 diagrams in a 2.2-hour session, and 173928 diagrams in 47 minutes with any restriction card
+(on a Mac mini). For 2 to 4 processes restrict first (`import model dim8_is-bosonic` for the
 bosonic classes, or a class card), which is what the VBF di-Higgs study does. A
 relative path does not work: MadGraph resolves it against its own directory and stops with "is
 not a valid pathname".
 
 Every Wilson coefficient is an external parameter in block `DIM8` of the parameter card, named after
 the operator (`c8G2H4x1` is `Q_{G^2H^4}^{(1)}`, complex ones come as `...Re` and `...Im`), and every
-one of them is **zero by default**. The scale is `Lam` in GeV (default 1000), which MadGraph renames
-`lam__2` because `lam` is already the Higgs quartic. The full list with operator names is
-`cards/coefficients.md`: 734 operators, which come to 1030 card entries once the 296 complex ones
+one of them is **zero by default**. The scale is `Lam` in GeV (default 1000). The full list with
+operator names is `cards/coefficients.md`: 734 operators, which come to 1030 card entries once the 296 complex ones
 are split into real and imaginary parts.
 
 Of those 734 operators, 674 conserve baryon number and 60 do not, and the shipped model contains the
@@ -35,14 +34,14 @@ because the parameter list is written from the whole basis, and setting one of t
 all. The parameter-card template marks every such line, and `make_restriction.py` says so if you
 select them.
 
-Nine more operators of the 674 have no vertices either, so 899 of the 1030 entries are live.
-Seven vanish identically once the coefficient is flavour universal: `Q_{e^4B}`, `Q_{l^4B}^{(1)}`,
-`Q_{u^4B}`, `Q_{d^4B}`, `Q_{q^4B}^{(1)}` and `Q_{q^4B}^{(3)}` contract two identical currents,
-symmetric in their Lorentz indices, with the antisymmetric B field strength, and `Q_{q^4H^2}^{(5)}`
-contracts two identical isotriplet currents with epsilon^{IJK}. With generation indices these
-operators are not zero, which is why Murphy's basis lists them, but with one coefficient per
-operator they are. The remaining two, `Q_{udWH^2}^{(1)}` and `Q_{udWH^2}^{(2)}`, vanish by their
-SU(2) structure. Their card entries are marked like the baryon-number-violating ones.
+Thirteen more operators of the 674 have no vertices either, so 897 of the 1030 entries are live.
+They vanish identically once their currents are flavour diagonal. The twelve `psi^4 B` operators
+`Q_{l^4B}^{(1,2)}`, `Q_{q^4B}^{(1,2,3,4)}`, `Q_{e^4B}^{(1,2)}`, `Q_{u^4B}^{(1,2)}` and `Q_{d^4B}^{(1,2)}`
+contract two identical currents, symmetric in their Lorentz indices, with the antisymmetric B field
+strength, and `Q_{q^4H^2}^{(5)}` contracts two identical isotriplet currents with epsilon^{IJK}. With
+generation indices these operators are not zero, which is why Murphy's basis lists them, but with one
+coefficient per operator they are. Their card entries are marked like the baryon-number-violating
+ones.
 
 ## Lambda power counting in MadGraph
 
@@ -84,7 +83,9 @@ a vertex in it: in `p p > w+ w-` the two operators `Q_{l^2H^4D}^{(2)}` and `Q_{l
 which contain no quarks at all and enter only through muon decay and hence G_F, carry about a third
 of the whole dimension-eight interference. `./dim8 select` lists such operators in a second group,
 beside those with a vertex, so its answer is complete at tree level with one insertion. This
-treatment of an input scheme is inherited from SMEFTsim. For operators with genuine new vertices
+treatment of an input scheme is inherited from SMEFTsim. With `dim68_is`, `./dim8 select` lists the
+dimension-six coefficients one by one as well, those that enter `NP^2==2` only with a second
+dimension-six insertion included (example 14). For operators with genuine new vertices
 (X^2 H^2 D^2, X^3 H^2, psi^2 X^2 D, the four-fermion and X^4 classes) the counting is exact. Which
 classes can enter a given process at all is a separate question, answered by `./dim8 select`
 (example 14) or by trying: the bosonic X^2 H^2 D^2 operators have no three-point vertex (their

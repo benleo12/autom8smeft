@@ -20,7 +20,7 @@ so removing an entry renumbers every index above it.
 
 A second kind of zero lives in a vertex rather than in a structure.  Two structures of one vertex
 can each be nonzero and still cancel, when they carry couplings equal up to sign and their signed
-sum vanishes.  Q_{q^4B}^{(4)} is the case: with flavour-universal coefficients its two quark
+sum vanishes.  Q_{q^4B}^{(4)} is the case: with flavour-diagonal currents its two quark
 currents are identical, so the operator is symmetric in its Lorentz indices against an
 antisymmetric field strength and vanishes, while FeynRules writes it as two structures that differ
 by a relabelling inside one Epsilon and carry the same coupling.  MadGraph merges structures that
@@ -28,6 +28,16 @@ share a coupling into one routine, ALOHA reduces that routine to zero, and the p
 compile.  So, within each vertex and colour structure, the entries are grouped by coupling up to
 sign, each group's signed sum is evaluated at a common random point, and a group that vanishes is
 removed.
+
+Each structure is evaluated as MadGraph's amplitude carries it, with the sign MadGraph's import
+puts on the coupling of a four-fermion structure whose fermion flow is not 1->2, 3->4
+(zero_vertex.flow_sign).  FeynRules writes a vertex of identical fermions, nu_e~ nu_e nu_e~ nu_e
+from (l~ gamma l)(l~ gamma l), as both pairings with one coupling.  As a bare contraction the
+crossed pairing is minus the direct one by Fierz, and the pair reads as zero, but MadGraph gives the
+crossed one the sign of the exchange and the vertex is twice the direct term: with cll alone in
+SMEFTsim's own UFO, sigma(ve ve > ve ve) is twice sigma(ve vm > ve vm) and sigma(ve ve~ > ve ve~)
+four times sigma(ve vm~ > ve vm~), as it must be.  Without the sign this stage removed such live
+pairs wherever FeynRules gave both one coupling.
 
 The same cancellation can be split over two vertices.  In the input-scheme models the vacuum piece
 of Q_{G^2H^4}^{(1)} on the four-gluon vertex and the d8fG term that cancels it in the gluon kinetic
@@ -40,7 +50,7 @@ vertex with the same legs in the same order, and colours are compared in a canon
 
 A coefficient can also vanish as a whole without any single group doing so.  The field-strength
 operators with two identical currents, such as Q_{q^4B}^{(2)}, are symmetric in the Lorentz
-indices of an antisymmetric field strength and vanish for flavour-universal coefficients, but
+indices of an antisymmetric field strength and vanish once the currents are flavour diagonal, but
 some of their terms share couplings with live operators.  The third stage evaluates, for every
 coefficient, its whole contribution to every vertex with all other coefficients at zero, at
 common random points, and a coefficient whose contribution vanishes everywhere is set to zero in
@@ -56,11 +66,14 @@ import shutil
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from generic_inputs import COEFFICIENT_BLOCKS, generic_value  # noqa: E402
 
 
 def zero_structures(ufo: str) -> set[str]:
     """The identically vanishing structures of this UFO, from zero_vertex.py."""
-    py = shutil.which("python3.13") or shutil.which("python3")
+    # the interpreter running this script, which needs numpy itself in the later stages
+    py = sys.executable or shutil.which("python3")
     r = subprocess.run([py, os.path.join(HERE, "zero_vertex.py"), ufo, "--structures"],
                        capture_output=True, text=True)
     m = re.search(r"identically zero (\d+)\s*\n\s*(.*)", r.stdout)
@@ -115,8 +128,9 @@ def rewrite_vertices(text: str, zero: set[str]) -> tuple[str, int, int, int]:
 def random_point(P, seed):
     """Values of every parameter at a random point: dimension-six and dimension-eight coefficients
     uniform in [0.3, 1.7], every other external input perturbed by up to 10 per cent, so that no
-    test can depend on a default value (a Cabibbo-only CKM makes many couplings zero at the
-    defaults without making them zero as expressions)."""
+    test can depend on a default value, and an input that is zero on the card first given a value
+    of its own (validate/generic_inputs.py), since the light masses and the Cabibbo angle of the
+    default card make many couplings zero without making them zero as expressions."""
     import cmath, math, random
     ns = {"cmath": cmath, "math": math, "complex": complex,
           "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
@@ -125,10 +139,10 @@ def random_point(P, seed):
     for p in P.all_parameters:
         if p.nature != "external":
             continue
-        if p.lhablock in ("DIM8", "DIM6") and p.name not in ("Lam", "Lam6"):
+        if p.lhablock in COEFFICIENT_BLOCKS and p.name not in ("Lam", "Lam6"):
             v[p.name] = rnd.uniform(0.3, 1.7)
         else:
-            v[p.name] = float(p.value) * rnd.uniform(0.9, 1.1)
+            v[p.name] = generic_value(p.name, float(p.value), p.lhablock) * rnd.uniform(0.9, 1.1)
     for p in P.all_parameters:
         if p.nature == "internal":
             try:
@@ -157,8 +171,14 @@ def colour_key(s: str):
     return "*".join(sorted(out)), sign
 
 
-def cancelling_entries(ufo: str) -> dict:
-    """Vertex name -> set of (colour, lorentz) entries whose same-coupling group sums to zero.
+def cancelling_entries(ufo: str, zero: set[str] = frozenset()) -> dict:
+    """Vertex name -> set of (colour index, structure name, coupling name) entries whose same-coupling
+    group sums to zero.
+
+    The entries are named and not numbered because the UFO is read from disk as it was before the
+    first stage, which renumbers the lorentz list of every vertex it edits: a position read here
+    would name another structure in the edited text.  The structures of `zero`, which that stage
+    has removed already, take no part in a group.
 
     Couplings are evaluated with every external parameter at a distinct random value, so two
     couplings are grouped only if they are equal up to sign as expressions.  A group collects the
@@ -190,31 +210,40 @@ def cancelling_entries(ufo: str) -> dict:
     for vx in V.all_vertices:
         for (ci, li), cp in vx.couplings.items():
             g = gval.get(cp.name, complex("nan"))
-            if g != g or g == 0:
+            if g != g or g == 0 or vx.lorentz[li].name in zero:
                 continue
             ck, cs = colour_key(vx.color[ci])
             legs.setdefault((tuple(p.name for p in vx.particles), ck), []).append(
-                (vx.name, ci, li, vx.lorentz[li].name, cs * g))
+                (vx.name, ci, cp.name, vx.lorentz[li].name, cs * g))
+    # A structure's value at a common point depends on the structure, the point and the number of
+    # legs alone, so each is evaluated once.  The flavour models have about a million entries over
+    # some nine thousand structures.
+    cache = {}
+    def S(name, nlegs, rep):
+        k = (name, nlegs, rep)
+        if k not in cache:
+            st = struct.get(name)
+            cache[k] = None if st is None else Z.evaluate(Z.parse(st), np.random.default_rng(500 + rep), nlegs)
+        return cache[k]
     hits = {}
     for (parts, _), entries in legs.items():
         groups = []                                  # [reference value, members]
-        for vn, ci, li, ln, g in entries:
+        for vn, ci, cn, ln, g in entries:
             for grp in groups:
                 ref = grp[0]
                 if abs(g - ref) <= 1e-12 * abs(ref) or abs(g + ref) <= 1e-12 * abs(ref):
-                    grp[1].append((vn, ci, li, ln, 1 if abs(g - ref) <= 1e-12 * abs(ref) else -1))
+                    grp[1].append((vn, ci, cn, ln, 1 if abs(g - ref) <= 1e-12 * abs(ref) else -1))
                     break
             else:
-                groups.append([g, [(vn, ci, li, ln, 1)]])
+                groups.append([g, [(vn, ci, cn, ln, 1)]])
         for ref, members in groups:
             if len(members) < 2:
                 continue
             dead = True
             for rep in range(3):
                 tot, scale = 0j, 0.0
-                for vn, ci, li, ln, sign in members:
-                    st = struct.get(ln)
-                    e = None if st is None else Z.evaluate(Z.parse(st), np.random.default_rng(500 + rep), len(parts))
+                for vn, ci, cn, ln, sign in members:
+                    e = S(ln, len(parts), rep)
                     if e is None:
                         dead = False
                         break
@@ -224,8 +253,26 @@ def cancelling_entries(ufo: str) -> dict:
                     dead = False
                     break
             if dead:
-                for vn, ci, li, ln, sign in members:
-                    hits.setdefault(vn, set()).add((ci, li))
+                for vn, ci, cn, ln, sign in members:
+                    hits.setdefault(vn, set()).add((ci, ln, cn))
+    return hits
+
+
+def entries_in(text: str, named: dict) -> dict:
+    """The named entries of cancelling_entries as (colour, lorentz) positions in the vertices of `text`.
+    An entry whose structure or coupling is no longer in its vertex is left out."""
+    hits = {}
+    for block in re.split(r"\n\n", text):
+        m = re.match(r"\s*(V_\d+) = Vertex\(", block)
+        if not m or m.group(1) not in named:
+            continue
+        lm = re.search(r"lorentz = \[(.*?)\]", block, re.S)
+        cm = re.search(r"couplings = \{(.*?)\}", block, re.S)
+        names = re.findall(r"L\.(\w+)", lm.group(1))
+        want = named[m.group(1)]
+        for c, l, coup in re.findall(r"\((\d+),(\d+)\):C\.(\w+)", cm.group(1)):
+            if (int(c), names[int(l)], coup) in want:
+                hits.setdefault(m.group(1), set()).add((int(c), int(l)))
     return hits
 
 
@@ -247,7 +294,7 @@ def dead_coefficients(ufo: str) -> list:
     ns = {"cmath": cmath, "math": math, "complex": complex,
           "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
     ext = [p for p in P.all_parameters if p.nature == "external"]
-    coef_parts = {p.name for p in ext if p.lhablock in ("DIM8", "DIM6") and p.name not in ("Lam", "Lam6")}
+    coef_parts = {p.name for p in ext if p.lhablock in COEFFICIENT_BLOCKS and p.name not in ("Lam", "Lam6")}
     bases = {re.sub(r"(Re|Im)$", "", n) for n in coef_parts} | coef_parts
     internal = [p for p in P.all_parameters if p.nature == "internal"]
     # coefficient -> couplings that mention it, by one scan of each coupling's identifiers
@@ -272,7 +319,7 @@ def dead_coefficients(ufo: str) -> list:
         return cache[k]
     import random as _r
     _rnd = _r.Random(20261015)
-    base = {p.name: float(p.value) * _rnd.uniform(0.9, 1.1) for p in ext}
+    base = {p.name: generic_value(p.name, float(p.value), p.lhablock) * _rnd.uniform(0.9, 1.1) for p in ext}
     for n in coef_parts:
         base[n] = 0.0
     dead = []
@@ -392,6 +439,9 @@ def main(argv) -> int:
     if len(argv) < 2:
         print(__doc__)
         return 2
+    # each stage's line reaches the release log when the stage ends, which on a flavour model is
+    # minutes apart
+    sys.stdout.reconfigure(line_buffering=True)
     ufo = os.path.abspath(argv[1])
     dry = "--dry-run" in argv
     zero = zero_structures(ufo)
@@ -407,7 +457,8 @@ def main(argv) -> int:
               f"coupling entries removed from edited vertices {lost}")
     else:
         print("no identically vanishing Lorentz structures")
-    hits = cancelling_entries(ufo)
+    # the groups are found in the UFO on disk, and their entries placed in the text the first stage left
+    hits = entries_in(V, cancelling_entries(ufo, zero))
     if hits:
         V, dropped2, edited2, lost2 = remove_entries(V, hits)
         print(f"cancelling same-coupling groups in {len(hits)} vertices: vertices deleted {dropped2}, "
@@ -435,10 +486,11 @@ def main(argv) -> int:
     if dry:
         return 0
 
-    for z in orphanL:
-        L = re.sub(rf"(?<!\w){z} = Lorentz\(.*?\)\n\n", "", L, flags=re.S)
-    for c in orphanC:
-        C = re.sub(rf"(?<!\w){c} = Coupling\(.*?\)\n\n", "", C, flags=re.S)
+    # One pass over each file: a pass per name costs twelve seconds on the 460 MB couplings.py of a
+    # flavour model.
+    orphanL, orphanC = set(orphanL), set(orphanC)
+    L = re.sub(r"(?<!\w)(\w+) = Lorentz\(.*?\)\n\n", lambda m: "" if m.group(1) in orphanL else m.group(0), L, flags=re.S)
+    C = re.sub(r"(?<!\w)(GC_\d+) = Coupling\(.*?\)\n\n", lambda m: "" if m.group(1) in orphanC else m.group(0), C, flags=re.S)
     # All three files or none.  A vertices.py that has been renumbered against a couplings.py that
     # has not is a model that imports and gives wrong numbers, which is worse than one that fails,
     # so every file is staged beside its target and the renames happen together at the end.

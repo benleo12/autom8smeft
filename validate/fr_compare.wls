@@ -70,56 +70,84 @@ zdN = Table[ 2 Tr[(zGell[[za]].zGell[[zb]] + zGell[[zb]].zGell[[za]]).zGell[[zc]
    Eps replaced by numbers), then Lorentz (explicit momenta summing to zero, free indices
    assigned, dummies summed against the Minkowski metric, the Lorentz Eps replaced by the
    Levi-Civita symbol).  The two Eps are told apart by the type of their indices. *)
-(* zvals: one explicit value per external colour index (Union order).  zVanishesQ enumerates
-   every colour assignment and stops at the first nonzero one.  Random values are unsound for
-   sparse tensors: two gluon externals hit a nonzero delta one time in eight, so with eight
-   random draws a nonzero gluonic difference vertex would still be declared zero with
-   probability 0.34.  The momenta stay random (a nonzero polynomial in them is caught with
-   probability one), with two seeds per assignment. *)
-(* Every FeynRules tensor head is swapped for an inert private head BEFORE any integer is
+(* Every free index is contracted with a dense random vector of its own, a four-vector for a Lorentz
+   index and an eight- or three-vector for a colour index, and the momenta are random and sum to zero.
+   A vertex is multilinear in those vectors and polynomial in the momenta, so a nonzero vertex is
+   nonzero at such a point with probability one.  Single random values of the indices would not do.  The
+   tensors are sparse: g^{mu nu} g^{rho sigma} - g^{mu rho} g^{nu sigma} is zero at most values of its
+   indices, and two gluon indices hit a nonzero delta one time in eight, so a test that draws index
+   values can pass a vertex that differs.  Nothing is enumerated, so no colour space is too large.
+   Every FeynRules tensor head is swapped for an inert private head BEFORE any integer is
    substituted: FeynRules' own contraction rules fire on equal integers as if they were a
    summed pair (Eps[a,b,2,4] Eps[c,d,2,4] auto-reduces to metrics), which would corrupt the
-   evaluation whenever two external indices take the same value.  Dummies are summed TERM BY
+   evaluation whenever two dummy indices take the same value.  Dummies are summed TERM BY
    TERM: summing a dummy over the whole expression multiplies every term that does not contain
    it by the metric trace (-2 for Lorentz, 3 or 8 for colour), so a difference of two
-   expressions with differently named dummies could never cancel. *)
+   expressions with differently named dummies could never cancel.  The arithmetic is exact, over the
+   rationals, sqrt 3 and i.  The other parameters take random rational values, since the two sides of a
+   pair hold them as the same symbols and no relation between them may be used. *)
 zInert = {Eps -> zEPS, ME -> zME, FV -> zFV, SP -> zSP, T -> zT, f -> zF, dSUN -> zD, IndexDelta -> zDEL};
 zSumDummies[ze_, zdumsOf_, zdim_, zweight_] := Module[{zterms = If[Head[Expand[ze]] === Plus, List @@ Expand[ze], {Expand[ze]}]},
   Total[Function[zt, Module[{zt2 = zt, zds = zdumsOf[zt]},
      Do[zt2 = Sum[(zt2 /. zd -> zv) zweight[zd, zv], {zv, zdim[zd]}], {zd, zds}]; zt2]] /@ zterms]];
-zNumeric[zc_, zn_Integer, zseed_, zvals_List] := Module[{ze = zc /. zInert, zp, zext, zlor},
+zDense[zc_, zn_Integer, zseed_] := Module[{ze = zc /. zInert, zp, zext, zcv, zlor, zlv, zcol, zlr, zF3, zD3, zT3, zpar},
   SeedRandom[zseed];
-  zext = Union[Cases[ze, Index[Colour | Gluon, Ext[_]], Infinity]]; ze = ze /. Thread[zext -> zvals];
-  ze = zSumDummies[ze, Function[zt, Union[Cases[zt, Index[Colour | Gluon, _Symbol], Infinity]]], Function[zd, If[zd[[1]] === Colour, 3, 8]], Function[{zd, zv}, 1]];
-  ze = ze /. {zT[za_Integer, zi_Integer, zj_Integer] :> zGell[[za, zi, zj]]/2, zF[za_Integer, zb_Integer, zk_Integer] :> zfN[[za, zb, zk]],
-              zD[za_Integer, zb_Integer, zk_Integer] :> zdN[[za, zb, zk]], zDEL[zi_Integer, zj_Integer] :> KroneckerDelta[zi, zj]};
   zp = Table[RandomInteger[{-9, 9}, 4], {zn - 1}]; AppendTo[zp, -Total[zp]];
+  zext = Union[Cases[ze, Index[Colour | Gluon, Ext[_]], Infinity]];
+  zcv = Association[Thread[zext -> (RandomInteger[{-9, 9}, If[#[[1]] === Colour, 3, 8]] & /@ zext)]];
+  ze = zSumDummies[ze, Function[zt, Union[Cases[zt, Index[Colour | Gluon, _Symbol], Infinity]]], Function[zd, If[zd[[1]] === Colour, 3, 8]], Function[{zd, zv}, 1]];
+  zcol[za_Integer, zdim_] := UnitVector[zdim, za];
+  zcol[za_, _] := zcv[za];
+  zF3[za_, zb_, zk_] := zF3[za, zb, zk] = (zfN . zcol[zk, 8]) . zcol[zb, 8] . zcol[za, 8];
+  zD3[za_, zb_, zk_] := zD3[za, zb, zk] = (zdN . zcol[zk, 8]) . zcol[zb, 8] . zcol[za, 8];
+  zT3[za_, zi_, zj_] := zT3[za, zi, zj] = zcol[zi, 3] . (Total[zcol[za, 8] zGell]/2) . zcol[zj, 3];
+  ze = ze /. {zF[za_, zb_, zk_] :> zF3[za, zb, zk], zD[za_, zb_, zk_] :> zD3[za, zb, zk], zT[za_, zi_, zj_] :> zT3[za, zi, zj],
+              zDEL[zi_Integer, zj_Integer] :> KroneckerDelta[zi, zj], zDEL[zi_Integer, zj_] :> zcv[zj][[zi]],
+              zDEL[zi_, zj_Integer] :> zcv[zi][[zj]], zDEL[zi_, zj_] :> zcv[zi] . zcv[zj],
+              zEPS[za_, zb_, zk_] :> Det[{zcol[za, 3], zcol[zb, 3], zcol[zk, 3]}]};
   ze = ze /. Index[Lorentz, zx_] :> zx;
-  zlor = Union[Cases[ze, Ext[_], Infinity]]; ze = ze /. Thread[zlor -> (RandomInteger[{1, 4}] & /@ zlor)];
+  zlor = Union[Cases[ze, Ext[_], Infinity]];
+  zlv = Association[Thread[zlor -> (RandomInteger[{-9, 9}, 4] & /@ zlor)]];
   ze = zSumDummies[ze, Function[zt, Union[Cases[zt, (zFV[_, zs_Symbol] | zME[zs_Symbol, _] | zME[_, zs_Symbol] | zEPS[___, zs_Symbol, ___]) :> zs, Infinity]]], Function[zd, 4], Function[{zd, zv}, zEta[[zv, zv]]]];
-  ze = ze /. {zME[zi_Integer, zj_Integer] :> zEta[[zi, zj]], zSP[zi_Integer, zj_Integer] :> zp[[zi]].zEta.zp[[zj]]};
-  ze = ze /. {zFV[zi_, zm_Integer] :> zp[[zi, zm]], zEPS[za_Integer, zb_Integer, zc2_Integer, zd2_Integer] :> Signature[{za, zb, zc2, zd2}], zEPS[za_Integer, zb_Integer, zc2_Integer] :> Signature[{za, zb, zc2}]};
-  Simplify[ze]];
-(* The cap on how many external colour assignments are enumerated.  A vertex above it is not
-   evaluated: zVanishesQ returns zUntested and the vertex is reported as untested, never as
-   differing.  DIM8_MAXCOMBOS raises the cap.  Enumeration stays exhaustive, since drawing the
-   assignments at random is unsound for sparse colour tensors. *)
-zMaxCombos = If[Environment["DIM8_MAXCOMBOS"] === $Failed, 4096, ToExpression[Environment["DIM8_MAXCOMBOS"]]];
-zVanishesQ[zvert_] := Module[{zc = zvert[[2]], zn = Length[zvert[[1]]], zext, zdims},
-  If[PossibleZeroQ[Simplify[zc]], Return[True]];
-  zext = Union[Cases[zc, Index[Colour | Gluon, Ext[_]], Infinity]];
-  zdims = If[#[[1]] === Colour, 3, 8] & /@ zext;
-  If[Times @@ zdims > zMaxCombos,
-    Print["  [untested] ", zvert[[1, All, 1]], " has ", Times @@ zdims, " colour assignments, above the ", zMaxCombos, " cap"];
-    Return[zUntested]];
-  NoneTrue[Tuples[Range /@ zdims], Function[zvals, AnyTrue[{1, 2}, zNumeric[zc, zn, #, zvals] =!= 0 &]]]];
+  zlr[zm_Integer] := UnitVector[4, zm];
+  zlr[zm_] := zlv[zm];
+  ze = ze /. {zSP[zi_Integer, zj_Integer] :> zp[[zi]] . zEta . zp[[zj]],
+              zFV[zi_, zm_Integer] :> zp[[zi, zm]], zFV[zi_, zm_] :> zp[[zi]] . zlv[zm],
+              zME[zi_Integer, zj_Integer] :> zEta[[zi, zj]], zME[zi_Integer, zj_] :> zEta[[zi, zi]] zlv[zj][[zi]],
+              zME[zi_, zj_Integer] :> zEta[[zj, zj]] zlv[zi][[zj]], zME[zi_, zj_] :> zlv[zi] . zEta . zlv[zj],
+              zEPS[za_, zb_, zk_, zd2_] :> Det[zlr /@ {za, zb, zk, zd2}]};
+  zpar = Union[Cases[ze, zx_Symbol /; !NumericQ[zx], {0, Infinity}, Heads -> False]];
+  ze = ze /. Thread[zpar -> (Rational[RandomInteger[{1, 97}], RandomInteger[{1, 97}]] & /@ zpar)];
+  Expand[ze]];
+zVanishesQ[zvert_] := Module[{zn = Length[zvert[[1]]]},
+  AllTrue[{1, 2, 3}, zDense[zvert[[2]], zn, #] === 0 &]];
+
+(* The test must catch a difference and must pass an identity, and it stops here if it does not. *)
+zL[k_] := Index[Lorentz, Ext[k]];
+zG[k_] := Index[Gluon, Ext[k]];
+zd1 = Index[Gluon, zzdum1]; zd2 = Index[Gluon, zzdum2]; zd3 = Index[Gluon, zzdum3]; zl1 = Index[Lorentz, zzdum4];
+zSelf = {
+  {"a metric-only difference on four gauge bosons", False, 4, ME[zL[1], zL[2]] ME[zL[3], zL[4]] - ME[zL[1], zL[3]] ME[zL[2], zL[4]]},
+  {"a Levi-Civita tensor on four free indices", False, 4, Eps[zL[1], zL[2], zL[3], zL[4]]},
+  {"a sparse colour tensor on four gluons", False, 4, IndexDelta[zG[1], zG[2]] IndexDelta[zG[3], zG[4]] ME[zL[1], zL[2]] ME[zL[3], zL[4]]},
+  {"a colour tensor on six gluons, far above any enumeration", False, 6,
+     f[zG[1], zG[2], zd1] f[zd1, zG[3], zd2] f[zd2, zG[4], zd3] f[zd3, zG[5], zG[6]] ME[zL[1], zL[2]] ME[zL[3], zL[4]] ME[zL[5], zL[6]]},
+  {"a wrong relative sign", False, 3, FV[1, zL[2]] ME[zL[1], zL[3]] + FV[2, zL[1]] ME[zL[2], zL[3]]},
+  {"the Jacobi identity", True, 4, (f[zG[1], zG[2], zd1] f[zG[3], zG[4], zd1] + f[zG[1], zG[3], zd1] f[zG[4], zG[2], zd1] + f[zG[1], zG[4], zd1] f[zG[2], zG[3], zd1]) ME[zL[1], zL[2]] ME[zL[3], zL[4]]},
+  {"the Schouten identity", True, 5, Eps[zL[1], zL[2], zL[3], zL[4]] FV[1, zL[5]] - Eps[zL[5], zL[2], zL[3], zL[4]] FV[1, zL[1]] - Eps[zL[1], zL[5], zL[3], zL[4]] FV[1, zL[2]] - Eps[zL[1], zL[2], zL[5], zL[4]] FV[1, zL[3]] - Eps[zL[1], zL[2], zL[3], zL[5]] FV[1, zL[4]]},
+  {"momentum conservation", True, 4, (FV[1, zL[1]] + FV[2, zL[1]] + FV[3, zL[1]] + FV[4, zL[1]]) ME[zL[2], zL[3]]},
+  {"a contracted dummy against the scalar product", True, 3, FV[1, zl1] FV[2, zl1] - SP[1, 2]},
+  {"f against d", True, 2, f[zd1, zd2, zG[1]] dSUN[zd1, zd2, zG[2]]}};
+Do[If[zVanishesQ[{ConstantArray[{G, 1}, zt[[3]]], zt[[4]]}] =!= zt[[2]],
+     Print["[abort] the vanishing test fails on ", zt[[1]]]; Exit[2]], {zt, zSelf}];
+Print["[compare] the vanishing test passes its ", Length[zSelf], " cases"];
 
 pairs = Get[pairsAbs];
 If[! ListQ[pairs] || pairs === {}, Print["[abort] pairs file did not give a non-empty list: ", pairsAbs]; Exit[1]];
 Print["[compare] ", Length[pairs], " pairs loaded"];
 report = {};
 allok = True;
-anyuntested = False;
+anyskipped = False;
 
 Do[
   {hBlk, hWC, gBlk, gWC, norm} = pr;
@@ -155,25 +183,21 @@ Do[
   If[verts === $Aborted,
     Print["SKIPPED  exceeded the ", N[memcap/1024^3, 3], " GB cap"];
     AppendTo[report, <|"ref" -> hBlk, "gen" -> gBlk, "result" -> "skipped-memory"|>];
+    anyskipped = True;
     Continue[]];
-  (* A vertex whose colour space is above the cap is UNTESTED, not differing.  The two tallies
-     are kept apart, so a size limit is never reported as a disagreement. *)
   zver = zVanishesQ /@ verts;
   nz = Pick[verts, zver, False];
-  unt = Pick[verts, zver, zUntested];
   ok = Length[nz] == 0;
   allok = allok && ok;
-  anyuntested = anyuntested || Length[unt] > 0;
-  Print[Which[! ok, "FAIL", Length[unt] > 0, "PASS but incomplete", True, "PASS"],
-    "  differing: ", Length[nz], ", untested: ", Length[unt], ", verified zero: ",
-    Length[verts] - Length[nz] - Length[unt], "   (", Round[AbsoluteTime[] - t0, 0.1], " s)"];
-  If[! ok, Print["  first differing vertex: ", nz[[1, 1]], "\n  coefficient: ", Simplify[nz[[1, 2]]]]];
-  If[Length[unt] > 0, Print["  untested vertices: ", DeleteDuplicates[unt[[All, 1, All, 1]]]]];
+  Print[If[ok, "PASS", "FAIL"], "  differing: ", Length[nz], ", verified zero: ",
+    Length[verts] - Length[nz], "   (", Round[AbsoluteTime[] - t0, 0.1], " s)"];
+  If[! ok, Print["  first differing vertex: ", nz[[1, 1]], "\n  coefficient: ", Short[nz[[1, 2]], 5]]];
   AppendTo[report, <|"ref" -> hBlk, "refWC" -> ToString[hWC], "gen" -> gBlk, "genWC" -> ToString[gWC],
                      "norm" -> ToString[norm], "pass" -> ok, "surviving" -> Length[nz],
-                     "untested" -> Length[unt], "verified" -> Length[verts] - Length[nz] - Length[unt]|>];
+                     "verified" -> Length[verts] - Length[nz]|>];
   , {pr, pairs}];
 
 Export[StringReplace[pairsAbs, ".m" ~~ EndOfString -> "_report.json"], report, "JSON"];
-Print["\nOVERALL: ", Which[! allok, "FAIL", anyuntested, "PASS but incomplete (some vertices above the colour cap)", True, "PASS"]];
-Exit[If[allok, 0, 1]];
+(* a pair over the memory cap was not tested, so the list has not passed *)
+Print["\nOVERALL: ", Which[! allok, "FAIL", anyskipped, "INCOMPLETE (some pairs over the memory cap)", True, "PASS"]];
+Exit[If[allok && ! anyskipped, 0, 1]];

@@ -20,11 +20,19 @@ Conventions, checked against SMEFTsim's rotateGaugeB and SmeftFR's Z-factors:
      m   = cHWB v^2 L6 + (1/2) c8WBH4x1 v^4 L8   (Q_HWB -> -(v^2/2) W3B, Q_{WBH^4}^(1) -> -(v^4/4) W3B)
   M_W^2 = g^2 v^2/4 (1 + dmW),                    dmW = (c8H6x1 - c8H6x2)/4 v^4 L8
   M_neutral^2 = (v^2/4)(1 + dmZ) n n^T, n = (g,-g'), dmZ = cHDD v^2 L6/2 + (c8H6x1 + c8H6x2)/4 v^4 L8
-  sqrt2 GF v^2 = R = (1 + dl)^2/(1 + dmW) + dc,   dl = cHl3 v^2 L6 + d8gWl,  dc = -cll1 v^2 L6,
-     d8gWl = (c8l2H4Dx2 + c8l2H4Dx4)/2 v^4 L8.
+  sqrt2 GF v^2 = R = (1 + dl)^2/(1 + dmW) + dc,   dl = cHl3 v^2 L6 + d8gWl,  dc = -cll1 v^2 L6 + d8c,
+     d8gWl = [(c8l2H4Dx2 + c8l2H4Dx4)/2 + (c8l2H4Dx2FE + c8l2H4Dx4FE)(ye^2 + ymu^2)/4] v^4 L8,
+     d8c   = -[c8l4H2x1Fx00/2 + c8l4H2x1Fx0E (ye^2 + ymu^2)/4] v^4 L8.
   (The muon-decay R reproduces SmeftFR's universal-flavour c6 and c8 exactly, including the
-   2 cHl3^2 that a naive square misses; under our delta_pr delta_st contraction the dim-8
-   four-lepton operators and the non-interfering cle^2 give nothing.)
+   2 cHl3^2 that a naive square misses.  The flavour structures of the models add three terms.
+   The structure (Y_e Y_e^dag)_pr of Q_{l^2H^4D}^{(2),(4)} scales the W coupling of lepton p by
+   y_p^2, so the electron and muon vertices together add (y_e^2 + y_mu^2) times its coefficient
+   where the universal structure adds 2.  The crossed structures delta_pt delta_sr and
+   delta_pt (Y_e Y_e^dag)_sr of Q_{l^4H^2}^{(1)} give (nubar_mu nu_e)(ebar mu) with weight 2 and
+   y_e^2 + y_mu^2, the cll1 structure of SMEFTsim times v^2/2.  Every other dim-8 four-lepton
+   structure is flavour diagonal or, for the crossed one of Q_{l^4H^2}^{(2)}, purely imaginary, and
+   the non-interfering cle^2 gives nothing.  With the default massless e and mu only the first
+   crossed term survives.)
 """
 import math
 import os
@@ -46,6 +54,10 @@ L6, L8 = sp.symbols('L6 L8', positive=True)
 cHW, cHB, cHWB, cHDD, cHl3, cll1 = sp.symbols('cHW cHB cHWB cHDD cHl3 cll1', real=True)
 c8W2H4x1, c8W2H4x3, c8B2H4x1, c8WBH4x1, c8H6x1, c8H6x2, c8l2H4Dx2, c8l2H4Dx4 = sp.symbols(
     'c8W2H4x1 c8W2H4x3 c8B2H4x1 c8WBH4x1 c8H6x1 c8H6x2 c8l2H4Dx2 c8l2H4Dx4', real=True)
+# the flavour structures that reach muon decay, and y_e^2 + y_mu^2 (ylsq in the model)
+c8l2H4Dx2FE, c8l2H4Dx4FE, c8l4H2x1Fx00, c8l4H2x1Fx0E = sp.symbols(
+    'c8l2H4Dx2FE c8l2H4Dx4FE c8l4H2x1Fx00 c8l4H2x1Fx0E', real=True)
+ylsq = sp.symbols('ylsq', nonnegative=True)
 g, gp, v = sp.symbols('g gp v', positive=True)
 g0, gp0, v0 = sp.symbols('gwSM g1SM vevSM', positive=True)
 
@@ -56,8 +68,8 @@ fB  = 2*cHB*v**2*e6 + c8B2H4x1*v**4*e8
 m   = cHWB*v**2*e6 + sp.Rational(1, 2)*c8WBH4x1*v**4*e8
 dmW = (c8H6x1 - c8H6x2)/4*v**4*e8
 dmZ = cHDD*v**2*e6/2 + (c8H6x1 + c8H6x2)/4*v**4*e8
-dl  = cHl3*v**2*e6 + (c8l2H4Dx2 + c8l2H4Dx4)/2*v**4*e8
-dc  = -cll1*v**2*e6
+dl  = cHl3*v**2*e6 + ((c8l2H4Dx2 + c8l2H4Dx4)/2 + (c8l2H4Dx2FE + c8l2H4Dx4FE)*ylsq/4)*v**4*e8
+dc  = -cll1*v**2*e6 - (c8l4H2x1Fx00/2 + c8l4H2x1Fx0E*ylsq/4)*v**4*e8
 
 K11, K12, K22 = 1 - fW3, m, 1 - fB
 detK = K11*K22 - K12**2
@@ -71,7 +83,6 @@ R   = (1 + dl)**2/(1 + dmW) + dc
 # inputs written through the SM couplings, so the zeroth order cancels identically
 aEW_of = g0**2*gp0**2/(g0**2 + gp0**2)          # = e0^2
 MZ2_of = (g0**2 + gp0**2)*v0**2/4
-GFv2   = 1                                      # sqrt2 GF v0^2 = 1  ->  sqrt2 GF = 1/v0^2
 
 a1, a2, b1, b2, c1, c2 = sp.symbols('a1 a2 b1 b2 c1 c2')
 sub = {g: g0*(1 + a1*t + a2*t**2), gp: gp0*(1 + b1*t + b2*t**2), v: v0*(1 + c1*t + c2*t**2)}
@@ -160,11 +171,15 @@ print("  (b)", "PASS" if ok_b else "FAIL")
 
 print("=== (c) dim-8 only vs the independent derivation (L8 = 1) ===")
 wc8 = {c8W2H4x1: 0.5, c8W2H4x3: -0.3, c8B2H4x1: 0.4, c8WBH4x1: 0.6, c8H6x1: 0.8, c8H6x2: -0.2,
-       c8l2H4Dx2: 0.35, c8l2H4Dx4: 0.15}
+       c8l2H4Dx2: 0.35, c8l2H4Dx4: 0.15, c8l2H4Dx2FE: 0.45, c8l2H4Dx4FE: -0.25, c8l4H2x1Fx00: 0.55,
+       c8l4H2x1Fx0E: -0.65, ylsq: 0.3}
 v4 = v0n**4
-d8gWl = (wc8[c8l2H4Dx2] + wc8[c8l2H4Dx4])/2*v4; d8mW = (wc8[c8H6x1] - wc8[c8H6x2])/4*v4
+d8gWl = ((wc8[c8l2H4Dx2] + wc8[c8l2H4Dx4])/2 + (wc8[c8l2H4Dx2FE] + wc8[c8l2H4Dx4FE])*wc8[ylsq]/4)*v4
+d8mW = (wc8[c8H6x1] - wc8[c8H6x2])/4*v4
+d8c = -(wc8[c8l4H2x1Fx00]/2 + wc8[c8l4H2x1Fx0E]*wc8[ylsq]/4)*v4
 vev2_ours = 2*float(out['vev'][1].subs({L6: 0, L8: 1}).subs(wc8).subs(num))
-print(f"  vev^2: ours {vev2_ours:+.12f}   independent 2 d8gWl - d8mW = {2*d8gWl - d8mW:+.12f}   diff {vev2_ours-(2*d8gWl-d8mW):+.1e}")
+indep = 2*d8gWl - d8mW + d8c
+print(f"  vev^2: ours {vev2_ours:+.12f}   independent 2 d8gWl - d8mW + d8c = {indep:+.12f}   diff {vev2_ours-indep:+.1e}")
 
 print("=== (e) truncation self-test: residuals of the EXACT relations at the O(t^2) solution ===")
 allwc = {**wc6, **wc8, L6: 1e-6, L8: 1e-12}

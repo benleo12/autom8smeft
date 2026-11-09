@@ -45,6 +45,21 @@ Off[General::stop];
 If[! MemberQ[$Path, $FeynRulesPath], PrependTo[$Path, $FeynRulesPath]];
 << FeynRules`;
 If[FR$NKernels > 0, FR$KernelNumber = $KernelCount];  (* only used in FeynRules progress messages *)
+(* Setting 4: LoadModel lists the blocks of the external parameters (ParametersMG in
+   Core/ClassDeclarations.m) by removing repeated names with
+       list //. {xx___, a_, yy___, a_, zz___} -> {xx, a, yy, zz}
+   which removes one repetition per pass and costs the cube of the number of external parameters:
+   9 s for the 1031 coefficients of block DIM8 alone and six minutes once the 2507 of the flavour
+   structures in block DIM8F are there.  It leaves the first occurrence of each name in order, which
+   is DeleteDuplicates, and that replaces it in the definition.  The rule is found by its form, a
+   pattern name that occurs twice between three sequences, so that a FeynRules without it is left as
+   it is. *)
+FRDedupe = HoldPattern[ReplaceRepeated[x_, Verbatim[Rule][{Verbatim[Pattern][_, Verbatim[BlankNullSequence][]],
+      Verbatim[Pattern][a_, Verbatim[Blank][]], Verbatim[Pattern][_, Verbatim[BlankNullSequence][]],
+      Verbatim[Pattern][a_, Verbatim[Blank][]], Verbatim[Pattern][_, Verbatim[BlankNullSequence][]]}, _]]];
+Print["[init] block names of the parameters deduplicated with DeleteDuplicates: ",
+  Count[DownValues[ParametersMG], FRDedupe, Infinity], " place(s)"];
+DownValues[ParametersMG] = DownValues[ParametersMG] /. FRDedupe :> DeleteDuplicates[x];
 Print["[init] FeynRules ", FR$VersionNumber, " loaded on Mathematica ", $Version, " with ", $KernelCount, " subkernels"];
 Print["[init] DownValues[MatrixSymbol] master/sub: ", Length[DownValues[MatrixSymbol]], " / ", If[FR$NKernels>0, ParallelEvaluate[Length[DownValues[MatrixSymbol]]], "n/a"]];
 Print["[init] Options[ValueQ] master/sub: ", Options[ValueQ], " / ", If[FR$NKernels>0, ParallelEvaluate[Options[ValueQ]], "n/a"]];

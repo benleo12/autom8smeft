@@ -1,15 +1,15 @@
 #!/bin/bash
-# A fifteen-minute acceptance test of models/dim8_is, for someone who has not built it and does
+# An acceptance test of models/dim8_is, about an hour on one core, for someone who has not built it and does
 # not intend to read the pipeline.  Every test states the number it expects BEFORE it runs, so a
 # disagreement is a result and not a judgement call.
 #
 #     validate/quicktest.sh [/path/to/MG5_aMC] [/path/to/scratch]
 #
 # Tests 1 and 2 need no MadGraph and take five seconds.  Tests 3 to 6 each generate 5000 events
-# on one core.  Run it from the top of the repository.
+# on one core, and tests 3, 4 and 6 each first import the model and write a process directory.  Run it from the top of the repository.
 
 set -u
-MG=${1:-${MG5_DIR:-/path/to/MG5_aMC}}
+MG=${1:-${MG5_DIR:-MG5_aMC}}
 S=${2:-$PWD/.quicktest}
 PY=${DIM8_PY:-python3.11}
 REPO=$(cd "$(dirname "$0")/.." && pwd)
@@ -77,34 +77,33 @@ check "M_W from {alpha, MZ, GF}" "$(awk '/^MW  /{print $3}' "$S/params.txt")" 79
 check "v"                        "$(awk '/^vevT/{print $3}' "$S/params.txt")" 246.2205691 1e-6
 
 # ---------------------------------------------------------------- 3. the Standard Model limit
-say "3. the SM limit reproduces MadGraph's own sm model (2 min)"
+say "3. the SM limit reproduces MadGraph's own sm model (20 min)"
 build sm0 "NP=0"
 check "p p > w+ w- at c = 0" "$(xsec sm0 dim8_all=0)" 68.05 0.6
-echo "    reference: the stock sm model with the same inputs (aEWM1 127.9, MZ 91.1876, MT 172)"
-echo "    gives 68.05 +- 0.24 pb"
+echo "    reference: the stock sm model with the same inputs (aEWM1 127.9, MZ 91.1876) gives"
+echo "    68.05 +- 0.24 pb, and the top mass does not enter this process at this order"
 
 # ---------------------------------------------------------------- 4. the interference
-say "4. the 1/Lambda^4 interference, all 1030 coefficients at 1, Lambda = 1 TeV (3 min)"
+say "4. the 1/Lambda^4 interference, every dimension-eight coefficient at 1, Lambda = 1 TeV (20 min)"
 build int "NP^2==2"
-i1000=$(xsec int dim8_all=1 lam__2=1000)
-check "interference at Lambda = 1 TeV" "$i1000" -3.998 0.06
+i1000=$(xsec int dim8_all=1 Lam=1000)
+check "interference at Lambda = 1 TeV" "$i1000" -3.634 0.06
 
 # ---------------------------------------------------------------- 5. the Lambda scaling
 say "5. that interference falls as 1/Lambda^4 (3 min)"
-i2000=$(xsec int dim8_all=1 lam__2=2000)
+i2000=$(xsec int dim8_all=1 Lam=2000)
 check "interference at Lambda = 2 TeV" "$i2000" "$("$PY" -c "print($i1000/16)")" 0.01
-echo "    the expected answer is NOT exactly i(1 TeV)/16.  A 0.8 per cent deficit is physical and"
-echo "    measured: the W mass shifts by 0.625 per cent at c = 1 and Lambda = 1 TeV, it carries no"
-echo "    order tag, and the Standard-Model half of the interference is evaluated at that shifted"
-echo "    mass.  A fit to A/Lambda^4 + B/Lambda^8 gives B/A = 0.85 per cent and predicts the 3 TeV"
-echo "    point at 0.27 sigma, where pure 1/Lambda^4 misses it by 3.2.  A deviation much larger"
-echo "    than one per cent, or one that does not fall as 1/Lambda^8, would be the real failure."
+echo "    the expected answer is NOT exactly i(1 TeV)/16.  The W mass shifts by 0.58 per cent at"
+echo "    c = 1 and Lambda = 1 TeV, it carries no order tag, and the Standard-Model half of the"
+echo "    interference is evaluated at that shifted mass, so a deficit of that order is physical."
+echo "    A deviation much larger than one per cent, or one that does not fall as 1/Lambda^8,"
+echo "    would be the real failure."
 
 # ---------------------------------------------------------------- 6. the square
-say "6. the dimension-eight square (5 min)"
+say "6. the dimension-eight square (20 min)"
 build sq "NP<=2 NP^2==4"
-check "square at Lambda = 1 TeV" "$(xsec sq dim8_all=1 lam__2=1000)" 3989 100
-echo "    this is 59 times the Standard Model, which is the truncation failing at c = 1 and"
+check "square at Lambda = 1 TeV" "$(xsec sq dim8_all=1 Lam=1000)" 3893 100
+echo "    this is 57 times the Standard Model, which is the truncation failing at c = 1 and"
 echo "    Lambda = 1 TeV in an inclusive sample, not the model being wrong"
 
 printf '\n%s passed, %s failed\n' "$pass" "$fail"

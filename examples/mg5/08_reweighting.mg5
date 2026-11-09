@@ -10,6 +10,6 @@ set nevents 10000
 set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
-set lam__2 1000
+set Lam 1000
 set c8q2W2Dx1 1.0
 done

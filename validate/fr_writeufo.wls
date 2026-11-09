@@ -20,7 +20,8 @@ args = Rest[$ScriptCommandLine];
 outname = If[Length[args] >= 1, args[[1]], "dim8_full"];
 selfile = If[Length[args] >= 2, args[[2]], ""];
 If[selfile =!= "", selfile = ExpandFileName[selfile]];   (* resolve before SetDirectory *)
-FR$NKernels = 2;
+(* DIM8_NKERNELS: the parallel kernels WriteUFO uses for its flavour expansion and its splitting (default 2) *)
+FR$NKernels = If[Environment["DIM8_NKERNELS"] === $Failed, 2, ToExpression[Environment["DIM8_NKERNELS"]]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
@@ -35,6 +36,28 @@ z8base = If[Environment["DIM8_BASE"] === $Failed, "base.fr", Environment["DIM8_B
 z8bases = StringTrim /@ StringSplit[z8base, ";"];
 LoadModel[Sequence @@ Append[z8bases, "gen.fr"]];
 Print["[time] LoadModel: ", Round[AbsoluteTime[] - t0, 0.1], " s"];
+(* The blocks of the fermionic operators are cached with a general flavour coefficient (z8F2 or z8F4,
+   shared, since a block holds one operator), which gen_flavour_rules.m replaces block by block by the
+   operator's flavour structures (gen/emit_flavour.py) as each block is loaded.  A block must come out
+   with no placeholder left, or the UFO would hold a parameter it never defines, so the load loop below
+   stops on one. *)
+z8flavourFile = $root <> "/tests/gen_smoke/gen_flavour_rules.m";
+If[FileExistsQ[z8flavourFile], Get[z8flavourFile];
+  Print["[flavour] structures of the operators of ", Length[z8FlavourRules], " blocks from gen_flavour_rules.m"],
+  z8FlavourRules = <||>; z8FlavourPlaceholders = {}];
+(* DIM8_EXTRA_RULES: more files of flavour rules, separated by ";", for blocks that gen.fr does not define:
+   the connection operators of the models of gen/towers.py, whose file joins its rules to these *)
+If[Environment["DIM8_EXTRA_RULES"] =!= $Failed,
+  Scan[(Get[$root <> "/tests/gen_smoke/" <> #];
+        Print["[flavour] with ", #, ": structures of the operators of ", Length[z8FlavourRules], " blocks"]) &,
+       StringTrim /@ StringSplit[Environment["DIM8_EXTRA_RULES"], ";"]]];
+z8placeholderQ[z8e_] := ! FreeQ[z8e, Alternatives @@ z8FlavourPlaceholders];
+(* DIM8_DROPBELOW: a file of block names whose vertices with at most three legs are left out as each is
+   loaded, because a model of gen/towers.py takes those vertices from another cache, computed to a higher
+   order.  Unset, every vertex of every block is kept. *)
+z8dropBelow = If[Environment["DIM8_DROPBELOW"] === $Failed, {},
+  Select[StringTrim /@ StringSplit[Import[ExpandFileName[Environment["DIM8_DROPBELOW"]], "Text"], "\n"], # =!= "" &]];
+If[z8dropBelow =!= {}, Print["[cfg] the vertices with at most three legs of ", Length[z8dropBelow], " blocks are left out"]];
 
 (* DIM8_VDIR may name several cache directories separated by ";".  The dimension-six sector is
    built into its own directory so that a plain dimension-eight build cannot pick it up by
@@ -116,7 +139,9 @@ If[FileExistsQ[z8smfile] && Environment["DIM8_NOSMCACHE"] === $Failed,
 Print["[time] base (", z8lsmname, ") vertices: ", Length[smVerts],
       " (", Round[AbsoluteTime[] - tt, 0.1], " s)"];
 
-all = {smVerts};
+(* DIM8_NOBASE=1 leaves the base model's vertices out: a model written in shards (hpc/write_shards.sh)
+   carries them in one shard only, and validate/merge_ufo.py joins the shards *)
+all = If[Environment["DIM8_NOBASE"] === "1", Print["[cfg] base vertices left out"]; {}, {smVerts}];
 (* Every file must define FR$Vert, and the loop checks that it does.  A file that defines
    something else leaves FR$Vert without a value, AppendTo then stores the SYMBOL in the list,
    and the next file's Get gives that symbol a value before the list is next evaluated, so the
@@ -129,6 +154,12 @@ Do[
       Get[z8file]];                    (* restores FR$Vert *)
     If[! ListQ[FR$Vert],
       Print["[abort] ", z8file, " does not hold a vertex list"]; Quit[1]];
+    If[KeyExistsQ[z8FlavourRules, FileBaseName[z8file]], FR$Vert = FR$Vert /. z8FlavourRules[FileBaseName[z8file]]];
+    If[MemberQ[z8dropBelow, FileBaseName[z8file]], FR$Vert = Select[FR$Vert, Length[#[[1]]] >= 4 &]];
+    If[z8FlavourPlaceholders =!= {},
+      If[z8placeholderQ[FR$Vert],
+        Print["[abort] ", z8file, " keeps a general flavour coefficient after the flavour structures replace it: ",
+          Union[Cases[FR$Vert, Alternatives @@ z8FlavourPlaceholders, Infinity]]]; Quit[1]]];
     AppendTo[all, FR$Vert];
     ClearAll[FR$Vert];
   ], {z8file, files}];

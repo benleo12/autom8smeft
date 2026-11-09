@@ -80,8 +80,8 @@
      one gets the exact algebraic relation
          LQphi6D2 = 1/2 Q_{H^6}^{(1)} + 1/2 Q_{H^6}^{(2)}
      which is a LINEAR COMBINATION of two of our blocks and therefore cannot be written as
-     a single entry of this file.  LQphi6Box equals a combination of the two only after an
-     integration by parts, so it is not even algebraically reducible to our blocks, and
+     a single entry of this file.  LQphi6Box equals a combination of the two only through the
+     equations of motion, so it is not even algebraically reducible to our blocks, and
      pairing it against either one would be a guaranteed false failure.  Both are left out
      on purpose.  The shim still declares the two coefficients cphi6Box and cphi6D2, so the
      relation can be checked separately.

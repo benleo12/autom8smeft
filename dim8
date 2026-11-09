@@ -2,12 +2,14 @@
 """
 dim8  --  dimension-eight SMEFT models for MadGraph, one process at a time.
 
-    ./dim8 build                       compute and cache the vertices (slow, once)
+    ./dim8 rebuild                     gen/operators.py to the released models: build, index, each UFO and its release
+    ./dim8 build                       check the encoding, compute and cache the vertices (slow, once)
     ./dim8 index                       export the vertex field content for the selector
     ./dim8 select "p p > h j j"        which operators can contribute, and why
     ./dim8 select "p p > h j j" --card vbf   ... and write restrict_vbf.dat into the model
     ./dim8 model  "p p > h j j" -o vbf write the FeynRules model for just those
     ./dim8 ufo    "p p > h j j" -o vbf write the UFO for just those
+    ./dim8 series "u u~ > w+ w-"       the amplitude topology by topology as a series in lambda
     ./dim8 check                       run the symbolic validation gates
 
 The point of the process argument is that nobody should import every vertex of 674
@@ -22,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 
@@ -32,7 +35,9 @@ VDIR = os.environ.get("DIM8_VDIR", os.path.join(ROOT, "build/vertices"))
 sys.path.insert(0, os.path.join(ROOT, "gen"))
 sys.path.insert(0, os.path.join(ROOT, "validate"))
 
-WOLFRAM = "/Applications/Wolfram.app/Contents/MacOS/wolframscript"
+# WS names wolframscript, and otherwise it is the one on the PATH or the macOS application
+WOLFRAM = (os.environ.get("WS") or shutil.which("wolframscript")
+           or "/Applications/Wolfram.app/Contents/MacOS/wolframscript")
 
 
 def _need(path, hint):
@@ -43,31 +48,574 @@ def _need(path, hint):
 # ---------------------------------------------------------------------------- build ----
 
 
+# The six operators of Q_{G^4} with a dual field strength.  Their vertices with seven and eight gluons
+# exceed 122 GB in FeynRules even one monomial at a time, so ./dim8 build has FeynRules compute these
+# six, and no other operator, up to six legs.  It keeps their Levi-Civita tensors as written
+# (DIM8_EPSEPS=0), the form in which six legs take minutes at 6 GB in chunks of 25 terms where the
+# rewritten form takes hours.  Their status lines read "maxlegs 6".  validate/g4_highleg.py then writes the
+# vertices with seven and eight gluons from the operators themselves, and their status lines read "highleg
+# 7 8", or whichever of them are nonzero.  Resolved by coefficient name so the list cannot go stale.
+CAPPED_WCS = ("c8G4x2", "c8G4x4", "c8G4x5", "c8G4x6", "c8G4x8", "c8G4x9")
+CAP_ENV = {"DIM8_MAXLEGS": "6", "DIM8_EPSEPS": "0", "DIM8_CHUNK": "25"}
+# The recursion limit of a worker.  FeynRules sets it to 2500 when it loads, and the large blocks exceed
+# that, so a worker stops with TerminatedEvaluation[RecursionLimit] and the blocks after it stay missing.
+WORKER_RECURSION = 20000
+
+
+def _need_wolfram():
+    if not (shutil.which(WOLFRAM) or os.path.exists(WOLFRAM)):
+        sys.exit(f"wolframscript not found at {WOLFRAM}\n  -> set WS to it")
+    _need(os.path.join(ROOT, "external", "feynrules", "feynrules-current"),
+          "unpack FeynRules 2.3.49 there, where the Wolfram scripts of validate/ load it from")
+
+
+def _wolfram_env(**extra):
+    """The environment of a Wolfram script, which reads the tree named by DIM8_ROOT."""
+    return dict(os.environ, DIM8_ROOT=ROOT, **extra)
+
+
+def _numpy_python():
+    """The Python that examples/release_model.sh runs its zero tests with: the first of DIM8_NUMPY_PY,
+    python3.13 and python3 that imports numpy, or None."""
+    for p in os.environ.get("DIM8_NUMPY_PY", "").split() + ["python3.13", "python3"]:
+        if shutil.which(p) and subprocess.call([p, "-c", "import numpy"], stdout=subprocess.DEVNULL,
+                                               stderr=subprocess.DEVNULL) == 0:
+            return p
+    return None
+
+
+def _release_tools():
+    """What examples/release_model.sh lacks here, as lines to print.  It runs after the hours of writing
+    a UFO, which a second run repeats, so ./dim8 rebuild asks before it starts.  Without numpy the release
+    stops, and without MadGraph it would release a model that no generator has imported."""
+    out = []
+    if _numpy_python() is None:
+        out.append("no Python with numpy for the zero tests of the release\n"
+                   "  -> install numpy, or set DIM8_NUMPY_PY to a Python that has it")
+    if (os.environ.get("DIM8_SKIP_MG5_IMPORT") != "1"
+            and not os.access(os.path.join(os.environ.get("MG5_DIR", ""), "bin", "mg5_aMC"), os.X_OK)):
+        out.append("no MadGraph for the import test of the release\n"
+                   "  -> set MG5_DIR, or DIM8_SKIP_MG5_IMPORT=1 to release without the test")
+    return out
+
+
+def _command_line(script, args, extra):
+    """How a Wolfram script is run, as a line to print, with the variables set for it."""
+    import shlex
+    return " ".join([f"{k}={shlex.quote(v)}" for k, v in extra.items()]
+                    + [shlex.quote(WOLFRAM), "-file", f"validate/{script}"] + [shlex.quote(str(x)) for x in args])
+
+
+def _run_wolfram(script, args, env, log):
+    """Run validate/<script> with its output in build/logs/<log>, and return its exit status.  A kernel
+    that finds no licence seat is retried every two minutes for up to twelve hours."""
+    import re
+    import time
+    path = os.path.join(ROOT, "build", "logs", log)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    for attempt in range(360):
+        with open(path, "w") as fh:
+            rc = subprocess.call([WOLFRAM, "-file", os.path.join(ROOT, "validate", script)] + [str(x) for x in args],
+                                 stdout=fh, stderr=fh, env=env)
+        if not re.search(r"not activated|license|password", open(path, errors="replace").read(), re.I):
+            return rc
+        print(f"build/logs/{log}: no licence seat, attempt {attempt + 1}", flush=True)
+        time.sleep(120)
+    return 1
+
+
+def _load_encoding():
+    """The operators of gen/operators.py.  An index that is not contracted raises when the operator is
+    constructed, so a file that does not load stops here, with its line and the reason."""
+    import traceback
+    try:
+        return _parse_all()
+    except Exception as e:
+        at = [f.lineno for f in traceback.extract_tb(e.__traceback__) if f.filename.endswith("operators.py")]
+        sys.exit(f"gen/operators.py {f'line {at[-1]} ' if at else ''}does not load: {type(e).__name__}: {e}")
+
+
+def _write_text(path, text):
+    """Write a file through a temporary one, so that a failed write leaves the old file, and leave it
+    alone when nothing changes."""
+    if os.path.exists(path) and open(path, errors="replace").read() == text:
+        return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path + ".tmp", "w") as fh:
+        fh.write(text)
+    os.replace(path + ".tmp", path)
+
+
+def _write_catalogue():
+    """docs/catalogue.json, the table examples/cards/coefficients.md and the LaTeX rendering
+    docs/catalogue_ops.tex, from the encoding.  The class summary that gen/catalogue_table.py writes
+    beside them goes to build/."""
+    import catalogue_json
+    import catalogue_table
+    catalogue_json.main(["catalogue_json"])
+    catalogue_table.main(["catalogue_table", os.path.join(ROOT, "build")])
+
+
+def _prepare_sources(dry_run=False, relations_updated=False):
+    """What ./dim8 build does before any Mathematica.  Nothing is written until every check has passed:
+    every operator must pass validate/structural.py, its recorded CP parity must be what its encoded
+    terms give (gen/cp_parity.py), the block index written from the encoding must keep the block,
+    the operator and the coefficient of every existing entry (index_mismatch in gen/emit_fr.py), and no
+    operator of the input relations may change, unless relations_updated says that the base files have
+    been written again for it.  Then the Lagrangian the workers load, the block index, the catalogue
+    and the readable copies of models/src are written from the encoding, so that no operator can be
+    built from a stale file.  With dry_run nothing is written, and the cache is compared with the
+    Lagrangian that would be.  Returns the index and the blocks whose definition changes, each with the
+    stamp of its old code."""
+    import cache_source as CS
+    import cp_parity
+    import structural
+    from emit_fr import emit_flavour_files, emit_model_fragment, index_mismatch
+
+    if ";" in VDIR:
+        sys.exit(f"DIM8_VDIR names several directories ({VDIR}), and the dimension-eight cache is one directory")
+    ops = _load_encoding()
+    if structural.report(ops):
+        sys.exit("stopped: an operator of gen/operators.py fails validate/structural.py, see above. Nothing was written.")
+    if cp_parity.report_disagreements(ops):
+        sys.exit("stopped: the recorded CP parity (cp= in gen/operators.py) and the encoded terms disagree, see above.\n"
+                 "That is a finding about the operator or the rule, and nothing overwrites either. Nothing was written.")
+    txt, index = emit_model_fragment(ops, per_block=1)
+    ipath = os.path.join(ROOT, "docs", "block_index.json")
+    old = json.load(open(ipath)) if os.path.exists(ipath) else []
+    bad = index_mismatch(index, old)
+    if bad:
+        sys.exit("stopped: gen/operators.py changes the block, the name or the coefficient of an existing operator,\n"
+                 "or gives two operators one name or one coefficient. The vertex cache, the released models and the\n"
+                 "restriction cards are keyed on them, so correct an operator in place and append a new one after the\n"
+                 "last, with a name and a coefficient of its own. Nothing was written.\n  "
+                 + "\n  ".join(bad[:20]) + ("\n  ..." if len(bad) > 20 else ""))
+    gen = os.path.join(ROOT, "tests", "gen_smoke", "gen.fr")
+    # A clone has no gen.fr before its first build, and the readable copy it ships holds the same text.
+    readable = os.path.join(ROOT, "models", "src", "dim8_generated.fr")
+    ref = gen if os.path.exists(gen) else readable
+    changed = CS.changed_blocks(open(ref, errors="replace").read(), txt) if os.path.exists(ref) else {}
+    # The input relations in the base files are derived from these operators by hand and are not written
+    # from the encoding.  A model written on the old relation would be inconsistent, and only the G_F
+    # closure and Ward tests that come after this chain would show it.
+    relations = [e for e in index if e["block"] in changed and set(e["wcs"]) & set(INPUT_SCHEME_WCS)]
+    if relations and not relations_updated:
+        sys.exit("stopped: gen/operators.py changes operators that enter the input relations: "
+                 + ", ".join(f"{e['ops'][0]} ({e['block']})" for e in relations) + ".\n"
+                 "The base files hold those relations, which are not written from the encoding, so a model written now\n"
+                 "would keep the old relation. Correct it in gen/derive_input_scheme.py, gen/derive_rotation.py or\n"
+                 "gen/derive_higgs_yukawa.py, write the base files again with gen/input_scheme.py (models/src/README.md\n"
+                 "gives the commands), and run this command again with --relations-updated. Nothing was written.")
+    CS.use_gen_text(txt)
+    print(f"encoding: {len(index)} operators, {max(len(index) - len(old), 0)} of them appended, "
+          f"{len(changed)} with a changed definition in gen.fr" + (": " + " ".join(list(changed)[:30]) if changed else ""))
+    if dry_run:
+        return index, changed
+    # A cached block without a stamp would be taken as current.  One whose definition is about to change
+    # is not, so it gets the stamp of its old code, on which the worker rebuilds it.
+    for b, stamp in changed.items():
+        if CS.state(VDIR, b) == "unstamped":
+            CS.write_stamp(VDIR, b, stamp)
+    _write_text(gen, txt)
+    # the general flavour coefficients the workers declare beside gen.fr, and the rules that put the
+    # flavour structures in their place when a UFO is written (gen/emit_flavour.py)
+    for name, text in emit_flavour_files(ops).items():
+        _write_text(os.path.join(ROOT, "tests", "gen_smoke", name), text)
+    _write_text(ipath, json.dumps(index, indent=1))
+    if os.path.exists(readable):
+        _write_text(readable, txt)
+    for b in ("base.fr", "base_fg.fr", "base_inputscheme.fr", "base_inputscheme_mw.fr"):
+        base, copy = os.path.join(ROOT, "tests", "gen_smoke", b), os.path.join(ROOT, "models", "src", b)
+        if os.path.exists(base) and os.path.exists(copy):
+            _write_text(copy, open(base, errors="replace").read())
+    _write_catalogue()
+    return index, changed
+
+
+def _capped_blocks(index):
+    by_wc = {w: e["block"] for e in index for w in e["wcs"]}
+    missing = [w for w in CAPPED_WCS if w not in by_wc]
+    if missing:
+        sys.exit(f"coefficients of the capped operators not in the encoding: {missing}")
+    return {by_wc[w] for w in CAPPED_WCS}
+
+
+def _worker_plan(pending, capped, jobs):
+    """(log tag, blocks, variables) of each worker: the capped blocks in a worker of their own, since
+    the variables act on every block of a worker, and the others shared out over the remaining jobs."""
+    cap = [b for b in pending if b in capped]
+    rest = [b for b in pending if b not in capped]
+    plan = [("capped", cap, dict(CAP_ENV))] if cap else []
+    n = max(jobs - len(plan), 1)
+    return plan + [(str(s + 1), rest[s::n], {}) for s in range(n) if rest[s::n]]
+
+
+def _without_highleg(blocks):
+    """The capped blocks in the cache that FeynRules has finished and validate/g4_highleg.wls has not."""
+    out = []
+    for b in sorted(blocks):
+        st = os.path.join(VDIR, b + ".status")
+        if os.path.exists(st) and "highleg" not in open(st, errors="replace").read():
+            out.append(b)
+    return out
+
+
+def _complete_capped(index, env):
+    """Add the vertices with seven and eight gluons to the capped blocks that lack them, or return 1."""
+    todo = _without_highleg(_capped_blocks(index))
+    if not todo:
+        return 0
+    by_block = {e["block"]: w for e in index for w in e["wcs"]}
+    print(f"  seven and eight gluons: {len(todo)} blocks, log in build/logs/highleg.log", flush=True)
+    return _run_wolfram("g4_highleg.wls", ["merge", VDIR, VDIR.rstrip("/") + "_highleg"]
+                        + [f"{b}={by_block[b]}" for b in todo], env, "highleg.log")
+
+
+def _build_vertices(a, index, changed, only=None):
+    """Run the workers over the blocks that are missing or built from a different source, so that one
+    edited operator starts one worker.  The worker decides the same way when it is run alone.  only
+    names the blocks of a trial of ./dim8 rebuild, which leaves every other block as it is.  Returns the
+    exit status, 1 when blocks are still missing or stale afterwards."""
+    import cache_source as CS
+    from concurrent.futures import ThreadPoolExecutor
+
+    blocks = [e["block"] for e in index if only is None or e["block"] in only]
+    states = {b: CS.state(VDIR, b) for b in blocks}
+    pending = [b for b in blocks if states[b] in ("missing", "stale") or (states[b] == "unstamped" and b in changed)]
+    stale = [b for b in pending if states[b] != "missing"]
+    unstamped = [b for b in blocks if states[b] == "unstamped" and b not in changed]
+    plan = _worker_plan(pending, _capped_blocks(index), a.jobs)
+    print(f"vertices: {len(pending)} of {len(blocks)} blocks to compute in {VDIR}, "
+          f"{len(stale)} of them stale" + (": " + " ".join(stale[:30]) if stale else ""))
+    if unstamped:
+        print(f"  {len(unstamped)} cached blocks carry no stamp and are taken as current, "
+              f"python3 validate/cache_source.py backstamp {VDIR} checks them")
+    if a.dry_run:
+        for tag, part, extra in plan:
+            print(f"  worker {tag}: " + _command_line("fr_worker.wls", [",".join(part), 0, len(index), a.kernels, WORKER_RECURSION], extra))
+        cap = _capped_blocks(index) & set(blocks)
+        todo = sorted(set(_without_highleg(cap)) | (cap & set(pending)))
+        if todo:
+            print("  then seven and eight gluons, validate/g4_highleg.wls merge: " + " ".join(todo))
+        return 0
+    if plan:
+        _need_wolfram()
+        os.makedirs(VDIR, exist_ok=True)
+        env = _wolfram_env(DIM8_VDIR=VDIR)
+        for k in ("DIM8_MAXLEGS", "DIM8_MINLEGS", "DIM8_EPSEPS"):     # the plan sets these, block by block
+            env.pop(k, None)
+        for tag, part, extra in plan:
+            print(f"  worker {tag}: {len(part)} blocks, log in build/logs/worker_{tag}.log", flush=True)
+        print(f"  progress:  ls {VDIR}/*.status | wc -l", flush=True)
+
+        def run(spec):
+            tag, part, extra = spec
+            return _run_wolfram("fr_worker.wls", [",".join(part), 0, len(index), a.kernels, WORKER_RECURSION],
+                                dict(env, **extra), f"worker_{tag}.log")
+
+        with ThreadPoolExecutor(max_workers=max(a.jobs, 1)) as pool:
+            list(pool.map(run, plan))
+    if only is None and _without_highleg(_capped_blocks(index)):
+        _need_wolfram()
+        env = _wolfram_env(DIM8_VDIR=VDIR)
+        if _complete_capped(index, env):
+            print("the vertices with seven and eight gluons were not added, see build/logs/highleg.log")
+            return 1
+    if os.path.isdir(VDIR):
+        cmd_status(a)
+    left = [b for b in blocks if CS.state(VDIR, b) in ("missing", "stale")]
+    if only is None:
+        left += _without_highleg(_capped_blocks(index))
+    if left:
+        print(f"{len(left)} blocks are still missing or stale, see build/logs/worker_*.log: " + " ".join(left[:30])
+              + ("\nRun the same command again, since blocks already computed are skipped." if plan else ""))
+        return 1
+    return 0
+
+
 def cmd_build(a):
-    """Fan the 734 blocks out over N external FeynRules processes and cache each one."""
-    from emit_fr import emit_model_fragment
+    """Check the encoding, write the files made from it, and fan the blocks that need it out over N
+    external FeynRules processes, which cache each one."""
+    index, changed = _prepare_sources(a.dry_run, a.relations_updated)
+    if a.source_only:
+        return 0
+    return _build_vertices(a, index, changed)
 
-    # the Lagrangian the workers load is written from the encoding at every build, so that no
-    # operator can be built from a stale file
-    txt, index = emit_model_fragment(_parse_all(), per_block=1)
-    if index != json.load(open(os.path.join(ROOT, "docs/block_index.json"))):
-        sys.exit("gen/operators.py and docs/block_index.json disagree on the block order; "
-                 "regenerate both from the same encoding before building")
-    open(os.path.join(ROOT, "tests/gen_smoke/gen.fr"), "w").write(txt)
 
-    n = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
-    procs = []
-    os.makedirs(os.path.join(ROOT, "build/logs"), exist_ok=True)
-    for s in range(1, a.jobs + 1):
-        log = open(os.path.join(ROOT, f"build/logs/worker_{s}.log"), "w")
-        procs.append(subprocess.Popen(
-            [WOLFRAM, "-file", os.path.join(ROOT, "validate/fr_worker.wls"),
-             str(s), str(a.jobs), str(n), str(a.kernels)], stdout=log, stderr=log))
-    print(f"{a.jobs} workers over {n} blocks; cached blocks are skipped, so this resumes.")
-    print(f"  progress:  ls {VDIR}/*.status | wc -l")
-    for p in procs:
-        p.wait()
-    cmd_status(a)
+# -------------------------------------------------------------------------- rebuild ----
+
+
+# The models ./dim8 rebuild writes: the name, the input scheme of the base it is written on (SCHEME_BASE)
+# and whether it carries the dimension-six sector.  Every one with an input scheme is written with the
+# truncation of validate/np_truncate.m.  dim8_plain has neither and ships only as a control, so it is rebuilt
+# where it exists, since validate/index_vs_ufo.py compares the vertex list with it.
+REBUILD_MODELS = (("dim8_mw", "mw", False), ("dim8_is", "alpha", False), ("dim68_mw", "mw", True),
+                  ("dim68_is", "alpha", True), ("dim8_plain", None, False))
+# set per step by ./dim8 rebuild, so that one left in the shell cannot change a released model
+REBUILD_SETS = ("DIM8_BASE", "DIM8_TRUNCATE", "DIM8_LSM", "DIM8_NPORDER", "DIM8_DRYRUN", "DIM8_MAXLEGS", "DIM8_MINLEGS",
+                "DIM8_EPSEPS", "DIM8_INDEX_TAG", "DIM8_INDEX_MERGE", "DIM8_HERM", "DIM8_HERMONLY")
+# ./dim8 rebuild writes the vertex lists under this tag, and they replace the lists that ./dim8 select
+# reads only when validate/index_vs_ufo.py has compared them with the released models and removed what
+# no model has.  A chain that fails on the way, hours later, leaves the lists as they were.
+NEW_LISTS = "_new"
+VERTEX_LISTS = ("vertex_index", "sm_vertices", "lsm_vertices")
+
+
+def _v6dir(scheme):
+    """The dimension-six cache of a scheme, a directory of its own so that a plain dimension-eight build
+    cannot pick it up by accident (docs/DIM6.md): DIM8_VDIR6, or DIM8_VDIR6_MW for the {MW, MZ, GF}
+    scheme, and otherwise beside the dimension-eight cache, with the suffix 6 or 6_mw."""
+    if scheme == "mw":
+        return os.environ.get("DIM8_VDIR6_MW", VDIR.rstrip("/") + "6_mw")
+    return os.environ.get("DIM8_VDIR6", VDIR.rstrip("/") + "6")
+
+
+def _dim6_file():
+    return os.path.join(ROOT, "tests", "gen_smoke", "dim6_smeftsim.fr")
+
+
+def _dim6_blocks():
+    """The dimension-six classes, as tests/gen_smoke/dim6_smeftsim.fr lists them."""
+    import re
+    m = re.search(r"DIM6\$Classes = \{([^}]*)\}", open(_dim6_file()).read())
+    if not m:
+        sys.exit("tests/gen_smoke/dim6_smeftsim.fr has no list DIM6$Classes: run gen/make_dim6.py again")
+    return re.findall(r'"(\w+)"', m.group(1))
+
+
+def _rebuilt_models(asked):
+    """The entries of REBUILD_MODELS to write.  Without a list these are all that this tree can write:
+    a combined model needs tests/gen_smoke/dim6_smeftsim.fr, which gen/make_dim6.py writes from the
+    FeynRules sources of SMEFTsim, which are not redistributed."""
+    have6 = os.path.exists(_dim6_file())
+    if asked:
+        out = [m for m in REBUILD_MODELS if m[0] in asked]
+        if any(m[2] for m in out) and not have6:
+            sys.exit("no tests/gen_smoke/dim6_smeftsim.fr for the combined models\n"
+                     "  -> obtain SMEFTsim's FeynRules sources from its authors and run gen/make_dim6.py (docs/DIM6.md)")
+        return out
+    out = [m for m in REBUILD_MODELS if (have6 or not m[2]) and (m[0] != "dim8_plain" or os.path.isdir(os.path.join(ROOT, "models", m[0])))]
+    if not have6:
+        print("the combined models are left out: they need tests/gen_smoke/dim6_smeftsim.fr, "
+              "which gen/make_dim6.py writes from the FeynRules sources of SMEFTsim (docs/DIM6.md)")
+    return out
+
+
+def _refuse_unstamped(a, vdir, blocks, bases=None):
+    """./dim8 rebuild takes no block without a stamp.  The stamp is what shows that a correction has
+    reached a block, and without it the worker skips the block and the writer lets it through, so a
+    model would be released from the old vertices with only a notice.  A dry run says so and goes on."""
+    import cache_source as CS
+    bare = [b for b in blocks if CS.state(vdir, b, bases=bases) == "unstamped"]
+    if not bare:
+        return
+    how = (f"python3 validate/cache_source.py backstamp {vdir} --write stamps those that agree with the history "
+           "of gen.fr and marks the others for a rebuild" if bare[0].startswith("L8op")
+           else "delete them, and they are computed again")
+    msg = (f"{len(bare)} cached blocks in {vdir} carry no stamp, so nothing shows which source they were built from: "
+           + " ".join(bare[:30]) + (" ..." if len(bare) > 30 else "") + f"\n  -> {how}")
+    if not a.dry_run:
+        sys.exit("stopped: " + msg)
+    print("a run would stop here: " + msg)
+
+
+def _build_dim6(a, scheme, only=None):
+    """The workers' step for the dimension-six blocks of a scheme, computed on its base, in its cache.
+    only names the blocks of a trial of ./dim8 rebuild."""
+    import cache_source as CS
+    base, v6 = SCHEME_BASE[scheme], _v6dir(scheme)
+    blocks = [b for b in _dim6_blocks() if only is None or b in only]
+    _refuse_unstamped(a, v6, blocks, bases=[base])
+    pending = [b for b in blocks if CS.state(v6, b, bases=[base]) in ("missing", "stale")]
+    extra = {"DIM8_BASE": f"{base};dim6_smeftsim.fr", "DIM8_VDIR": v6}
+    args = [",".join(pending), 0, len(blocks), a.kernels, WORKER_RECURSION]
+    print(f"dimension-six vertices on {base}: {len(pending)} of {len(blocks)} blocks to compute in {v6}")
+    if not pending:
+        return
+    if a.dry_run:
+        print("  " + _command_line("fr_worker.wls", args, extra))
+        return
+    os.makedirs(v6, exist_ok=True)
+    _run_wolfram("fr_worker.wls", args, _wolfram_env(**extra), f"worker6_{scheme}.log")
+    left = [b for b in blocks if CS.state(v6, b, bases=[base]) in ("missing", "stale")]
+    if left:
+        sys.exit(f"stopped: dimension-six blocks still missing or stale, see build/logs/worker6_{scheme}.log: {' '.join(left)}")
+
+
+def _shown(argv):
+    """A step of the chain as a line to print, with the paths in this tree relative to it."""
+    return "  " + " ".join(os.path.relpath(x, ROOT) if x.startswith(ROOT + os.sep) else x for x in argv)
+
+
+def _run_step(argv):
+    """Run a step of the chain that needs no Mathematica, and stop if it fails."""
+    print(_shown(argv), flush=True)
+    rc = subprocess.call(argv, cwd=ROOT)
+    if rc:
+        sys.exit(f"stopped: this step exited with status {rc}, and the steps after it have not run")
+
+
+def _release_blocks(index, with6, b=None):
+    """The blocks of a released model: every operator of the basis (gen/basis.py: DIM8_BASIS, or b) that
+    conserves baryon number, whatever its place in the encoding, and the dimension-six classes for a
+    combined model."""
+    import basis
+    import cp_parity
+    bviol = cp_parity.baryon_violating()
+    return ([e["block"] for e in index if not bviol & set(e["ops"]) and basis.in_basis(e["wcs"], b)]
+            + (_dim6_blocks() if with6 else []))
+
+
+def _write_and_release(a, index, name, scheme, with6):
+    """One model: its block list, the UFO on the base of its scheme and examples/release_model.sh, which
+    audits the model before it replaces the old one.  A trial (--blocks) goes to models/<name>_trial, so
+    that the model it replaces is not touched.  Returns the name of the released model."""
+    base = SCHEME_BASE[scheme] if scheme else "base.fr"
+    raw, release = name + "_raw", name + "_trial" if a.blocks else name
+    extra = {"DIM8_BASE": f"{base};dim6_smeftsim.fr" if with6 else base,
+             "DIM8_VDIR": f"{VDIR};{_v6dir(scheme)}" if with6 else VDIR}
+    if scheme:
+        extra["DIM8_TRUNCATE"] = "1"
+    sel = os.path.abspath(a.blocks) if a.blocks else os.path.join(ROOT, "build", name + ".blocks")
+    rawdir = os.path.join(ROOT, "tests", "gen_smoke", raw)
+    step = ["bash", os.path.join(ROOT, "examples", "release_model.sh"), rawdir, release]
+    print(f"model {release}: on {extra['DIM8_BASE']}", flush=True)
+    # in shards, hpc/write_shards.sh writes the blocks in that many small UFOs side by side and joins them
+    # (validate/merge_ufo.py).  The base model's vertices are a shard of their own, written with the operators
+    # that enter its relations, whose vacuum pieces cancel against the shifts the base carries only when the
+    # two are merged and truncated together (hpc/write_shards.sh)
+    shard = os.path.join(ROOT, "hpc", "write_shards.sh")
+    withbase = os.path.join(ROOT, "build", name + ".withbase")
+    plan = [["plan", raw[:-4], sel, str(a.shards + 1), withbase], ["run", raw[:-4], "0", str(a.shards), str(a.par)],
+            ["merge", raw[:-4]]]
+    if a.dry_run:
+        if a.shards:
+            for s in plan:
+                print("  " + _shown(["bash", shard] + s))
+        else:
+            print("  " + _command_line("fr_writeufo.wls", [raw, os.path.relpath(sel, ROOT)], extra))
+        print(_shown(step))
+        return release
+    if not a.blocks:
+        _write_text(sel, "\n".join(_release_blocks(index, with6)) + "\n")
+    shutil.rmtree(rawdir, ignore_errors=True)
+    if a.shards:
+        _write_text(withbase, "".join(b + "\n" for b in sorted((_input_scheme_blocks() if scheme else set())
+                                                                 | (set(_dim6_blocks()) if with6 else set()), key=_bkey)))
+        # write_shards.sh skips a shard that is already written, which is for a run cut short by hand; the shards
+        # of an earlier rebuild hold blocks that may have changed since, so they go
+        import glob
+        for d in glob.glob(os.path.join(ROOT, "tests", "gen_smoke", raw[:-4] + "_s[0-9]*_raw")):
+            shutil.rmtree(d)
+        for f in glob.glob(os.path.join(ROOT, "logs", "shards", raw[:-4] + "[_.]*")):
+            os.remove(f)
+        print(f"  writing the UFO in {a.shards} shards and the base, {a.par} at a time, logs in logs/shards", flush=True)
+        env = _wolfram_env(**extra, WS=WOLFRAM, DIM8_NUMPY_PY=_numpy_python() or "python3")
+        for s in plan:
+            rc = subprocess.call(["bash", shard] + s, cwd=ROOT, env=env)
+            if rc:
+                sys.exit(f"stopped: hpc/write_shards.sh {s[0]} for {name} exited with status {rc}, see logs/shards/{raw[:-4]}_*.log")
+    else:
+        log = f"write_{name}.log"
+        print(f"  writing the UFO, which takes hours, log in build/logs/{log}", flush=True)
+        # the exit status and not the last line of the log, which a kernel can lose as it exits (it did on half of
+        # the writers of a cluster job, whose models then passed the audits of the release)
+        rc = _run_wolfram("fr_writeufo.wls", [raw, sel], _wolfram_env(**extra), log)
+        if rc:
+            sys.exit(f"stopped: the writer did not finish {name}, see build/logs/{log}")
+    if not os.path.exists(os.path.join(rawdir, "vertices.py")):
+        sys.exit(f"stopped: no UFO was written for {name} in {os.path.relpath(rawdir, ROOT)}")
+    _run_step(step)
+    return release
+
+
+def cmd_rebuild(a):
+    """From gen/operators.py to the released models.  See the help of the command, and models/src/README.md."""
+    for k in REBUILD_SETS:
+        if os.environ.pop(k, None) is not None:
+            print(f"{k} in the environment is ignored, this command sets it for each step")
+    import basis
+    # in the Murphy basis (DIM8_BASIS=murphy) each model is released under its name with the suffix _murphy
+    models = [(basis.model_name(n), s, w) for n, s, w in _rebuilt_models(a.models)]
+    only = None
+    if a.blocks:
+        _need(a.blocks, "a file with one block name per line")
+        only = {line.strip() for line in open(a.blocks) if line.strip()}
+    if not a.dry_run:
+        _need_wolfram()
+    lacks = _release_tools()
+    if lacks and not a.dry_run:
+        sys.exit("\n".join(lacks))
+    for line in lacks:
+        print("a run would stop here: " + line)
+    index, changed = _prepare_sources(a.dry_run, a.relations_updated)
+    blocks = [e["block"] for e in index if only is None or e["block"] in only]
+    _refuse_unstamped(a, VDIR, [b for b in blocks if b not in changed])
+    rc = _build_vertices(a, index, changed, only)
+    if rc:
+        return rc
+    if not a.dry_run:
+        # A Hermiticity failure of an edited operator ends the chain here, before any model holds it, and
+        # so does a block whose check was deferred ("nonhermitian -1"), which has not passed it.
+        import re
+        statuses = (os.path.join(VDIR, b + ".status") for b in blocks)
+        bad = [os.path.basename(p)[:-7] for p in statuses if os.path.exists(p)
+               and re.search(r"nonhermitian -?[1-9]", open(p, errors="replace").read())]
+        if bad:
+            sys.exit("stopped: blocks that fail the Hermiticity check of the worker, or that were built with the check "
+                     f"deferred (nonhermitian -1, and DIM8_HERMONLY=1 runs it): {' '.join(bad[:30])}")
+    # the dimension-six caches of the combined models, and the one the vertex lists read, whichever models are asked for
+    schemes = {m[1] for m in models if m[2]}
+    if not a.blocks and _v6dir("alpha") in _index_dirs():
+        schemes.add("alpha")
+    for scheme in sorted(schemes):
+        _build_dim6(a, scheme, only)
+    if not a.blocks:
+        print("the vertex lists of the selector:", flush=True)
+        _dump_index(a.dry_run, NEW_LISTS)
+    released = [_write_and_release(a, index, *m) for m in models]
+    if a.blocks:
+        print("a trial on the blocks of " + a.blocks + ": " + " ".join(released)
+              + ".  The released models and the vertex lists of the selector were left alone.")
+        return 0
+    print("after the models:", flush=True)
+    py = [sys.executable]
+    with6 = [os.path.join(ROOT, "models", m[0]) for m in models if m[2]]
+    steps = [py + [os.path.join(ROOT, "gen", "catalogue_json.py")],
+             py + [os.path.join(ROOT, "gen", "catalogue_table.py"), os.path.join(ROOT, "build")]]
+    if with6:
+        steps.append(py + [os.path.join(ROOT, "validate", "dim6_index.py"), "--models"] + with6)
+    final = py + [os.path.join(ROOT, "validate", "index_vs_ufo.py"), "--write", "--index",
+                  os.path.join(ROOT, "build", f"vertex_index{NEW_LISTS}.json")]
+    template = os.path.join(ROOT, "models", "dim8_is", "param_card_template.dat")
+    if a.dry_run:
+        for s in steps + [final]:
+            print(_shown(s))
+        print("a dry run: nothing was run or written")
+        return 0
+    for s in steps:
+        _run_step(s)
+    # release_model.sh leaves the card of the last model in examples/cards, and the example is that of dim8_is,
+    # the model the scripts of examples/mg5 import, whose block SMINPUTS it fits
+    if os.path.exists(template):
+        shutil.copy(template, os.path.join(ROOT, "examples", "cards", "param_card_template.dat"))
+    print(_shown(final), flush=True)
+    rc = subprocess.call(final, cwd=ROOT)
+    others = [m[0] for m in REBUILD_MODELS if m[0] not in [x[0] for x in models]
+              and os.path.isfile(os.path.join(ROOT, "models", m[0], "parameters.py"))]
+    if rc:
+        print("validate/index_vs_ufo.py found an error, so the vertex lists that ./dim8 select reads were not replaced, and "
+              f"the new ones wait in build/vertex_index{NEW_LISTS}.json"
+              + (f".  These models were not rewritten and are compared as they are: {', '.join(others)}" if others else ""))
+        return rc
+    for f in VERTEX_LISTS:
+        new = os.path.join(ROOT, "build", f + NEW_LISTS + ".json")
+        if os.path.exists(new):
+            os.replace(new, os.path.join(ROOT, "build", f + ".json"))
+    print("released: " + " ".join(released) + ".  The tests of docs/HOW_TO_BREAK_IT.md come next.  "
+          "This command does not rewrite the Feynman-gauge lists in build/ or build/onshell_zero.json (models/src/README.md)."
+          + ("  MadGraph has not imported these models, since DIM8_SKIP_MG5_IMPORT=1." if os.environ.get("DIM8_SKIP_MG5_IMPORT") == "1" else ""))
+    return 0
 
 
 def cmd_status(a):
@@ -80,9 +628,11 @@ def cmd_status(a):
     total = len(json.load(open(os.path.join(ROOT, "docs/block_index.json"))))
     # "nonhermitian -1" means the check was DEFERRED (built with DIM8_HERM=0), not that it
     # passed.  Count those separately so a deferred block can never be mistaken for a clean
-    # one; DIM8_HERMONLY=1 runs the outstanding checks.
+    # one; DIM8_HERMONLY=1 runs the outstanding checks.  "nonhermitian hc" is a block written as
+    # X + HC[X] throughout, Hermitian by construction, which needs no check.
     deferred = [s for s in st if "nonhermitian -1" in s]
-    bad = [s for s in st if "nonhermitian 0 " not in s and "nonhermitian -1" not in s and "SKIPPED" not in s]
+    bad = [s for s in st if "nonhermitian 0 " not in s and "nonhermitian hc" not in s
+           and "nonhermitian -1" not in s and "SKIPPED" not in s]
     ok = len(st) - len(bad) - len(deferred)
     print(f"cached {len(st)}/{total} blocks")
     print(f"hermiticity: {ok} pass, {len(bad)} FAIL, {len(deferred)} not checked")
@@ -113,9 +663,57 @@ def cmd_status(a):
         print(f"  {b}: {n} QN::NonConserv")
 
 
+def _index_dirs():
+    """The caches the vertex lists of the selector are read from: DIM8_VDIR as it is when it names
+    several, and otherwise the dimension-eight cache with, where it exists, the dimension-six cache of
+    the {alpha, MZ, GF} scheme, since the lists hold the dimension-six classes too and
+    validate/index_vs_ufo.py compares those with dim68_is."""
+    dirs = [d.strip() for d in VDIR.split(";") if d.strip()]
+    if len(dirs) == 1 and os.path.isdir(_v6dir("alpha")) and os.path.exists(_dim6_file()):
+        dirs.append(_v6dir("alpha"))
+    return dirs
+
+
+def _dump_index(dry_run=False, tag=""):
+    """validate/dump_vertex_index.wls on those caches, which stops on a stale block as the writer does,
+    since the selector would otherwise list the vertices of an operator that has changed.  Where no cache
+    holds the dimension-six classes, which need SMEFTsim's sources, the lists keep what they hold of them,
+    which a correction to a dimension-eight operator does not change.  A tag goes into the names of the
+    files written, and the lists the selector reads stay as they are."""
+    import cache_source as CS
+    dirs = _index_dirs()
+    extra = {"DIM8_VDIR": ";".join(dirs)}
+    if tag:
+        extra["DIM8_INDEX_TAG"] = tag
+    if dry_run:
+        print("  " + _command_line("dump_vertex_index.wls", [], extra))
+        return
+    for d in dirs:
+        _need(d, "./dim8 build")
+    if CS.check(dirs):
+        sys.exit("stopped: stale blocks in the caches, and ./dim8 build recomputes a dimension-eight block and ./dim8 rebuild "
+                 "a dimension-six one. The vertex lists were not written.")
+    _need_wolfram()
+    vpath, spath = (os.path.join(ROOT, "build", f) for f in ("vertex_index.json", "sm_vertices.json"))
+    keep = None
+    if os.path.exists(vpath) and os.path.exists(spath) and not any(f.startswith("L6cl") for d in dirs for f in os.listdir(d)):
+        keep = ({b: v for b, v in json.load(open(vpath)).items() if b.startswith("L6")}, open(spath).read())
+    rc = _run_wolfram("dump_vertex_index.wls", [], _wolfram_env(**extra), "index.log")
+    text = open(os.path.join(ROOT, "build", "logs", "index.log"), errors="replace").read()
+    for line in text.splitlines():
+        if line.startswith("["):
+            print("  " + line)
+    if rc:
+        sys.exit("stopped: the index dump failed, see build/logs/index.log")
+    if keep and keep[0]:
+        print(f"  no cache holds the dimension-six classes here, so the lists keep their {len(keep[0])} blocks")
+        vnew, snew = (os.path.join(ROOT, "build", f + tag + ".json") for f in ("vertex_index", "sm_vertices"))
+        _write_text(vnew, json.dumps(dict(json.load(open(vnew)), **keep[0])))
+        _write_text(snew, keep[1])
+
+
 def cmd_index(a):
-    _need(VDIR, "./dim8 build")
-    subprocess.check_call([WOLFRAM, "-file", os.path.join(ROOT, "validate/dump_vertex_index.wls")])
+    _dump_index()
 
 
 # --------------------------------------------------------------------------- select ----
@@ -128,16 +726,18 @@ def cmd_index(a):
 # is nonzero: without them the writer's truncation test finds an uncancelled Lambda^-4
 # {A,A,H} vertex.  Resolved by coefficient name so the list cannot go stale.
 INPUT_SCHEME_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
-                    "c8l2H4Dx2", "c8l2H4Dx4", "c8G2H4x1", "c8H8", "c8quH5", "c8qdH5", "c8leH5"]
-# The eight of those that act with NO vertex of their own in a process: they shift gw, g1, the
+                    "c8l2H4Dx2", "c8l2H4Dx4", "c8l4H2x1", "c8G2H4x1", "c8H8", "c8quH5", "c8qdH5", "c8leH5"]
+# The nine of those that act with NO vertex of their own in a process: they shift gw, g1, the
 # vev, the W mass and the neutral field rotation (the paper's expressions for delta v and
-# delta M_W), and so enter every electroweak amplitude.  The other five of INPUT_SCHEME_WCS shift
-# the gluon normalisation, the Higgs quartic and the Yukawas, which are couplings the same
-# operators also produce as vertices of their own (g g h, h h h, h f fbar), so wherever that
-# shift matters the vertex test above already lists the operator.
+# delta M_W), and so enter every electroweak amplitude.  c8l4H2x1 is one of them only through its
+# flavour structures: the crossed contraction of its two lepton currents, alone and with one
+# lepton Yukawa insertion, holds the (nu_mu mu)(e nu_e) current of muon decay, and so shifts G_F.
+# The other five of INPUT_SCHEME_WCS shift the gluon normalisation, the Higgs quartic and the
+# Yukawas, which are couplings the same operators also produce as vertices of their own (g g h,
+# h h h, h f fbar), so wherever that shift matters the vertex test above already lists the operator.
 INPUT_RELATION_WCS = ["c8W2H4x1", "c8W2H4x3", "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2",
-                      "c8l2H4Dx2", "c8l2H4Dx4"]
-# The same eight enter the relations of both schemes (gen/input_scheme_formulae.json and _mw.json).
+                      "c8l2H4Dx2", "c8l2H4Dx4", "c8l4H2x1"]
+# The same nine enter the relations of both schemes (gen/input_scheme_formulae.json and _mw.json).
 # In the {alpha, MZ, GF} scheme they shift the derived W mass, in the {MW, MZ, GF} scheme the derived
 # electromagnetic coupling.  dim8_plain has no input relations: it drops the two-point terms of
 # these operators, which then act only through their vertices.
@@ -148,13 +748,30 @@ SCHEME_LABEL = {"alpha": "{alpha, MZ, GF}", "mw": "{MW, MZ, GF}"}
 # whether or not they also have a vertex in the process.  C_{HW} and C_{HB} enter g_2 and g_1 too, but
 # only to undo the rescaling of the W and B fields by their vacuum pieces: switched on in
 # models/dim68_is they move no gauge or gauge-fermion vertex at linear order, while each of the
-# four moves every W and Z vertex (2026-10-23), so they act through their Higgs vertices alone.
+# four moves every W and Z vertex, so they act through their Higgs vertices alone at
+# 1/Lambda^2.  At 1/Lambda^4 they also rescale the field strengths in the vertices of other operators,
+# C_HW the triple-gauge vertex of C_W and C_HB the photon and Z dipoles of C_uB, which
+# build/dim6_index.json lists under "two" (validate/dim6_index.py).
 DIM6_INPUT_RELATION = [("Q_{HD}", "cHDD"), ("Q_{HWB}", "cHWB"), ("Q_{Hl}^{(3)}", "cHl3"), ("Q_{ll}'", "cll1")]
 # The dimension-six coefficients every input-scheme model carries, in its base Lagrangian
-# (gen/make_dim6.py, IN_BASE).  A model with more has a dimension-six sector of its own.
+# (gen/make_dim6.py, IN_BASE).  A model with more in block DIM6 has a dimension-six sector of its own.
+# In one without, the release fixes these at zero, as internal parameters that no card can set, since
+# alone they are half a calculation (validate/freeze_dim6_inputs.py).
 DIM6_IN_BASE = {"Lam6", "cH", "cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "cHbox"}
-RELEASED = ("dim8_is", "dim8_mw", "dim8_plain", "dim68_is")
+RELEASED = ("dim8_is", "dim8_mw", "dim8_plain", "dim68_is", "dim68_mw")
+# the same models in the Murphy basis (gen/basis.py), released under these names when DIM8_BASIS=murphy
+RELEASED += tuple(m + "_murphy" for m in RELEASED)
 SCHEME_MODEL = {"alpha": "dim8_is", "mw": "dim8_mw", "plain": "dim8_plain"}
+# The released model with a dimension-six sector of each scheme, whose entry of build/dim6_index.json
+# (validate/dim6_index.py) ./dim8 select reads for a model with a dimension-six sector that the index
+# does not name, as it reads the dimension-eight vertices of the released model of its scheme.
+SCHEME_MODEL6 = {"alpha": "dim68_is", "mw": "dim68_mw"}
+# The remark of ./dim8 select on a dimension-six coefficient that enters at 1/Lambda^4 only with a second
+# dimension-six insertion.  The second insertion may be the same coefficient: in g g > g g, C_HG enters
+# alone through g g > h* > g g, with its vertex g g h at both ends.
+SECOND6 = "only with a second dimension-six insertion, of this coefficient or another"
+# the base each input scheme is written on, for a model built for one process (./dim8 ufo)
+SCHEME_BASE = {"alpha": "base_inputscheme.fr", "mw": "base_inputscheme_mw.fr"}
 
 
 def _model_inputs(model):
@@ -175,19 +792,41 @@ def _model_inputs(model):
 def _model_dir(arg):
     """The UFO directory --model names: a path, or the bare name of a model in models/.  Anything
     else stops, since a directory without parameters.py reads as a model with no input relations and
-    the second group would silently disappear (2026-10-27: --model dim8_mw did that)."""
+    the second group would silently disappear."""
     for d in (os.path.abspath(arg), os.path.join(ROOT, "models", arg)):
         if os.path.isfile(os.path.join(d, "parameters.py")):
             return d
+    _unpacked(os.path.basename(os.path.normpath(arg)))
     sys.exit(f"{arg} is neither a UFO directory (no parameters.py) nor a model in models/")
 
 
-def _scheme(inputs):
-    """'mw' when M_W is an input, 'alpha' when the model carries the input-scheme dimension-six
-    block, and 'plain' otherwise."""
+def _unpacked(name):
+    """Stop with the command that unpacks models/<name> when the release ships it packed and it has
+    not been unpacked yet (README, Install)."""
+    d = os.path.join(ROOT, "models")
+    if not os.path.isdir(os.path.join(d, name)) and os.path.isfile(os.path.join(d, name + ".tar.xz")):
+        sys.exit(f"models/{name} ships packed, unpack it first:\n    cd {d} && tar -xJf {name}.tar.xz")
+
+
+def _scheme(model, inputs):
+    """'mw' when M_W is an input, 'alpha' when the model carries the corrected input relations without
+    it, and 'plain' otherwise.  The relations show in the internal parameter vev1, the first-order shift
+    of the vev, which gen/input_scheme.py writes in both schemes and the plain base does not have.  The
+    parameters look alike otherwise, since dim8_plain and dim8_is both take M_W from alpha, M_Z and G_F."""
+    import re
     if inputs.get("MW") == "SMINPUTS":
         return "mw"
-    return "alpha" if "DIM6" in inputs.values() else "plain"
+    params = open(os.path.join(model, "parameters.py"), errors="replace").read()
+    return "alpha" if re.search(r"^vev1 = Parameter\(", params, re.M) else "plain"
+
+
+def _reference_model(model, scheme):
+    """The released model whose vertices the selection reads for the model directory `model`: itself when
+    it is one of RELEASED, and otherwise the released model of its scheme in its basis (gen/basis.py),
+    since a released model holds the class-11 operators of one basis only."""
+    import basis
+    name = os.path.basename(os.path.normpath(model))
+    return name if name in RELEASED else basis.model_name(SCHEME_MODEL[scheme], basis.of_model(model))
 
 
 def _for_model(vi, model):
@@ -213,6 +852,56 @@ def _for_model(vi, model):
     return vi
 
 
+def _dim6_name(n):
+    """The dimension-six coefficient an external parameter belongs to: cuH for cuHAbs and cuHPh, since a
+    complex coefficient is set through its modulus and its phase."""
+    import re
+    return re.sub(r"(Abs|Ph|Re|Im)$", "", n)
+
+
+def _dim6_index(model, scheme):
+    """(coefficient -> {"one": [...], "rescaled": [...], "two": [...]}, the model it was read for) from
+    build/dim6_index.json, for a model with a dimension-six sector of its own, or (None, why not).  The
+    entry is the model's own when the index names it, and otherwise that of the released model with a
+    dimension-six sector of its scheme (SCHEME_MODEL6).  An entry is not used when the file cannot be
+    read (a truncated file, or one that a full disk has evicted), when it names a coefficient that
+    gen/lambda_routes.py does not know, since its class and its power could not be given, and
+    validate/dim6_index.py refuses to write one, or when it lacks a coefficient of the model, which the
+    listing would miss and the card would zero (an entry left from an older model)."""
+    import lambda_routes as LR
+
+    path = os.path.join(ROOT, "build", "dim6_index.json")
+    if not os.path.exists(path):
+        return None, "build/dim6_index.json is not in this tree"
+    try:
+        data = json.load(open(path))["models"]
+        name = os.path.basename(os.path.normpath(model))
+        ref6 = name if name in data else SCHEME_MODEL6.get(scheme)
+        entry = data[ref6] if ref6 in data else None
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        return None, f"build/dim6_index.json cannot be read ({e.__class__.__name__})"
+    if not isinstance(entry, dict):
+        return None, f"build/dim6_index.json has no entry for {ref6 or name}"
+    unknown = sorted(c for c in entry if c not in LR.DIM6_COEFF)
+    if unknown:
+        return None, (f"the entry of build/dim6_index.json for {ref6} names coefficients that gen/lambda_routes.py "
+                      f"does not know ({', '.join(unknown[:4])})")
+    lack = sorted({_dim6_name(k) for k, blk in _model_inputs(model).items() if blk == "DIM6" and k != "Lam6"}
+                  - set(entry))
+    if lack:
+        return None, (f"the entry of build/dim6_index.json for {ref6} lacks coefficients of this model "
+                      f"({', '.join(lack[:4])}{', ...' if len(lack) > 4 else ''})")
+    return entry, ref6
+
+
+def _as_listed(legs, verts):
+    """The legs of a dimension-six vertex, which build/dim6_index.json sorts, in the order in which
+    build/vertex_index.json lists the same field content in the coefficient's class, so that a
+    coefficient reads as the dimension-eight operators do, and sorted where the class lacks it."""
+    key = sorted(legs)
+    return next((list(v) for v in verts if sorted(v) == key), list(legs))
+
+
 def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
     idx = json.load(open(os.path.join(ROOT, "docs/block_index.json")))
     by_wc = {w: b["block"] for b in idx for w in b["wcs"]}
@@ -222,58 +911,236 @@ def _input_scheme_blocks(wcs=INPUT_SCHEME_WCS):
     return {by_wc[w] for w in wcs}
 
 
-def _select(proc, collapse=True, with_bviol=False, two_insertions=False, model="dim8_is"):
+def _select(proc, collapse=True, with_bviol=False, two_insertions=False, model="dim8_mw", second=None):
     """Operators the process can see, with the vertices of the released model `model` (one of
     RELEASED).  The B-violating classes 18-21 are dropped unless
     asked for: their four-fermion vertices violate fermion flow, and MadGraph's ALOHA
     refuses helicity routines for 4-point flow-violating interactions (for u u > e+ d~ from
     Q_{eu^2dH^2} the diagrams are generated and the check stops with ALOHAERROR).  They are
-    still generated, cached and Hermitian, for tools that can use them."""
+    still generated, cached and Hermitian, for tools that can use them.  With two_insertions, a
+    set passed as second receives the blocks that only the second pass of process.select finds."""
     import process as P
 
+    import basis
     vi, sm = P.load_data(ROOT)
     vi = _for_model(vi, model)
     idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
+    # a released model holds the class-11 operators of one basis, and its name says which (gen/basis.py)
+    b = "murphy" if model.endswith("_murphy") else "geo"
+    vi = {k: v for k, v in vi.items() if k not in idx or basis.in_basis(idx[k]["wcs"], b)}
     if not with_bviol:
         vi = {k: v for k, v in vi.items() if idx.get(k, {}).get("cls", 0) < 18 or not _is_bviol(idx[k])}
     # An operator whose every vertex vanishes carries no vertex in the released models, since the
     # release step removes it (validate/drop_zero_structures.py), although FeynRules' vertex lists
-    # still name it.  The four-fermion field-strength operators with two identical currents are the
-    # case.  They are dropped here, so that the selection and the released model agree.
+    # still name it.  The four-fermion field-strength operators with two identical currents vanish with
+    # their own coefficient, and all but Q_{e^4B}^{(2)} have vertices through a flavour structure on one
+    # current.  A block left without a vertex is dropped here, so that the selection and the released
+    # model agree.
     dead = _operators_without_vertex(idx, model)
     vi = {k: v for k, v in vi.items() if k not in dead}
-    return P.select(proc, vi, sm, collapse=collapse, two_insertions=two_insertions), vi
+    return P.select(proc, vi, sm, collapse=collapse, two_insertions=two_insertions, second=second), vi
 
 
-def _operators_without_vertex(idx, model="dim8_is"):
-    """Dimension-eight blocks none of whose coefficients appears in a coupling of models/<model>."""
+def _operators_without_vertex(idx, model="dim8_mw"):
+    """Dimension-eight blocks none of whose coefficients appears in a coupling of models/<model>,
+    the coefficients of the block's further flavour structures included: Q_{q^4B}^{(4)} vanishes with
+    its own coefficient and has vertices through Y_u Y_u^dag on one current."""
     path = os.path.join(ROOT, "models", model, "couplings.py")
     if not os.path.exists(path):
+        # a packed model would otherwise list the operators that have no vertex in it
+        _unpacked(model)
         return set()
     import re
     used = set(re.findall(r"\bc8\w+?(?=Re\b|Im\b|\b)", open(path, errors="replace").read()))
-    return {b for b, e in idx.items() if b.startswith("L8op") and not any(w in used for w in e["wcs"])}
+    return {b for b, e in idx.items() if b.startswith("L8op")
+            and not any(re.sub(r"(Re|Im)$", "", w) in used for w in e["wcs"] + e.get("flavour", []))}
+
+
+_BVIOL_BLOCKS = None
 
 
 def _is_bviol(entry):
-    return int(entry["block"][4:]) >= 675
+    """Whether a block violates baryon number, as docs/catalogue.json records it, whatever its number,
+    since an operator appended to the encoding comes after the ones that do."""
+    global _BVIOL_BLOCKS
+    if _BVIOL_BLOCKS is None:
+        _BVIOL_BLOCKS = {e["block"] for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json"))) if e["b_violating"]}
+    return entry["block"] in _BVIOL_BLOCKS
+
+
+def _bkey(b):
+    """Sort L8op<n> numerically and anything else (L6cl1, L6cl8a) by name, after them.
+    int(b[4:]) alone would raise on L6cl8a, the name of a dimension-six four-fermion
+    class, so the names that are not L8op<n> sort by name."""
+    return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
+
+
+def _write_selection(a, hits, extra, keep6=None, total6=0, which="those listed above"):
+    """Write the selection, both groups, as the block list of -o and as the restriction card of
+    --card, and return the lines that report it, which ./dim8 select prints after the operators.
+    Without --max-power the card is the selection's: the marks and the route search that gives the
+    powers enter neither file, and since both are written before that search runs, nothing it does
+    can stop them.  With it, _cut_selection passes the part within the cut, after the search.  keep6
+    is the set of dimension-six coefficients that --with-dim6 keeps, for a model with a dimension-six
+    sector and its entry in build/dim6_index.json, and None keeps them all.  total6, the number of
+    dimension-six coefficients of a model with a sector of its own and 0 for any other model, adds a
+    line saying how many of them the card keeps."""
+    import contextlib
+    import io
+
+    lines = []
+    if a.out:
+        p = os.path.join(ROOT, "build", a.out + ".blocks")
+        open(p, "w").write("\n".join(sorted(set(hits) | set(extra), key=_bkey)) + "\n")
+        lines.append(f"\nwrote {os.path.relpath(p, ROOT)}  ({len(hits) + len(extra)} entries, both groups)")
+    if getattr(a, "card", None):
+        # The selection is applied to a released model with no rebuild.  FeynRules has already
+        # been run, the model carries all its operators, and the selection is a
+        # restriction card that MadGraph applies at import, dropping the zeroed coefficients and
+        # every vertex whose couplings then vanish.  Both groups go into the card.  The
+        # dimension-six sector is zeroed unless --with-dim6 asks for it, as in the released class
+        # cards: a kept coefficient is a placeholder value in the restricted model's defaults, and
+        # a dimension-six sector kept by accident would enter NP^2==2 through its square.  With
+        # --with-dim6 a model with a dimension-six sector and its entry in build/dim6_index.json
+        # keeps exactly the dimension-six coefficients of the selection, those that enter only with
+        # a second dimension-six insertion and those of the input relations included, a complex one
+        # as its modulus and its phase, and one without that entry keeps its whole dimension-six block.
+        # cmd_select has already refused --with-dim6 for a model with no such sector.
+        import make_restriction as MR
+
+        model = _model_dir(a.model)
+        sels = [b for b in sorted(set(hits) | set(extra), key=_bkey) if b.startswith("L8op")]
+        parts6 = []
+        if getattr(a, "with_dim6", False):
+            if keep6 is None:
+                sels.append("dim6")
+            else:
+                parts6 = sorted(n for n, blk in _model_inputs(model).items()
+                                if blk == "DIM6" and n != "Lam6" and _dim6_name(n) in keep6)
+                sels += [f"dim6:{n}" for n in parts6]
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = MR.main(["make_restriction", model, a.card] + sels)
+        if rc:
+            sys.stdout.write(buf.getvalue())
+            sys.exit(rc)
+        lines += ["", buf.getvalue().rstrip("\n")]
+        if total6:
+            with6 = getattr(a, "with_dim6", False)
+            if with6 and keep6 is not None:
+                kept = {_dim6_name(n) for n in parts6}
+                lines.append(f"dimension six: the card keeps {len(kept)} of the {total6} coefficients, {which}"
+                             + (f" ({len(parts6)} card entries, a complex coefficient being its modulus and its phase)"
+                                if len(parts6) != len(kept) else ""))
+            elif with6:
+                lines.append(f"dimension six: the card keeps all {total6} coefficients, since build/dim6_index.json "
+                             "does not list them one by one for this model")
+            else:
+                lines.append(f"dimension six: the card keeps none of the {total6} coefficients"
+                             + (f" (--with-dim6 keeps the {len(keep6)} {which.removeprefix('those ')})" if keep6 is not None
+                                else " (--with-dim6 keeps them all)"))
+        lines.append(f"import with:  import model {os.path.basename(model)}-{a.card}")
+    return lines
+
+
+def _cut_selection(a, cut, hits, extra, pw, pw6, smp, ir, sel6, extra6, idx6, full6, total6):
+    """--max-power: write the part of the selection listed at most cut powers of lambda above the
+    Standard Model amplitude of the channel, lambda^smp, as _write_selection writes the whole of it,
+    and return the lines that report it.  pw holds the power of each block the listing printed and
+    pw6 that of each dimension-six coefficient, "second" for one that enters only with a second
+    dimension-six insertion and None for one listed without a power.  A shift of the input relations
+    is the Standard Model amplitude times lambda^8 at dimension eight and lambda^4 at dimension six,
+    so an operator of the input relations is kept at that power when it is the smaller.  A
+    dimension-six class block of a model whose coefficients are listed one by one goes with its
+    coefficients, and one of a model with no dimension-six sector, which the listing leaves out,
+    stays in the block list as without the cut."""
+    import lambda_routes as LR
+
+    top = smp + cut
+
+    def ok(p):
+        return isinstance(p, int) and p <= top
+
+    rel8, rel6 = smp + 8, smp + 4
+    keep6 = None
+    if idx6 is not None:
+        keep6 = {w for w in sel6 if pw6.get(w) == "second" or ok(pw6.get(w))}
+        keep6 |= {wc for _, wc in extra6 if ok(rel6) or ok(pw6.get(wc)) or pw6.get(wc) == "second"}
+    blocks6 = {LR.DIM6_COEFF[w][1] for w in keep6 or () if w in LR.DIM6_COEFF}
+    kept = {}
+    for b, legs in hits.items():
+        if b.startswith("L8op"):
+            keep = ok(pw.get(b)) or (b in ir and ok(rel8))
+        elif not full6:
+            keep = True
+        elif idx6 is not None:
+            keep = b in blocks6
+        else:
+            keep = ok(pw.get(b))
+        if keep:
+            kept[b] = legs
+    kept_extra = [b for b in extra if ok(rel8)]
+    n8 = sum(1 for b in hits if b.startswith("L8op")) + len(extra)
+    k8 = sum(1 for b in kept if b.startswith("L8op")) + len(kept_extra)
+    lines = ["", f"cut at {cut} powers of lambda above the Standard Model amplitude, lambda^{top} (--max-power {cut}): "
+                 f"{k8} of the {n8} dimension-eight operators listed are kept"]
+    if idx6 is not None:
+        n6 = len(set(sel6) | {wc for _, wc in extra6})
+        unp = sorted(w for w in keep6 if pw6.get(w) == "second")
+        lines.append(f"  and {len(keep6)} of the {n6} dimension-six coefficients"
+                     + (f", {len(unp)} of them ({', '.join(unp)}) since they enter only with a second dimension-six "
+                        "insertion, whose power the counting does not give" if unp else ""))
+    elif full6 and getattr(a, "with_dim6", False):
+        lines.append("  The dimension-six sector is not cut, since build/dim6_index.json does not list it "
+                     "coefficient by coefficient for this model, and --with-dim6 keeps it whole.")
+    lines.append("  Left out are those listed at a larger power and those listed without one.")
+    return lines + _write_selection(a, kept, kept_extra, keep6=keep6, total6=total6,
+                                    which=f"those listed above at lambda^{top} or below")
 
 
 def cmd_select(a):
     import process as P
     import lambda_routes as LR
 
+    # MadGraph's polarisation marks.  The selection is that of the unpolarised process, but the power
+    # of lambda beside each operator is counted in the channel the marks name, as ./dim8 series counts
+    # it (gen/lambda_routes.py, channel_slots): a W or Z marked {T} or left unmarked is transverse, and
+    # one marked {0} is its Goldstone boson or the gauge boson at one power of lambda.  The Goldstone
+    # vertices are those of the Feynman-gauge lists.  Without them, or with lists that are incomplete,
+    # the powers are left out with a note rather than counted as transverse, and the selection, the
+    # block list and the card are written all the same.
+    try:
+        marks = P.parse_process(a.process, marks=True)[1]
+    except P.ProcessError as e:
+        sys.exit(f"{a.process}: {e}")
+
     # The model the card is for decides the scheme of the second group and which vertices an input
-    # scheme has absorbed.  A model that is not one of the four released ones is read as the
-    # released model of its scheme.
+    # scheme has absorbed.  A model that is not one of the released ones is read as the released
+    # model of its scheme.
     model = _model_dir(a.model)
     inputs = _model_inputs(model)
-    scheme = _scheme(inputs)
-    ref = os.path.basename(model) if os.path.basename(model) in RELEASED else SCHEME_MODEL[scheme]
+    scheme = _scheme(model, inputs)
+    ref = _reference_model(model, scheme)
     full6 = any(blk == "DIM6" and k not in DIM6_IN_BASE for k, blk in inputs.items())
-    with6 = full6 or getattr(a, "with_dim6", False)
+    # There is nothing for --with-dim6 to keep in a model without a dimension-six sector of its own: the
+    # dimension-six coefficients of its input relations stay at zero, since alone they would be half a
+    # calculation.  It stops here, rather than write a card that reads as if dimension six were in.
+    if getattr(a, "with_dim6", False) and not full6:
+        sys.exit(f"--with-dim6: {os.path.basename(model)} has no dimension-six sector of its own, and the "
+                 "dimension-six coefficients of any input relations it has stay at zero, since alone they would "
+                 f"be half a calculation. --model {SCHEME_MODEL6.get(scheme, 'dim68_mw')} has the sector"
+                 + (", in the same scheme." if scheme in SCHEME_MODEL6 else "."))
+    # A model with a dimension-six sector of its own has its dimension-six coefficients listed one by one,
+    # from the vertices of each in build/dim6_index.json (validate/dim6_index.py), those that enter at
+    # 1/Lambda^4 only with a second dimension-six insertion included (process.select_dim6).
+    # Without the index, or without the model's entry in it, the sector is listed by Warsaw class with
+    # one insertion, as the class blocks of build/vertex_index.json give it, and a line says so.  total6
+    # counts the coefficients of the sector, a complex one once.
+    idx6, why6 = _dim6_index(model, scheme) if full6 else (None, None)
+    total6 = len({_dim6_name(k) for k, blk in inputs.items() if blk == "DIM6" and k != "Lam6"}) if full6 else 0
+    second = set()                           # the blocks that --two-insertions adds
     hits, vi = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
-                       two_insertions=getattr(a, 'two_insertions', False), model=ref)
+                       two_insertions=getattr(a, 'two_insertions', False), model=ref, second=second)
     idx = {b["block"]: b for b in json.load(open(os.path.join(ROOT, "docs/block_index.json")))}
     slots = P.parse_process(a.process, collapse=not a.all_flavours)
     print(f"process : {a.process}")
@@ -290,7 +1157,8 @@ def cmd_select(a):
                        if f.endswith(".mx") and not f.startswith(".") and not f.startswith("base_")}
     # dimension-eight operators and dimension-six classes are different units, so they are counted
     # separately.  The dimension-six classes are reported only for a model that has them, under
-    # their Warsaw names, the four blocks of psi^4 as one class.
+    # their Warsaw names, the four blocks of psi^4 as one class, and only when build/dim6_index.json
+    # does not list the coefficients one by one, which the coefficient listing below does otherwise.
     n8 = sum(1 for b in hits if b.startswith("L8op"))
     n6 = len({LR.DIM6[b][0] for b in hits if b in LR.DIM6}) if full6 else 0
     # The vertex test alone is a LOWER BOUND on the operators that affect the process: an
@@ -300,11 +1168,6 @@ def cmd_select(a):
     # dimension-eight interference that way, with no vertex in any diagram.  These operators are
     # part of the answer, listed under their own heading and written into the block list, so the
     # selection is complete at tree level with one insertion.
-    def _bkey(b):
-        """Sort L8op<n> numerically and anything else (L6cl1, L6cl8a) by name, after them.
-        int(b[4:]) alone would raise on L6cl8a, the name of a dimension-six four-fermion
-        class, so the names that are not L8op<n> sort by name."""
-        return (0, int(b[4:]), "") if b.startswith("L8op") and b[4:].isdigit() else (1, 0, b)
 
     # The input relations shift the Standard-Model amplitude, so they enter only where there is one,
     # and only through its electroweak vertices: a process whose tree diagrams are built from quark
@@ -314,15 +1177,51 @@ def cmd_select(a):
     sm_ew = sm_tree and P.sm_electroweak(a.process, smv, collapse=not a.all_flavours)
     label = SCHEME_LABEL.get(scheme)
     extra = sorted(_input_scheme_blocks(INPUT_RELATION_WCS) - set(hits), key=_bkey) if sm_ew and label else []
-    extra6 = [(op, wc) for op, wc in DIM6_INPUT_RELATION if wc in inputs] if sm_ew and label and with6 else []
-    print(f"selected: {n8} of the 674 dimension-eight operators through a vertex of the process"
-          + (f", and {n6} of the eight dimension-six classes" if n6 else "")
-          + (f", plus {len(extra)} that enter through the {label} input relations" if sm_ew and label else ""))
-    if sm_ew and label:
+    extra6 = [(op, wc) for op, wc in DIM6_INPUT_RELATION if wc in inputs] if sm_ew and label and full6 else []
+    sel6 = P.select_dim6(a.process, idx6, smv, collapse=not a.all_flavours) if idx6 is not None else {}
+    if idx6 is not None:
+        part6 = f", and {len(sel6)} of the {total6} dimension-six coefficients"
+    else:
+        part6 = f", and {n6} of the eight dimension-six classes" if n6 else ""
+    # For a model with a dimension-six sector the input relations hold dimension-eight operators and
+    # dimension-six coefficients, which are different units and are counted apart, the coefficients
+    # that the listing holds already left out of the count.
+    if not (sm_ew and label):
+        part2 = ""
+    elif full6:
+        k6 = sum(1 for _, wc in extra6 if wc not in sel6)
+        part2 = (f", plus {len(extra)} dimension-eight operators"
+                 + (f" and {k6} {'more ' if idx6 is not None else ''}dimension-six coefficient{'' if k6 == 1 else 's'}"
+                    if k6 else "")
+                 + f" that enter through the {label} input relations")
+    else:
+        part2 = f", plus {len(extra)} that enter through the {label} input relations"
+    print(f"selected: {n8} of the 674 dimension-eight operators through a vertex of the process" + part6 + part2)
+    # With the dimension-six coefficients one by one the selection holds those that enter with a second
+    # dimension-six insertion as well, and the parentheses say so.  Without a Standard Model tree a
+    # dimension-six coefficient with a tree of its own still enters at 1/Lambda^4, through the square of
+    # the dimension-six amplitude, which NP^2==2 holds.
+    if sm_ew and label and idx6 is not None:
+        print("          (complete at tree level with one insertion, or two of dimension six: nothing")
+        print("           else can change the prediction at 1/Lambda^4.  The dimension-eight second group")
+        print("           has no vertex here and shifts the couplings " + ("and the W mass " if scheme == "alpha" else "")
+              + "of every electroweak amplitude)")
+    elif sm_ew and label:
         print("          (complete at tree level with one insertion: nothing else can change the")
         print("           prediction at 1/Lambda^4; the second group has no vertex here and shifts")
         print("           the couplings " + ("and the W mass " if scheme == "alpha" else "")
               + "of every electroweak amplitude)")
+    elif sm_tree and label and idx6 is not None:
+        # The input relations do not shift these Standard Model trees, but a coefficient of the input
+        # relations still enters at 1/Lambda^4 through the vev in a dimension-six vertex, as C_Hl^(3) and
+        # C_ll' do through the vev shift on the chromomagnetic vertex of C_uG in g g > t t~, and it is
+        # then listed with the coefficients that enter with a second dimension-six insertion.
+        print("          (complete at tree level with one insertion, or two of dimension six.  Every")
+        print("           Standard-Model tree diagram of this process is built from quark and gluon")
+        print(f"           vertices, whose coupling g_s is the input alpha_s, so the {label} input")
+        print("           relations do not shift them and there is no dimension-eight second group.  A")
+        print("           dimension-six coefficient of the input relations still enters at 1/Lambda^4")
+        print("           through the vev in a dimension-six vertex, and is listed where it does)")
     elif sm_tree and label:
         print("          (complete at tree level with one insertion.  Every Standard-Model tree diagram")
         print("           of this process is built from quark and gluon vertices, whose coupling g_s")
@@ -332,11 +1231,21 @@ def cmd_select(a):
         print("          (complete at tree level with one insertion.  This model has no input")
         print("           relations, so an operator acts only through its own vertices and there")
         print("           is no second group)")
+    elif full6:
+        print("          The Standard Model has no tree diagram for this process, so nothing interferes")
+        print("          with it at 1/Lambda^4: no dimension-eight operator enters at that order, and a")
+        print("          dimension-six coefficient enters only through the square of the dimension-six")
+        print("          amplitude (NP^2==2), and so only with a tree of one insertion.  The operators")
+        print("          that act only through the input relations shift the Standard-Model amplitude,")
+        print("          which is absent, so none of them is listed.")
     else:
         print("          The Standard Model has no tree diagram for this process, so nothing interferes")
         print("          at 1/Lambda^4 (NP^2==2 vanishes) and the leading term is the square, of order")
         print("          1/Lambda^8.  The operators that act only through the input relations shift the")
         print("          Standard-Model amplitude, which is absent, so none of them is listed.")
+    if full6 and idx6 is None:
+        print(f"dimension six: listed by Warsaw class with one insertion, since {why6}.  python3 validate/dim6_index.py "
+              "writes the index with which each coefficient is listed, those that enter only with a second one included.")
     # The selector can only see blocks that are in build/vertex_index.json.  If the cache has
     # grown since the index was written, every count below is an UNDERCOUNT.  The test compares
     # names against the FULL index, not counts against the B-conserving view, because the
@@ -353,90 +1262,276 @@ def cmd_select(a):
     # Each operator is printed with the vertex of its leading tree and that tree's power of lambda
     # (gen/lambda_routes.py), not with the first vertex that fits: when an operator reaches the
     # process through vertices with different numbers of legs, the powers differ.  A tree through
-    # a Yukawa coupling of a quark or lepton is not counted, since it is suppressed by the fermion
-    # mass, so an operator that reaches the process only that way is printed with the vertex
-    # that fits and flagged.
-    n_ext = len(slots)
-    cat = {e["block"]: e for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json")))}
-    cheap = LR.Cheapest(P.standard_model_vertices(P.load_data(ROOT)[1]))
-    assignments = sorted({tuple(sorted(x)) for x in P._product(slots)})
+    # the Yukawa coupling of a light quark or a lepton is not counted, since it is suppressed by
+    # the fermion mass, whether at a Standard Model vertex or, at dimension six, in the coefficient
+    # of a chain (lambda_routes.dim6_yukawa), and neither is a tree whose light fermion line joins
+    # two legs of different chirality, which needs the mass itself.  An operator that reaches the
+    # process only that way is printed with the vertex that fits and flagged.  The top Yukawa
+    # coupling and the top mass are counted, the mass at one power of lambda, and the routes keep
+    # the b quark apart from d and s, since a b line turns into a top line at a W vertex.  The
+    # selection itself is flavour and chirality blind, so an operator can also be listed that has
+    # no tree once the flavours of the external particles are kept (a b quark, say, which joins
+    # only a top quark at a W vertex).  A second search that admits every Yukawa coupling and every
+    # mass tells the two cases apart.  An operator that only --two-insertions adds has no tree with
+    # one insertion, and is flagged so.
+    # The selection keeps every QCD order, while QCD=0 in the process, as for electroweak HHjj,
+    # takes every tree with a power of g_s out of the powers, as MadGraph does and as
+    # gen/lambda_routes.py counts it: the Standard Model vertices with a gluon, and the vertices of
+    # an operator with more gluon legs than it has gluon field strengths.  An operator that reaches
+    # the process only that way is flagged so, by a third search with every vertex, and a fourth
+    # that also admits the light Yukawa couplings and masses says when it needs those as well.
+    # Another QCD order is not counted in the powers, which then keep every tree, and the header
+    # says so.  The block list and the card are the selection's and are written first
+    # (_write_selection), so that the route search can neither change them nor stop them.  With the
+    # dimension-six coefficients one by one, --with-dim6 keeps those of the selection and those of the
+    # input relations, and nothing else of the dimension-six sector.  With --max-power the card keeps
+    # what the powers allow, so it is written after they are counted (_cut_selection), from the power
+    # of each block printed, in pw, and of each dimension-six coefficient, in pw6, measured from that
+    # of the Standard Model amplitude, smp.
+    keep6 = set(sel6) | {wc for _, wc in extra6} if idx6 is not None else None
+    cut = getattr(a, "max_power", None)
+    pw, pw6 = {}, {}
+    tail = _write_selection(a, hits, extra, keep6=keep6, total6=total6) if cut is None else []
+    try:
+        cat = {e["block"]: e for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json")))}
+        # an operator of the second group that also has a vertex here is marked where it is listed
+        ir = _input_scheme_blocks(INPUT_RELATION_WCS) if label and sm_ew else set()
+        try:
+            qcd0 = LR.qcd_zero(a.process)
+        except ValueError:                   # a QCD order other than 0, which the powers do not count
+            qcd0 = None
+        gold, why_not, smp = {}, None, None
+        if "0" in marks:
+            # a longitudinal W or Z: each block keeps the model's vertices and gains its Goldstone
+            # vertices from the Feynman-gauge lists, whose Standard Model vertices give the internal
+            # lines.  Without them, or with lists that are incomplete, the powers are left out.
+            try:
+                fgi, fgbase = P.load_data(ROOT, gauge="feynman")
+                smv_ = P.standard_model_vertices(fgbase, goldstones=True)
+                gold = {b: [v for v in fgi.get(b, []) if P.GOLDSTONES & set(v)] for b in hits}
+            except FileNotFoundError:
+                why_not = ("the Feynman-gauge vertex lists build/vertex_index_fg.json and build/sm_vertices_fg.json "
+                           "are not in this tree")
+            except ValueError as e:
+                why_not = f"the Feynman-gauge vertex lists in build/ are incomplete ({e})"
+        else:
+            smv_ = P.standard_model_vertices(P.load_data(ROOT)[1])
+        # a cut needs the powers, of the dimension-six coefficients as well when the card keeps them
+        if cut is not None and why_not:
+            sys.exit(f"--max-power: a longitudinal W or Z ({{0}}) is counted through its Goldstone boson, and {why_not}, "
+                     "so there are no powers of lambda to cut on. Nothing was written. Mark the boson {T}, or leave "
+                     "it unmarked, for the transverse count.")
+        if cut is not None and sel6 and "0" in marks and getattr(a, "with_dim6", False):
+            sys.exit("--max-power: the dimension-six coefficients come from build/dim6_index.json, which is read from "
+                     "the unitary-gauge model and holds no Goldstone vertex, so with a longitudinal W or Z ({0}) "
+                     "they have no powers of lambda to cut on. Nothing was written. Mark the boson {T}, or leave it "
+                     "unmarked, for the transverse count, or leave out --with-dim6.")
+        if why_not:
+            print("each operator with the vertex through which the selection takes it into the process, the")
+            print("powers of lambda left out (see the note at the end):")
+        else:
+            ng = LR.gluon_strengths(list(idx.values())) if qcd0 else {}
+            smq = [v for v in smv_ if "G" not in v] if qcd0 else smv_
+            cheap = LR.Cheapest(smq, chains=LR.chains())
+            cheap_any = LR.Cheapest(smq, chains=LR.chains(), light_yukawa=True)
+            # under QCD=0, the trees with a power of g_s, with the light Yukawa couplings and masses
+            # left out as in the powers, and then admitted as well
+            cheap_qcd = LR.Cheapest(smv_, chains=LR.chains()) if qcd0 else None
+            cheap_qcd_any = LR.Cheapest(smv_, chains=LR.chains(), light_yukawa=True) if qcd0 else None
+            rslots = P.parse_process(a.process, collapse=False if a.all_flavours else LR.ROUTE_COLLAPSE)
+            alts = LR.channel_slots(rslots, marks)
+            every = (LR.channel_assignments(alts) if any(marks)
+                     else {e: 0 for e in sorted({tuple(sorted(x)) for x in P._product(rslots)})})
+            # the assignments of the external particles that a tree can join (LR.conserving), by the
+            # charge, the baryon and lepton numbers and the generation labels, and for a B-violating
+            # operator by the charge alone
+            assignments = {e: k for e, k in every.items() if LR.conserving(e)}
+            assignments_bv = {e: k for e, k in every.items() if LR.conserving(e, baryon_number=False)}
 
-    def lead(b):
-        if b.startswith("L8op"):
-            n_h = cat.get(b, {}).get("fields", {}).get("N_H")
-            return None if n_h is None else LR.leading(vi[b], 8, n_h, assignments, cheap)
-        return LR.leading(vi[b], 6, LR.DIM6[b][1], assignments, cheap) if b in LR.DIM6 else None
+            def lead(b, c=cheap, qcd=qcd0):
+                verts = vi[b] + gold.get(b, [])
+                if qcd:
+                    verts = [v for v in verts if v.count("G") <= ng.get(b, 0)]
+                if b.startswith("L8op"):
+                    n_h = cat.get(b, {}).get("fields", {}).get("N_H")
+                    ext = assignments_bv if _is_bviol({"block": b}) else assignments
+                    return None if n_h is None else LR.leading(verts, 8, n_h, ext, c, b)
+                return LR.leading(verts, 6, LR.DIM6[b][1], assignments, c, b) if b in LR.DIM6 else None
 
-    # an operator of the second group that also has a vertex here is marked where it is listed
-    ir = _input_scheme_blocks(INPUT_RELATION_WCS) if label and sm_ew else set()
-    print(f"each operator with the vertex of its leading tree and that tree's power of lambda, where")
-    print(f"(Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) and the Standard Model amplitude is "
-          f"lambda^{2 * n_ext - 8}:")
-    byclass = {}
-    for b in sorted(hits, key=_bkey):
-        if b.startswith("L6cl"):
-            if not full6:
-                continue
-            # the four blocks of psi^4 are one class, printed with the leading tree of the four
-            name = LR.DIM6[b][0]
-            got = lead(b)
-            old = next((r for r in byclass.get("dim6", []) if r[0] == name), None)
-            if old is None:
-                byclass.setdefault("dim6", []).append([name, f"class {b[4:5]}", hits[b], got, False, False])
-            elif got is not None and (old[3] is None or got[0] < old[3][0]):
-                old[3] = got
-            continue
-        meta = idx.get(b, {})
-        byclass.setdefault(meta.get("cls", 0), []).append(
-            [meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b], lead(b), b in ir,
-             cat.get(b, {}).get("redundant_one_generation", False)])
-    for cls in sorted(byclass, key=lambda c: (1, 0) if c == "dim6" else (0, c)):
-        print("dimension six, Warsaw classes:" if cls == "dim6" else f"class {cls}:")
-        for name, wc, legs, got, also, red in byclass[cls]:
-            # the Murphy basis lists it as redundant for one generation: say so wherever it is listed
-            note = "   (redundant for one generation, Murphy basis class 20)" if red else ""
-            if got is None:
-                print(f"  {name:34s} {wc:16s} {'':10s} via {' '.join(legs)}"
-                      + ("   (the input relations, and this vertex only through a quark or lepton Yukawa coupling)"
-                         if also else "   (only through a quark or lepton Yukawa coupling)") + note)
+            def lead6(w, c=cheap, qcd=qcd0):
+                # a dimension-six coefficient, through its vertices of order NP=1, with the chains of its
+                # operator, the Higgs fields of its class and its gluon field strengths (LR.DIM6_COEFF),
+                # the Standard Model vertices it rescales counted at their power and four more
+                verts = idx6[w]["one"]
+                if qcd:
+                    verts = [v for v in verts if v.count("G") <= ng.get(w, 0)]
+                return LR.leading(verts, 6, LR.dim6_higgs(w), assignments, c, w, rescaled=idx6[w].get("rescaled", ()))
+
+            # The assignments in which the Standard Model has a tree with the couplings the powers count,
+            # where an amplitude of order 1/Lambda^4 interferes with it, for second6.
+            with_sm6 = ({e: k for e, k in assignments.items() if cheap.reach(LR.anti(e[0]), e[1:])[0] < LR.INF}
+                        if sel6 else {})
+
+            def second6(w):
+                # A vertex of order NP=2 of the coefficient (build/dim6_index.json, "two") with neither a
+                # fermion nor a gluon leg, through which it has a tree with the couplings the powers count
+                # in an assignment where the Standard Model has one, or None.  Such a vertex needs no Dirac
+                # chains, which the index does not give for the second coefficient of a product, and no
+                # count of gluon field strengths, so the route search can confirm it.
+                verts = [v for v in idx6[w].get("two", []) if not any(LR.is_fermion(x) or x == "G" for x in v)]
+                got = LR.leading(verts, 6, 0, with_sm6, cheap) if verts and with_sm6 else None
+                return None if got is None else got[2]
+
+            # The Standard Model amplitude of the channel, found as the trees of the operators are, so
+            # that an unmarked W or Z, which the powers count as transverse, is transverse here too:
+            # u u~ > z h is lambda^1, Z_T h, where the unpolarised amplitude is lambda^0, from Z_L h.
+            # Under QCD=0 it has no tree when every Standard Model tree carries g_s (u u~ > g g).
+            smp = LR.sm_power(alts, cheap)
+            transverse = any(m is None and any(x in LR.GOLDSTONE for x in s) for s, m in zip(rslots, marks))
+            channel = any(marks) or transverse
+            if smp is None:
+                smtxt = "the Standard Model has no tree" + (" at QCD=0" if qcd0 else " in this channel" if channel else "")
             else:
-                print(f"  {name:34s} {wc:16s} {'lambda^' + str(got[0]):10s} via {' '.join(got[2])}"
-                      + ("   (and the input relations)" if also else "") + note)
-    # A shift of the input relations multiplies the Standard Model amplitude by v^4/Lambda^4, that
-    # is lambda^8, at dimension eight and by v^2/Lambda^2, lambda^4, at dimension six.
-    if extra:
-        print(f"through the {label} input relations, with no vertex in this process:")
-        for b in extra:
+                smtxt = (f"the Standard Model amplitude {'of the channel ' if channel else ''}is lambda^{smp}"
+                         + (", an unmarked W or Z being counted as transverse ({T})" if transverse else ""))
+            if cut is not None and smp is None:
+                sys.exit(f"--max-power counts the powers of lambda above the Standard Model amplitude, and {smtxt}, "
+                         "so there is nothing to count from. Nothing was written. Without --max-power the card "
+                         "keeps the whole selection.")
+            print("each operator with the vertex of its leading tree and that tree's power of lambda, where")
+            print(f"(Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) and {smtxt}:")
+            if qcd0 is None:
+                print("(the powers keep every tree, since of the QCD orders they count QCD=0 alone)")
+        byclass = {}
+        for b in sorted(hits, key=_bkey):
+            if b.startswith("L6cl"):
+                # listed coefficient by coefficient below when the index has the model
+                if not full6 or idx6 is not None:
+                    continue
+                # the four blocks of psi^4 are one class, printed with the leading tree of the four
+                name = LR.DIM6[b][0]
+                got = None if why_not else lead(b)
+                pw[b] = got[0] if got else None
+                old = next((r for r in byclass.get("dim6", []) if r[0] == name), None)
+                if old is None:
+                    byclass.setdefault("dim6", []).append([name, f"class {b[4:5]}", hits[b], got, False, False, [b]])
+                else:
+                    old[6].append(b)
+                    if got is not None and (old[3] is None or (got[0], len(got[3])) < (old[3][0], len(old[3][3]))):
+                        old[3] = got
+                continue
             meta = idx.get(b, {})
-            print(f"  {meta.get('ops', [b])[0]:34s} {meta.get('wcs', [''])[0]:16s} "
-                  f"{'lambda^' + str(2 * n_ext):10s} class {meta.get('cls', '?')}")
-    if extra6:
-        print(f"dimension six, through the {label} input relations (and their own vertices, if any):")
-        for op, wc in extra6:
-            print(f"  {op:34s} {wc:16s} {'lambda^' + str(2 * n_ext - 4):10s}")
-    if a.out:
-        p = os.path.join(ROOT, "build", a.out + ".blocks")
-        open(p, "w").write("\n".join(sorted(set(hits) | set(extra), key=_bkey)) + "\n")
-        print(f"\nwrote {os.path.relpath(p, ROOT)}  ({len(hits) + len(extra)} blocks, both groups)")
-    if getattr(a, "card", None):
-        # The selection is applied to a released model with no rebuild.  FeynRules has already
-        # been run, the model carries every vertex of every operator, and the selection is a
-        # restriction card that MadGraph applies at import, dropping the zeroed coefficients and
-        # every vertex whose couplings then vanish.  Both groups go into the card.  The
-        # dimension-six sector is zeroed unless --with-dim6 asks for it, as in the released class
-        # cards: a kept coefficient is a placeholder value in the restricted model's defaults, and
-        # a dimension-six sector kept by accident would enter NP^2==2 through its square.
-        import make_restriction as MR
-
-        model = _model_dir(a.model)
-        sels = [b for b in sorted(set(hits) | set(extra), key=_bkey) if b.startswith("L8op")]
-        if getattr(a, "with_dim6", False):
-            sels.append("dim6")
-        print()
-        rc = MR.main(["make_restriction", model, a.card] + sels)
-        if rc:
-            sys.exit(rc)
-        print(f"import with:  import model {os.path.basename(model)}-{a.card}")
+            got = None if why_not else lead(b)
+            pw[b] = got[0] if got else None
+            byclass.setdefault(meta.get("cls", 0), []).append(
+                [meta.get("ops", [b])[0], meta.get("wcs", [""])[0], hits[b], got, b in ir,
+                 cat.get(b, {}).get("redundant_one_generation", False), [b]])
+        for cls in sorted(byclass, key=lambda c: (1, 0) if c == "dim6" else (0, c)):
+            print("dimension six, Warsaw classes:" if cls == "dim6" else f"class {cls}:")
+            for name, wc, legs, got, also, red, blocks in byclass[cls]:
+                # the Murphy basis lists it as redundant for one generation: say so wherever it is listed
+                note = "   (redundant for one generation, Murphy basis class 20)" if red else ""
+                if why_not:
+                    print(f"  {name:34s} {wc:16s} {'':10s} via {' '.join(legs)}"
+                          + ("   (and the input relations)" if also else "") + note)
+                elif got is None:
+                    # each reason completes "this vertex ..." after the input relations
+                    if all(b in second for b in blocks):
+                        why = "only with a second operator insertion"
+                    elif any(lead(b, cheap_any) is not None for b in blocks):
+                        why = "only through the Yukawa coupling or the mass of a light quark or a lepton"
+                    elif qcd0 and any(lead(b, cheap_qcd, False) is not None for b in blocks):
+                        why = "only through a power of g_s, which QCD=0 removes"
+                    elif qcd0 and any(lead(b, cheap_qcd_any, False) is not None for b in blocks):
+                        why = ("only through a power of g_s, which QCD=0 removes, together with the Yukawa "
+                               "coupling or the mass of a light quark or a lepton")
+                    else:
+                        why = "has no tree once the flavours of the external particles are kept"
+                    print(f"  {name:34s} {wc:16s} {'':10s} via {' '.join(legs)}"
+                          + (f"   (the input relations, and this vertex {why})" if also else f"   ({why})") + note)
+                else:
+                    print(f"  {name:34s} {wc:16s} {'lambda^' + str(got[0]):10s} via {' '.join(got[2])}"
+                          + ("   (and the input relations)" if also else "") + note)
+        # The dimension-six coefficients, by Warsaw class in the order of the basis, each with the vertex
+        # of its leading tree and that tree's power of lambda, and flagged as the dimension-eight
+        # operators are when it has no tree with the couplings the powers count.  A coefficient that
+        # enters only with a second dimension-six insertion, of the same coefficient or of another, has no
+        # tree of its own and is flagged so, with the vertex that brings it in.  So is one whose trees
+        # with one insertion all need the Yukawa coupling or the mass of a light fermion, when it has a
+        # vertex of order NP=2 through which the route search finds a tree with the couplings the powers
+        # count (second6): C_HW in p p > w+ w-, whose gauge vertices cancel at 1/Lambda^2 against the
+        # rescaling of the W field and enter at 1/Lambda^4 on the triple-gauge vertex of C_W.  With a
+        # longitudinal W or Z the powers are left out, since the index is read from the unitary-gauge
+        # model and holds no Goldstone vertex.
+        if sel6:
+            ir6 = {wc for _, wc in extra6}
+            bare6 = bool(why_not) or "0" in marks
+            groups = {}
+            for w in LR.DIM6_COEFF:
+                if w in sel6:
+                    groups.setdefault(LR.DIM6[LR.DIM6_COEFF[w][1]][0], []).append(w)
+            for cname, members in groups.items():
+                print(f"dimension six, {cname}:")
+                for w in members:
+                    e, name, also = sel6[w], LR.DIM6_NAMES[w], w in ir6
+                    listed = vi.get(LR.DIM6_COEFF[w][1], [])
+                    got = None if bare6 or e["kind"] == "second" else lead6(w)
+                    if e["kind"] == "second":
+                        why = SECOND6
+                    elif bare6 or got is not None:
+                        why = None
+                    elif lead6(w, cheap_any) is not None:
+                        alt = second6(w)
+                        if alt is not None:
+                            e = {"legs": alt, "kind": "second"}
+                            why = SECOND6
+                        else:
+                            why = "only through the Yukawa coupling or the mass of a light quark or a lepton"
+                    elif qcd0 and lead6(w, cheap_qcd, False) is not None:
+                        why = "only through a power of g_s, which QCD=0 removes"
+                    elif qcd0 and lead6(w, cheap_qcd_any, False) is not None:
+                        why = ("only through a power of g_s, which QCD=0 removes, together with the Yukawa "
+                               "coupling or the mass of a light quark or a lepton")
+                    else:
+                        why = "has no tree once the flavours of the external particles are kept"
+                    pw6[w] = got[0] if got is not None else "second" if why == SECOND6 else None
+                    if got is not None:
+                        print(f"  {name:34s} {w:16s} {'lambda^' + str(got[0]):10s} via {' '.join(_as_listed(got[2], listed))}"
+                              + ("   (and the input relations)" if also else ""))
+                    elif why is None:
+                        print(f"  {name:34s} {w:16s} {'':10s} via {' '.join(_as_listed(e['legs'], listed))}"
+                              + ("   (and the input relations)" if also else ""))
+                    else:
+                        print(f"  {name:34s} {w:16s} {'':10s} via {' '.join(_as_listed(e['legs'], listed))}"
+                              + (f"   (the input relations, and this vertex {why})" if also else f"   ({why})"))
+        # A shift of the input relations multiplies the Standard Model amplitude by v^4/Lambda^4, that
+        # is lambda^8, at dimension eight and by v^2/Lambda^2, lambda^4, at dimension six, in a
+        # polarisation channel the amplitude of that channel.
+        if extra:
+            print(f"through the {label} input relations, with no vertex in this process:")
+            for b in extra:
+                meta = idx.get(b, {})
+                print(f"  {meta.get('ops', [b])[0]:34s} {meta.get('wcs', [''])[0]:16s} "
+                      f"{'' if smp is None else 'lambda^' + str(smp + 8):10s} class {meta.get('cls', '?')}")
+        if extra6:
+            print(f"dimension six, through the {label} input relations (and their own vertices, if any):")
+            for op, wc in extra6:
+                print(f"  {op:34s} {wc:16s} {'' if smp is None else 'lambda^' + str(smp + 4):10s}")
+        if why_not:
+            print(f"note: a longitudinal W or Z ({{0}}) is counted through its Goldstone boson, and {why_not}, so "
+                  "the powers of lambda are left out. Mark the boson {T}, or leave it unmarked, for the transverse "
+                  "count. The selection, and with it the card, does not depend on the marks.")
+        elif sel6 and "0" in marks:
+            print("note: the dimension-six coefficients come from build/dim6_index.json, which is read from the "
+                  "unitary-gauge model and holds no Goldstone vertex, so with a longitudinal W or Z ({0}) their "
+                  "powers of lambda are left out. Mark the boson {T}, or leave it unmarked, for the transverse count. "
+                  "The selection, and with it the card, does not depend on the marks.")
+        if cut is not None:
+            tail = _cut_selection(a, cut, hits, extra, pw, pw6, smp, ir, sel6, extra6, idx6, full6, total6)
+    finally:
+        # the block list and the card were written before the powers were counted
+        for line in tail:
+            print(line)
 
 
 def cmd_model(a):
@@ -444,15 +1539,20 @@ def cmd_model(a):
     from emit_fr import emit_model_fragment
 
     # without --input-scheme the model is written on the plain base, with --input-scheme on the
-    # base of the {alpha, MZ, GF} scheme, and the vertices are those of the released model of each
-    ref = "dim8_is" if getattr(a, "input_scheme", False) else "dim8_plain"
+    # base of the scheme it names ({MW, MZ, GF} unless "alpha"), and the vertices are those of the
+    # released model of each, in the basis of DIM8_BASIS (gen/basis.py)
+    import basis
+    ref = basis.model_name(SCHEME_MODEL[a.input_scheme or "plain"])
     hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
                       two_insertions=getattr(a, 'two_insertions', False), model=ref)
     ops = _parse_all()
     # the dimension-six classes the selector also returns live in the base model, not in OPS
     keep = {int(b[4:]) - 1 for b in hits if b.startswith("L8op")}
     sub = [o for i, o in enumerate(ops) if i in keep]
-    txt, index = emit_model_fragment(sub, per_block=1)
+    # a model read on its own has no rules to replace the placeholders of the general flavour form when its
+    # UFO is written, so its operators carry the sum of their flavour structures in the Lagrangian itself
+    import emit_fr
+    txt, index = emit_model_fragment(sub, per_block=1, flavor="mfvexplicit" if emit_fr.FLAVOR == "mfv" else emit_fr.FLAVOR)
     out = os.path.join(ROOT, "models", a.out)
     os.makedirs(out, exist_ok=True)
     open(os.path.join(out, "dim8.fr"), "w").write(
@@ -465,10 +1565,11 @@ def cmd_model(a):
 
 
 def cmd_ufo(a):
-    ref = "dim8_is" if getattr(a, "input_scheme", False) else "dim8_plain"
+    import basis
+    ref = basis.model_name(SCHEME_MODEL[a.input_scheme or "plain"])
     hits, _ = _select(a.process, collapse=not a.all_flavours, with_bviol=a.with_bviol,
                       two_insertions=getattr(a, 'two_insertions', False), model=ref)
-    if getattr(a, "input_scheme", False):
+    if a.input_scheme:
         extra = _input_scheme_blocks() - set(hits)
         for b in extra:
             hits[b] = ["input scheme"]
@@ -477,9 +1578,9 @@ def cmd_ufo(a):
     order = lambda b: (0, int(b[4:]), "") if b.startswith("L8op") else (1, 0, b)
     open(sel, "w").write("\n".join(sorted(hits, key=order)) + "\n")
     print(f"{len(hits)} operators selected, writing UFO {a.out}")
-    env = dict(os.environ)
-    if getattr(a, "input_scheme", False):
-        env["DIM8_BASE"] = "base_inputscheme.fr"
+    env = _wolfram_env()
+    if a.input_scheme:
+        env["DIM8_BASE"] = SCHEME_BASE[a.input_scheme]
         env["DIM8_TRUNCATE"] = "1"
     if getattr(a, "two_insertions", False):
         # NP order 2 per dim-8 coupling, so two insertions need the limit at 4 or MadGraph
@@ -488,6 +1589,13 @@ def cmd_ufo(a):
     if getattr(a, "max_legs", None):
         env["DIM8_MAXLEGS"] = str(a.max_legs)
     subprocess.check_call([WOLFRAM, "-file", os.path.join(ROOT, "validate/fr_writeufo.wls"), a.out, sel], env=env)
+    if a.input_scheme:
+        # This UFO has no dimension-six sector, so the dimension-six coefficients of its input relations are
+        # fixed at zero, as in the released dimension-eight models.  The writer works in tests/gen_smoke.  A
+        # UFO the step cannot read, or that the writer did not write, stops the command with its status.
+        import freeze_dim6_inputs as F
+
+        return F.main(["freeze_dim6_inputs", os.path.join(ROOT, "tests", "gen_smoke", a.out)])
 
 
 def _parse_all():
@@ -518,7 +1626,8 @@ def cmd_count(a):
         rows = t if isinstance(t, list) else t.Results
         Dop = E.op_dimension(*args)
         if getattr(a, "verbose", False):
-            # the full tower: p powers of the vev, q of the energy, k derivatives traded for vevs
+            # the (p, q) that leg counting allows with n legs: p Higgs fields at the vacuum, q powers of the
+            # energy, k = p - p_min.  Some of them vanish for every operator of the class (validate/check_legs.py)
             print(f"{name} (D,H,psi,F)={args} n={n}:  p_min={max(args[1]+args[2]+args[3]-n,0)}  "
                   + "  ".join(f"k={r['k']}: (p,q)=({r['p']},{r['q']}) lambda^{3*Dop-2*r['q']-r['p']}" for r in rows))
             continue
@@ -530,22 +1639,43 @@ def cmd_count(a):
         legs = {4: "four", 5: "five", 6: "six"}
         print(f"{name:12s} leading power of the class's vertex, by its number of legs: "
               + ", ".join(f"lambda^{l} at {legs.get(n, n)} legs" for n, l in lead))
-        print("             (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) in the regime Lambda >> E >> v, so a")
-        print("             smaller power grows faster with energy, lambda^4 being the fastest a dimension-eight")
-        print("             operator can; every subleading term of the same vertex trades one power of E for one")
-        print("             of v and is one power of lambda higher.  --verbose prints the whole tower, as (p, q):")
-        print("             p powers of the vev, q of the energy, k derivatives traded for vevs.")
+        print("             (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1) in the regime Lambda >> E >> v, so at a")
+        print("             given number of legs a smaller power is a larger contribution in the tails, lambda^4 at")
+        print("             four legs being the fastest growth a dimension-eight operator can have.  The k-th")
+        print("             subleading vertex with the same number of legs has k more")
+        print("             Higgs fields at the vacuum, trades k powers of E for powers of v and is k powers of")
+        print("             lambda higher.  --verbose lists the (p, q) that leg counting allows: p Higgs fields")
+        print("             at the vacuum and q powers of the energy (some vanish by C or gauge structure).")
     return 0
+
+
+def cmd_series(a):
+    """The amplitude of a process topology by topology as a series in lambda (gen/lambda_series.py):
+    the Standard Model couplings and the dimension-six and dimension-eight classes side by side,
+    with MadGraph's {0} and {T} marks counting a longitudinal and a transverse W or Z apart."""
+    import lambda_series as LS
+
+    return LS.run(a)
 
 
 def cmd_check(a):
     import check_counts
     import check_symbol_clash
+    import cp_parity
+    import structural
 
     rc = 0
     rc |= check_symbol_clash.main(check_symbol_clash.DEFAULT_MODELS)
     print()
-    check_counts.main() if hasattr(check_counts, "main") else None
+    ops = _load_encoding()
+    rc |= 1 if structural.report(ops) else 0
+    rc |= 1 if cp_parity.report_disagreements(ops) else 0
+    print()
+    # check_counts.main() ends in sys.exit with its verdict
+    try:
+        check_counts.main() if hasattr(check_counts, "main") else None
+    except SystemExit as e:
+        rc |= 1 if e.code else 0
     return rc
 
 
@@ -554,9 +1684,59 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    b = sub.add_parser("build", help="compute and cache every operator's vertices")
+    RELATIONS_UPDATED = ("accept a changed operator that enters the input relations, once its relation has been "
+                         "derived again and the base files written again from it (models/src/README.md)")
+    rb = sub.add_parser("rebuild", help="gen/operators.py to the released models, every step in one command",
+                        description="From gen/operators.py to the released models, in one command.  It runs ./dim8 "
+                                    "build (the checks of the encoding, the files written from it, the vertices of "
+                                    "the operators that have changed), computes the dimension-six blocks that have "
+                                    "changed, runs ./dim8 index, writes each UFO with validate/fr_writeufo.wls on the "
+                                    "base of its input scheme, releases it with examples/release_model.sh, which "
+                                    "audits it and has MadGraph import it before it replaces the old model, and then "
+                                    "rewrites the catalogue and the vertex lists of the selector from the released "
+                                    "models.  It stops at the first step that fails, and a block already computed is "
+                                    "not computed again, but it takes no cached block without a stamp "
+                                    "(validate/cache_source.py backstamp).  It needs Mathematica and FeynRules, a "
+                                    "Python with numpy (DIM8_NUMPY_PY names one) and MadGraph (MG5_DIR), and it checks "
+                                    "for them first.  Each UFO is written in many small pieces side by side and "
+                                    "joined (--shards), since in one piece it takes about eight hours for a "
+                                    "dimension-eight model and about nineteen for a combined one.  The "
+                                    "dimension-six caches are DIM8_VDIR6 and DIM8_VDIR6_MW, by default beside "
+                                    "the dimension-eight cache with the suffixes 6 and 6_mw.  The models are in the "
+                                    "default basis, in which every Higgs field of class 11 carries a derivative, and "
+                                    "with DIM8_BASIS=murphy in the Murphy basis, under the same names with the suffix "
+                                    "_murphy (gen/basis.py).  models/src/README.md describes the steps.")
+    rb.add_argument("-j", "--jobs", type=int, default=6, help="workers at a time for the vertices")
+    rb.add_argument("-k", "--kernels", type=int, default=2, help="subkernels per worker")
+    rb.add_argument("--models", nargs="+", choices=[m[0] for m in REBUILD_MODELS], metavar="NAME",
+                    help="the models to write, among " + ", ".join(m[0] for m in REBUILD_MODELS) + " (default: all that "
+                         "this tree can write, the combined ones needing tests/gen_smoke/dim6_smeftsim.fr)")
+    rb.add_argument("--dry-run", action="store_true",
+                    help="run the checks of the encoding and print what would be computed, run and written, and "
+                         "write nothing, which needs no Mathematica")
+    rb.add_argument("--blocks", metavar="FILE",
+                    help="a trial of the chain: compute only the blocks listed in FILE, write each model from them "
+                         "alone, as models/<name>_trial, and leave the released models and the vertex lists alone")
+    rb.add_argument("--relations-updated", action="store_true", help=RELATIONS_UPDATED)
+    rb.add_argument("--shards", type=int, default=120, metavar="N",
+                    help="write each UFO in N shards of blocks and one of the base model with the operators of its "
+                         "relations, side by side, and join them (hpc/write_shards.sh): three to four hours on a node "
+                         "of 64 cores, set by the slowest shard, the same vertices by validate/compare_ufo.py "
+                         "(default 120; 0 writes the UFO in one piece)")
+    rb.add_argument("--par", type=int, default=os.cpu_count(), metavar="P",
+                    help="shards written at a time, one kernel each (default: the number of processors)")
+    rb.set_defaults(func=cmd_rebuild)
+
+    b = sub.add_parser("build", help="check the encoding and compute and cache every operator's vertices")
     b.add_argument("-j", "--jobs", type=int, default=6)
     b.add_argument("-k", "--kernels", type=int, default=2)
+    b.add_argument("--dry-run", action="store_true",
+                   help="run the checks of the encoding and print what would be computed, and write nothing, "
+                        "which needs no Mathematica")
+    b.add_argument("--source-only", action="store_true",
+                   help="run the checks and write tests/gen_smoke/gen.fr, docs/block_index.json and the catalogue "
+                        "from gen/operators.py, and compute no vertices, which needs no Mathematica")
+    b.add_argument("--relations-updated", action="store_true", help=RELATIONS_UPDATED)
     b.set_defaults(func=cmd_build)
 
     s = sub.add_parser("status", help="how much of the cache exists, and the Hermiticity verdicts")
@@ -572,20 +1752,25 @@ def main():
         p.add_argument("process", help='MadGraph syntax, e.g. "p p > h j j" or "p p > w+ h, w+ > l+ vl"')
         p.add_argument("-o", "--out", default=None if name == "select" else "proc")
         p.add_argument("--all-flavours", action="store_true",
-                       help="do not collapse c to u and s,b to d (slower, same answer in the universal model)")
+                       help="do not collapse c to u and s,b to d. It is slower, the selection in the universal "
+                            "model is the same, and the powers of lambda keep the b apart in either case")
         p.add_argument("--two-insertions", action="store_true",
                        help="also select operators that need a SECOND dimension-eight vertex. "
-                            "That is order 1/Lambda^8, outside a consistent 1/Lambda^4 analysis; "
-                            "use it for dimension-eight-squared as a 1/Lambda^8 proxy or for "
+                            "That is order 1/Lambda^8, outside a consistent 1/Lambda^4 analysis. "
+                            "Use it for dimension-eight-squared as a 1/Lambda^8 proxy or for "
                             "positivity and unitarity studies. The UFO is written with the NP "
                             "coupling order raised to 4 so MadGraph will generate the diagrams.")
-        p.add_argument("--input-scheme", action="store_true",
-                       help="use the corrected {alpha, MZ, GF} input relations (base_inputscheme.fr), always "
-                            "include the operators that enter them, and drop the Lambda^-8 remnant vertices. "
-                            "Load a dim-6 Lagrangian alongside before setting any dim-6 coefficient.")
+        p.add_argument("--input-scheme", nargs="?", const="mw", default=None, choices=sorted(SCHEME_BASE),
+                       help="use the corrected input relations of a scheme, {MW, MZ, GF} (mw, the default "
+                            "when the option is given alone, base_inputscheme_mw.fr) or {alpha, MZ, GF} "
+                            "(alpha, base_inputscheme.fr), always include the operators that enter them, and "
+                            "drop the Lambda^-8 remnant vertices. ./dim8 ufo fixes the dimension-six "
+                            "coefficients of these relations at zero, as in the released dimension-eight "
+                            "models. With ./dim8 model, load a dimension-six Lagrangian alongside before "
+                            "setting any of them.")
         p.add_argument("--max-legs", type=int, default=None, metavar="N",
                        help="drop vertices with more than N legs from the UFO (an n-point vertex only enters "
-                            "tree amplitudes with at least n external legs); also honoured by the worker")
+                            "tree amplitudes with at least n external legs). The worker honours it too")
         p.add_argument("--with-bviol", action="store_true",
                        help="include the B-violating classes 18-21 (MadGraph/ALOHA cannot use their 4-fermion vertices)")
         if name == "select":
@@ -594,21 +1779,48 @@ def main():
                                 "groups, and import it as  import model <model>-NAME.  Nothing is rebuilt: "
                                 "FeynRules has already been run, the released model carries every vertex "
                                 "of every operator, and MadGraph applies the card at import")
-            p.add_argument("--model", default="models/dim8_is", metavar="DIR",
+            p.add_argument("--model", default="models/dim8_mw", metavar="DIR",
                            help="the released UFO the card is written into, a path or a name in models/ "
-                                "(default models/dim8_is)")
+                                "(default models/dim8_mw, the {MW, MZ, GF} scheme)")
             p.add_argument("--with-dim6", action="store_true",
-                           help="also keep the model's dimension-six coefficients in the card. Without it "
-                                "they are zeroed, like in the released class cards, so that NP^2==2 is the "
+                           help="also keep dimension-six coefficients in the card, in a model with a "
+                                "dimension-six sector of its own (dim68_mw, dim68_is). With its entry in "
+                                "build/dim6_index.json (python3 validate/dim6_index.py) these are the "
+                                "coefficients the selection lists, those that enter only with a second "
+                                "dimension-six insertion, of the same coefficient or another, and those of the "
+                                "input relations included, and without it every dimension-six coefficient it "
+                                "has. A model with no such sector refuses the option, since the dimension-six "
+                                "coefficients of its input relations stay at zero. Without the option they are "
+                                "zeroed, like in the released class cards, so that NP^2==2 is the "
                                 "dimension-eight interference alone")
+            p.add_argument("--max-power", type=int, default=None, metavar="N",
+                           help="keep in the card and the block list only the operators and dimension-six "
+                                "coefficients listed at most N powers of lambda above the Standard Model "
+                                "amplitude of the channel, which the listing gives in its header: those whose "
+                                "contributions grow fastest with energy relative to it (N=4 is E^4/Lambda^4 "
+                                "at four legs, N=2 E^2/Lambda^2). An operator of the input relations, eight "
+                                "powers above at dimension eight and four at dimension six, is kept at that "
+                                "power when it is the smaller. One listed without a power is left out, since it then "
+                                "enters only through the mass of a light fermion, a second insertion, a power "
+                                "of g_s that QCD=0 removes, or not at all once the flavours are kept, except a "
+                                "dimension-six coefficient that enters only with a second dimension-six "
+                                "insertion, which is kept since the counting does not give its power. The "
+                                "option stops, writing nothing, where the powers are left out or the "
+                                "Standard Model has no tree")
         p.set_defaults(func=fn)
 
     k = sub.add_parser("count", help="lambda power counting for a class or (D,H,psi,F), or 'all'")
     k.add_argument("spec", help='e.g. "psi^2H^2D^3", "3,2,2,0", or all')
     k.add_argument("-n", nargs="+", type=int, default=[4, 5, 6], help="vertex multiplicities")
     k.add_argument("--target", type=int, default=None, help="only report if this lambda exponent appears")
-    k.add_argument("--verbose", action="store_true", help="the full (p, q) tower instead of the leading power")
+    k.add_argument("--verbose", action="store_true", help="the (p, q) that leg counting allows with these legs, leading and subleading, instead of the leading power")
     k.set_defaults(func=cmd_count)
+
+    import lambda_series as LS
+    r = sub.add_parser("series", help="the amplitude of a process topology by topology as a series in lambda",
+                       description=LS.__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    LS.add_arguments(r)
+    r.set_defaults(func=cmd_series)
 
     c = sub.add_parser("check", help="symbolic validation gates")
     c.set_defaults(func=cmd_check)

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Every linear dimension-six vertex of models/dim68_is against SMEFTsim's {alpha, MZ, GF} model.
+"""Every linear dimension-six vertex of a combined model against SMEFTsim's model of the same scheme.
 
     python3 validate/dim6_vs_smeftsim.py <SMEFTsim U35 alphaScheme UFO> [--ours models/dim68_is]
+    python3 validate/dim6_vs_smeftsim.py <SMEFTsim U35 MwScheme UFO> --ours models/dim68_mw
                                          [--coeffs cHWB,cll1,...] [--tol 1e-6] [--show 5]
 
-The reference is SMEFTsim_U35_alphaScheme_UFO, version 3.0.2 (github.com/SMEFTsim/SMEFTsim, commit
-e4cf6f9).  It is not shipped here; download it and give its path.
+The reference is SMEFTsim_U35_alphaScheme_UFO for dim68_is and SMEFTsim_U35_MwScheme_UFO for dim68_mw,
+version 3.0.2 (github.com/SMEFTsim/SMEFTsim, commit e4cf6f9).  It is not shipped here; download it
+and give its path.
 
 Both models are read as text with read_model of validate/index_vs_ufo.py, at the same Standard
-Model inputs: SMEFTsim's defaults, with alpha entering ours as aEWM1 = 1/aEW, the CKM matrix the
+Model inputs: SMEFTsim's defaults, with alpha entering ours as aEWM1 = 1/aEW in the alpha scheme (in
+the {MW, MZ, GF} scheme the three inputs carry the same names in both models), the CKM matrix the
 unit matrix in both (our model carries only the Cabibbo angle, SMEFTsim the Wolfenstein form), and
 Lambda = 1 TeV.  For each dimension-six coefficient the derivative of every coupling at zero is
 taken, from symmetric differences combined so that the quadratic and cubic terms cancel: our model
@@ -62,7 +65,9 @@ def matched_inputs(ours, smeftsim):
             r"(\w+) = Parameter\(name = '\w+',\s*nature = '(external)',\s*type = '\w+',\s*value = ([^,]+),", txt)}
     a, b = defaults(ours), defaults(smeftsim)
     common = {n: float(b[n]) for n in a if n in b and not n.startswith("c")}
-    mine = dict(common, aEWM1=1 / float(b["aEW"]) if "aEW" in b else float(b["aEWM1"]), cabi=0.0, Lam6=1000.0)
+    mine = dict(common, cabi=0.0, Lam6=1000.0)
+    if "aEWM1" in a:   # the alpha scheme, where alpha is ours as 1/aEW; in the MW scheme it is derived
+        mine["aEWM1"] = 1 / float(b["aEW"]) if "aEW" in b else float(b["aEWM1"])
     theirs = dict(common, CKMlambda=0.0, CKMA=0.0, CKMrho=0.0, CKMeta=0.0, LambdaSMEFT=1000.0,
                   linearPropCorrections=0.0, cabi=0.0, Lam6=1000.0)
     return mine, theirs

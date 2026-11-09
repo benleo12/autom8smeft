@@ -7,7 +7,13 @@
    f T quark-gluon-gluon structure, which a test that samples one random value per external
    colour index wrongly finds zero.  With a cached block given as DIM8_BLOCK=L8opNN (from DIM8_VDIR) it also runs
    both tests on every coupling of that block and on the differences between couplings.
-   Run: DIM8_ROOT=<repo> wolframscript -file validate/check_colour_test.wls *)
+   Run: DIM8_ROOT=<repo> wolframscript -file validate/check_colour_test.wls
+
+   DIM8_SWEEP=k/n runs none of that.  It passes the k-th of n shares of the cached blocks of DIM8_VDIR, .mx or
+   .wxf, through the worker's canonVerts and names every vertex that canonVerts drops: a vertex of a block built
+   before a change to the test or the canonicalisation, which a build today would not write.  The exit status
+   is 1 if there is one.  Believe it when it names the four-gluon vertices of the singlet G Gdual operators, which
+   vanish by the Jacobi identity, on a cache from before the change.  *)
 $root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the default path of the init file *)
 FR$NKernels = 0;   (* serial: no subkernels on a shared laptop *)
@@ -17,6 +23,24 @@ z8w = Import[$root <> "/validate/fr_worker.wls", "Text"];
 z8a = StringPosition[z8w, "canonEps = "][[1, 1]]; z8b = StringPosition[z8w, "(* ---- term-wise evaluation"][[1, 1]];
 ToExpression[StringTake[z8w, {z8a, z8b - 1}]];   (* canonicalisation, both colour tests, canonVerts *)
 Print["exact colour tables pass their identities: ", z8colourTablesOK];
+If[Environment["DIM8_SWEEP"] =!= $Failed,
+  {z8k, z8n} = ToExpression /@ StringSplit[Environment["DIM8_SWEEP"], "/"];
+  vdir = If[Environment["DIM8_VDIR"] === $Failed, $root <> "/build/vertices", Environment["DIM8_VDIR"]];
+  z8files = Select[FileNames[{"*.mx", "*.wxf"}, vdir], !StringStartsQ[FileBaseName[#], "base_"] && !StringContainsQ[FileBaseName[#], "."] &];
+  z8files = z8files[[z8k ;; ;; z8n]];
+  Print["[sweep] ", Length[z8files], " blocks of ", vdir, ", share ", z8k, " of ", z8n];
+  z8lost = 0;
+  Do[ClearAll[FR$Vert];
+     If[FileExtension[z8file] === "wxf", FR$Vert = Import[z8file, "WXF"], Get[z8file]];
+     If[!ListQ[FR$Vert], Print["[abort] ", z8file, " holds no vertex list"]; Quit[2]];
+     z8t = AbsoluteTime[]; z8after = canonVerts[FR$Vert];
+     z8gone = Complement[(ToString /@ #[[1, All, 1]]) & /@ FR$Vert, (ToString /@ #[[1, All, 1]]) & /@ z8after];
+     z8lost += Length[FR$Vert] - Length[z8after];
+     Print["[block] ", FileBaseName[z8file], " ", Length[FR$Vert], " -> ", Length[z8after], " ", Round[AbsoluteTime[] - z8t, 0.1], " s"];
+     If[z8gone =!= {}, Print["[dropped] ", FileBaseName[z8file], " ", StringRiffle[z8gone, ", ", " "]]],
+     {z8file, z8files}];
+  Print["[sweep] ", z8lost, " vertices dropped"];
+  Quit[If[z8lost > 0, 1, 0]]];
 g1 = Index[Gluon, Ext[1]]; g2 = Index[Gluon, Ext[2]]; g3 = Index[Gluon, Ext[3]]; g4 = Index[Gluon, Ext[4]]; g5 = Index[Gluon, Ext[5]];
 c1 = Index[Colour, Ext[1]]; c2 = Index[Colour, Ext[2]]; c3 = Index[Colour, Ext[3]]; c4 = Index[Colour, Ext[4]];
 cc1 = Index[Colour, Colour$1]; cc2 = Index[Colour, Colour$2]; gg1 = Index[Gluon, Gluon$1]; gg2 = Index[Gluon, Gluon$2]; gg3 = Index[Gluon, Gluon$3];

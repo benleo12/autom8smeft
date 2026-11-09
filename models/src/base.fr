@@ -303,7 +303,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Ml, {Me,5.11*^-4}, {MMU,0.10566}, {MTA,1.777}},
+    Mass             -> {Ml, {Me,0}, {MMU,0}, {MTA,0}},
     Width            -> 0,
     QuantumNumbers   -> {Q -> -1, LeptonNumber -> 1},
     PropagatorLabel  -> {"l", "e", "mu", "ta"},
@@ -320,7 +320,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation], Index[Colour]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Mu, {MU, 2.55*^-3}, {MC,1.27}, {MT,172}},
+    Mass             -> {Mu, {MU,0}, {MC,0}, {MT,172.76}},
     Width            -> {0, 0, {WT,1.50833649}},
     QuantumNumbers   -> {Q -> 2/3},
     PropagatorLabel  -> {"uq", "u", "c", "t"},
@@ -337,7 +337,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation], Index[Colour]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Md, {MD,5.04*^-3}, {MS,0.101}, {MB,4.7}},
+    Mass             -> {Md, {MD,0}, {MS,0}, {MB,4.18}},
     Width            -> 0,
     QuantumNumbers   -> {Q -> -1/3},
     PropagatorLabel  -> {"dq", "d", "s", "b"},
@@ -515,70 +515,70 @@ M$Parameters = {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 1,
-    Value         -> 5.04*^-3,
+    Value         -> 0,
     Description   -> "Down Yukawa mass"
   },
   ymup == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 2,
-    Value         -> 2.55*^-3,
+    Value         -> 0,
     Description   -> "Up Yukawa mass"
   },
   yms == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 3,
-    Value         -> 0.101,
+    Value         -> 0,
     Description   -> "Strange Yukawa mass"
   },
   ymc == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 4,
-    Value         -> 1.27,
+    Value         -> 0,
     Description   -> "Charm Yukawa mass"
   },
   ymb == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 5,
-    Value         -> 4.7,
+    Value         -> 4.18,
     Description   -> "Bottom Yukawa mass"
   },
  ymt == {
    ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 6,
-    Value         -> 172,
+    Value         -> 172.76,
     Description   -> "Top Yukawa mass"
   },
   yme == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 11,
-    Value         -> 5.11*^-4,
+    Value         -> 0,
     Description   -> "Electron Yukawa mass"
   },
   ymm == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 13,
-    Value         -> 0.10566,
+    Value         -> 0,
     Description   -> "Muon Yukawa mass"
   },
   ymtau == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 15,
-    Value         -> 1.777,
+    Value         -> 0,
     Description   -> "Tau Yukawa mass"
   },
   cabi == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 1,
-    Value         -> 0.227736,
+    Value         -> 0,
     TeX           -> Subscript[\[Theta], c],
     Description   -> "Cabibbo angle"
   },

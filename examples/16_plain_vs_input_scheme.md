@@ -1,5 +1,8 @@
 # 16: plain model versus input-scheme model
 
+`dim8_plain` ships in `validate/ward_control/` as the control of the Ward test, not as a model to run. Link it
+into the `models` directory of MadGraph to reproduce what follows.
+
 `dim8_plain` puts the operators on the FeynRules Standard Model as it comes: inputs are
 {alpha, MZ, GF} in name, but the operators' contributions to the gauge boson kinetic terms, the
 photon-Z mixing, the W mass, the vev and the Yukawas are left in the Lagrangian. Two problems

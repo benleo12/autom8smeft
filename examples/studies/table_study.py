@@ -3,6 +3,9 @@
 
     examples/studies/table_study.py <study dir> [model dir]
 
+The model is the one the study was run with, read from the model column of results.tsv, unless
+[model dir] names another.
+
 Writes <study dir>/table.md and <study dir>/table.tex: one block per process with the
 Standard-Model cross section, the full-model interference and squared rows, and one line per
 operator class with its interference (1/Lambda^4) and squared (1/Lambda^8) cross sections in pb,
@@ -95,9 +98,16 @@ def fmt(x):
 def main(argv):
     if len(argv) < 2:
         print(__doc__); return 2
-    st = os.path.abspath(argv[1]); model = os.path.abspath(argv[2]) if len(argv) > 2 else os.path.join(ROOT, "models", "dim8_is")
+    st = os.path.abspath(argv[1])
     rows = [l.rstrip("\n").split("\t") for l in open(os.path.join(st, "results.tsv"))]
     head, rows = rows[0], rows[1:]
+    if len(argv) > 2:
+        model = os.path.abspath(argv[2])
+    else:
+        base = {r[1].split("-")[0] for r in rows if len(r) > 1}
+        if len(base) != 1:
+            sys.exit(f"{st}/results.tsv: rows from {len(base)} models ({', '.join(sorted(base))}), name the model")
+        model = os.path.join(ROOT, "models", base.pop())
     col = {h: i for i, h in enumerate(head)}
     procs = []
     for r in rows:

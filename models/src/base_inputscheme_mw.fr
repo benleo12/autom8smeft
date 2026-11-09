@@ -306,7 +306,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Ml, {Me,5.11*^-4}, {MMU,0.10566}, {MTA,1.777}},
+    Mass             -> {Ml, {Me,0}, {MMU,0}, {MTA,0}},
     Width            -> 0,
     QuantumNumbers   -> {Q -> -1, LeptonNumber -> 1},
     PropagatorLabel  -> {"l", "e", "mu", "ta"},
@@ -323,7 +323,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation], Index[Colour]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Mu, {MU, 2.55*^-3}, {MC,1.27}, {MT,172}},
+    Mass             -> {Mu, {MU,0}, {MC,0}, {MT,172.76}},
     Width            -> {0, 0, {WT,1.50833649}},
     QuantumNumbers   -> {Q -> 2/3},
     PropagatorLabel  -> {"uq", "u", "c", "t"},
@@ -340,7 +340,7 @@ M$ClassesDescription = {
     Indices          -> {Index[Generation], Index[Colour]},
     FlavorIndex      -> Generation,
     SelfConjugate    -> False,
-    Mass             -> {Md, {MD,5.04*^-3}, {MS,0.101}, {MB,4.7}},
+    Mass             -> {Md, {MD,0}, {MS,0}, {MB,4.18}},
     Width            -> 0,
     QuantumNumbers   -> {Q -> -1/3},
     PropagatorLabel  -> {"dq", "d", "s", "b"},
@@ -516,70 +516,70 @@ M$Parameters = {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 1,
-    Value         -> 5.04*^-3,
+    Value         -> 0,
     Description   -> "Down Yukawa mass"
   },
   ymup == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 2,
-    Value         -> 2.55*^-3,
+    Value         -> 0,
     Description   -> "Up Yukawa mass"
   },
   yms == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 3,
-    Value         -> 0.101,
+    Value         -> 0,
     Description   -> "Strange Yukawa mass"
   },
   ymc == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 4,
-    Value         -> 1.27,
+    Value         -> 0,
     Description   -> "Charm Yukawa mass"
   },
   ymb == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 5,
-    Value         -> 4.7,
+    Value         -> 4.18,
     Description   -> "Bottom Yukawa mass"
   },
  ymt == {
    ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 6,
-    Value         -> 172,
+    Value         -> 172.76,
     Description   -> "Top Yukawa mass"
   },
   yme == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 11,
-    Value         -> 5.11*^-4,
+    Value         -> 0,
     Description   -> "Electron Yukawa mass"
   },
   ymm == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 13,
-    Value         -> 0.10566,
+    Value         -> 0,
     Description   -> "Muon Yukawa mass"
   },
   ymtau == {
     ParameterType -> External,
     BlockName     -> YUKAWA,
     OrderBlock    -> 15,
-    Value         -> 1.777,
+    Value         -> 0,
     Description   -> "Tau Yukawa mass"
   },
   cabi == {
     ParameterType -> External,
     BlockName     -> CKMBLOCK,
     OrderBlock    -> 1,
-    Value         -> 0.227736,
+    Value         -> 0,
     TeX           -> Subscript[\[Theta], c],
     Description   -> "Cabibbo angle"
   },
@@ -622,14 +622,15 @@ M$Parameters = {
   d8mZ == { ParameterType -> Internal, Value -> (c8H6x1 + c8H6x2)/4 vev^4/Lam^4, InteractionOrder -> {NP,2}, Description -> "dim-8 form factor: Z mass" },
   d8gWl == { ParameterType -> Internal, Value -> (c8l2H4Dx2 + c8l2H4Dx4)/2 vev^4/Lam^4, InteractionOrder -> {NP,2}, Description -> "dim-8 form factor: W-lepton vertex" },
   d8Zh == { ParameterType -> Internal, Value -> (c8H6x1 + c8H6x2)/4 vev^4/Lam^4, InteractionOrder -> {NP,2}, Description -> "dim-8 form factor: Higgs kinetic term" },
+  ylsq == { ParameterType -> Internal, Value -> 2 (yme^2 + ymm^2)/vevSM^2, Description -> "y_e^2 + y_mu^2, in the muon-decay relation" },
   gw1 == { ParameterType -> Internal, Value -> -1/2*L6*vevSM^2*(2*cHW + 2*cHl3 - cll1), InteractionOrder -> {NP,1}, Description -> "O(1/Lambda^2) relative shift of gw" },
-  gw2 == { ParameterType -> Internal, Value -> -1/2*L6^2*cHW^2*vevSM^4 - L6^2*cHW*cHl3*vevSM^4 + (1/2)*L6^2*cHW*cll1*vevSM^4 - L6^2*cHl3^2*vevSM^4 + (1/2)*L6^2*cHl3*cll1*vevSM^4 - 1/8*L6^2*cll1^2*vevSM^4 - 1/2*L8*c8W2H4x1*vevSM^4 - 1/2*L8*c8l2H4Dx2*vevSM^4 - 1/2*L8*c8l2H4Dx4*vevSM^4, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of gw, dim-6 squared plus dim-8" },
+  gw2 == { ParameterType -> Internal, Value -> -1/2*L6^2*cHW^2*vevSM^4 - L6^2*cHW*cHl3*vevSM^4 + (1/2)*L6^2*cHW*cll1*vevSM^4 - L6^2*cHl3^2*vevSM^4 + (1/2)*L6^2*cHl3*cll1*vevSM^4 - 1/8*L6^2*cll1^2*vevSM^4 - 1/2*L8*c8W2H4x1*vevSM^4 - 1/2*L8*c8l2H4Dx2*vevSM^4 - 1/4*L8*c8l2H4Dx2FE*vevSM^4*ylsq - 1/2*L8*c8l2H4Dx4*vevSM^4 - 1/4*L8*c8l2H4Dx4FE*vevSM^4*ylsq + (1/4)*L8*c8l4H2x1Fx00*vevSM^4 + (1/8)*L8*c8l4H2x1Fx0E*vevSM^4*ylsq, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of gw, dim-6 squared plus dim-8" },
   g11 == { ParameterType -> Internal, Value -> -1/4*L6*vevSM^2*(4*cHB*g1SM^2 + cHDD*g1SM^2 + cHDD*gwSM^2 + 4*cHWB*g1SM*gwSM + 4*cHl3*g1SM^2 - 2*cll1*g1SM^2)/g1SM^2, InteractionOrder -> {NP,1}, Description -> "O(1/Lambda^2) relative shift of g1" },
-  g12 == { ParameterType -> Internal, Value -> (1/32)*(-16*L6^2*cHB^2*g1SM^4*vevSM^4 + 8*L6^2*cHB*cHDD*g1SM^4*vevSM^4 + 8*L6^2*cHB*cHDD*g1SM^2*gwSM^2*vevSM^4 - 32*L6^2*cHB*cHl3*g1SM^4*vevSM^4 + 16*L6^2*cHB*cll1*g1SM^4*vevSM^4 + 3*L6^2*cHDD^2*g1SM^4*vevSM^4 + 2*L6^2*cHDD^2*g1SM^2*gwSM^2*vevSM^4 - L6^2*cHDD^2*gwSM^4*vevSM^4 - 8*L6^2*cHDD*cHl3*g1SM^4*vevSM^4 - 8*L6^2*cHDD*cHl3*g1SM^2*gwSM^2*vevSM^4 + 4*L6^2*cHDD*cll1*g1SM^4*vevSM^4 + 4*L6^2*cHDD*cll1*g1SM^2*gwSM^2*vevSM^4 - 32*L6^2*cHW*cHWB*g1SM^3*gwSM*vevSM^4 - 16*L6^2*cHWB^2*g1SM^4*vevSM^4 - 32*L6^2*cHWB*cHl3*g1SM^3*gwSM*vevSM^4 + 16*L6^2*cHWB*cll1*g1SM^3*gwSM*vevSM^4 - 32*L6^2*cHl3^2*g1SM^4*vevSM^4 + 16*L6^2*cHl3*cll1*g1SM^4*vevSM^4 - 4*L6^2*cll1^2*g1SM^4*vevSM^4 - 16*L8*c8B2H4x1*g1SM^4*vevSM^4 - 8*L8*c8H6x2*g1SM^4*vevSM^4 - 8*L8*c8H6x2*g1SM^2*gwSM^2*vevSM^4 - 16*L8*c8W2H4x3*g1SM^2*gwSM^2*vevSM^4 - 16*L8*c8WBH4x1*g1SM^3*gwSM*vevSM^4 - 16*L8*c8l2H4Dx2*g1SM^4*vevSM^4 - 16*L8*c8l2H4Dx4*g1SM^4*vevSM^4)/g1SM^4, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of g1, dim-6 squared plus dim-8" },
+  g12 == { ParameterType -> Internal, Value -> (1/32)*(-16*L6^2*cHB^2*g1SM^4*vevSM^4 + 8*L6^2*cHB*cHDD*g1SM^4*vevSM^4 + 8*L6^2*cHB*cHDD*g1SM^2*gwSM^2*vevSM^4 - 32*L6^2*cHB*cHl3*g1SM^4*vevSM^4 + 16*L6^2*cHB*cll1*g1SM^4*vevSM^4 + 3*L6^2*cHDD^2*g1SM^4*vevSM^4 + 2*L6^2*cHDD^2*g1SM^2*gwSM^2*vevSM^4 - L6^2*cHDD^2*gwSM^4*vevSM^4 - 8*L6^2*cHDD*cHl3*g1SM^4*vevSM^4 - 8*L6^2*cHDD*cHl3*g1SM^2*gwSM^2*vevSM^4 + 4*L6^2*cHDD*cll1*g1SM^4*vevSM^4 + 4*L6^2*cHDD*cll1*g1SM^2*gwSM^2*vevSM^4 - 32*L6^2*cHW*cHWB*g1SM^3*gwSM*vevSM^4 - 16*L6^2*cHWB^2*g1SM^4*vevSM^4 - 32*L6^2*cHWB*cHl3*g1SM^3*gwSM*vevSM^4 + 16*L6^2*cHWB*cll1*g1SM^3*gwSM*vevSM^4 - 32*L6^2*cHl3^2*g1SM^4*vevSM^4 + 16*L6^2*cHl3*cll1*g1SM^4*vevSM^4 - 4*L6^2*cll1^2*g1SM^4*vevSM^4 - 16*L8*c8B2H4x1*g1SM^4*vevSM^4 - 8*L8*c8H6x2*g1SM^4*vevSM^4 - 8*L8*c8H6x2*g1SM^2*gwSM^2*vevSM^4 - 16*L8*c8W2H4x3*g1SM^2*gwSM^2*vevSM^4 - 16*L8*c8WBH4x1*g1SM^3*gwSM*vevSM^4 - 16*L8*c8l2H4Dx2*g1SM^4*vevSM^4 - 8*L8*c8l2H4Dx2FE*g1SM^4*vevSM^4*ylsq - 16*L8*c8l2H4Dx4*g1SM^4*vevSM^4 - 8*L8*c8l2H4Dx4FE*g1SM^4*vevSM^4*ylsq + 8*L8*c8l4H2x1Fx00*g1SM^4*vevSM^4 + 4*L8*c8l4H2x1Fx0E*g1SM^4*vevSM^4*ylsq)/g1SM^4, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of g1, dim-6 squared plus dim-8" },
   vev1 == { ParameterType -> Internal, Value -> (1/2)*L6*vevSM^2*(2*cHl3 - cll1), InteractionOrder -> {NP,1}, Description -> "O(1/Lambda^2) relative shift of vev" },
-  vev2 == { ParameterType -> Internal, Value -> 2*L6^2*cHl3^2*vevSM^4 - 3/2*L6^2*cHl3*cll1*vevSM^4 + (3/8)*L6^2*cll1^2*vevSM^4 - 1/8*L8*c8H6x1*vevSM^4 + (1/8)*L8*c8H6x2*vevSM^4 + (1/2)*L8*c8l2H4Dx2*vevSM^4 + (1/2)*L8*c8l2H4Dx4*vevSM^4, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of vev, dim-6 squared plus dim-8" },
+  vev2 == { ParameterType -> Internal, Value -> 2*L6^2*cHl3^2*vevSM^4 - 3/2*L6^2*cHl3*cll1*vevSM^4 + (3/8)*L6^2*cll1^2*vevSM^4 - 1/8*L8*c8H6x1*vevSM^4 + (1/8)*L8*c8H6x2*vevSM^4 + (1/2)*L8*c8l2H4Dx2*vevSM^4 + (1/4)*L8*c8l2H4Dx2FE*vevSM^4*ylsq + (1/2)*L8*c8l2H4Dx4*vevSM^4 + (1/4)*L8*c8l2H4Dx4FE*vevSM^4*ylsq - 1/4*L8*c8l4H2x1Fx00*vevSM^4 - 1/8*L8*c8l4H2x1Fx0E*vevSM^4*ylsq, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of vev, dim-6 squared plus dim-8" },
   aEW1 == { ParameterType -> Internal, Value -> -1/2*L6*vevSM^2*(cHDD*gwSM^2 + 4*cHWB*g1SM*gwSM + 4*cHl3*g1SM^2 - 2*cll1*g1SM^2)/g1SM^2, InteractionOrder -> {NP,1}, Description -> "O(1/Lambda^2) relative shift of aEW" },
-  aEW2 == { ParameterType -> Internal, Value -> (1/2)*(-4*L6^2*cHB*cHWB*g1SM^2*gwSM*vevSM^4 - L6^2*cHDD*cHWB*g1SM^2*gwSM*vevSM^4 + L6^2*cHDD*cHWB*gwSM^3*vevSM^4 - 4*L6^2*cHW*cHWB*g1SM^2*gwSM*vevSM^4 + 2*L6^2*cHWB^2*g1SM*gwSM^2*vevSM^4 - 2*L6^2*cHl3^2*g1SM^3*vevSM^4 - L8*c8H6x2*g1SM*gwSM^2*vevSM^4 + 2*L8*c8W2H4x3*g1SM^3*vevSM^4 - 2*L8*c8W2H4x3*g1SM*gwSM^2*vevSM^4 - 2*L8*c8WBH4x1*g1SM^2*gwSM*vevSM^4 - 2*L8*c8l2H4Dx2*g1SM^3*vevSM^4 - 2*L8*c8l2H4Dx4*g1SM^3*vevSM^4)/g1SM^3, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of aEW, dim-6 squared plus dim-8" },
+  aEW2 == { ParameterType -> Internal, Value -> (1/4)*(-8*L6^2*cHB*cHWB*g1SM^2*gwSM*vevSM^4 - 2*L6^2*cHDD*cHWB*g1SM^2*gwSM*vevSM^4 + 2*L6^2*cHDD*cHWB*gwSM^3*vevSM^4 - 8*L6^2*cHW*cHWB*g1SM^2*gwSM*vevSM^4 + 4*L6^2*cHWB^2*g1SM*gwSM^2*vevSM^4 - 4*L6^2*cHl3^2*g1SM^3*vevSM^4 - 2*L8*c8H6x2*g1SM*gwSM^2*vevSM^4 + 4*L8*c8W2H4x3*g1SM^3*vevSM^4 - 4*L8*c8W2H4x3*g1SM*gwSM^2*vevSM^4 - 4*L8*c8WBH4x1*g1SM^2*gwSM*vevSM^4 - 4*L8*c8l2H4Dx2*g1SM^3*vevSM^4 - 2*L8*c8l2H4Dx2FE*g1SM^3*vevSM^4*ylsq - 4*L8*c8l2H4Dx4*g1SM^3*vevSM^4 - 2*L8*c8l2H4Dx4FE*g1SM^3*vevSM^4*ylsq + 2*L8*c8l4H2x1Fx00*g1SM^3*vevSM^4 + L8*c8l4H2x1Fx0E*g1SM^3*vevSM^4*ylsq)/g1SM^3, InteractionOrder -> {NP,2}, Description -> "O(1/Lambda^4) relative shift of aEW, dim-6 squared plus dim-8" },
   (* canonical field rotation, applied to the expanded SM Lagrangian; first- and
      second-order pieces are separate parameters so MadGraph can count NP orders *)
   TZZ1 == { ParameterType -> Internal, Value -> L6*vevSM^2*(cHB*g1SM^2 + cHW*gwSM^2 + cHWB*g1SM*gwSM)/(g1SM^2 + gwSM^2), InteractionOrder -> {NP,1}, Description -> "O(1/Lambda^2) piece: Z -> (1 + TZZ) Z + TZA A" },
@@ -788,9 +789,10 @@ LYukawa := Block[{sp,ii,jj,cc,ff1,ff2,ff3,yuk,feynmangaugerules},
   feynmangaugerules = If[Not[FeynmanGauge], {G0|GP|GPbar ->0}, {}];
  
   yuk = ExpandIndices[
-   -(yd[ff2, ff3] (1 + yr1 + yr2) + c8qdH5 vevSM^4 L8/4 IndexDelta[ff2, ff3]) CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] - 
-    (yl[ff1, ff3] (1 + yr1 + yr2) + c8leH5 vevSM^4 L8/4 IndexDelta[ff1, ff3]) LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] - 
-    (yu[ff1, ff2] (1 + yr1 + yr2) + c8quH5 vevSM^4 L8/4 IndexDelta[ff1, ff2]) QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj], FlavorExpand -> SU2D];
+   -yd[ff2, ff3] (1 + yr1 + yr2) CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -
+    vevSM^4 L8/4 ((c8qdH5) mfvqd[ff1,ff3] + (c8qdH5FURe + I c8qdH5FUIm) mfvqdU[ff1,ff3] + (c8qdH5FDRe + I c8qdH5FDIm) mfvqdD[ff1,ff3]) QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] - 
+    (yl[ff1, ff3] (1 + yr1 + yr2) + vevSM^4 L8/4 ((c8leH5) mfvle[ff1,ff3] + (c8leH5FERe + I c8leH5FEIm) mfvleE[ff1,ff3])) LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] - 
+    (yu[ff1, ff2] (1 + yr1 + yr2) + vevSM^4 L8/4 ((c8quH5) mfvqu[ff1,ff2] + (c8quH5FURe + I c8quH5FUIm) mfvquU[ff1,ff2] + (c8quH5FDRe + I c8quH5FDIm) mfvquD[ff1,ff2])) QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj], FlavorExpand -> SU2D];
   yuk = yuk /. { CKM[a_, b_] Conjugate[CKM[a_, c_]] -> IndexDelta[b, c], CKM[b_, a_] Conjugate[CKM[c_, a_]] -> IndexDelta[b, c]};
   yuk+HC[yuk]/.feynmangaugerules
  ];

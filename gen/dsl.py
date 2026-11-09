@@ -581,8 +581,9 @@ class Operator:
     # Q + Q^dag and i(Q - Q^dag)
     cp: str = ""
     notes: str = ""
-    # pairs of flavour indices that are identified under the flavour-universal assumption
-    # (one pair per fermion bilinear, in order); derived from ``gens`` if not given
+    # pairs of flavour indices that a delta identifies, one pair per fermion bilinear, in order (the bilinears
+    # that join two species take Yukawa matrices instead in the mfv mode of gen/emit_fr.py);
+    # derived from ``gens`` if not given
     flavor_pairs: Optional[Tuple[Tuple[str, str], ...]] = None
 
     def __post_init__(self):
@@ -626,57 +627,6 @@ def fresh(prefix: str = "x") -> str:
 
 def T(coeff, *factors: Factor) -> Term:
     return Term(C.of(coeff), tuple(factors))
-
-
-def HdH(j: str = None) -> Term:
-    """(H^dag H)"""
-    j = j or fresh("j")
-    return T(1, H(j, dag=True), H(j))
-
-
-def HtauH(I_: str, j: str = None, k: str = None) -> Term:
-    """(H^dag tau^I H)"""
-    j = j or fresh("j")
-    k = k or fresh("k")
-    return T(1, H(j, dag=True), Tensor("tau", (I_, j, k)), H(k))
-
-
-def iHDlrH(mu: str, j: str = None) -> List[Term]:
-    """i H^dag Dlr_mu H = i H^dag (D_mu H) - i (D_mu H^dag) H   (two terms)."""
-    j = j or fresh("j")
-    return [
-        T(I, H(j, dag=True), H(j, derivs=(mu,))),
-        T(-I, H(j, dag=True, derivs=(mu,)), H(j)),
-    ]
-
-
-def iHDlrIH(mu: str, I_: str, j: str = None, k: str = None) -> List[Term]:
-    """i H^dag Dlr^I_mu H = i H^dag tau^I (D_mu H) - i (D_mu H^dag) tau^I H."""
-    j = j or fresh("j")
-    k = k or fresh("k")
-    return [
-        T(I, H(j, dag=True), Tensor("tau", (I_, j, k)), H(k, derivs=(mu,))),
-        T(-I, H(j, dag=True, derivs=(mu,)), Tensor("tau", (I_, j, k)), H(k)),
-    ]
-
-
-def D_HdH(mu: str, j: str = None) -> List[Term]:
-    """D_mu (H^dag H) = (D_mu H^dag) H + H^dag (D_mu H)."""
-    j = j or fresh("j")
-    return [
-        T(1, H(j, dag=True, derivs=(mu,)), H(j)),
-        T(1, H(j, dag=True), H(j, derivs=(mu,))),
-    ]
-
-
-def D_HtauH(mu: str, I_: str, j: str = None, k: str = None) -> List[Term]:
-    """D_mu (H^dag tau^I H)."""
-    j = j or fresh("j")
-    k = k or fresh("k")
-    return [
-        T(1, H(j, dag=True, derivs=(mu,)), Tensor("tau", (I_, j, k)), H(k)),
-        T(1, H(j, dag=True), Tensor("tau", (I_, j, k)), H(k, derivs=(mu,))),
-    ]
 
 
 def bilinear(
@@ -783,3 +733,13 @@ class FRContext:
 
     def all_names(self) -> List[str]:
         return sorted(set(self.map.values()))
+
+
+# The operators whose own coefficient (block DIM8, the leading flavour structure) has no vertex in any model, all
+# because that structure makes their currents flavour diagonal: Q_{q^4H^2}^{(5)}, whose eps^{IJK} is antisymmetric
+# under the exchange of its two identical triplet currents, and the twelve of psi^4B with two identical currents, which
+# are symmetric in the Lorentz indices of an antisymmetric field strength.  All of them but Q_{e^4B}^{(2)} have
+# vertices through the coefficients of their further flavour structures (block DIM8F).  Any other operator whose own
+# coefficient has no vertex has been lost, and validate/index_vs_ufo.py stops on it.
+NO_VERTEX = {"Q_{q^4H^2}^{(5)}"} | {f"Q_{{{f}^4B}}^{{({k})}}" for f, ks in
+                                    (("l", "12"), ("q", "1234"), ("e", "12"), ("u", "12"), ("d", "12")) for k in ks}

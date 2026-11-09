@@ -1,7 +1,7 @@
 # every class of the Murphy basis.  The study exercises the four-fermion classes 18 to 21, to which
 # 311 of the 674 operators belong.  Diboson and triboson do not reach them at all.  VBF di-Higgs
-# reaches 18, 20 and 21 through a contact term between the two quark lines, but that study leaves
-# them out on cost.  Drell-Yan reaches all four, including 19, for a small fraction of the CPU.
+# reaches 18, 20 and 21 through a contact term between the two quark lines.  Drell-Yan reaches all
+# four, including 19.
 cls1
 cls2
 cls3

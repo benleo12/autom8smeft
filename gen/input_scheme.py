@@ -6,10 +6,11 @@ relations with no SMEFT corrections.  Those relations fail as soon as an operato
 one of the three input observables is switched on.
 
 WHICH OPERATORS.  The input-scheme section of the paper works through all 21 dimension-eight classes:
-only eight operators enter.  Four class-6 operators correct the gauge kinetic terms
-(alpha, MZ), Q_{H^6}^{(1),(2)} correct the gauge mass matrix (MZ, MW and hence GF), and
-Q_{l^2H^4D}^{(2),(4)} correct the W-lepton vertex (GF).  Q_{G^2H^4}^{(1)} touches alpha_s
-alone.  The bosonic half is confirmed against SmeftFR v3.03's code/smeft_input_scheme.m.
+nine operators enter.  Four class-6 operators correct the gauge kinetic terms (alpha, MZ),
+Q_{H^6}^{(1),(2)} correct the gauge mass matrix (MZ, MW and hence GF), Q_{l^2H^4D}^{(2),(4)}
+correct the W-lepton vertex (GF), and the crossed flavour structures of Q_{l^4H^2}^{(1)} add a
+four-lepton contact term to muon decay (GF).  Q_{G^2H^4}^{(1)} touches alpha_s alone.  The bosonic
+half is confirmed against SmeftFR v3.03's code/smeft_input_scheme.m.
 
 HOW THE FORMULAE ARE OBTAINED.  gen/derive_input_scheme.py writes the EXACT kinetic and mass
 matrices and the EXACT muon-decay relation, with the dimension-six (Warsaw, SMEFTsim
@@ -30,9 +31,13 @@ every coupling into pieces of definite NP order and the NP=0 amplitude is the St
 The one exception is the W mass, which in the {alpha, MZ, GF} scheme is derived and is kept
 exact in the propagator, as SMEFTsim 3 does by default.
 
-FLAVOUR CAVEAT.  Our flavour-universal contraction is C delta_pr delta_st.  With it the
-dimension-eight four-lepton operators contain no mu -> e nu nu structure and do not shift
-GF; SMEFTsim's crossed delta_pt delta_sr would.  A convention choice, not physics.
+FLAVOUR.  In the flavour mode of the released models, mfv (gen/emit_fr.py), every fermionic operator
+carries each of its flavour structures with a coefficient of its own.  Three of them reach muon decay
+and so G_F: the crossed structures delta_pt delta_sr and delta_pt (Y_e Y_e^dag)_sr of
+Q_{l^4H^2}^{(1)} (c8l4H2x1Fx00, c8l4H2x1Fx0E), and the structure (Y_e Y_e^dag)_pr of
+Q_{l^2H^4D}^{(2),(4)} (c8l2H4Dx2FE, c8l2H4Dx4FE), the last two weighted by y_e^2 + y_mu^2 (ylsq).
+gen/derive_input_scheme.py has them.  In the universal mode the operators have one structure each, these
+coefficients do not exist, and emit() sets them to zero in the formulae.
 
 THE OTHER INGREDIENTS.  The canonical normalisation of the gauge and Higgs fields (SMEFTsim's
 rotateGaugeB) comes from gen/derive_rotation.py, and the Higgs quartic and the Yukawas as series
@@ -78,10 +83,25 @@ DIM8_FORM_FACTORS = [   # informational, and needed by the field-normalisation s
 SCHEME = os.environ.get("DIM8_SCHEME", "alpha").lower()
 
 
-def formulae(scheme: str = None) -> dict:
+# The coefficients of flavour structures in the formulae, which only the mfv mode has.
+FLAVOUR_WCS = ("c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E")
+
+
+def formulae(scheme: str = None, n: int = None) -> dict:
+    """The formulae of the scheme, to O(1/Lambda^4), or with n to O(t^n) from gen/derive_geo.py."""
     scheme = scheme or SCHEME
-    return json.load(open(os.path.join(
+    if n is not None:
+        F = json.load(open(os.path.join(HERE, f"input_scheme_formulae_geo{n}_{scheme}.json")))
+        F.pop("keys")
+        assert os.environ.get("DIM8_FLAVOUR", "mfv") in ("mfv", "mfvexplicit"), \
+            "the models of order n are built in the flavour mode mfv"
+        return F
+    F = json.load(open(os.path.join(
         HERE, "input_scheme_formulae.json" if scheme == "alpha" else "input_scheme_formulae_mw.json")))
+    if os.environ.get("DIM8_FLAVOUR", "mfv") not in ("mfv", "mfvexplicit"):
+        drop = re.compile(r"\b(" + "|".join(FLAVOUR_WCS) + r")\b")
+        F = {k: drop.sub("0", v) for k, v in F.items()}
+    return F
 
 
 def emit(helpers_only: bool = False, scheme: str = None) -> str:
@@ -127,6 +147,7 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
                       "alpha, derived from the inputs", io="{QED,2}"))
     for name, expr, desc in DIM8_FORM_FACTORS:
         rows.append(P(name, expr, f"dim-8 form factor: {desc}", 2))
+    rows.append(P("ylsq", "2 (yme^2 + ymm^2)/vevSM^2", "y_e^2 + y_mu^2, in the muon-decay relation"))
     # the derived shifts
     for k in (("gw", "g1", "vev", "MW2") if scheme == "alpha" else ("gw", "g1", "vev", "aEW")):
         rows.append(P(f"{k}1", F[f"{k}1"], f"O(1/Lambda^2) relative shift of {k}", 1))
@@ -188,7 +209,190 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
     return "\n".join(rows[:5]) + "\n" + ",\n".join(rows[5:]) + ("\n" if not helpers_only else ",\n")
 
 
-def write_variant(base: str, out: str, scheme: str = None) -> None:
+# The most terms in the value of one parameter of the base of a model of order n.  MadGraph compiles every
+# parameter with Python, whose compiler recurses once per term of a sum and stops near 3000 terms (CPython 3.9
+# to 3.11), and the neutral rotation reaches 2700 at n = 4, so a longer sum goes in as parts of at most this
+# many terms, each a parameter of its own, about the size of the largest coupling of the released models.
+PART_TERMS = 400
+
+
+def split_sum(expr: str, size: int = PART_TERMS) -> list:
+    """The value of a parameter as parts of at most size terms each, cut where a term of the top-level sum
+    begins (the " + " and " - " of sympy's mathematica_code, outside any bracket), so that the parts written
+    one after the other are the value itself."""
+    cuts, depth = [0], 0
+    for i, ch in enumerate(expr):
+        if ch in "([{":
+            depth += 1
+        elif ch in ")]}":
+            depth -= 1
+        elif depth == 0 and ch in "+-" and expr[i - 1:i] == " " and expr[i + 1:i + 2] == " ":
+            cuts.append(i)
+    terms = [expr[a:b] for a, b in zip(cuts, cuts[1:] + [len(expr)])]
+    assert "".join(terms) == expr and depth == 0
+    parts = ["".join(terms[j:j + size]).strip() for j in range(0, len(terms), size)]
+    return [x[2:] if x.startswith("+ ") else x for x in parts]
+
+
+def emit_geo(n: int, scheme: str = None) -> str:
+    """The parameters of the base of the model of order n (gen/towers.py): those of emit() with every series
+    carried to O(t^n), the rescaling of the gluon, and the four-lepton coefficients above dimension eight,
+    which enter only G_F (their operators have four legs, so the model has no vertex of them).  The
+    dimension-eight form factors and Zh2 of emit() are left out: they hold to O(1/Lambda^4) only, and nothing
+    in the Lagrangian uses them.  d8fG is left out because the gluon operators are vev-subtracted instead
+    (gen/towers.py, gen/make_dim6.py --geo)."""
+    scheme = scheme or SCHEME
+    F = formulae(scheme, n)
+    P = lambda name, value, desc, order=None, io=None: (
+        f"  {name} == {{ ParameterType -> Internal, Value -> {value},"
+        + (f" InteractionOrder -> {{NP,{order}}}," if order is not None else "")
+        + (f" InteractionOrder -> {io}," if io is not None else "")
+        + f' Description -> "{desc}" }}')
+    dims = range(10, 2*n + 5, 2)
+    rows = ["(* " + "=" * 84,
+            "   Electroweak input scheme " + ("{alpha, MZ, GF}" if scheme == "alpha" else "{MW, MZ, GF}")
+            + f" to O(t^{n}), t = 1/Lambda^2, with the towers of the field-space",
+            f"   connections.  Generated by gen/input_scheme.py from gen/input_scheme_formulae_geo{n}_{scheme}.json,",
+            "   itself written by gen/derive_geo.py.",
+            "   " + "=" * 84 + " *)"]
+    rows.append('  Lam6 == { ParameterType -> External, BlockName -> DIM6, OrderBlock -> 1, Value -> 1000,'
+                ' Description -> "dimension-six scale in GeV (SMEFTsim LambdaSMEFT)" }')
+    for i, (c, op) in enumerate(DIM6, start=2):
+        rows.append(f'  {c} == {{ ParameterType -> External, BlockName -> DIM6, OrderBlock -> {i}, Value -> 0,'
+                    f' InteractionOrder -> {{NP,1}}, Description -> "{op}, SMEFTsim convention" }}')
+    rows.append('  L6 == { ParameterType -> Internal, Value -> 1/Lam6^2, Description -> "1/Lambda_6^2" }')
+    rows.append('  L8 == { ParameterType -> Internal, Value -> 1/Lam^4, Description -> "1/Lambda^4" }')
+    for d in dims:
+        rows.append(f'  L{d} == {{ ParameterType -> Internal, Value -> 1/Lam^{d - 4}, Description -> "1/Lambda^{d - 4}" }}')
+    # the four-lepton coefficients above dimension eight in the relations (2007.00565's LLLL tower)
+    gf = sorted({w for v in F.values() for w in re.findall(r"\bc(?:1[0-9]|[2-9][0-9])l4H2x[0-9A-Za-z]+\b", v)},
+                key=lambda w: (int(re.match(r"c(\d+)", w).group(1)), w))
+    for i, w in enumerate(gf, start=1):
+        d = int(re.match(r"c(\d+)", w).group(1))
+        rows.append(f'  {w} == {{ ParameterType -> External, BlockName -> GEOGF, OrderBlock -> {i}, Value -> 0,'
+                    f' InteractionOrder -> {{NP,{(d - 4)//2}}},'
+                    f' Description -> "dimension-{d} four-lepton coefficient in G_F, no vertex in the model" }}')
+    rows.append(P("vevSM", "1/Sqrt[Sqrt[2] Gf]", "SM vev from GF", io="{QED,-1}"))
+    if scheme == "alpha":
+        rows.append(P("sw2SM", "(1 - Sqrt[1 - 4 Pi aEW/(Sqrt[2] Gf MZ^2)])/2", "SM sin^2 theta_W from the inputs"))
+        rows.append(P("gwSM",  "Sqrt[4 Pi aEW]/Sqrt[sw2SM]", "SM SU(2) coupling", io="{QED,1}"))
+        rows.append(P("g1SM",  "Sqrt[4 Pi aEW]/Sqrt[1 - sw2SM]", "SM U(1) coupling", io="{QED,1}"))
+        rows.append(P("MW2SM", "gwSM^2 vevSM^2/4", "SM MW^2"))
+    else:
+        rows.append(P("sw2SM", "1 - MW^2/MZ^2", "sin^2 theta_W, exact from the two input masses"))
+        rows.append(P("gwSM",  "2 MW/vevSM", "SM SU(2) coupling from M_W and G_F", io="{QED,1}"))
+        rows.append(P("g1SM",  "gwSM Sqrt[sw2SM/(1 - sw2SM)]", "SM U(1) coupling", io="{QED,1}"))
+        rows.append(P("MW2SM", "MW^2", "M_W^2, an input"))
+        rows.append(P("aEWSM", "gwSM^2 g1SM^2/(4 Pi (gwSM^2 + g1SM^2))",
+                      "alpha, derived from the inputs", io="{QED,2}"))
+    rows.append(P("ylsq", "2 (yme^2 + ymm^2)/vevSM^2", "y_e^2 + y_mu^2, in the muon-decay relation"))
+    rows.append(P("ylprod", "4 yme^2 ymm^2/vevSM^4", "y_e^2 y_mu^2, in the muon-decay relation"))
+    series = [(k, f"relative shift of {k}") for k in
+              (("gw", "g1", "vev", "MW2") if scheme == "alpha" else ("gw", "g1", "vev", "aEW"))]
+    series += [("TZZ", "Z -> (1 + TZZ) Z + TZA A"), ("TZA", "Z -> ... + TZA A"),
+               ("TAZ", "A -> ... + TAZ Z"), ("TAA", "A -> (1 + TAA) A + TAZ Z"),
+               ("rW", "W -> (1 + rW) W"), ("rh", "h -> (1 + rh) h"),
+               ("lamr", "relative shift of the Higgs quartic"), ("yr", "relative shift of every Yukawa"),
+               ("rG", "G -> (1 + rG) G inside the operators, g_s G fixed"), ("sG", "g_s -> g_s (1 + sG) inside the operators")]
+    for k, desc in series:
+        for j in range(1, n + 1):
+            parts = split_sum(F[f"{k}{j}"])
+            if len(parts) > 1:
+                for i, x in enumerate(parts, start=1):
+                    rows.append(P(f"{k}{j}p{i}", x, f"part {i} of {len(parts)} of {k}{j}", j))
+                parts = [" + ".join(f"{k}{j}p{i}" for i in range(1, len(parts) + 1))]
+            rows.append(P(f"{k}{j}", parts[0], f"O(t^{j}) piece: {desc}", j))
+    vev = " + ".join(f"vev{j}" for j in range(1, n + 1))
+    rows.append(P("vevT", f"vevSM (1 + {vev})",
+                  f"the corrected vev, for reference: the Lagrangian carries vevSM (1 + {vev})", io="{QED,-1}"))
+    return "\n".join(rows[:5]) + "\n" + ",\n".join(rows[5:]) + ",\n"
+
+
+def geo_definitions(n: int) -> str:
+    """The truncation of the model of order n.  Each correction of order j is tagged z9eps^j, and an operator
+    of NP order p keeps the products of its corrections through order n - p (z8geoTrunc, which the blocks of
+    gen/towers.py and gen/make_dim6.py --geo call).  The Standard-Model Lagrangian (p = 0) is cut at n with the
+    electroweak rules only: the gluon is canonical as it stands, since the gluon operators are vev-subtracted,
+    and the rescaling rG, sG that this leaves acts inside the operators (gen/derive_geo.py)."""
+    tag = lambda j: "z9eps" if j == 1 else f"z9eps^{j}"
+    ser = lambda k: " + ".join(f"{tag(j)} {k}{j}" for j in range(1, n + 1))
+    tags = lambda k: ", ".join(f"{k}{j} -> {tag(j)} {k}{j}" for j in range(1, n + 1))
+    vev = " + ".join(f"vev{j}" for j in range(1, n + 1))
+    return "\n".join([
+        f"(* the truncation of the model of order {n}; see gen/input_scheme.py geo_definitions *)",
+        f"z8geoN = {n};",
+        f"z8vT := vevSM (1 + {vev});",
+        "z8geoRulesEW = {",
+        f"  vevT -> vevSM (1 + {ser('vev')}), {tags('vev')},",
+        f"  gw -> gwSM (1 + {ser('gw')}), {tags('gw')},",
+        f"  g1 -> g1SM (1 + {ser('g1')}), {tags('g1')},",
+        f"  Z[z9mu_] :> (1 + {ser('TZZ')}) Z[z9mu] + ({ser('TZA')}) A[z9mu],",
+        f"  A[z9mu_] :> ({ser('TAZ')}) Z[z9mu] + (1 + {ser('TAA')}) A[z9mu],",
+        f"  W[z9mu_] :> (1 + {ser('rW')}) W[z9mu], Wbar[z9mu_] :> (1 + {ser('rW')}) Wbar[z9mu],",
+        f"  H :> (1 + {ser('rh')}) H,",
+        f"  {tags('lamr')}, {tags('yr')}}};",
+        "z8geoRules = Join[z8geoRulesEW, {",
+        "  (* the gluon: g_s G is unchanged, so a field strength scales as one power of the field *)",
+        f"  FS[G, z9m_, z9n_, z9a_] :> (1 + {ser('rG')}) FS[G, z9m, z9n, z9a],",
+        f"  G[z9mu_, z9a_] :> (1 + {ser('rG')}) G[z9mu, z9a], gs -> gs (1 + {ser('sG')})}}];",
+        "(* the cut at order M: the expansion of z9e with the powers of z9eps above M dropped.  Expand[z9e] would first",
+        "   make every order of the products of the corrections, z8geoExp drops them product by product, with the",
+        "   same result: like Expand it acts on sums, products and positive powers and leaves other heads as they are *)",
+        "z8geoMul[z9a_, z9b_, z9M_] := Expand[z9a z9b] /. z9eps^z9n_ /; z9n > z9M :> 0;",
+        "z8geoExp[z9e_Plus, z9M_] := z8geoExp[#, z9M] & /@ z9e;",
+        "z8geoExp[z9e_Times, z9M_] := Fold[z8geoMul[#1, z8geoExp[#2, z9M], z9M] &, 1, List @@ z9e];",
+        "z8geoExp[Power[z9b_, z9n_Integer?Positive], z9M_] /; ! FreeQ[z9b, z9eps] := Nest[z8geoMul[#, z8geoExp[z9b, z9M], z9M] &, 1, z9n];",
+        "z8geoExp[z9e_, _] := z9e;",
+        "z8geoCut[z9e_, z9M_] := If[z9M <= 0, Expand[z9e /. z9eps -> 0],",
+        "  (z8geoExp[z9e, z9M] /. z9eps^z9n_ /; z9n > z9M :> 0) /. z9eps -> 1];",
+        "z8geoTrunc[z9L_, z9p_] := z8geoCut[z9L /. z8geoRules, z8geoN - z9p];",
+        'If[FeynmanGauge, Print["[geo] WARNING: the rotation is written for the unitary gauge; '
+        'the Goldstone and ghost terms are not rotated"]];', ""])
+
+
+def tower_yukawa_terms(d: int) -> dict:
+    """yukawa_terms() for the class-12 members of dimension d, (H^dag H)^((d-8)/2) Q_{fH^5} (gen/towers.py):
+    the same flavour structures, with the coefficients of the member."""
+    if d == 8:
+        return yukawa_terms()
+    import sys
+    sys.path.insert(0, HERE)
+    import emit_flavour as EF
+    import towers
+    from operators import OPS
+    structures = EF.load_structures()
+    ops = {o.wc: o for o in OPS}
+    idx = {"c8quH5": ("ff1", "ff2"), "c8qdH5": ("ff1", "ff3"), "c8leH5": ("ff1", "ff3")}
+    out = {}
+    for wc, (a, b) in idx.items():
+        member = towers.times_hdagh(ops[wc], (d - 8)//2)
+        assert member.wc == f"c{d}" + wc[2:], member.wc
+        out[wc] = EF.yukawa_term(member, structures[ops[wc].name], a, b)
+    return out
+
+
+def yukawa_terms() -> dict:
+    """The flavour matrix of each class-12 operator, by its coefficient, in the indices of the Yukawa term
+    of base.fr it compensates.  In the flavour mode of the released models, mfv (gen/emit_fr.py), it is
+    the sum of the operator's structures, the Yukawa matrix and the chains with one Y Y^dag insertion,
+    each with its own coefficient.  DIM8_FLAVOUR=universal has the delta."""
+    idx = {"c8quH5": ("ff1", "ff2"), "c8qdH5": ("ff1", "ff3"), "c8leH5": ("ff1", "ff3")}
+    if os.environ.get("DIM8_FLAVOUR", "mfv") not in ("mfv", "mfvexplicit"):
+        return {wc: f"{wc} IndexDelta[{a}, {b}]" for wc, (a, b) in idx.items()}
+    import sys
+    sys.path.insert(0, HERE)
+    import emit_flavour as EF
+    from operators import OPS
+    structures = EF.load_structures()
+    ops = {o.wc: o for o in OPS}
+    out = {}
+    for wc, (a, b) in idx.items():
+        assert ops[wc].name in structures, f"{EF.STRUCTURES} has no structures of {ops[wc].name}"
+        out[wc] = EF.yukawa_term(ops[wc], structures[ops[wc].name], a, b)
+    return out
+
+
+def write_variant(base: str, out: str, scheme: str = None, n: int = None) -> None:
     """Write an opt-in copy of base.fr that uses the corrected input relations.
 
     The structure follows SMEFTsim exactly.  gw and g1 are shifted through their
@@ -199,12 +403,23 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     tagged series lamr and yr.  In the alpha scheme MW is shifted as the pole mass, and in
     the mw scheme it is an input.  sw2 stays the SM mixing angle from the inputs, as SMEFTsim
     keeps sth, and the canonical field rotation is applied to the expanded SM Lagrangian.
-    With every coefficient zero every substitution is the identity and the model is base.fr."""
+    With every coefficient zero every substitution is the identity and the model is base.fr.
+
+    With n, the base of the model of order n (gen/towers.py): every series to O(t^n) (gen/derive_geo.py), the
+    class-12 compensation of every dimension through 2n + 4, no d8fG, and the truncation of geo_definitions."""
     scheme = scheme or SCHEME
     s = open(base).read()
+    m = n or 2
+    S = lambda k: " + ".join(f"{k}{j}" for j in range(1, m + 1))
+    if n is None:
+        T = {wc: f"vevSM^4 L8/4 ({t})" for wc, t in yukawa_terms().items()}
+    else:
+        F = formulae(scheme, n)
+        terms = {d: tower_yukawa_terms(d) for d in range(8, 2*n + 5, 2)}
+        T = {wc: "(" + " + ".join(f"({F[f'yc{d}']}) ({terms[d][wc]})" for d in terms) + ")" for wc in terms[8]}
     if scheme == "alpha":
         swap = [("Value         -> Sqrt[MZ^2/2+Sqrt[MZ^4/4-Pi/Sqrt[2]*aEW/Gf*MZ^2]], ",
-                 "Value         -> Sqrt[MW2SM (1 + MW21 + MW22)], ")]
+                 f"Value         -> Sqrt[MW2SM (1 + {S('MW2')})], ")]
     else:
         # The two inputs trade places.  M_W becomes the external at SMINPUTS 1 and alpha is
         # derived from it, which is what removes every Wilson-coefficient dependence from the
@@ -220,7 +435,7 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     InteractionOrder -> {QED,-2},""",
              """  aEWM1 == { 
     ParameterType    -> Internal, 
-    Value            -> 1/(aEWSM (1 + aEW1 + aEW2)),
+    Value            -> 1/(aEWSM (1 + """ + S('aEW') + """)),
     InteractionOrder -> {QED,-2},"""),
             # alpha itself, and with it ee = Sqrt[4 Pi aEW], must stay at the SM value derived from
             # the inputs.  The shift of alpha enters the Lagrangian through the tagged series of gw
@@ -248,36 +463,41 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
         ]
     edits = swap + [
         ("Value         -> 1-(MW/MZ)^2, ", "Value         -> sw2SM, "),
-        ("Definitions      -> {gw->ee/sw}, ", "Definitions      -> {gw -> gwSM (1 + gw1 + gw2)}, "),
-        ("Definitions      -> {g1->ee/cw}, ", "Definitions      -> {g1 -> g1SM (1 + g11 + g12)}, "),
+        ("Definitions      -> {gw->ee/sw}, ", f"Definitions      -> {{gw -> gwSM (1 + {S('gw')})}}, "),
+        ("Definitions      -> {g1->ee/cw}, ", f"Definitions      -> {{g1 -> g1SM (1 + {S('g1')})}}, "),
         ("Value            -> 2*MW*sw/ee, ", "Value            -> vevSM, "),
-        ("- 1/4 FS[G,mu,nu,aa] FS[G,mu,nu,aa]", "- 1/4 (1 + d8fG) FS[G,mu,nu,aa] FS[G,mu,nu,aa]"),
+    ] + ([("- 1/4 FS[G,mu,nu,aa] FS[G,mu,nu,aa]", "- 1/4 (1 + d8fG) FS[G,mu,nu,aa] FS[G,mu,nu,aa]")]
+         if n is None else []) + [
         # the vev in the doublet as a tagged sum, not as the one untagged parameter vevT
-        ("(vev + H)/Sqrt[2]", "(vevSM (1 + vev1 + vev2) + H)/Sqrt[2]"),
+        ("(vev + H)/Sqrt[2]", f"(vevSM (1 + {S('vev')}) + H)/Sqrt[2]"),
         # lam and muH keep base.fr's Standard-Model values (vev is vevSM here); the quartic's
         # shift is written into LHiggs below.  muH multiplies only the tadpole and the h mass
         # term, neither of which is a vertex, so it needs no series.
         ("- lam Phibar[ii] Phi[ii] Phibar[jj] Phi[jj]",
-         "- lam (1 + lamr1 + lamr2) Phibar[ii] Phi[ii] Phibar[jj] Phi[jj]"),
+         f"- lam (1 + {S('lamr')}) Phibar[ii] Phi[ii] Phibar[jj] Phi[jj]"),
         # the Yukawas: the Standard-Model y_f = Sqrt[2] m_f/vevSM stays in the parameter, the
         # vev shift multiplies it as a tagged series, and the class-12 compensation that keeps
         # the input mass fixed is its own tagged term (c8 vevSM^4 rather than vevT^4, the
-        # difference being O(1/Lambda^8)).  The IndexDelta keeps it diagonal in flavour.
+        # difference being O(1/Lambda^8)).  The compensation is the operator's flavour matrix in the
+        # basis of the doublet, so the down-type one stands outside the product with CKM.
         ("-yd[ff2, ff3] CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -",
-         "-(yd[ff2, ff3] (1 + yr1 + yr2) + c8qdH5 vevSM^4 L8/4 IndexDelta[ff2, ff3]) CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -"),
+         f"-yd[ff2, ff3] (1 + {S('yr')}) CKM[ff1, ff2] QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -\n"
+         f"    {T['c8qdH5']} QLbar[sp, ii, ff1, cc].dR [sp, ff3, cc] Phi[ii] -"),
         ("    yl[ff1, ff3] LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] -",
-         "    (yl[ff1, ff3] (1 + yr1 + yr2) + c8leH5 vevSM^4 L8/4 IndexDelta[ff1, ff3]) LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] -"),
+         f"    (yl[ff1, ff3] (1 + {S('yr')}) + {T['c8leH5']}) LLbar[sp, ii, ff1].lR [sp, ff3] Phi[ii] -"),
         ("    yu[ff1, ff2] QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj]",
-         "    (yu[ff1, ff2] (1 + yr1 + yr2) + c8quH5 vevSM^4 L8/4 IndexDelta[ff1, ff2]) QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj]"),
+         f"    (yu[ff1, ff2] (1 + {S('yr')}) + {T['c8quH5']}) QLbar[sp, ii, ff1, cc].uR [sp, ff2, cc] Phibar[jj] Eps[ii, jj]"),
     ]
     # The Yukawas.  base.fr has -y fbar f Phi (mass m = y v/sqrt2) and the class-12
     # operators enter as + c8fH5 (H^dag H)^2 (fbar f H) / Lam^4, whose mass-giving term is
-    # + c8 v^5/(4 sqrt2) fbar f.  Keeping the input masses fixed therefore needs
-    #     y_f = sqrt2 m_f/vevT + c8fH5 vevT^4/(4 Lam^4)
-    # with c8quH5 for up-type, c8qdH5 for down-type and c8leH5 for the charged leptons.  That
-    # relation is written into LYukawa as the series y_f (1 + yr1 + yr2) + c8fH5 vevSM^4 L8/4
-    # (edits list above), so that the shift is tagged; the parameter y_f itself keeps its
-    # Standard-Model value.
+    # + c8 v^5/(4 sqrt2) fbar T f, with T the operator's flavour matrix.  Keeping the input masses
+    # fixed therefore needs
+    #     Y_f = sqrt2 M_f/vevT + vevT^4/(4 Lam^4) sum_S c_S T^S
+    # with the structures of c8quH5 for up-type, c8qdH5 for down-type and c8leH5 for the charged
+    # leptons (yukawa_terms).  That relation is written into LYukawa as the series
+    # y_f (1 + yr1 + yr2) + vevSM^4 L8/4 sum_S c_S T^S (edits list above), so that the shift is
+    # tagged; the parameter y_f itself keeps its Standard-Model value.  The mass matrix is then
+    # sqrt2 M_f/vevT whatever the structures, diagonal and real, and no field is rotated.
     #
     # The dimension-six class-5 operators are NOT compensated here.  They carry the Yukawa as an
     # explicit factor (Conjugate[yd[ff2,ff1]] in OdH), so a compensating shift of y_f would
@@ -294,8 +514,15 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     # their Definitions, so a rule on the raw LSM would miss all of them.  SMEFTsim applies
     # rotateGaugeB at the level of mass eigenstates for the same reason.  All rules go in one
     # ReplaceAll so Z -> ... A ... and A -> ... Z ... do not chain.
-    F = formulae(scheme)
-    if "TZZ1" in F:
+    F = formulae(scheme, n)
+    if n is not None:
+        lsm_old = "LSM:= LGauge + LFermions + LHiggs + LYukawa + LGhost;"
+        assert s.count(lsm_old) == 1
+        s = s.replace(lsm_old,
+            "LSMbare := LGauge + LFermions + LHiggs + LYukawa + LGhost;\n" + geo_definitions(n) +
+            "(* canonical field rotation of the input scheme, cut at O(t^z8geoN); see gen/input_scheme.py *)\n"
+            "LSM := z8geoCut[ExpandIndices[LSMbare, FlavorExpand -> {SU2D, SU2W}] /. z8geoRulesEW, z8geoN];")
+    elif "TZZ1" in F:
         lsm_old = "LSM:= LGauge + LFermions + LHiggs + LYukawa + LGhost;"
         assert s.count(lsm_old) == 1
         s = s.replace(lsm_old,
@@ -309,19 +536,29 @@ def write_variant(base: str, out: str, scheme: str = None) -> None:
     # helper parameters go in just before MW, the first parameter that uses them
     anchor = "  MW == { "
     assert s.count(anchor) == 1
-    s = s.replace(anchor, emit(helpers_only=True, scheme=scheme) + anchor, 1)
+    s = s.replace(anchor, (emit(helpers_only=True, scheme=scheme) if n is None else emit_geo(n, scheme)) + anchor, 1)
     header = "\n".join([
         "(* GENERATED by gen/input_scheme.py write_variant() from base.fr.  Do not edit; edit",
         "   base.fr or gen/input_scheme.py and regenerate.  Input relations of this scheme",
-        "   corrected to O(1/Lambda^4); identical to base.fr when every coefficient is zero. *)", ""])
+        "   corrected to O(1/Lambda^4); identical to base.fr when every coefficient is zero. *)", ""]) if n is None else \
+        "\n".join([
+        f"(* GENERATED by gen/input_scheme.py write_variant(n = {n}) from base.fr.  Do not edit; edit",
+        "   base.fr or gen/input_scheme.py and regenerate.  Input relations of this scheme and the",
+        f"   canonical normalisation corrected to O(t^{n}), t = 1/Lambda^2, with the towers of the field-space",
+        "   connections; identical to base.fr when every coefficient is zero. *)", ""])
     open(out, "w").write(header + s)
 
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) in (3, 4):
-        write_variant(sys.argv[1], sys.argv[2],
-                      sys.argv[3] if len(sys.argv) > 3 else None)
-        print("wrote", sys.argv[2], "in the", (sys.argv[3] if len(sys.argv) > 3 else SCHEME), "scheme")
+    args, n = sys.argv[1:], None
+    if "--geo" in args:      # python3 gen/input_scheme.py base.fr base_geo4_mw.fr mw --geo 4
+        i = args.index("--geo")
+        n = int(args[i + 1])
+        del args[i:i + 2]
+    if len(args) in (2, 3):
+        write_variant(args[0], args[1], args[2] if len(args) > 2 else None, n)
+        print("wrote", args[1], "in the", (args[2] if len(args) > 2 else SCHEME), "scheme"
+              + (f", every series to O(t^{n})" if n else ""))
     else:
         print(emit())

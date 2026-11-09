@@ -6,15 +6,7 @@
 		"genWC":"c8H8",
 		"norm":"1",
 		"pass":true,
-		"surviving":0
-	},
-	{
-		"ref":"LQphi8",
-		"refWC":"cphi8",
-		"gen":"L8op468",
-		"genWC":"c8H8",
-		"norm":"1",
-		"pass":true,
-		"surviving":0
+		"surviving":0,
+		"verified":0
 	}
 ]

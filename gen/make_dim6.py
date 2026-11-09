@@ -11,9 +11,9 @@ Two things make that possible without rewriting any physics.  The field names ag
 SMEFTsim and our base both descend from the FeynRules Standard Model, so Phi, QL, uR, dR,
 LL, lR, Wi, B, G and the SU2W/SU2D/Colour/Gluon/Generation index types are the same
 symbols on both sides, and SMEFTsim's operator expressions evaluate against our fields
-unchanged.  And the input relations already expect it: our base declares eight dimension-six
-coefficients in block DIM6 under SMEFTsim's own names, with the dimension-six-squared terms
-that the {alpha, MZ, GF} relations need at 1/Lambda^4, so those eight feed the operators and
+unchanged.  And the input relations already expect it: both input-scheme bases declare eight
+dimension-six coefficients in block DIM6 under SMEFTsim's own names, with the dimension-six-squared
+terms that the relations of {alpha, MZ, GF} and of {MW, MZ, GF} need at 1/Lambda^4, so those eight feed the operators and
 the input scheme from the same external parameter.
 
 The operator definitions are SMEFTsim's, with two changes.  The class-5 Yukawa operators and
@@ -41,8 +41,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_SMEFTSIM = os.environ.get(
     "SMEFTSIM_FR", os.path.expanduser("~/Downloads/SMEFT_HandsOn_pt1/SMEFTsim_FR"))
 
-# Declared already by tests/gen_smoke/base_inputscheme.fr, in block DIM6, because the
-# {alpha, MZ, GF} relations need them.  Re-declaring a parameter makes FeynRules keep the
+# Declared already by both input-scheme bases, in block DIM6, because the input relations of
+# either scheme need them.  Re-declaring a parameter makes FeynRules keep the
 # first and warn, so they are dropped here and the base's declaration is the one that counts.
 IN_BASE = {"cH", "cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "cHbox"}
 # The scale: ours is Lam6, declared in the base beside them.
@@ -173,6 +173,18 @@ def extract_statement(text: str, pat: str) -> str:
     sys.exit(f"no terminating semicolon after {pat!r}")
 
 
+# Q_quqd^(1,8) with the Yukawa matrices joining q_p to d_t and q_s to u_r, in place of q_p to u_r and q_s to d_t.
+PRIMED = {"cquqd1": "cquqd11", "cquqd8": "cquqd81"}
+PRIMED_OPERATORS = r"""Oquqd11:= Block[{sp1,sp2,cc1,cc2,ii,jj,ff1,ff2,ff3,ff4,ff5},
+	ExpandIndices[ Conjugate[yu[ff2, ff3]] Conjugate[yd[ff5, ff4]] CKM[ff1,ff4] QLbar[sp1,ii,ff1,cc1].uR[sp1,ff2,cc1] Eps[ii,jj] QLbar[sp2,jj,ff3,cc2].dR[sp2,ff5,cc2] , FlavorExpand->{SU2W,SU2D}]
+	]//OptimizeIndex;
+
+Oquqd81:= Block[{sp1,sp2,cc1,cc2,cc3,cc4,aa,ii,jj,ff1,ff2,ff3,ff4,ff5},
+	ExpandIndices[ Conjugate[yu[ff2, ff3]] Conjugate[yd[ff5, ff4]] CKM[ff1,ff4] QLbar[sp1,ii,ff1,cc1].uR[sp1,ff2,cc2] T[aa,cc1,cc2] Eps[ii,jj] QLbar[sp2,jj,ff3,cc3].dR[sp2,ff5,cc4] T[aa,cc3,cc4] , FlavorExpand->{SU2W,SU2D}]
+	]//OptimizeIndex;
+"""
+
+
 def rewrite(name: str, body: str, order: int) -> str:
     """Zero the value, put it in block DIM6, keep everything else SMEFTsim wrote."""
     fields = {}
@@ -266,6 +278,14 @@ def main() -> None:
             continue
         keep.append(rewrite(n, b, order))
         order += 1
+    # The second flavour contraction of Q_quqd^(1,8), which SMEFTsim 3 has as cquqd11 and cquqd81 and the
+    # 2018 files read here do not.  They take the next card entries, so that no other entry moves.
+    for first, second in PRIMED.items():
+        for n, b in phases + params:
+            if n in (first, first + "Abs", first + "Ph"):
+                keep.append(rewrite(n.replace(first, second), b.replace(first, second), order))
+                order += 1
+    wc6 += [n.replace(first, second) for first, second in PRIMED.items() for n, _ in params if n in (first, first + "Abs")]
 
     # The operator definitions, verbatim apart from the vev subtractions and the truncation step
     # below.  Everything above the first operator in SMEFTsim's file is its own header plus the
@@ -283,6 +303,9 @@ def main() -> None:
     # parameter it is supposed to describe, and the load hangs.
     # The aggregates are not used by the build, which drives the classes one at a time, so they
     # are renamed rather than dropped.
+    assert ops.count("Olequ1:=") == 1 and ops.count("cquqd8 Oquqd8") == 1
+    ops = ops.replace("Olequ1:=", PRIMED_OPERATORS + "\nOlequ1:=", 1)
+    ops = ops.replace("cquqd8 Oquqd8", "cquqd8 Oquqd8 + cquqd11 Oquqd11 + cquqd81 Oquqd81", 1)
     ops = re.sub(r"^L6no4f\s*:=", "LD6no4f :=", ops, flags=re.M)
     ops = re.sub(r"^L6\s*:=", "LD6 :=", ops, flags=re.M)
 
@@ -348,27 +371,32 @@ def main() -> None:
     classes = [c for c in classes if not c.endswith("0")]     # L6cl50 etc. are intermediates
     classes = [c for c in classes if c != "L6cl8"]            # the sum of 8a..8d
 
-    # Every symbol this file defines, checked against every name the base already declares.
+    # Every symbol this file defines, checked against every name the bases already declare.
     # A collision such as L6 (above) hangs the FeynRules load, so it is a hard error rather than
-    # a warning.  The base is read from tests/gen_smoke, where the build reads it, or from
-    # models/src, the readable copy of the FeynRules source.
-    base = next((q for q in (os.path.join(ROOT, "tests/gen_smoke/base_inputscheme.fr"),
-                             os.path.join(ROOT, "models/src/base_inputscheme.fr"))
-                 if os.path.exists(q)), None)
-    if base is None:
-        sys.exit("no base_inputscheme.fr under tests/gen_smoke or models/src")
-    btxt = open(base).read()
-    base_names = {n for n, _ in split_entries(btxt, "M$Parameters")}
-    base_names |= set(re.findall(r"ClassName\s*->\s*([A-Za-z][A-Za-z0-9]*)", btxt))
+    # a warning.  The one file is loaded on either input-scheme base (dim68_is on
+    # base_inputscheme.fr, dim68_mw on base_inputscheme_mw.fr), so it is checked against both.  A
+    # base is read from tests/gen_smoke, where the build reads it, or from models/src.
     mine = {n for n, _ in phases + params if n not in IN_BASE and n != SCALE}
     mine |= set(re.findall(r"^([A-Za-z][A-Za-z0-9$]*)\s*:?=", ops, re.M))
     mine |= {"QLm", "sigmaT", "HDH", "WC6", "redefCtoZero", "LambdaSMEFT", "vevhat",
              "z6vev", "z6trunc", "rG1"}
-    clash = sorted(mine & base_names)
-    if clash:
-        sys.exit("name collision with tests/gen_smoke/base_inputscheme.fr: " + " ".join(clash)
-                 + "\n  the base's declaration would be replaced by SMEFTsim's definition, "
-                   "silently for a parameter and fatally for L6.  Rename in the generator.")
+    for bname in ("base_inputscheme.fr", "base_inputscheme_mw.fr"):
+        base = next((q for q in (os.path.join(ROOT, "tests/gen_smoke", bname),
+                                 os.path.join(ROOT, "models/src", bname))
+                     if os.path.exists(q)), None)
+        if base is None:
+            sys.exit(f"no {bname} under tests/gen_smoke or models/src")
+        btxt = open(base).read()
+        base_names = {n for n, _ in split_entries(btxt, "M$Parameters")}
+        base_names |= set(re.findall(r"ClassName\s*->\s*([A-Za-z][A-Za-z0-9]*)", btxt))
+        missing = sorted(IN_BASE - base_names)
+        if missing:
+            sys.exit(f"{bname} does not declare {' '.join(missing)}, which this file leaves to the base")
+        clash = sorted(mine & base_names)
+        if clash:
+            sys.exit(f"name collision with {bname}: " + " ".join(clash)
+                     + "\n  the base's declaration would be replaced by SMEFTsim's definition, "
+                       "silently for a parameter and fatally for L6.  Rename in the generator.")
 
     hdr = f'''(* GENERATED by gen/make_dim6.py.  Do not edit; edit the generator.
 
@@ -382,7 +410,7 @@ def main() -> None:
    Three couplings to our side of the model:
 
      LambdaSMEFT is our Lam6, the external dimension-six scale the base declares in block
-       DIM6 beside the eight coefficients the {{alpha, MZ, GF}} relations need.
+       DIM6 beside the eight coefficients the input relations need, in either scheme.
 
      vevhat is our vevSM, 1/Sqrt[Sqrt[2] Gf], which is what SMEFTsim's vevhat is too.
 
@@ -421,5 +449,47 @@ def main() -> None:
     print(f"  classes: {' '.join(classes)}")
 
 
+# The dimension-six file of the model of order n (gen/towers.py), made from the file main() writes.  Its operators
+# are evaluated on the corrections of that model's base to order n - 1, by the rules z8geoRules and the cut z8geoCut
+# the base defines (gen/input_scheme.py), the same that act on the dimension-eight and higher blocks, so that every
+# vertex with at most three legs is complete to 1/Lambda^(2n).  The vev subtracted from the class-5 operators and
+# O_HG is z8vT, the vev of the doublet.  The classes with a vertex of at most three legs (1 to 7) are renamed
+# G6cl1 to G6cl7, so that their cache cannot be mistaken for that of the 1/Lambda^4 models; the four-fermion
+# classes keep their names and are not computed again.  rG1 is left to the base, which declares rG1 to rGn.
+GEO_FROM = "\n".join(TRUNC_SECOND)
+GEO_TO = "\n".join([
+    "If[DownValues[z8geoCut] === {} || OwnValues[z8vT] === {} || OwnValues[z8geoRules] === {},",
+    '  Print["[dim6] FATAL: this file needs the base of the model of its order, which defines z8geoRules, z8geoCut and z8vT"]; Abort[]];',
+    "z6vev := z8vT;",
+    "redefCtoZero = Join[{Alternatives @@ WC6 -> 0}, z8geoRules];",
+    "z6trunc[z9e_] := z8geoCut[z9e, z8geoN - 1];",
+    "DIM6$FirstOrder = {};",
+    'If[FeynmanGauge, Print["[dim6] WARNING: the rotation is written for the unitary gauge; the Goldstone and ghost terms are not rotated"]];',
+])
+GEO_CLASSES = ("L6cl1", "L6cl2", "L6cl3", "L6cl4", "L6cl50", "L6cl5", "L6cl60", "L6cl6", "L6cl7")
+
+
+def geo_variant(text: str) -> str:
+    """The file of the models of gen/towers.py from tests/gen_smoke/dim6_smeftsim.fr (see GEO_FROM above)."""
+    assert text.count(GEO_FROM) == 1, "the truncation block of dim6_smeftsim.fr is not the one this generator writes"
+    text = text.replace(GEO_FROM, GEO_TO)
+    rg1 = ",\n" + RG1
+    assert text.count(rg1) == 1, "no rG1 declaration in dim6_smeftsim.fr"
+    text = text.replace(rg1, "")
+    for c in GEO_CLASSES:
+        n = len(re.findall(r"\b" + c + r"\b", text))
+        assert n >= 1, c
+        text = re.sub(r"\b" + c + r"\b", "G6" + c[2:], text)
+    old = re.search(r"DIM6\$Classes = \{[^}]*\};", text).group(0)
+    text = text.replace(old, "DIM6$Classes = {" + ", ".join(f'"G6cl{k}"' for k in range(1, 8)) + "};")
+    return text.replace("GENERATED by gen/make_dim6.py.", "GENERATED by gen/make_dim6.py --geo from dim6_smeftsim.fr.", 1)
+
+
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:2] == ["--geo"]:
+        src = os.path.join(ROOT, "tests/gen_smoke/dim6_smeftsim.fr")
+        out = sys.argv[2] if len(sys.argv) > 2 else os.path.join(ROOT, "tests/gen_smoke/dim6_geo.fr")
+        open(out, "w").write(geo_variant(open(src).read()))
+        print(f"wrote {out} from {src}")
+    else:
+        main()

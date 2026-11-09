@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Is G_F still G_F?  Muon decay with the dimension-six coefficients of the input relations on.
 
-    python3.11 validate/gf_closure.py <UFO dir with a DIM6 block> [--keep DIR]
+    python3.11 validate/gf_closure.py <UFO dir with a dimension-six sector> [--keep DIR]
 
 G_F is an input of the scheme, so the muon decay amplitude must not move when a coefficient is
 switched on: the W-lepton vertices, the W mass and the four-lepton contact term change together
@@ -22,9 +22,19 @@ size m_mu^2/M_W^2, the momentum dependence of the propagator, at the 1e-8 level.
 
 Reference output with the nine coefficients of COEFF on:
     t = 1        1/2       1/4       1/8
-    -2.4e-3    -2.7e-4   -3.3e-5   -4.0e-6    ratios 8.7 8.3 8.2
+    -2.4e-3    -2.7e-4   -3.3e-5   -4.0e-6    ratios 8.7 8.3 8.2     dim68_is, {alpha, M_Z, G_F}
+    -8.1e-8    -4.1e-8   -2.0e-8   -1.0e-8    ratios 2.0 2.0 2.0     dim68_mw, {M_W, M_Z, G_F}
 A model without the products of an operator with the first-order shifts gives a second-order
 deviation instead, with ratios near four.
+
+In the {M_W, M_Z, G_F} scheme the W mass is an input and the higher orders cancel, so that the
+first-order momentum dependence of the propagator is all that remains, and it falls by two per
+halving.  G_F is defined at zero momentum transfer, while the W exchange of muon decay carries
+q^2 up to m_mu^2 and the four-lepton contact term carries none, so no input relation removes it.
+Its size is m_mu^2/M_W^2 = 1.7e-6 times the first-order shift, below m_mu^2/M_W^2 at every
+strength.  The test therefore passes a deviation that falls by eight per halving, or one that
+stays below m_mu^2/M_W^2 at every strength.  A missing first-order term would be of order
+v^2/Lambda^2, about 1e-2 here, and a missing second-order term about 1e-3, so either fails both.
 """
 import os
 import re
@@ -54,11 +64,22 @@ def set_card(card, values):
     open(card, "w").write("\n".join(lines))
 
 
+def mass(card, pdg):
+    """The mass of a particle in the MASS block of a param card, or None when it is not there."""
+    blk = re.search(r"(?ims)^\s*block\s+mass\b(.*?)(?=^\s*(?:block|decay)\b|\Z)", open(card).read())
+    m = re.search(rf"(?m)^\s*{pdg}\s+([0-9.eE+-]+)", blk.group(1)) if blk else None
+    return float(m.group(1)) if m else None
+
+
 def main(argv):
     if len(argv) < 2:
         print(__doc__)
         return 2
     ufo = os.path.abspath(argv[1])
+    if "lhablock = 'DIM6'" not in open(os.path.join(ufo, "parameters.py"), errors="replace").read():
+        print(f"{ufo} has no block DIM6, so there is no dimension-six coefficient to switch on.  The check is for "
+              "a model with a dimension-six sector, dim68_is or dim68_mw.")
+        return 2
     mg = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3"))
     work = argv[argv.index("--keep") + 1] if "--keep" in argv else tempfile.mkdtemp(prefix="gf_closure_")
     os.makedirs(work, exist_ok=True)
@@ -102,8 +123,21 @@ def main(argv):
         print(f"   t = {t:<6g} |M|^2/SM - 1 = {d:+.4e}")
     ratios = [dev[i] / dev[i + 1] if dev[i + 1] else float("inf") for i in range(3)]
     print("   ratios per halving:", " ".join(f"{x:.2f}" for x in ratios), "  (8 is third order, 4 second, 2 first)")
-    ok = abs(dev[-1]) < 1e-12 or ratios[-1] > 6.5
-    print("G_F closure:", "PASS, the deviation is third order" if ok else "FAIL, G_F moves below third order")
+    # the floor of the propagator's momentum dependence, m_mu^2/M_W^2.  In the {alpha, M_Z, G_F}
+    # scheme the W mass is derived and is not on the card, and only the size of the floor needs it.
+    mmu, mw = mass(card, 13), mass(card, 24) or 80.379
+    floor = (mmu / mw) ** 2 if mmu else 0.0
+    third = abs(dev[-1]) < 1e-12 or ratios[-1] > 6.5
+    below = max(abs(d) for d in dev) < floor
+    ok = third or below
+    if third:
+        verdict = "PASS, the deviation is third order"
+    elif below:
+        verdict = (f"PASS, the deviation stays below m_mu^2/M_W^2 = {floor:.1e} at every strength: the first-order "
+                   "momentum dependence of the W propagator, with nothing above it")
+    else:
+        verdict = "FAIL, G_F moves below third order"
+    print("G_F closure:", verdict)
     print("work directory:", work)
     return 0 if ok else 1
 

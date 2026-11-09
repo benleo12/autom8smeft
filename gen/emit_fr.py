@@ -13,15 +13,93 @@ emit_operator_expr(op, wc=None)  -> "wc (term1 + term2 + ...)" with h.c. if need
 emit_block(ops, name)            -> a complete  Lname := Block[...]  definition
 emit_parameters(ops, ...)        -> M$Parameters entries for the Wilson coefficients
 emit_model_fragment(ops, ...)    -> parameters + blocks + an Ltotal for a list of ops
+index_mismatch(new, old)         -> what a new block index changes that must stay fixed (./dim8 build)
 """
 
 from __future__ import annotations
 
+import os
 import re
 from fractions import Fraction
 from typing import Dict, Iterable, List, Optional, Sequence
 
 from dsl import ALL_INDEX_NAMES, FRContext, Gamma, H, Operator, Psi, Term, FS, Tensor, EPS_LOR_SIGN
+import emit_flavour as EF
+
+
+# --------------------------------------------------------------------------------------
+# flavour
+# --------------------------------------------------------------------------------------
+
+# The flavour mode of a build: "mfv" (the default, and that of the released models), a delta on the
+# bilinears of one species and Yukawa matrices on the others, or with DIM8_FLAVOUR=universal a delta on
+# each bilinear.  A bilinear that joins two species is not invariant under U(3)^5 with a delta.  It is
+# invariant with the Yukawa matrices as spurions, in the form the dimension-six sector has them
+# (gen/make_dim6.py), with Y_u and Y_e diagonal and Y_d = CKM diag(y_d) in the basis of the doublet of the
+# base model.  The other operators come out exactly as in the universal mode, so that only the blocks of
+# the first kind differ between the two.
+FLAVOR = os.environ.get("DIM8_FLAVOUR", "mfv")
+# The flavour structures of the fermionic operators (gen/emit_flavour.py).  An operator that has them is
+# written with a general flavour coefficient in the mfv mode; one that has none (Q_{e^4B}^{(2)}, whose
+# structures all vanish to the order kept) keeps the structure of mfv_structure below.
+MFV_STRUCTURES = EF.load_structures() if FLAVOR in ("mfv", "mfvexplicit") else {}
+# Without the list a build in the mfv mode would write every operator with one structure, a model that
+# the vertices of the general form cannot be compared with, so it stops instead.
+if FLAVOR in ("mfv", "mfvexplicit") and not MFV_STRUCTURES:
+    raise SystemExit(f"{EF.STRUCTURES} is missing: write it with python3 validate/flavour_rank.py mfv, "
+                     "or build in the universal mode (DIM8_FLAVOUR=universal)")
+
+# the number of Yukawa matrices that join a barred field of the first species to a field of the second
+MFV_YUKAWAS = {("q", "q"): 0, ("u", "u"): 0, ("d", "d"): 0, ("l", "l"): 0, ("e", "e"): 0,
+               ("q", "u"): 1, ("u", "q"): 1, ("q", "d"): 1, ("d", "q"): 1, ("l", "e"): 1, ("e", "l"): 1,
+               ("u", "d"): 2, ("d", "u"): 2}
+MFV_DUMMIES = ("z8y1", "z8y2", "z8y3", "z8y4")
+
+
+def mfv_structure(op: Operator):
+    """(pairs, spurions) of an operator at leading order in the Yukawa matrices: the pairs of generation
+    indices a delta identifies, and (species of the barred field, of the other, its index, the other's
+    index) for each pair that a Yukawa matrix joins.  Of the two ways to pair the barred fields of a
+    four-fermion operator with the others, this takes the one with fewer Yukawa matrices and, when they
+    tie, the bilinears as written, which is how the dimension-six operators have them.  So
+    (qbar u)(qbar d) has Y_u Y_d, (lbar q)(qbar e) has Y_e on l and e and a delta on the quarks, and
+    (ubar d)(qbar u) has Y_d on q and d and a delta on the up quarks.  An operator that violates
+    baryon number has no such pairing and stays as it is: it is not exported."""
+    pairs = tuple(op.flavor_pairs or ())
+    seen = None
+    for t in op.terms:
+        here = {f.gen: (f.name, bool(f.bar)) for f in t.factors if isinstance(f, Psi)}
+        if seen is None:
+            seen = here
+        if here != seen:
+            raise ValueError(f"{op.name}: the terms give the generation indices different fields")
+    if not pairs or not seen or sum(bar for _, bar in seen.values()) * 2 != len(seen) or any(a not in seen or b not in seen for a, b in pairs):
+        return pairs, ()
+    ordered = [(a, b) if seen[a][1] else (b, a) for a, b in pairs]
+    if any(not seen[a][1] or seen[b][1] for a, b in ordered):
+        return pairs, ()
+    ways = [ordered]
+    if len(ordered) == 2:
+        ways.append([(ordered[0][0], ordered[1][1]), (ordered[1][0], ordered[0][1])])
+    def cost(way):
+        return sum(MFV_YUKAWAS.get((seen[a][0], seen[b][0]), 99) for a, b in way)
+    best = min(ways, key=cost)      # min keeps the first of a tie, the bilinears as written
+    if cost(best) >= 99:
+        raise ValueError(f"{op.name}: no pairing of its fields has Yukawa matrices that join them")
+    return (tuple((a, b) for a, b in best if seen[a][0] == seen[b][0]),
+            tuple((seen[a][0], seen[b][0], a, b) for a, b in best if seen[a][0] != seen[b][0]))
+
+
+def mfv_factor(barred: str, other: str, a: str, b: str, y1: str, y2: str) -> str:
+    """The element a, b of the Yukawa matrices that join a barred field of one species to a field of another."""
+    return {("q", "u"): f"yu[{a},{b}]",
+            ("u", "q"): f"yu[{b},{a}]",
+            ("l", "e"): f"yl[{a},{b}]",
+            ("e", "l"): f"yl[{b},{a}]",
+            ("q", "d"): f"CKM[{a},{y1}] yd[{y1},{b}]",
+            ("d", "q"): f"Conjugate[CKM[{b},{y1}]] yd[{y1},{a}]",
+            ("u", "d"): f"yu[{a},{y1}] CKM[{y1},{y2}] yd[{y2},{b}]",
+            ("d", "u"): f"yd[{y2},{a}] Conjugate[CKM[{y1},{y2}]] yu[{y1},{b}]"}[(barred, other)]
 
 
 # --------------------------------------------------------------------------------------
@@ -29,18 +107,23 @@ from dsl import ALL_INDEX_NAMES, FRContext, Gamma, H, Operator, Psi, Term, FS, T
 # --------------------------------------------------------------------------------------
 
 
-def emit_term(term: Term, flavor: str = "universal", flavor_pairs=()) -> str:
+def emit_term(term: Term, flavor: str = "universal", flavor_pairs=(), spurions=(), gens=()) -> str:
     """flavor = "universal": generation indices are identified pairwise (delta_{pr});
-    flavor = "general": every generation index is kept free (WC carries them)."""
+    flavor = "general": every generation index is kept free (WC carries them, named in the order of gens,
+    so that every term of an operator gives them the names the coefficient has);
+    flavor = "mfv": as universal on flavor_pairs, with the Yukawa matrices of spurions on the others."""
     ctx = FRContext(term)
     # 1. Kronecker identifications first (so that both sides of a delta get one name)
     for f in term.factors:
         for a, b in f.identities():
             ctx.identify(a, b)
-    if flavor == "universal":
+    if flavor in ("universal", "mfv"):
         for a, b in flavor_pairs:
             if a in ctx.types and b in ctx.types:
                 ctx.identify(a, b)
+    if flavor == "general":
+        for g in gens:
+            ctx.name(g)
 
     # 2. name every index in order of appearance (deterministic output)
     for f in term.factors:
@@ -69,6 +152,8 @@ def emit_term(term: Term, flavor: str = "universal", flavor_pairs=()) -> str:
             if s:
                 pieces.append(s)
     flush()
+    for k, (barred, other, a, b) in enumerate(spurions):
+        pieces.append(mfv_factor(barred, other, ctx.name(a), ctx.name(b), MFV_DUMMIES[2 * k], MFV_DUMMIES[2 * k + 1]))
     c = term.coeff.fr()
     body = " ".join(pieces)
     return body if c == "1" else f"{c} {body}"
@@ -177,9 +262,6 @@ def _balanced(s: str) -> bool:
 def _sum(terms: Sequence[str]) -> str:
     return " + ".join(f"({t})" for t in terms) if len(terms) > 1 else terms[0]
 
-
-
-_FERM_FIELD = re.compile(r"\b(QLbar|QL|LLbar|LL)\[([^\]]*)\]")
 
 
 def sub_su2_index(t: str, n: str, v: int) -> str:
@@ -404,11 +486,27 @@ def combine_monomials(monos: List[str]) -> List[str]:
 
 
 def emit_operator_expr(op: Operator, wc: Optional[str] = None, lam: str = "Lam", flavor: str = "universal") -> str:
-    """``wc/Lam^4 * (Q)``.  The Hermitian conjugate for +h.c. operators is NOT added here:
+    """``wc/Lam^(d-4) * (Q)`` for an operator of dimension d.  The Hermitian conjugate for +h.c. operators is NOT added here:
     FeynRules' HC[] must be applied to the *expanded* Lagrangian (emit_block does that), since
-    HC inside ExpandIndices on the explicit-spinor-index dialect loses vertices."""
+    HC inside ExpandIndices on the explicit-spinor-index dialect loses vertices.
+
+    In the mfv mode an operator with flavour structures (gen/emit_flavour.py) is written in the general
+    mode, with the placeholder z8F<wc> as its coefficient; "mfvexplicit" writes the sum of its structures
+    there instead, the same Lagrangian with the replacement made before FeynRules rather than after."""
+    if flavor in ("mfv", "mfvexplicit") and op.name in MFV_STRUCTURES:
+        if flavor == "mfv":
+            return emit_operator_expr(op, wc=wc or EF.placeholder(op), lam=lam, flavor="general")
+        ctx = FRContext(op.terms[0])
+        names = {f"z8w{k + 1}": ctx.name(g) for k, g in enumerate(op.gens)}
+        pars = EF.structure_parameters(op, MFV_STRUCTURES[op.name])
+        coef = " + ".join(f"({p['coef']}) {EF.tensor(op, p['structure'])}" for p in pars)
+        coef = re.sub(r"z8w\d+", lambda m: names[m.group(0)], coef)
+        body = emit_operator_expr(op, wc="z8EXPLICIT", lam=lam, flavor="general")
+        return body.replace("z8EXPLICIT[" + ",".join(names.values()) + "]", f"({coef})", 1)
     wc = wc or op.wc
-    terms = [expand_eps_su2f(expand_eps_su2a(emit_term(t, flavor=flavor, flavor_pairs=op.flavor_pairs or ()))) for t in op.terms]
+    pairs, spurions = mfv_structure(op) if flavor == "mfv" else (op.flavor_pairs or (), ())
+    terms = [expand_eps_su2f(expand_eps_su2a(emit_term(t, flavor=flavor, flavor_pairs=pairs, spurions=spurions, gens=op.gens)))
+             for t in op.terms]
     if EXPAND_SU2_EXPLICITLY:
         expanded = []
         for t in terms:
@@ -430,7 +528,9 @@ def emit_operator_expr(op: Operator, wc: Optional[str] = None, lam: str = "Lam",
         ctx = FRContext(op.terms[0])
         gnames = [ctx.name(g) for g in op.gens]  # deterministic: ff1, ff2, ...
         wc = f"{wc}[{','.join(gnames)}]"
-    pref = f"{wc}/{lam}^4"
+    # the power of the scale follows the mass dimension: 4 for every operator of gen/operators.py, more for
+    # the towers of gen/towers.py
+    pref = f"{wc}/{lam}^{int(op.mass_dimension()) - 4}"
     return f"{pref} ({expr})"
 
 
@@ -452,9 +552,14 @@ def emit_block(ops: Iterable[Operator], name: str, comment: str = "", flavor: st
     (inside ExpandIndices it drops vertices without an error).
     """
     ops = list(ops)
-    herm = [o for o in ops if o.hc_mode == "real"]
+    # An operator with a general flavour coefficient is Hermitian only with its conjugate added, so a
+    # real coefficient goes with the 1/2 and the h.c. of the "sym" bucket (gen/emit_flavour.py).
+    general = {o.name for o in ops if flavor in ("mfv", "mfvexplicit") and o.name in MFV_STRUCTURES}
+    if general and flavor == "mfv" and len(ops) > 1:
+        raise ValueError(f"{name}: the general flavour coefficient is shared between blocks, so a block holds one operator")
+    herm = [o for o in ops if o.hc_mode == "real" and o.name not in general]
     nonh = [o for o in ops if o.hc_mode == "complex"]
-    symm = [o for o in ops if o.hc_mode == "sym"]
+    symm = [o for o in ops if o.hc_mode == "sym" or (o.hc_mode == "real" and o.name in general)]
 
     def sum_of(sub, half=False):
         pre = "(1/2) " if half else ""
@@ -471,7 +576,8 @@ def emit_block(ops: Iterable[Operator], name: str, comment: str = "", flavor: st
 
     head = f"(* ---- {comment} ---- *)\n" if comment else ""
     body = "\n".join([stanza("z8lagH", herm), stanza("z8lagN", nonh), stanza("z8lagS", symm, half=True)])
-    return f"""{head}{name} := Module[{{{BLOCK_LOCALS}}},
+    spur = flavor == "mfv" and any(mfv_structure(o)[1] for o in ops if o.name not in general)
+    return f"""{head}{name} := Module[{{{BLOCK_LOCALS + ("," + ",".join(MFV_DUMMIES) if spur else "")}}},
   z8fmgr = If[Not[FeynmanGauge], {{G0|GP|GPbar -> 0}}, {{}}];
 {body}
   Return[z8lagH
@@ -488,31 +594,35 @@ def emit_parameters(ops: Iterable[Operator], block_name: str = "DIM8", start: in
     n = start
     for o in ops:
         cplx = o.hc_mode == "complex"
+        # the name in a Wolfram string, without a backslash: FeynRules parses the Descriptions again when it merges the
+        # model files, where an escaped backslash is read as an escape, so the (H^\dagger H)^k of gen/towers.py is (H^dag H)^k
+        name = o.name.replace("\\dagger", "dag").replace("\\", "")
         if not cplx:
             out.append(
                 f"""  {o.wc} == {{ ParameterType -> External, BlockName -> {block_name}, OrderBlock -> {n},
     Value -> 0, InteractionOrder -> {{{order},{order_power}}}, TeX -> Subscript[c, {o.wc[1:]}],
-    Description -> "{o.name}" }}"""
+    Description -> "{name}" }}"""
             )
             n += 1
         else:
             out.append(
                 f"""  {o.wc}Re == {{ ParameterType -> External, BlockName -> {block_name}, OrderBlock -> {n},
-    Value -> 0, InteractionOrder -> {{{order},{order_power}}}, Description -> "Re {o.name}" }}"""
+    Value -> 0, InteractionOrder -> {{{order},{order_power}}}, Description -> "Re {name}" }}"""
             )
             out.append(
                 f"""  {o.wc}Im == {{ ParameterType -> External, BlockName -> {block_name}, OrderBlock -> {n + 1},
-    Value -> 0, InteractionOrder -> {{{order},{order_power}}}, Description -> "Im {o.name}" }}"""
+    Value -> 0, InteractionOrder -> {{{order},{order_power}}}, Description -> "Im {name}" }}"""
             )
             out.append(
                 f"""  {o.wc} == {{ ParameterType -> Internal, ComplexParameter -> True,
-    Value -> {o.wc}Re + I {o.wc}Im, InteractionOrder -> {{{order},{order_power}}}, Description -> "{o.name}" }}"""
+    Value -> {o.wc}Re + I {o.wc}Im, InteractionOrder -> {{{order},{order_power}}}, Description -> "{name}" }}"""
             )
             n += 2
     return ",\n".join(out)
 
 
-def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block: int = 1, lam_value: float = 1000.0):
+def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block: int = 1, lam_value: float = 1000.0,
+                        flavor: str = FLAVOR):
     """Parameters plus one Lagrangian block per chunk of ``per_block`` operators.
 
     The default is one operator per block.  That is what makes the build parallel and
@@ -521,7 +631,9 @@ def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block
     single ``WriteUFO[..., Input -> vertices]`` call at the end.  It also means a
     Hermiticity failure names one operator.
 
-    Returns (text, index) where index is a list of {block, ops, wcs} for the drivers.
+    Returns (text, index) where index is a list of {block, ops, wcs} for the drivers, with the
+    coefficients of the flavour structures of an operator under "flavour".  flavor is the mode of the
+    blocks; a model to be read without the rules of emit_flavour_files takes "mfvexplicit".
     """
     blocks = []
     names = []
@@ -530,10 +642,18 @@ def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block
         chunk = ops[i : i + per_block]
         nm = f"{block_prefix}op{i // per_block + 1}" if per_block == 1 else f"{block_prefix}blk{i // per_block + 1}"
         names.append(nm)
-        index.append(dict(block=nm, ops=[o.name for o in chunk], wcs=[o.wc for o in chunk],
-                          cls=chunk[0].cls, hc_mode=chunk[0].hc_mode, n_terms=sum(len(o.terms) for o in chunk)))
-        blocks.append(emit_block(chunk, nm, comment=", ".join(o.name for o in chunk)))
+        entry = dict(block=nm, ops=[o.name for o in chunk], wcs=[o.wc for o in chunk],
+                     cls=chunk[0].cls, hc_mode=chunk[0].hc_mode, n_terms=sum(len(o.terms) for o in chunk))
+        # the coefficients of the flavour structures each operator has besides its own, in block DIM8F
+        flav = [n for o in chunk if o.name in MFV_STRUCTURES
+                for p in EF.structure_parameters(o, MFV_STRUCTURES[o.name]) for n, _, _ in p["externals"]]
+        if flav:
+            entry["flavour"] = flav
+        index.append(entry)
+        blocks.append(emit_block(chunk, nm, comment=", ".join(o.name for o in chunk), flavor=flavor))
     params = emit_parameters(ops)
+    if MFV_STRUCTURES:
+        params += ",\n" + EF.emit_parameters(ops, MFV_STRUCTURES)[0]
     lam = f"""  Lam == {{ ParameterType -> External, BlockName -> DIM8, OrderBlock -> 0, Value -> {lam_value},
     TeX -> \\[CapitalLambda], Description -> "EFT cutoff scale [GeV]" }}"""
     eps = f"""  {EPS_LOR_SIGN} == {{ ParameterType -> Internal, Value -> 1, Description -> "sign relating eps_(0123)=+1 to FeynRules Eps, see validate/conventions.md" }}"""
@@ -545,3 +665,43 @@ def emit_model_fragment(ops: List[Operator], block_prefix: str = "L8", per_block
         + f"\n(* {len(names)} blocks; the drivers never sum them, they are computed and cached one at a time *)\n"
     )
     return txt, index
+
+
+def emit_flavour_files(ops: List[Operator]) -> Dict[str, str]:
+    """The files beside gen.fr that the mfv mode needs, by name in tests/gen_smoke: the placeholders the
+    workers declare, and the rules that replace them when the UFO is written (gen/emit_flavour.py)."""
+    if FLAVOR != "mfv" or not MFV_STRUCTURES:
+        return {}
+    # the block names of emit_model_fragment with one operator per block, which a shared placeholder needs
+    blocks = {o.name: f"L8op{i + 1}" for i, o in enumerate(ops)}
+    return {"gen_flavour.fr": EF.emit_placeholders(ops, MFV_STRUCTURES),
+            "gen_flavour_rules.m": EF.emit_rules(ops, MFV_STRUCTURES, blocks)}
+
+
+def index_mismatch(new_index: List[dict], old_index: List[dict]) -> List[str]:
+    """What a block index written from the encoding changes in the existing one, as lines to print.
+
+    What stays fixed is what the rest of the chain is keyed on: the block of an operator, which names
+    its cached vertices, and the operator and coefficient names, which the released models, the
+    restriction cards and the selector use.  So every existing entry must keep its block, ops and wcs.
+    Everything else follows the encoding, so that a correction that changes the number of terms of an
+    operator or how it enters the Lagrangian (cls, hc_mode, n_terms) is not refused, and operators
+    appended after the existing ones take the next block numbers.  No two entries may share an operator
+    or a coefficient, as an entry copied from a neighbour would: they would share one parameter, and
+    every table keyed on a name would keep only one of them."""
+    out = []
+    for key in ("ops", "wcs"):
+        seen = {}
+        for e in new_index:
+            for name in e[key]:
+                if name in seen:
+                    out.append(f"{e['block']}: {key} has {name}, which {seen[name]} has too")
+                seen.setdefault(name, e["block"])
+    for i, old in enumerate(old_index):
+        if i >= len(new_index):
+            out.append(f"{old['block']}: {', '.join(old['ops'])} is no longer in the encoding")
+            continue
+        for key in ("block", "ops", "wcs"):
+            if new_index[i][key] != old[key]:
+                out.append(f"{old['block']}: {key} was {old[key]}, the encoding has {new_index[i][key]}")
+    return out

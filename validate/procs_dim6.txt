@@ -3,7 +3,9 @@
 # rescales the three-gluon vertex unless it is removed), the photon ones the products of an
 # operator with the input-scheme shifts (a photon coupled to the neutral current, a W-W-photon
 # coupling that is not e), and the last seven carry no massless vector and test Lorentz
-# covariance of the massive sector.
+# covariance of the massive sector.  A line starting with ! is a process that must give no matrix
+# element: neutrinos do not couple to the photon and dimension six has no Z-Z-photon vertex, so a
+# result for it would be a spurious coupling, which a Lorentz check alone would pass.
 u u~ > g g
 g g > h g
 g g > g g
@@ -18,7 +20,7 @@ u d~ > w+ a
 u u~ > h a
 e+ e- > a a
 e+ e- > h a
-ve ve~ > a z
+! ve ve~ > a z
 ve ve~ > h a
 e+ ve > w+ a
 u u~ > w+ w- a
