@@ -94,10 +94,11 @@ nine dimension-eight entries of the card, those of six operators (`c8H6x2`, `c8W
 
     sigma(1/Lambda^4) = sigma(NP^2==2, c) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-The bracket is zero in any process in which no W is produced or exchanged. With every coefficient
-at 1 and Lambda at 1 TeV it is +1.19 +- 0.13 pb in `p p > w+ w-` against an interference of
--3.6 pb, and 5.9 +- 0.4 per cent of the cross section in `p p > h h j j QCD=0` (with `ptj` = 25 GeV,
-`etaj` = 5 and `mmjj` = 400 GeV), where the W sits in the two t-channel propagators. `examples/studies/run_study.sh` runs the `NP=0` row both ways for you
+The bracket is zero in any process in which no W is produced or exchanged. With every entry of
+DIM8 and DIM8F at 1 and Lambda at 1 TeV it is +1.23 +- 0.11 pb in `p p > w+ w-` against an
+interference of -3.6 pb, and 5.8 +- 0.6 per cent of the cross section in `p p > h h j j QCD=0`
+(with `ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV), where the W sits in the two t-channel
+propagators. `examples/studies/run_study.sh` runs the `NP=0` row both ways for you
 (rows `NP=0` and `NP=0 on`). In the `{MW, MZ, GF}` models `M_W` is an input and no mass moves with a
 coefficient, so there is no bracket and `NP^2==2` is the whole term.
 
@@ -346,7 +347,7 @@ with an insertion on each bilinear. The leading structure takes a Kronecker delt
 one species and the Yukawa matrix between two species, `Y_u` for `qbar u`, `Y_d` (with the CKM
 matrix) for `qbar d`, `Y_e` for `lbar e` and `Y_u^dag Y_d` for `ubar d`. It keeps the operator's
 coefficient in block `DIM8`, and every other structure has its own coefficient in block `DIM8F`. In
-all the 585 fermionic operators carry 2247 structures with 3315 real parameters: 572 leading
+all the fermionic operators carry 2247 structures with 3315 real parameters (`Q_{e^4B}^{(2)}` has none): 572 leading
 structures, 147 second contractions without an insertion, 1485 structures with one insertion and 43
 with an insertion on each bilinear. So an operator that flips chirality, or carries the right-handed
 charged current `ubar gamma^mu d`, acts on light quarks only through their Yukawa couplings, in the

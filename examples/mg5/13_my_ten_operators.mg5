@@ -14,6 +14,14 @@ set hel_recycling False
 set ebeam1 6800
 set ebeam2 6800
 set Lam 1000
-set c8q2WH2Dx1 1.0
+set c8W2H2D2x1 1.0
+set c8W2H2D2x2 1.0
+set c8WBH2D2x1 1.0
+set c8B2H2D2x1 1.0
+set c8W3H2x1 1.0
 set c8q2W2Dx1 1.0
+set c8q2W2Dx2 1.0
+set c8q2W2Dx3 1.0
+set c8q2W2Dx4 1.0
+set c8H4x1 1.0
 done

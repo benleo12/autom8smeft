@@ -1,11 +1,13 @@
 # Drell-Yan study
 
 High-mass neutral-current Drell-Yan at 13.6 TeV, `p p > e+ e-` and `p p > e+ e- a`, both with the
-lepton pair above 200 GeV. This is the process that reaches the four-fermion classes. 311 of the
-674 operators sit in classes 18 to 21, none of them enters diboson or triboson production, and
-vector-boson fusion reaches classes 18, 20 and 21 alone, so without this study class 19 would appear
-in no cross section. Class 19, psi^4 X, needs the extra photon and gives no diagram in
-`p p > e+ e-` alone, which is why the second process is there.
+lepton pair above 200 GeV. This is the process that reaches the four-fermion classes with a vertex.
+311 of the 674 operators sit in classes 18 to 21. Class 18 enters every study, in diboson and
+triboson production through the G_F relation alone, and the others appear in no other study, so
+without this one classes 19 and 21 would appear in no cross section. Class 19, psi^4 X, needs the
+extra photon and gives no diagram in `p p > e+ e-` alone, which is why the second process is there.
+Class 20 has no diagram here either: it flips chirality, and the cards of the studies keep only the
+Yukawa couplings of the b and the t.
 
 Run
 

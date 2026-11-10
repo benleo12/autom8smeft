@@ -143,9 +143,10 @@ A directory with two or three text files.
     p p > e+ e- | mmll=200
     p p > h h j j QCD=0 | ptj=20 mmjj=500 | bosonic
 
-Restrict heavy processes. `p p > h h j j QCD=0 NP^2==2` on the unrestricted `dim8_mw` is 268104
-diagrams and a 2.2-hour MadGraph session, and 173928 diagrams in 47 minutes with any restriction card
-(on a Mac mini).
+Restrict heavy processes. `p p > h h j j QCD=0 NP^2==2` on the unrestricted `dim8_mw` is 525156
+diagrams, more than eight hours of generation on one core, and 9540 diagrams in a 31-minute session
+with the card `./dim8 select` writes for it. A card costs time at import (44 minutes for
+`dim8_mw-all`), so a light process such as `p p > w+ w-` is faster unrestricted.
 
 `classes.txt`, one restriction card per line:
 
@@ -186,11 +187,11 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
 
     sigma(1/Lambda^4) = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-On `p p > w+ w-` with all coefficients at 1 and Lambda at 1 TeV that bracket is +1.19 +- 0.13 pb
-against an interference of -3.6 pb. It vanishes for every process in which no W is produced or exchanged.
-It does not vanish in vector-boson fusion, where the W sits in the t-channel propagators: 5.9 per
-cent of the cross section in `p p > h h j j QCD=0` with `ptj` = 25 GeV, `etaj` = 5 and
-`mmjj` = 400 GeV.
+On `p p > w+ w-` with every entry of DIM8 and DIM8F at 1 and Lambda at 1 TeV that bracket is
++1.23 +- 0.11 pb against an interference of -3.6 pb. It vanishes for every process in which no W
+is produced or exchanged. It does not vanish in vector-boson fusion, where the W sits in the
+t-channel propagators: 5.8 +- 0.6 per cent of the cross section in `p p > h h j j QCD=0` with
+`ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV.
 
 ## 5. Output
 

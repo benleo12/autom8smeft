@@ -794,5 +794,13 @@ runblk[nm_String] := Module[{mx, wx, st, tt, lagX, te, tv, th, nv, nh, nraw, z9k
 blocks = If[StringContainsQ[args[[1]], ","] || nshards === 0,
   Function[z9t, If[StringMatchQ[z9t, NumberString], ToExpression[z9t], z9t]] /@ StringSplit[args[[1]], ","],
   Range[shard, nblocks, nshards]];
-Do[runblk[n], {n, blocks}];
+(* No one-letter symbol may carry a value here.  FeynRules names the summed indices of a vertex a, b, c, ...,
+   A, B, ... with ToExpression (Core/FRFormat.m, Int), so a value of such a symbol becomes an index label.
+   With the block in n (the loop variable this line once had) the 14th summed index of a vertex was named
+   after the block, and OptimizeIndex (Core/Superfields.m) turned Index[Generation, "G8op5", 1] into
+   Symbol["G8op51"], which evaluates the whole block G8op51 inside a vertex of G8op5. *)
+z9letterVals = Select[Join[CharacterRange["a", "z"], CharacterRange["A", "Z"]],
+  ToExpression[#, InputForm, Function[z9s, Context[z9s] =!= "System`" && OwnValues[z9s] =!= {}, HoldAll]] &];
+If[z9letterVals =!= {}, Print["[cfg] FATAL: one-letter symbols with values, which FeynRules would take for index names: ", z9letterVals]; Quit[2]];
+Do[runblk[z9blk], {z9blk, blocks}];
 Print["[alldone] shard ", shard, " total ", Round[AbsoluteTime[] - t0, 0.1], " s"];

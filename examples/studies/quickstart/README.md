@@ -3,25 +3,28 @@
     export MG5_DIR=/path/to/MG5_aMC
     examples/studies/run_study.sh examples/studies/quickstart models/dim8_is 2000
 
-About half an hour on two cores. Writes `results.tsv` here. Expected, all 1030 coefficients at 1
-and Lambda at 1 TeV, 13.6 TeV:
+About three hours on two cores of a cluster node. Writes `results.tsv` here. Expected, every
+entry of DIM8 and DIM8F at 1 and Lambda at 3 TeV, 13.6 TeV:
 
-    dim8_is        NP=0             68.1  pb     Standard Model
-    dim8_is        NP=0 on          69.4  pb     the same, operators on
-    dim8_is        NP^2==2          -4.0  pb     dimension-eight interference
-    dim8_is        NP<=2 NP^2==4  4000    pb     dimension-eight squared
-    dim8_is-cls14  NP^2==2          -2.38 pb     class 14 alone
-    dim8_is-cls14  NP<=2 NP^2==4   142   pb
-    dim8_is-cls15  NP^2==2           0.061 pb    class 15 alone
-    dim8_is-cls15  NP<=2 NP^2==4     2.1  pb
+    dim8_is        NP=0             68.2     pb     Standard Model
+    dim8_is        NP=0 on          68.2     pb     the same, operators on
+    dim8_is        NP^2==2          -0.044   pb     dimension-eight interference
+    dim8_is        NP<=2 NP^2==4     0.59    pb     dimension-eight squared
+    dim8_is-cls14  NP^2==2          -0.029   pb     class 14 alone
+    dim8_is-cls14  NP<=2 NP^2==4     0.021   pb
+    dim8_is-cls15  NP^2==2           0.00077 pb     class 15 alone
+    dim8_is-cls15  NP<=2 NP^2==4     0.00032 pb
 
 Statistics at 2000 events is a few percent, so agreement to two digits is fine.
 
-The square is 59 times the Standard Model. That is the expansion failing at c = 1 and
-Lambda = 1 TeV, not the model misbehaving. Raise Lambda or cut the tail.
+The square is thirteen times the size of the interference. In this total rate, with every
+coefficient at 1, the 1/Lambda^8 term is the larger one even at Lambda = 3 TeV. That is the
+expansion, not the model misbehaving. Raise Lambda or cut the tail.
 
-`NP=0 on` minus `NP=0` is +1.4 pb. That is a 1/Lambda^4 contribution the interference row does
-not contain, because MadGraph tags couplings and the W mass is not a coupling. Add it.
+`NP=0 on` and `NP=0` agree here. The W mass moves from 79.824 to 79.819 GeV, and the shift of the
+Standard-Model bin is below the Monte Carlo error. It is a 1/Lambda^4 contribution the interference
+row does not contain, because MadGraph tags couplings and the W mass is not a coupling. At
+Lambda = 1 TeV it is +1.23 +- 0.11 pb against an interference of -3.6 pb. Add it.
 
 ## Things to try next
 
@@ -47,4 +50,4 @@ One operator at a time:
 A different scale or coefficient. Make `coefficients.txt`:
 
     dim8_all=1
-    Lam=3000
+    Lam=2000

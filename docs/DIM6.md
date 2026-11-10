@@ -179,7 +179,7 @@ them, switch one sector off in the param card.
 tags couplings and not masses, and in this scheme `M_W` moves when a coefficient moves, which no
 tag can express. The vev, the Yukawas and the Higgs quartic are written as tagged sums, so the
 `W` mass is the one quantity left. On `p p > w+ w-` the piece missing from the tagged
-dimension-eight interference measures +1.19 +- 0.13 pb, with every dimension-eight coefficient at 1 and
+dimension-eight interference measures +1.23 +- 0.11 pb, with every entry of DIM8 and DIM8F at 1 and
 Lambda at 1 TeV. Use `validate/order_fit.py`, which scans one coefficient with no `NP^2`
 constraint and fits the polynomial:
 

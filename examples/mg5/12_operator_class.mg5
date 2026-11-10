@@ -1,10 +1,12 @@
 # 12: a whole operator class.  The card restrict_cls14.dat ships with the model, and this command
 # writes it:  python3 validate/make_restriction.py models/dim8_is cls14 cls:14
 # Class 14 of the Murphy basis is psi^2 X^2 D: the quark-quark-W-W (and g g, B B, W B) contact
-# terms, which enter p p > w+ w- directly (24 diagrams at NP^2==2 for the whole class).  The card
-# keeps the 57 coefficients of the class; only the q^2 W^2 D ones matter for this process and they
-# are switched on here.  The purely bosonic X^2 H^2 D^2 class (cls7) has no three-point vertex and
-# gives no diagram for this process; it enters p p > w+ w- z, see the triboson study.
+# terms, which enter p p > w+ w- directly (18 diagrams at NP^2==2 for the whole class).  The card
+# keeps the 136 coefficients of the class, those of its 57 operators and 79 of their flavour
+# structures.  Only the q^2 W^2 D ones matter for this process (all 136 at 1 give the same
+# -2.33 pb), and they are switched on here.  The purely bosonic X^2 H^2 D^2 class (cls7) has no
+# three-point vertex and gives no diagram for this process; it enters p p > w+ w- z, see the
+# triboson study.
 import model dim8_is-cls14
 generate p p > w+ w- NP^2==2
 output runs/12_ww_cls14

@@ -5,9 +5,9 @@
 # The model is models/dim8_mw, the {MW, MZ, GF} scheme, unless [model dir] names another.
 # <study dir> holds processes.txt (one MadGraph process per line, run-card settings after a '|'
 # as "ptj=20 mmjj=500", and after a second '|' optionally the restriction card to use for the
-# "full model" rows of that process: p p > h h j j QCD=0 NP^2==2 on the unrestricted dim8_mw is
-# 268104 diagrams and a 2.2-hour MadGraph session (Mac mini, 2026-10-30), so the VBF study runs its
-# full rows on the bosonic card) and classes.txt (one restriction-card name per line,
+# "full model" rows of that process: p p > h h j j QCD=0 NP^2==2 on the unrestricted dim8_mw has 525156
+# diagrams and did not finish generating in eight hours (Symmetry, 2026-11-09), so the VBF study runs
+# its full rows on the bosonic card) and classes.txt (one restriction-card name per line,
 # for cards that ship with the model or that validate/make_restriction.py writes into the model
 # directory).  Optionally coefficients.txt gives "NAME=VALUE" assignments applied at every launch.
 # The default is every dimension-eight coefficient at 1 with Lam at 3000 GeV, the scale at which the
@@ -36,8 +36,8 @@ OUT=$ST/results.tsv; [ -f $OUT ] || printf "process\tmodel\torder\tsigma_pb\terr
 # cannot tag it.  The complete 1/Lambda^4 prediction is
 #     sigma_int = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 # and the bracket is what this row measures.  It is zero in a process in which no W is produced
-# or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 5.9 per cent with every
-# coefficient at 1 and Lam at 1 TeV, ptj = 25 GeV, etaj = 5, mmjj = 400 GeV).  See docs/HOW_TO_BREAK_IT.md.
+# or exchanged (VBF di-Higgs exchanges two, and its NP=0 bin moves by 5.8 per cent with every
+# entry of DIM8 and DIM8F at 1 and Lam at 1 TeV, ptj = 25 GeV, etaj = 5, mmjj = 400 GeV).  See docs/HOW_TO_BREAK_IT.md.
 ORDERS=("NP=0" "NP=0 on" "NP^2==2" "NP<=2 NP^2==4")
 # The bracket exists only where M_W is derived.  In a model that takes M_W as an input (dim8_mw)
 # no mass depends on a coefficient, so the "NP=0 on" row would repeat the NP=0 row to every digit
@@ -99,8 +99,8 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   fi
   local xs=$(grep -h "Cross-section :" $RUNS/$tag.log | tail -1 | sed 's/.*Cross-section : *//' | awk '{print $1"\t"$3}')
   # The W mass is derived in the {alpha, MZ, GF} scheme, so switching coefficients on moves it and
-  # MadGraph says so.  Record it: with every one of the 1030 coefficients at 1 and Lam at 1 TeV it
-  # comes out at 79.33 instead of the scheme's tree-level 79.82, and a row with a visibly shifted MW is not being compared
+  # MadGraph says so.  Record it: with every entry of DIM8 and DIM8F at 1 and Lam at 1 TeV it
+  # comes out at 79.36 instead of the scheme's tree-level 79.82, and a row with a visibly shifted MW is not being compared
   # with the Standard Model at the same vacuum.  A class at a time keeps the shift small.
   # bin/generate_events does not print the derived W mass the way the launch prompt does, so it is
   # evaluated from the model's own parameter definitions at this row's settings (the plain model

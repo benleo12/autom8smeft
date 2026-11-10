@@ -39,9 +39,9 @@ normalises each histogram to the integrated weight from the banner and prints th
 used, which is the signal to raise the event count if the factor is far from one.
 
 One caution about the all-coefficients-at-one row. The W mass is derived in the {alpha, MZ, GF}
-scheme, so switching coefficients on moves it: with all 1030 at 1 and Lam at 3 TeV the model
-derives 79.818 GeV instead of the tree-level 79.824 of the {alpha, MZ, GF} scheme, and the
-squared term for `p p > w+ w-` comes out twelve times the interference, so the truncation is
+scheme, so switching coefficients on moves it: with every coefficient at 1 (those of `DIM8F` included) and Lam at 3 TeV
+the model derives 79.819 GeV instead of the tree-level 79.824 of the {alpha, MZ, GF} scheme, and
+the squared term for `p p > w+ w-` comes out thirteen times the interference, so the truncation is
 not self-consistent for that row. That row is a
 linearity check, since the class interferences must add up to it, rather than a prediction. The
 physics is in the per-class rows, where only a handful of operators are on and the shift is
@@ -51,7 +51,7 @@ that a distorted one is visible rather than buried.
 How to read the class-1 rows. At `NP^2==2` the X^4 class gives no diagram at all in
 `p p > w+ w-`, because a four-field-strength operator has no three-point vertex and its
 four-point ones cannot attach to a quark line, so the row says NO_DIAGRAMS. At `NP<=2 NP^2==4`
-the same class gives 0.55 pb at Lam = 3 TeV, eleven times the interference of the whole model:
+the same class gives 0.55 pb at Lam = 3 TeV, twelve times the interference of the whole model:
 that is `g g > w+ w-` through the G^2 W^2 contact vertex squared, one diagram, with no
 Standard-Model amplitude to interfere with, growing like s^2/Lambda^4 in the amplitude and fed by
 the gluon luminosity. Since it falls as 1/Lambda^8 it is thousands of picobarns at Lam = 1 TeV,

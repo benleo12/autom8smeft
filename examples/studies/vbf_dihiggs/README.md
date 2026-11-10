@@ -34,7 +34,7 @@ One caution about the row with every coefficient at one, which runs on the `boso
 this study. The W mass is derived in the {alpha, MZ, GF} scheme, so switching coefficients on
 moves it: with every coefficient of that card at 1 and Lam at 3 TeV the model derives 79.820 GeV
 instead of the tree-level 79.824 of the {alpha, MZ, GF} scheme. The squared term of that row comes
-out twenty times the interference, so the truncation is not self-consistent for it.
+out seventeen times the interference, so the truncation is not self-consistent for it.
 That row is a linearity check, since the class interferences must add up to it, rather than a
 prediction. The
 physics is in the per-class rows, where only a handful of operators are on and the shift is

@@ -12,12 +12,12 @@ For the LHC processes of the paper the counts of operators with a vertex are
 
 | process | one insertion | two insertions |
 |---|---|---|
-| p p > h j j | 210 | 219 |
-| p p > z h | 68 | 68 |
-| p p > w+ w- | 96 | 96 |
-| u u~ > w+ w- | 63 | 63 |
-| u u~ > z h | 48 | 48 |
-| u u~ > a h | 40 | 43 |
+| p p > h j j | 211 | 220 |
+| p p > z h | 64 | 64 |
+| p p > w+ w- | 95 | 95 |
+| u u~ > w+ w- | 62 | 62 |
+| u u~ > z h | 45 | 45 |
+| u u~ > a h | 34 | 37 |
 
 The selector follows internal fermion lines and multi-boson vertices, so it can be larger than
 a first guess. An operator listed here contributes at least one diagram, which may still vanish
@@ -65,19 +65,21 @@ The vertex test is one half of the answer. An operator that enters the electrowe
 relations shifts the weak coupling, the hypercharge coupling, the vev and the W mass of every
 amplitude, whether or not it has a vertex among the external legs. The clearest case is
 `p p > w+ w-`: the two operators `Q_{l^2H^4D}^{(2)}` and `Q_{l^2H^4D}^{(4)}` contain no quarks,
-enter through muon decay and so through G_F, and carry about a third of the process's
+enter through muon decay and so through G_F, and carry a large part of the process's
 dimension-eight interference through their shift of `gw`, the vev and `MW`, with no vertex in
-any diagram.
+any diagram. In `dim8_mw` at Lambda = 3 TeV each shifts the rate by -6.2 fb, against -25.8 fb from
+all operators together.
 
-Eight operators act this way: the two of class 3 (H^6 D^2), four of class 6 (X^2 H^4) and the
-two l^2 H^4 D operators of class 13. `./dim8 select` lists whichever of them have no vertex in the
+Nine operators act this way: the two of class 3 (H^6 D^2), four of class 6 (X^2 H^4), the two
+l^2 H^4 D operators of class 13 and `Q_{l^4H^2}^{(1)}` of class 18, whose flavour structure with
+crossed indices contains the four-lepton interaction of muon decay. `./dim8 select` lists whichever of them have no vertex in the
 process under its own heading, "through the {alpha, MZ, GF} input relations, with no vertex in this
 process", counts them in its summary line, marks those of the first group with "(and the input
 relations)", and writes them into the restriction card with `--card` and into the list that `-o`
 writes for `./dim8 ufo`. The two groups together are the complete list at tree level with one insertion.
 
 The second group follows the model named by `--model`. Without the option it is `models/dim8_mw`,
-the {MW, MZ, GF} scheme, where the same eight shift the electromagnetic coupling instead of the W
+the {MW, MZ, GF} scheme, where the same nine shift the electromagnetic coupling instead of the W
 mass and the heading names that scheme, and the card goes into that model, for
 `import model dim8_mw-NAME`. This page uses `models/dim8_is`, the {alpha, MZ, GF} scheme. With
 `models/dim68_is` the selector also lists the dimension-six coefficients, one by one under the

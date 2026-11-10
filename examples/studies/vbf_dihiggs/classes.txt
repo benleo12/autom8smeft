@@ -1,9 +1,9 @@
 # one restriction card per class of the Murphy basis (cls<N>), as make_restriction.py cls:<N> writes it
 # Every class that enters p p > h h j j QCD=0 at tree level with one insertion (a vertex of the operator in
-# a tree diagram whose other vertices are the Standard Model's): 2, 3, 4, 6, 7, 8 among the bosonic ones,
-# 10, 11, 12, 13, 15, 16, 17 among the two-fermion ones, and the four-fermion classes 18, 20 and 21, through
-# a contact term between the two quark lines with the Higgs pair radiated off a quark.  Classes 9 and 14 have
-# no interference here and a square.  Classes 1, 5 and 19 have no diagram at either order.
+# a tree diagram whose other vertices are the Standard Model's, or a shift of the inputs), with the cards of
+# the studies, which keep only the Yukawa couplings of the b and the t: 2, 3, 4, 6, 7, 8 among the bosonic
+# ones, 11, 13 and 15 among the two-fermion ones, and the four-fermion class 18.  Each has an interference
+# and a square.  The other classes have no diagram at either order.
 cls2
 cls3
 cls4

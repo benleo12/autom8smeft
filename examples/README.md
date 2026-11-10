@@ -8,25 +8,31 @@ Everything here runs with MadGraph5_aMC@NLO alone. No Mathematica, no FeynRules.
 |---|---|---|
 | `dim68_is` | the dimension-eight operators of `dim8_is` together with SMEFTsim's dimension-six operators in the U(3)^5 flavour-symmetric framework, on the same base and in the same input scheme | any calculation that needs the dimension-six sector, whose square enters `NP^2==2` beside the dimension-eight interference (see `docs/DIM6.md`) |
 | `dim68_mw` | the same two sectors as `dim68_is` in the {MW, MZ, GF} input scheme, in which alpha is derived and no mass moves with a coefficient | the dimension-six sector in that scheme, the model `./dim8 select --with-dim6` names for `dim8_mw` |
-| `dim8_is` | all 674 baryon-number-conserving dimension-eight operators of the Murphy basis on top of the Standard Model, in the {alpha, MZ, GF} input scheme with canonically normalised fields, truncated at 1/Lambda^4 in the input relations | the dimension-eight sector on its own. Every example here uses it |
+| `dim8_is` | all 674 baryon-number-conserving dimension-eight operators on top of the Standard Model, in the Murphy basis with class 11 in the form of the geometric SMEFT (`dim8_is_murphy` keeps the Murphy basis), in the {alpha, MZ, GF} input scheme with canonically normalised fields, truncated at 1/Lambda^4 in the input relations | the dimension-eight sector on its own. Every example here uses it |
 | `dim8_mw` | the same dimension-eight sector in the {MW, MZ, GF} input scheme, in which alpha is derived and no mass moves with a coefficient | dimension eight with no W-mass shift. Set `MW` to 79.82435975 to put it on the numerical point of `dim8_is` |
 
 Install: copy or symlink the model directory into MadGraph's `models/` folder under the same
 name, which is what the example scripts assume, or give `import model` an absolute path. The
 import takes about two minutes, once per session (MG5_aMC 3.5.6, Apple silicon). It needs 7.7 GB
-of memory the first time, when Python compiles the model files, and 2.4 GB after that. Diagram generation is what the full basis costs: with `NP^2==2` on `dim8_mw`, `p p > w+ w-`
-is 452 diagrams in a 32-second session, but `p p > h h j j QCD=0` on the unrestricted model is
-268104 diagrams in a 2.2-hour session, and 173928 diagrams in 47 minutes with any restriction card
-(on a Mac mini). For 2 to 4 processes restrict first (`import model dim8_is-bosonic` for the
-bosonic classes, or a class card), which is what the VBF di-Higgs study does. A
+of memory the first time, when Python compiles the model files, and 2.4 GB after that. Diagram generation is what the full basis costs: with `NP^2==2` on the unrestricted `dim8_mw`,
+`p p > w+ w-` is 796 diagrams in a 17-minute session, but `p p > h h j j QCD=0` is 525156 diagrams,
+more than eight hours of generation. With the card `./dim8 select` writes for it, HHjj is 9540
+diagrams in a 31-minute session, and with the class card `cls7` 600 in 13 minutes (one core of an
+Intel Xeon Gold 6148). A card costs time at import, more the more it keeps (44 minutes for
+`dim8_mw-all`), so for 2 to 4 processes restrict to what the process needs (`import model
+dim8_is-bosonic` for the bosonic classes, a class card, or the selector's card), which is what the
+VBF di-Higgs study does. A
 relative path does not work: MadGraph resolves it against its own directory and stops with "is
 not a valid pathname".
 
 Every Wilson coefficient is an external parameter in block `DIM8` of the parameter card, named after
 the operator (`c8G2H4x1` is `Q_{G^2H^4}^{(1)}`, complex ones come as `...Re` and `...Im`), and every
-one of them is **zero by default**. The scale is `Lam` in GeV (default 1000). The full list with
-operator names is `cards/coefficients.md`: 734 operators, which come to 1030 card entries once the 296 complex ones
-are split into real and imaginary parts.
+one of them is **zero by default**. The additional flavour structures of minimal flavour violation have
+coefficients of their own in block `DIM8F`, also zero by default (see the top-level README). The scale
+is `Lam` in GeV (default 1000). The full list with
+operator names is `cards/coefficients.md`: 734 operators in each basis (749 rows, since class 11 is
+listed in both forms), which come to 1030 `DIM8` entries once the 296 complex ones are split into
+real and imaginary parts.
 
 Of those 734 operators, 674 conserve baryon number and 60 do not, and the shipped model contains the
 674. The 120 card entries of the baryon-number-violating operators are in the card all the same,
@@ -34,14 +40,15 @@ because the parameter list is written from the whole basis, and setting one of t
 all. The parameter-card template marks every such line, and `make_restriction.py` says so if you
 select them.
 
-Thirteen more operators of the 674 have no vertices either, so 897 of the 1030 entries are live.
-They vanish identically once their currents are flavour diagonal. The twelve `psi^4 B` operators
+The leading flavour structures of thirteen more operators of the 674 have no vertices either, so 897
+of the 1030 `DIM8` entries are live. They vanish identically once their currents are flavour diagonal. The twelve `psi^4 B` operators
 `Q_{l^4B}^{(1,2)}`, `Q_{q^4B}^{(1,2,3,4)}`, `Q_{e^4B}^{(1,2)}`, `Q_{u^4B}^{(1,2)}` and `Q_{d^4B}^{(1,2)}`
 contract two identical currents, symmetric in their Lorentz indices, with the antisymmetric B field
 strength, and `Q_{q^4H^2}^{(5)}` contracts two identical isotriplet currents with epsilon^{IJK}. With
-generation indices these operators are not zero, which is why Murphy's basis lists them, but with one
-coefficient per operator they are. Their card entries are marked like the baryon-number-violating
-ones.
+generation indices these operators are not zero, which is why Murphy's basis lists them, but with a
+flavour-diagonal leading structure they are. Their `DIM8` entries are marked like the
+baryon-number-violating ones. Twelve of the thirteen still act through their additional flavour
+structures in `DIM8F`. `Q_{e^4B}^{(2)}` has none.
 
 ## Lambda power counting in MadGraph
 
@@ -164,7 +171,7 @@ scheme at work: M_W is derived from alpha, M_Z and G_F, 79.82 GeV at tree level,
 coefficients that enter the input relations are switched on.
 
 What the examples give (13.6 TeV, Lam 1 TeV, coefficients at 1): `p p > w+ w-`
-68.07 pb in the SM (02), -1.163 pb of interference from `Q_{q^2W^2D}^{(1)}` and
-`Q_{q^2WH^2D}^{(1)}` (03), -2.358 pb from the whole psi^2 X^2 D class (12), -1.31 pb from the ten
-operators of example 13; `p p > z h` -0.0051 pb from `Q_{q^2H^4D}^{(1)}` alone (11); and the five
-Ward checks of example 15 pass at 1e-14 with every coefficient at 0.7.
+68.25 pb in the SM (02), -1.16 pb of interference from `Q_{q^2W^2D}^{(1)}` and
+`Q_{q^2WH^2D}^{(1)}` (03), -2.33 pb from the whole psi^2 X^2 D class (12), -2.34 pb from the ten
+operators of example 13; `p p > z h` -0.0046 pb from `Q_{q^2H^4D}^{(1)}` alone (11); and the five
+Ward checks of example 15 pass at 1e-14 with every entry of DIM8 and DIM8F at 0.7.

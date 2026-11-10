@@ -1,7 +1,8 @@
 # every class of the Murphy basis.  The study exercises the four-fermion classes 18 to 21, to which
-# 311 of the 674 operators belong.  Diboson and triboson do not reach them at all.  VBF di-Higgs
-# reaches 18, 20 and 21 through a contact term between the two quark lines.  Drell-Yan reaches all
-# four, including 19.
+# 311 of the 674 operators belong.  Class 18 enters every process of the four studies, in diboson and
+# triboson production through the G_F relation alone.  Drell-Yan reaches 18 and 21 in p p > e+ e-, and
+# 19 as well in p p > e+ e- a.  Class 20 flips chirality and has no diagram with the cards of the
+# studies, which keep only the Yukawa couplings of the b and the t.
 cls1
 cls2
 cls3
