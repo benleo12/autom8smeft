@@ -18,8 +18,10 @@ amplitude is expanded by MadGraph's coupling orders.
 
 Needs a Python that can import the UFO (3.11 works).
 """
-import sys, os, cmath, math
+import sys, os, math
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import eval_ufo_params as E   # noqa: E402  the evaluation of a UFO's parameters, one for every script
 
 def evaluate(ufo, c):
     """Internal parameter values with every c8 coefficient set to c."""
@@ -29,17 +31,11 @@ def evaluate(ufo, c):
     for p in P.all_parameters:
         if p.nature == "external":
             vals[p.name] = c if p.name.startswith("c8") else float(p.value)
-    ns = {"cmath": cmath, "math": math, "complex": complex,
-          "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
-    order = []
-    for p in P.all_parameters:
-        if p.nature == "internal":
-            try:
-                vals[p.name] = eval(p.value, ns, vals)
-            except Exception:
-                vals[p.name] = float("nan")
-            order.append(p.name)
-    return vals, order
+    # with the functions of the UFO's function library (the relation for G_F uses cond), and a
+    # parameter that cannot be evaluated stops the script: the shifts of the input scheme, which
+    # this check is for, are the ones that depend on it
+    E.internal_parameters(P, vals, E.namespace())
+    return vals, [p.name for p in P.all_parameters if p.nature == "internal"]
 
 
 def real(z):
@@ -67,7 +63,7 @@ def main(argv):
         for n in names:
             y = [real(v.get(n, float("nan"))) for v in vals]
             if any(math.isnan(t) or math.isinf(t) for t in y):
-                continue
+                raise SystemExit(f"{n} is not a finite number at c = {cs}: {y}")
             # central second difference at c = 0, in units of the linear slope times the step
             lin = (y[3] - y[1]) / 2.0
             quad = (y[3] + y[1] - 2 * y[2]) / 2.0

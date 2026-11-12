@@ -21,7 +21,7 @@
 *)
 
 (* DIM8_ROOT lets the same script run off-machine, e.g. on an HPC system *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 (* the tag goes into file names, so it may hold letters, digits and underscores only *)
 z8tag = If[Environment["DIM8_INDEX_TAG"] === $Failed, "", Environment["DIM8_INDEX_TAG"]];
 If[! StringMatchQ[z8tag, RegularExpression["[A-Za-z0-9_]*"]],

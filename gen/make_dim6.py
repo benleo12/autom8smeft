@@ -45,7 +45,7 @@ DEFAULT_SMEFTSIM = os.environ.get(
 # either scheme need them.  Re-declaring a parameter makes FeynRules keep the
 # first and warn, so they are dropped here and the base's declaration is the one that counts.
 IN_BASE = {"cH", "cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "cHbox"}
-# The scale: ours is Lam6, declared in the base beside them.
+# The scale: ours is Lam, the one scale of dimension six and eight (block DIM8, entry 0).
 SCALE = "LambdaSMEFT"
 
 
@@ -100,7 +100,7 @@ TRUNC_LINEAR = [
 ]
 # The one parameter the second-order truncation adds: the first-order rescaling of the gluon,
 # the analogue of the base's rW1 = cHW v^2/Lambda^2.
-RG1 = ('  rG1 == { ParameterType -> Internal, Value -> cHG vevSM^2/Lam6^2, InteractionOrder -> {NP,1}, '
+RG1 = ('  rG1 == { ParameterType -> Internal, Value -> cHG vevSM^2/Lam^2, InteractionOrder -> {NP,1}, '
        'Description -> "O(1/Lambda^2) piece: G -> (1 + rG) G with g_s G fixed" }')
 
 
@@ -241,12 +241,13 @@ def main() -> None:
 
     os.makedirs(os.path.dirname(os.path.abspath(a.o)), exist_ok=True)
     if not os.path.isdir(a.smeftsim):
-        sys.exit(f"no SMEFTsim sources at {a.smeftsim}.\n"
+        print(f"no SMEFTsim sources at {a.smeftsim}.\n"
                  "They are not redistributed with this repository.  Obtain SMEFTsim from its\n"
                  "authors (arXiv:1709.06492 with the flavour framework of arXiv:2012.11343) and\n"
                  "point this at its FeynRules directory:\n"
                  "    SMEFTSIM_FR=/path/to/SMEFTsim_FR python3 gen/make_dim6.py\n"
-                 "or pass --smeftsim /path/to/SMEFTsim_FR.  docs/DIM6.md says what it is used for.")
+                 "or pass --smeftsim /path/to/SMEFTsim_FR.  docs/DIM6.md says what it is used for.", file=sys.stderr)
+        sys.exit(2)   # an input that is not there, with the exit status of argparse
     ptxt = open(os.path.join(a.smeftsim, "d6_parameters_U35.fr")).read()
     otxt = open(os.path.join(a.smeftsim, "SMEFTsim_A_operators_U35.fr")).read()
     ftxt = open(os.path.join(a.smeftsim, "SMEFTsim_A_fields.fr")).read()
@@ -297,7 +298,7 @@ def main() -> None:
     ops = otxt[cut.start():]
 
     # SMEFTsim calls the sum of its dimension-six terms L6.  Our base declares an INTERNAL
-    # PARAMETER of the same name, L6 = 1/Lam6^2, which the input relations are written in terms
+    # PARAMETER of the same name, L6 = 1/Lam^2, which the input relations are written in terms
     # of.  Letting SMEFTsim's definition land on that symbol replaces the parameter with a whole
     # Lagrangian: FeynRules then asks for MR$ParameterRules[L6], gets the Lagrangian as the
     # parameter it is supposed to describe, and the load hangs.
@@ -409,8 +410,8 @@ def main() -> None:
 
    Three couplings to our side of the model:
 
-     LambdaSMEFT is our Lam6, the external dimension-six scale the base declares in block
-       DIM6 beside the eight coefficients the input relations need, in either scheme.
+     LambdaSMEFT is our Lam, the one scale of the dimension-six and dimension-eight operators
+       (block DIM8, entry 0).
 
      vevhat is our vevSM, 1/Sqrt[Sqrt[2] Gf], which is what SMEFTsim's vevhat is too.
 
@@ -431,7 +432,7 @@ def main() -> None:
             "(* ---- helpers the operator file uses, from SMEFTsim_A_main.fr, verbatim ---- *)",
             sigmat, "", hdh, "",
             "(* ---- the couplings to our side, before the operators are read ---- *)",
-            "LambdaSMEFT := Lam6;",
+            "LambdaSMEFT := Lam;",
             "vevhat := vevSM;",
             "WC6 = {" + ", ".join(wc6) + "};",
             *(TRUNC_LINEAR if a.linear else TRUNC_SECOND),

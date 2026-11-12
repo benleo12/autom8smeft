@@ -17,7 +17,7 @@
    as such and stays flagged.  The worker's load-time self-test runs first: among other cases,
    a Schouten identity must vanish and its one-sign-flipped variant must not.
    Run: DIM8_ROOT=<repo> DIM8_VDIR=<cache> DIM8_BLOCK=L8op73 wolframscript -file validate/check_residual.wls *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 vdir = If[Environment["DIM8_VDIR"] === $Failed, $root <> "/build/vertices", Environment["DIM8_VDIR"]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the default path of the init file *)
 FR$NKernels = 0;

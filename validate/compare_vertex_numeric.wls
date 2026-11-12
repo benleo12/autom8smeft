@@ -8,7 +8,7 @@
    metric-determinant expansion.  The numeric block below is that of fr_compare.wls, from
    "zEta =" to the end of zVanishesQ, except that the colour cap is fixed at 4096 and a vertex
    above it counts as differing; keep the two in step. *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]]; FR$NKernels = 0;
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]]; FR$NKernels = 0;
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"]; LoadModel["base.fr", "gen.fr"];
 zEta = DiagonalMatrix[{1, -1, -1, -1}];

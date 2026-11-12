@@ -1,0 +1,387 @@
+(* ======================================================================================
+   validate/smeftfr_shim.fr
+   --------------------------------------------------------------------------------------
+   Glue that lets the BOSONIC dimension-eight Lagrangian files shipped with SmeftFR v3.03
+   (external/smeftfr_3_03/lagrangian_dim8_fr_files/2[1-8]_*.fr, Murphy classes 1 to 8) be
+   evaluated inside OUR model, so that validate/fr_compare.wls can diff them vertex by
+   vertex against the blocks emitted by dim8auto.
+
+   HOW TO LOAD
+   -----------
+   This is a FeynRules model fragment.  It must be handed to LoadModel TOGETHER with our
+   base model and the generated fragment, and it must come AFTER tests/gen_smoke/base.fr:
+
+       Get["tests/fr_env/fr_headless_init.m"];
+       LoadModel["tests/gen_smoke/base.fr", "tests/gen_smoke/gen.fr",
+                 "validate/smeftfr_shim.fr"];
+
+   validate/fr_compare.wls does this when its second argument names this file after gen.fr,
+   separated by a comma:
+
+       wolframscript -file validate/fr_compare.wls tests/gen_smoke/base.fr \
+           tests/gen_smoke/gen.fr,validate/smeftfr_shim.fr validate/smeftfr_by_class/class2.m
+
+   This file itself pulls in the eight SmeftFR bosonic Lagrangian files at the end, so the
+   LQ... block definitions named in validate/smeftfr_pairs.m exist after LoadModel returns.
+   SmeftFR is not shipped with this repository.  The eight files are 21_X4.fr to
+   28_Xphi4D2.fr of the directory lagrangian/ of SmeftFR v3.03 (arXiv:2302.01353,
+   www.fuw.edu.pl/smeft).  Copy them to external/smeftfr_3_03/lagrangian_dim8_fr_files under
+   the repository, or set SMEFTFR$Dir to the directory that holds them (section 6).
+
+   WHAT IS AND IS NOT ALIASED
+   --------------------------
+   Everything the eight bosonic files touch is listed here.  The complete set of symbols
+   they use is: B, Wi, Gl, Phi8, Phi8bar, Ta, f, dSUN, Eps, FS, DC, del, HC,
+   ExpandIndices, FlavorExpand, SU2W, SU2D, SMEFT$WB, SMEFTGaugeRules, Module,
+   ToExpression, I.  Of those, B / Wi / Ta / f / dSUN / Eps / SU2W / SU2D and all the
+   FeynRules primitives already exist in tests/gen_smoke/base.fr with IDENTICAL meaning,
+   so only Gl, Phi8, Phi8bar, SMEFT$WB and SMEFTGaugeRules need defining.  Nothing in the
+   bosonic files requires SmeftFR's own definitions/smeft_fields_WB.fr.
+
+   CONVENTION AUDIT
+   ----------------
+   * SU(2) generators.  Both models declare
+         SU2L: Representations -> {Ta,SU2D},
+               Definitions -> {Ta[a_,b_,c_] -> PauliSigma[a,b,c]/2, FSU2L[i_,j_,k_] :> I Eps[i,j,k]}
+     verbatim, i.e. Ta = sigma/2 and "2 Ta" = Murphy's tau in both.  No factor of 2 anywhere.
+   * SU(3) structure constants.  Both declare StructureConstant -> f and
+     SymmetricTensor -> dSUN.  Same names, same normalisation.
+   * Higgs doublet.  Both give it FlavorIndex -> SU2D and QuantumNumbers -> {Y -> 1/2}.
+     SmeftFR's Phi8[1] -> GP, Phi8[2] -> (vev + H + I G0)/Sqrt[2]; ours is the unitary
+     gauge truncation Phi[1] -> 0, Phi[2] -> (vev + H)/Sqrt[2].  Because the alias below
+     routes Phi8 onto OUR Phi, both sides of every pair use the same truncation, so the
+     comparison is a unitary gauge comparison on both sides and is self-consistent.  It
+     does NOT test the Goldstone sector.
+   * Dual field strength.  SmeftFR writes Xtilde as Eps[mu,nu,al,be]/2 HC[FS[X,al,be]]
+     with the two free indices FIRST; our generator writes (1/2) Eps[mu,nu,rho,sig]
+     FS[X,rho,sig], also free indices first.  Identical, including the index order, so
+     the Levi-Civita sign convention cancels between the two sides and epsLorSign never
+     enters.  HC[FS[X,...]] = FS[X,...] for every real gauge field.
+   * Covariant derivative sign.  THIS IS THE ONE REAL DIFFERENCE, and it is handled by
+     NOT touching it.  FeynRules builds DC as del[f,mu] - I FR$DSign g A f and
+     FS[X,mu,nu,a] as del[X[nu,a],mu] - del[X[mu,a],nu] + FR$DSign g f[a,b,c] X[mu,b] X[nu,c]
+     (feynrules ToolBox.m:335-337, Core/ClassDeclarations.m:2110-2119).  Our base.fr sets
+     FR$DSign = -1, which is Murphy's D = d + i g A.  SmeftFR never assigns FR$DSign
+     anywhere in its package, so SmeftFR itself runs at the FeynRules default
+     FR$DSign = +1, i.e. D = d - i g A, which is A -> -A relative to Murphy.
+     The eight bosonic files contain no compensating signs: they are literal
+     transcriptions of Murphy's table entries in terms of DC and FS.  Loading that text
+     into OUR model therefore evaluates it with Murphy's derivative and Murphy's field
+     strength, which is exactly the operator we want to compare against, so the shim adds
+     NO sign correction.  Consequence to keep in mind: this validates the SmeftFR file as
+     a transcription of Murphy, it does not reproduce SmeftFR's own published Feynman
+     rules.  If you ever want the latter, set FR$DSign = +1 and every operator with an
+     ODD number of explicit field strengths flips sign, i.e. all 6 of class 5 and all 6
+     of class 8; classes 1, 6, 7 have an even number and classes 2, 3, 4 have none.
+   * Wilson coefficient names.  SmeftFR builds them as SMEFT$WB <> <operator name>, with
+     SMEFT$WB = "c" (code/smeft_variables.m:27), so the 89 bosonic coefficients are
+     cG4n1 ... cBphi4D2n2.  They already carry 1/Lambda^4 inside their numerical value
+     (code/smeft_initialization.m:210,248 sets Lam -> 1), whereas our blocks carry an
+     explicit 1/Lam^4.  fr_compare.wls substitutes Lam -> 1 on the generated side, so the
+     two normalisations agree with no extra factor.
+   ====================================================================================== *)
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 1. Wilson coefficient prefix.                                                        *)
+(*    Every SmeftFR operator block ends in ToExpression[SMEFT$WB <> "<name>"], so this   *)
+(*    string is what turns the block into cG4n1 * (operator).  "c" is SmeftFR's own      *)
+(*    default, set in code/smeft_variables.m line 27; keeping it means the coefficient   *)
+(*    names quoted in validate/smeftfr_pairs.m are the ones SmeftFR itself would emit.   *)
+(* ---------------------------------------------------------------------------------- *)
+SMEFT$WB = "c";
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 2. Gauge fixing replacement list.                                                    *)
+(*    Every SmeftFR block finishes with "/. SMEFTGaugeRules".  In SmeftFR this is        *)
+(*    SMEFTGaugeRules = If[!SMEFT$RxiGaugeStatus, {G0|GP|GPbar -> 0}, {}]                *)
+(*    (code/smeft_io.m line 180), i.e. drop the Goldstones unless R-xi gauge was asked   *)
+(*    for.  Our base.fr uses exactly the same construction under the name                *)
+(*    feynmangaugerules (base.fr lines 730, 736), keyed on FeynmanGauge instead of on    *)
+(*    SMEFT$RxiGaugeStatus, so we mirror it.  SetDelayed, not Set, so that flipping      *)
+(*    FeynmanGauge after loading still does the right thing.                             *)
+(*    With base.fr's FeynmanGauge = False this evaluates to {G0|GP|GPbar -> 0}, which is *)
+(*    a no-op here because our Phi already has the Goldstones projected out, but it must *)
+(*    be defined or the SmeftFR blocks return unevaluated ReplaceAll expressions.        *)
+(* ---------------------------------------------------------------------------------- *)
+SMEFTGaugeRules := If[Not[FeynmanGauge], {G0|GP|GPbar -> 0}, {}];
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 3. Field aliases.                                                                    *)
+(*    These are plain OwnValues, deliberately Set and not SetDelayed, so that the symbol *)
+(*    is replaced at read time and FS / DC see OUR field in the head position.  A rule   *)
+(*    list applied afterwards would not work: FS[Gl,mu,nu,a] has to be FS[G,mu,nu,a]     *)
+(*    already when FeynRules resolves it against the SU3C gauge group.                   *)
+(*                                                                                       *)
+(*    Gl:  SmeftFR calls the SU(3) gauge boson Gl and reserves G for the PHYSICAL gluon  *)
+(*         (definitions/smeft_fields_WB.fr lines 42, 196-201, where Gl[si,a] -> Gnorm    *)
+(*         G[si,a]).  Our base.fr uses the single name G for both (GaugeBoson -> G,      *)
+(*         ClassName -> G).  We have no dim-6 induced kinetic renormalisation, so their  *)
+(*         Gnorm is 1 and the alias is exact.                                            *)
+(*    Wi, B: same names in both models, nothing to do.  Note SmeftFR carries Wnorm and   *)
+(*         AZnorm[i,j] in the Wi and B definitions where we carry the plain SM rotation; *)
+(*         those constants are 1 at dim-4 and only differ once dim-6 operators are       *)
+(*         switched on, which they are not here.                                         *)
+(*    Phi8/Phi8bar: SmeftFR keeps TWO Higgs doublets, Phi (carrying the Hnorm, G0norm,   *)
+(*         GPnorm renormalisations, used in their SM and dim-6 files) and Phi8 (with no  *)
+(*         normalisation constants at all, used in every dim-8 file) -- see              *)
+(*         definitions/smeft_fields_WB.fr lines 392-406.  The un-normalised Phi8 is the   *)
+(*         one that corresponds to our Phi, so that is what we alias.  Phibar is the     *)
+(*         antifield FeynRules generates automatically from base.fr's S[11].             *)
+(* ---------------------------------------------------------------------------------- *)
+Gl      = G;
+Phi8    = Phi;
+Phi8bar = Phibar;
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 4. The Lorentz indices al, be, ga, de of the SmeftFR sources.                        *)
+(*    Five SmeftFR blocks contract Lorentz indices named al, be, ga, de, which are       *)
+(*    Global` symbols there: LQG4n8 (al,be,ga,de), LQG4n9 (ga,de), LQG2W2n7 (ga,de),     *)
+(*    LQW2phi4n4 (al,be) and LQWBphi4n2 (al,be).  The blocks need these four symbols to  *)
+(*    have no value.  Neither tests/gen_smoke/base.fr nor tests/gen_smoke/gen.fr uses    *)
+(*    them, and they are cleared here, so that a value left in an interactive kernel     *)
+(*    does not enter the five operators.                                                 *)
+(* ---------------------------------------------------------------------------------- *)
+ClearAll[al, be, ga, de];
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 5. The 89 SmeftFR bosonic Wilson coefficients.                                       *)
+(*    fr_compare.wls forms Coefficient[block, wc] and then calls FeynmanRules on the     *)
+(*    difference, so the coefficient has to be a declared parameter of the merged model  *)
+(*    rather than a free symbol.  A separate BlockName keeps them out of our DIM8 block. *)
+(*    Value -> 1 rather than 0 on purpose: if anything ever did substitute numerical     *)
+(*    values, a zero would turn every test into a false PASS.                            *)
+(*    All 89 are declared, including the two class 3 coefficients whose operators are    *)
+(*    deliberately NOT paired (see validate/smeftfr_pairs.m), so that the class 3 blocks *)
+(*    can still be evaluated by hand when investigating that mismatch.                   *)
+(* ---------------------------------------------------------------------------------- *)
+M$Parameters = {
+  (* SmeftFR class 1 (X^4 and X^3 X-prime): 43 coefficients *)
+  cG4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 1,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n1" },
+  cG4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 2,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n2" },
+  cG4n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 3,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n3" },
+  cG4n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 4,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n4" },
+  cG4n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 5,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n5" },
+  cG4n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 6,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n6" },
+  cG4n7 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 7,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n7" },
+  cG4n8 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 8,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n8" },
+  cG4n9 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 9,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G4n9" },
+  cW4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 10,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n1" },
+  cW4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 11,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n2" },
+  cW4n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 12,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n3" },
+  cW4n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 13,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n4" },
+  cW4n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 14,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n5" },
+  cW4n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 15,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W4n6" },
+  cB4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 16,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B4n1" },
+  cB4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 17,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B4n2" },
+  cB4n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 18,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B4n3" },
+  cG3Bn1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 19,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3Bn1" },
+  cG3Bn2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 20,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3Bn2" },
+  cG3Bn3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 21,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3Bn3" },
+  cG3Bn4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 22,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3Bn4" },
+  cG2W2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 23,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n1" },
+  cG2W2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 24,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n2" },
+  cG2W2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 25,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n3" },
+  cG2W2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 26,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n4" },
+  cG2W2n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 27,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n5" },
+  cG2W2n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 28,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n6" },
+  cG2W2n7 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 29,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2W2n7" },
+  cG2B2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 30,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n1" },
+  cG2B2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 31,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n2" },
+  cG2B2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 32,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n3" },
+  cG2B2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 33,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n4" },
+  cG2B2n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 34,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n5" },
+  cG2B2n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 35,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n6" },
+  cG2B2n7 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 36,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2B2n7" },
+  cW2B2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 37,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n1" },
+  cW2B2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 38,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n2" },
+  cW2B2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 39,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n3" },
+  cW2B2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 40,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n4" },
+  cW2B2n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 41,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n5" },
+  cW2B2n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 42,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n6" },
+  cW2B2n7 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 43,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2B2n7" },
+  (* SmeftFR class 2 (phi^8): 1 coefficients *)
+  cphi8 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 44,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi8" },
+  (* SmeftFR class 3 (phi^6 D^2): 2 coefficients *)
+  cphi6Box == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 45,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi6Box" },
+  cphi6D2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 46,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi6D2" },
+  (* SmeftFR class 4 (phi^4 D^4): 3 coefficients *)
+  cphi4D4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 47,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi4D4n1" },
+  cphi4D4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 48,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi4D4n2" },
+  cphi4D4n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 49,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_phi4D4n3" },
+  (* SmeftFR class 5 (X^3 phi^2): 6 coefficients *)
+  cG3phi2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 50,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3phi2n1" },
+  cG3phi2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 51,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G3phi2n2" },
+  cW3phi2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 52,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W3phi2n1" },
+  cW3phi2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 53,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W3phi2n2" },
+  cW2Bphi2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 54,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2Bphi2n1" },
+  cW2Bphi2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 55,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2Bphi2n2" },
+  (* SmeftFR class 6 (X^2 phi^4): 10 coefficients *)
+  cG2phi4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 56,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2phi4n1" },
+  cG2phi4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 57,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2phi4n2" },
+  cW2phi4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 58,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi4n1" },
+  cW2phi4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 59,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi4n2" },
+  cW2phi4n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 60,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi4n3" },
+  cW2phi4n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 61,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi4n4" },
+  cWBphi4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 62,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi4n1" },
+  cWBphi4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 63,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi4n2" },
+  cB2phi4n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 64,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B2phi4n1" },
+  cB2phi4n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 65,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B2phi4n2" },
+  (* SmeftFR class 7 (X^2 phi^2 D^2): 18 coefficients *)
+  cG2phi2D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 66,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2phi2D2n1" },
+  cG2phi2D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 67,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2phi2D2n2" },
+  cG2phi2D2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 68,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_G2phi2D2n3" },
+  cW2phi2D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 69,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n1" },
+  cW2phi2D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 70,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n2" },
+  cW2phi2D2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 71,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n3" },
+  cW2phi2D2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 72,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n4" },
+  cW2phi2D2n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 73,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n5" },
+  cW2phi2D2n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 74,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_W2phi2D2n6" },
+  cWBphi2D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 75,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n1" },
+  cWBphi2D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 76,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n2" },
+  cWBphi2D2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 77,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n3" },
+  cWBphi2D2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 78,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n4" },
+  cWBphi2D2n5 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 79,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n5" },
+  cWBphi2D2n6 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 80,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_WBphi2D2n6" },
+  cB2phi2D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 81,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B2phi2D2n1" },
+  cB2phi2D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 82,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B2phi2D2n2" },
+  cB2phi2D2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 83,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_B2phi2D2n3" },
+  (* SmeftFR class 8 (X phi^4 D^2): 6 coefficients *)
+  cWphi4D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 84,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Wphi4D2n1" },
+  cWphi4D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 85,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Wphi4D2n2" },
+  cWphi4D2n3 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 86,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Wphi4D2n3" },
+  cWphi4D2n4 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 87,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Wphi4D2n4" },
+  cBphi4D2n1 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 88,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Bphi4D2n1" },
+  cBphi4D2n2 == { ParameterType -> External, BlockName -> SMEFTFRD8, OrderBlock -> 89,
+    Value -> 1, InteractionOrder -> {NP,2}, Description -> "SmeftFR WC for Q_Bphi4D2n2" }
+};
+
+
+(* ---------------------------------------------------------------------------------- *)
+(* 6. Pull in the eight SmeftFR bosonic Lagrangian files.                               *)
+(*    They contain only SetDelayed definitions of the LQ... blocks, no M$ declarations,  *)
+(*    so Get-ing them from inside a model file is safe: LoadModel clears and re-reads    *)
+(*    M$Parameters / M$ClassesDescription / M$GaugeGroups around each file it merges     *)
+(*    (feynrules Core/ClassDeclarations.m lines 434-448) and these files touch none of   *)
+(*    them.  The definitions are delayed, so nothing is evaluated until fr_compare.wls   *)
+(*    asks for a block by name, long after the model is fully built.                     *)
+(*    Only the bosonic files are loaded.  01..11 are the dim-5/6 and fermionic dim-8     *)
+(*    files; they need SmeftFR's own fermion field names and WC tensors and are outside  *)
+(*    the scope of this comparison.                                                      *)
+(*    Set SMEFTFR$Dir before LoadModel to point somewhere else.                          *)
+(* ---------------------------------------------------------------------------------- *)
+(* The repository is DIM8_ROOT when that is set, and otherwise the one this file is in: LoadModel
+   reads a model file with Get, so $InputFileName is this file's path here. *)
+If[!ValueQ[SMEFTFR$Dir],
+  SMEFTFR$Dir = FileNameJoin[{
+      If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]],
+      "external", "smeftfr_3_03", "lagrangian_dim8_fr_files"}]];
+
+SMEFTFR$BosonicFiles = {"21_X4.fr", "22_phi8.fr", "23_phi6D2.fr", "24_phi4D4.fr",
+                        "25_X3phi2.fr", "26_X2phi4.fr", "27_X2phi2D2.fr", "28_Xphi4D2.fr"};
+
+Do[
+  Module[{smeftfrpath = FileNameJoin[{SMEFTFR$Dir, smeftfrfile}]},
+    If[FileExistsQ[smeftfrpath],
+      Get[smeftfrpath],
+      (* Abort rather than continue: without these files every LQ... block stays an
+         unevaluated symbol, and the comparison would report every pair as differing. *)
+      Print["[smeftfr_shim] ABORT, missing SmeftFR file: ", smeftfrpath,
+        "\n  it is one of 21_X4.fr to 28_Xphi4D2.fr of lagrangian/ in SmeftFR v3.03 (www.fuw.edu.pl/smeft):",
+        " copy them there, or set SMEFTFR$Dir to their directory before LoadModel"];
+      Quit[1]]],
+  {smeftfrfile, SMEFTFR$BosonicFiles}];
+
+Print["[smeftfr_shim] loaded; SMEFT$WB = ", SMEFT$WB, "; SmeftFR dir = ", SMEFTFR$Dir];

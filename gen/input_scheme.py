@@ -6,11 +6,13 @@ relations with no SMEFT corrections.  Those relations fail as soon as an operato
 one of the three input observables is switched on.
 
 WHICH OPERATORS.  The input-scheme section of the paper works through all 21 dimension-eight classes:
-nine operators enter.  Four class-6 operators correct the gauge kinetic terms (alpha, MZ),
-Q_{H^6}^{(1),(2)} correct the gauge mass matrix (MZ, MW and hence GF), Q_{l^2H^4D}^{(2),(4)}
+nine operators enter with massless leptons.  Four class-6 operators correct the gauge kinetic terms
+(alpha, MZ), Q_{H^6}^{(1),(2)} correct the gauge mass matrix (MZ, MW and hence GF), Q_{l^2H^4D}^{(2),(4)}
 correct the W-lepton vertex (GF), and the crossed flavour structures of Q_{l^4H^2}^{(1)} add a
-four-lepton contact term to muon decay (GF).  Q_{G^2H^4}^{(1)} touches alpha_s alone.  The bosonic
-half is confirmed against SmeftFR v3.03's code/smeft_input_scheme.m.
+four-lepton contact term to muon decay (GF).  With the lepton Yukawas on, the crossed structure of
+Q_{l^2e^2H^2}^{(1),(2)} adds a scalar coupling to muon decay, which shifts G_F through its interference
+with the Standard Model, weighted by the electron's mass, and through its square.  Q_{G^2H^4}^{(1)}
+touches alpha_s alone.  The bosonic half is confirmed against SmeftFR v3.03's code/smeft_input_scheme.m.
 
 HOW THE FORMULAE ARE OBTAINED.  gen/derive_input_scheme.py writes the EXACT kinetic and mass
 matrices and the EXACT muon-decay relation, with the dimension-six (Warsaw, SMEFTsim
@@ -32,12 +34,14 @@ The one exception is the W mass, which in the {alpha, MZ, GF} scheme is derived 
 exact in the propagator, as SMEFTsim 3 does by default.
 
 FLAVOUR.  In the flavour mode of the released models, mfv (gen/emit_fr.py), every fermionic operator
-carries each of its flavour structures with a coefficient of its own.  Three of them reach muon decay
+carries each of its flavour structures with a coefficient of its own.  Six of them reach muon decay
 and so G_F: the crossed structures delta_pt delta_sr and delta_pt (Y_e Y_e^dag)_sr of
-Q_{l^4H^2}^{(1)} (c8l4H2x1Fx00, c8l4H2x1Fx0E), and the structure (Y_e Y_e^dag)_pr of
-Q_{l^2H^4D}^{(2),(4)} (c8l2H4Dx2FE, c8l2H4Dx4FE), the last two weighted by y_e^2 + y_mu^2 (ylsq).
-gen/derive_input_scheme.py has them.  In the universal mode the operators have one structure each, these
-coefficients do not exist, and emit() sets them to zero in the formulae.
+Q_{l^4H^2}^{(1)} (c8l4H2x1Fx00, c8l4H2x1Fx0E), the structure (Y_e Y_e^dag)_pr of
+Q_{l^2H^4D}^{(2),(4)} (c8l2H4Dx2FE, c8l2H4Dx4FE), the last two weighted by y_e^2 + y_mu^2 (ylsq),
+and the crossed structure (Y_e)_pt (Y_e^dag)_sr of Q_{l^2e^2H^2}^{(1),(2)} (c8l2e2H2x1Fx00,
+c8l2e2H2x2Fx00), weighted by yleta = y_e^2 g(x)/f(x) and, from O(t^4), by ylprod = y_e^2 y_mu^2.
+gen/derive_input_scheme.py and gen/derive_geo.py have them.  In the universal mode the operators have one
+structure each, these coefficients do not exist, and emit() sets them to zero in the formulae.
 
 THE OTHER INGREDIENTS.  The canonical normalisation of the gauge and Higgs fields (SMEFTsim's
 rotateGaugeB) comes from gen/derive_rotation.py, and the Higgs quartic and the Yukawas as series
@@ -84,7 +88,26 @@ SCHEME = os.environ.get("DIM8_SCHEME", "alpha").lower()
 
 
 # The coefficients of flavour structures in the formulae, which only the mfv mode has.
-FLAVOUR_WCS = ("c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E")
+FLAVOUR_WCS = ("c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E", "c8l2e2H2x1Fx00", "c8l2e2H2x2Fx00")
+
+
+def _eta_rows(P) -> list:
+    """The weight yleta = y_e^2 g(x)/f(x), x = m_e^2/m_mu^2, of the interference of the scalar coupling of muon
+    decay with the Standard Model (gen/derive_geo.py), and the helpers it is computed from.  MadGraph evaluates
+    every argument of cond, in Python and in Fortran, so no branch may divide by zero or take the logarithm of
+    zero: x is guarded at ymm = 0 and its logarithm at x = 0, where it enters only as x ln x.  f and g both
+    vanish as (1 - x)^5 at x = 1, where g/f is 1/4, and the cond on fmuon gives that value.  Since
+    f(1/x) = -f(x)/x^4 and g(1/x) = -g(x)/x^3, for yme > ymm the same expression is y_mu^2 g(1/x)/f(1/x),
+    the decay of the heavier of the two into the lighter, which at ymm = 0 is zero."""
+    return [
+        P("xemu", "yme^2/(ymm^2 + FR$Cond[ymm, 1, 0])", "m_e^2/m_mu^2 in muon decay"),
+        P("lxemu", "Log[xemu + FR$Cond[xemu, 1, 0]]", "Log[xemu], zero at xemu = 0, where xemu multiplies it"),
+        P("fmuon", "1 - 8 xemu + 8 xemu^3 - xemu^4 - 12 xemu^2 lxemu", "phase-space function f of muon decay"),
+        P("gmuon", "1 + 9 xemu - 9 xemu^2 - xemu^3 + 6 xemu (1 + xemu) lxemu",
+          "phase-space function g of the Michel eta term"),
+        P("yleta", "FR$Cond[ymm, 0, 2 yme^2/vevSM^2 FR$Cond[fmuon, 1/4, gmuon/(fmuon + FR$Cond[fmuon, 1, 0])]]",
+          "y_e^2 g/f, the weight of the Michel eta term in the muon-decay relation"),
+    ]
 
 
 def formulae(scheme: str = None, n: int = None) -> dict:
@@ -122,13 +145,13 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
             "   gen/input_scheme_formulae" + ("" if scheme == "alpha" else "_mw")
             + ".json, itself written by gen/derive_input_scheme.py.",
             "   " + "=" * 84 + " *)"]
-    # dimension-six coefficients and scale, SMEFTsim names, default zero
-    rows.append('  Lam6 == { ParameterType -> External, BlockName -> DIM6, OrderBlock -> 1, Value -> 1000,'
-                ' Description -> "dimension-six scale in GeV (SMEFTsim LambdaSMEFT)" }')
+    # dimension-six coefficients, SMEFTsim names, default zero.  Their scale is Lam (block DIM8, entry 0), the one
+    # scale of dimension six and eight.  Entry 1 of DIM6 held a second scale until 2026-11-10 and stays empty, so
+    # that the coefficients keep their entries.
     for i, (c, op) in enumerate(DIM6, start=2):
         rows.append(f'  {c} == {{ ParameterType -> External, BlockName -> DIM6, OrderBlock -> {i}, Value -> 0,'
                     f' InteractionOrder -> {{NP,1}}, Description -> "{op}, SMEFTsim convention" }}')
-    rows.append('  L6 == { ParameterType -> Internal, Value -> 1/Lam6^2, Description -> "1/Lambda_6^2" }')
+    rows.append('  L6 == { ParameterType -> Internal, Value -> 1/Lam^2, Description -> "1/Lambda^2" }')
     rows.append('  L8 == { ParameterType -> Internal, Value -> 1/Lam^4, Description -> "1/Lambda^4" }')
     # Standard Model values from the inputs (base.fr relations, unchanged)
     rows.append(P("vevSM", "1/Sqrt[Sqrt[2] Gf]", "SM vev from GF", io="{QED,-1}"))
@@ -148,6 +171,7 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
     for name, expr, desc in DIM8_FORM_FACTORS:
         rows.append(P(name, expr, f"dim-8 form factor: {desc}", 2))
     rows.append(P("ylsq", "2 (yme^2 + ymm^2)/vevSM^2", "y_e^2 + y_mu^2, in the muon-decay relation"))
+    rows += _eta_rows(P)
     # the derived shifts
     for k in (("gw", "g1", "vev", "MW2") if scheme == "alpha" else ("gw", "g1", "vev", "aEW")):
         rows.append(P(f"{k}1", F[f"{k}1"], f"O(1/Lambda^2) relative shift of {k}", 1))
@@ -166,7 +190,7 @@ def emit(helpers_only: bool = False, scheme: str = None) -> str:
             rows.append(row)
             rows.append(P(f"{k}2", F[f"{k}2"], f"O(1/Lambda^4) piece: {desc}", 2))
     # The Higgs potential.  base.fr has V = -muH^2 |H|^2 + lam |H|^4; with Q_H, Q_H8 in
-    # the Lagrangian as + cH |H|^6/Lam6^2 + c8H8 |H|^8/Lam^4 and a canonically normalised h,
+    # the Lagrangian as + cH |H|^6/Lam^2 + c8H8 |H|^8/Lam^4 and a canonically normalised h,
     # the minimum and the curvature at the actual vev vevT give
     #     2 lam = Zh^2 MH^2/vevT^2 + 3 cH vevT^2 L6 + 3 c8H8 vevT^4 L8
     #     muH^2 = lam vevT^2 - (3/4) cH vevT^4 L6 - (1/2) c8H8 vevT^6 L8
@@ -255,18 +279,18 @@ def emit_geo(n: int, scheme: str = None) -> str:
             f"   connections.  Generated by gen/input_scheme.py from gen/input_scheme_formulae_geo{n}_{scheme}.json,",
             "   itself written by gen/derive_geo.py.",
             "   " + "=" * 84 + " *)"]
-    rows.append('  Lam6 == { ParameterType -> External, BlockName -> DIM6, OrderBlock -> 1, Value -> 1000,'
-                ' Description -> "dimension-six scale in GeV (SMEFTsim LambdaSMEFT)" }')
     for i, (c, op) in enumerate(DIM6, start=2):
         rows.append(f'  {c} == {{ ParameterType -> External, BlockName -> DIM6, OrderBlock -> {i}, Value -> 0,'
                     f' InteractionOrder -> {{NP,1}}, Description -> "{op}, SMEFTsim convention" }}')
-    rows.append('  L6 == { ParameterType -> Internal, Value -> 1/Lam6^2, Description -> "1/Lambda_6^2" }')
+    rows.append('  L6 == { ParameterType -> Internal, Value -> 1/Lam^2, Description -> "1/Lambda^2" }')
     rows.append('  L8 == { ParameterType -> Internal, Value -> 1/Lam^4, Description -> "1/Lambda^4" }')
     for d in dims:
         rows.append(f'  L{d} == {{ ParameterType -> Internal, Value -> 1/Lam^{d - 4}, Description -> "1/Lambda^{d - 4}" }}')
-    # the four-lepton coefficients above dimension eight in the relations (2007.00565's LLLL tower)
-    gf = sorted({w for v in F.values() for w in re.findall(r"\bc(?:1[0-9]|[2-9][0-9])l4H2x[0-9A-Za-z]+\b", v)},
-                key=lambda w: (int(re.match(r"c(\d+)", w).group(1)), w))
+    # the four-lepton coefficients above dimension eight in the relations (2007.00565's LLLL tower), then the
+    # towers of the scalar coupling, numbered after them
+    gf = sorted({w for v in F.values()
+                 for w in re.findall(r"\bc(?:1[0-9]|[2-9][0-9])(?:l4H2x|l2e2H2x)[0-9A-Za-z]+\b", v)},
+                key=lambda w: ("l2e2H2x" in w, int(re.match(r"c(\d+)", w).group(1)), w))
     for i, w in enumerate(gf, start=1):
         d = int(re.match(r"c(\d+)", w).group(1))
         rows.append(f'  {w} == {{ ParameterType -> External, BlockName -> GEOGF, OrderBlock -> {i}, Value -> 0,'
@@ -287,6 +311,7 @@ def emit_geo(n: int, scheme: str = None) -> str:
                       "alpha, derived from the inputs", io="{QED,2}"))
     rows.append(P("ylsq", "2 (yme^2 + ymm^2)/vevSM^2", "y_e^2 + y_mu^2, in the muon-decay relation"))
     rows.append(P("ylprod", "4 yme^2 ymm^2/vevSM^4", "y_e^2 y_mu^2, in the muon-decay relation"))
+    rows += _eta_rows(P)
     series = [(k, f"relative shift of {k}") for k in
               (("gw", "g1", "vev", "MW2") if scheme == "alpha" else ("gw", "g1", "vev", "aEW"))]
     series += [("TZZ", "Z -> (1 + TZZ) Z + TZA A"), ("TZA", "Z -> ... + TZA A"),
@@ -409,6 +434,11 @@ def write_variant(base: str, out: str, scheme: str = None, n: int = None) -> Non
     class-12 compensation of every dimension through 2n + 4, no d8fG, and the truncation of geo_definitions."""
     scheme = scheme or SCHEME
     s = open(base).read()
+    # FeynRules declares FR$Cond, the cond of the UFO, but gives it no value, and yleta uses it
+    old = "FR$DSign = -1;"
+    assert s.count(old) == 1, f"expected exactly one occurrence of {old!r}, found {s.count(old)}"
+    s = s.replace(old, old + "\n\n(* the value of FR$Cond[a, b, c], the UFO's cond, that FeynRules has no definition for *)\n"
+                  "FR$Cond[z9a_?NumericQ, z9b_, z9c_] := If[z9a == 0, z9b, z9c];")
     m = n or 2
     S = lambda k: " + ".join(f"{k}{j}" for j in range(1, m + 1))
     if n is None:

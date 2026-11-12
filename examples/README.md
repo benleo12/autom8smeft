@@ -16,7 +16,7 @@ name, which is what the example scripts assume, or give `import model` an absolu
 import takes about two minutes, once per session (MG5_aMC 3.5.6, Apple silicon). It needs 7.7 GB
 of memory the first time, when Python compiles the model files, and 2.4 GB after that. Diagram generation is what the full basis costs: with `NP^2==2` on the unrestricted `dim8_mw`,
 `p p > w+ w-` is 796 diagrams in a 17-minute session, but `p p > h h j j QCD=0` is 525156 diagrams,
-more than eight hours of generation. With the card `./dim8 select` writes for it, HHjj is 9540
+3539 core-minutes of generation. With the card `./dim8 select` writes for it, HHjj is 9540
 diagrams in a 31-minute session, and with the class card `cls7` 600 in 13 minutes (one core of an
 Intel Xeon Gold 6148). A card costs time at import, more the more it keeps (44 minutes for
 `dim8_mw-all`), so for 2 to 4 processes restrict to what the process needs (`import model
@@ -87,8 +87,10 @@ every run, `NP=0` included, and invisible to the order counting.
 Two consequences. The pure Standard Model is the model with every coefficient at zero (example 02),
 not `NP=0` with coefficients on. And the operators that can affect a process are not only those with
 a vertex in it: in `p p > w+ w-` the two operators `Q_{l^2H^4D}^{(2)}` and `Q_{l^2H^4D}^{(4)}`,
-which contain no quarks at all and enter only through muon decay and hence G_F, carry about a third
-of the whole dimension-eight interference. `./dim8 select` lists such operators in a second group,
+which contain no quarks at all and enter only through muon decay and hence G_F, carry, with every
+coefficient at 1, 46 per cent of the 1/Lambda^4 cross section in `dim8_is`, where the shift of the W
+mass is part of it (40 per cent of the `NP^2==2` row alone), and 48 per cent in `dim8_mw`.
+`./dim8 select` lists such operators in a second group,
 beside those with a vertex, so its answer is complete at tree level with one insertion. This
 treatment of an input scheme is inherited from SMEFTsim. With `dim68_is`, `./dim8 select` lists the
 dimension-six coefficients one by one as well, those that enter `NP^2==2` only with a second
@@ -144,6 +146,7 @@ Studies (full runs, cross-section tables and distributions, see each folder's RE
 | `studies/vbf_dihiggs/` | `p p > h h j j` with VBF cuts |
 | `studies/drellyan/` | `p p > e+ e-` and `p p > e+ e- a` above 200 GeV, the four-fermion classes |
 | `studies/trihiggs_fcc/` | `p p > h h h` at 100 TeV |
+| `studies/distributions/` | `p p > w+ w-` and `p p > h h j j` at 10^5 events a row, the samples of the paper's two distribution figures |
 
 Restriction cards are written with
 

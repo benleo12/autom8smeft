@@ -10,7 +10,7 @@
    The model MUST be loaded first: the cached expressions carry FeynRules` heads (Eps, f,
    Index, T), and without FeynRules on the context path the rules below would be written in
    Global` and match nothing, reporting every vertex as different. *)
-$root = "${DIM8_ROOT:-.}";
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 z9args = Rest[$ScriptCommandLine];
 FR$NKernels = 0;
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";

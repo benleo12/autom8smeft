@@ -2,128 +2,128 @@
 
 ### p p > w+ w-
 
-Standard Model: 68.48 pb (+- 0.1562), M_W = 80.39 GeV
+Standard Model: 68.4 pb (+- 0.1731), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all 674 operators at once | -0.02904 | -0.04 | 0.6094 | 80.39 |
+| all 674 operators at once | -0.02581 | -0.04 | 0.5877 | 80.39 |
 | class 1 (X^4) | no diagram |  | 0.5464 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | -7.013e-05 | -1.0\times 10^{-4} | 1.953e-09 | 80.39 |
+| class 3 (H^6 D^2) | -6.804e-05 | -9.9e-05 | 1.949e-09 | 80.39 |
 | class 4 (H^4 D^4) | no diagram |  | no diagram | 80.39 |
-| class 5 (X^3 H^2) | -7.576e-05 | -1.1\times 10^{-4} | 8.081e-07 | 80.39 |
-| class 6 (X^2 H^4) | -4.103e-04 | -6.0\times 10^{-4} | 4.740e-05 | 80.39 |
+| class 5 (X^3 H^2) | -7.418e-05 | -1.1e-04 | 8.118e-07 | 80.39 |
+| class 6 (X^2 H^4) | -4.055e-04 | -5.9e-04 | 4.748e-05 | 80.39 |
 | class 7 (X^2 H^2 D^2) | no diagram |  | 0.008859 | 80.39 |
-| class 8 (X H^4 D^2) | -9.813e-05 | -1.4\times 10^{-4} | 9.986e-09 | 80.39 |
-| class 9 (psi^2 X^2 H) | -3.669e-06 | -5.4\times 10^{-6} | 0.001365 | 80.39 |
-| class 10 (psi^2 X H^3) | -5.975e-06 | -8.7\times 10^{-6} | 8.552e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -9.119e-04 | -1.3\times 10^{-3} | 1.775e-04 | 80.39 |
-| class 12 (psi^2 H^5) | -1.707e-06 | -2.5\times 10^{-6} | 6.964e-07 | 80.39 |
-| class 13 (psi^2 H^4 D) | 0.001312 | +1.9\times 10^{-3} | 1.700e-06 | 80.39 |
-| class 14 (psi^2 X^2 D) | -0.02947 | -0.04 | 0.02163 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 7.744e-04 | +1.1\times 10^{-3} | 3.226e-04 | 80.39 |
-| class 16 (psi^2 X H D^2) | -6.014e-07 | -8.8\times 10^{-7} | 0.02221 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -2.952e-07 | -4.3\times 10^{-7} | 6.976e-05 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 8 (X H^4 D^2) | -9.691e-05 | -1.4e-04 | 1.007e-08 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -8.981e-04 | -1.3e-03 | 0.003949 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 0.001299 | +1.9e-03 | 1.703e-06 | 80.39 |
+| class 14 (psi^2 X^2 D) | -0.02914 | -0.04 | 0.02137 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 7.503e-04 | +1.1e-03 | 3.203e-04 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 0.003106 | +4.5e-03 | 3.521e-08 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
-linearity check: sum of the class interferences -0.02896 +- 0.00011 pb against the all-on row -0.02904 +- 0.00012 pb (+0.5 sigma)
+linearity check: sum of the class interferences -0.02553 +- 0.00014 pb against the all-on row -0.02581 +- 0.00024 pb (+1.0 sigma)
 
 
 ### p p > w+ z
 
-Standard Model: 15.97 pb (+- 0.06702), M_W = 80.39 GeV
+Standard Model: 16.3 pb (+- 0.05283), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all 674 operators at once | -0.01137 | -0.07 | 0.0441 | 80.39 |
+| all 674 operators at once | -0.01302 | -0.08 | 0.02733 | 80.39 |
 | class 1 (X^4) | no diagram |  | no diagram | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 2.937e-04 | +1.8\times 10^{-3} | 4.835e-09 | 80.39 |
+| class 3 (H^6 D^2) | 2.984e-04 | +1.8e-03 | 4.899e-09 | 80.39 |
 | class 4 (H^4 D^4) | no diagram |  | no diagram | 80.39 |
-| class 5 (X^3 H^2) | -1.352e-04 | -8.5\times 10^{-4} | 6.949e-07 | 80.39 |
-| class 6 (X^2 H^4) | 0.001848 | +0.01 | 1.692e-07 | 80.39 |
+| class 5 (X^3 H^2) | -1.378e-04 | -8.5e-04 | 7.099e-07 | 80.39 |
+| class 6 (X^2 H^4) | 0.001879 | +0.01 | 1.713e-07 | 80.39 |
 | class 7 (X^2 H^2 D^2) | no diagram |  | no diagram | 80.39 |
-| class 8 (X H^4 D^2) | -9.456e-05 | -5.9\times 10^{-4} | 1.707e-08 | 80.39 |
-| class 9 (psi^2 X^2 H) | 1.255e-07 | +7.9\times 10^{-7} | 2.580e-04 | 80.39 |
-| class 10 (psi^2 X H^3) | 2.400e-07 | +1.5\times 10^{-6} | 4.384e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -9.748e-05 | -6.1\times 10^{-4} | 2.226e-04 | 80.39 |
+| class 8 (X H^4 D^2) | -9.565e-05 | -5.9e-04 | 1.741e-08 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -0.002287 | -0.01 | 0.001802 | 80.39 |
 | class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
-| class 13 (psi^2 H^4 D) | 0.001914 | +0.01 | 2.117e-06 | 80.39 |
-| class 14 (psi^2 X^2 D) | -0.01638 | -0.10 | 0.02482 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 0.001339 | +8.4\times 10^{-3} | 2.694e-04 | 80.39 |
-| class 16 (psi^2 X H D^2) | -3.632e-07 | -2.3\times 10^{-6} | 0.01818 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -2.888e-07 | -1.8\times 10^{-6} | 4.150e-05 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 0.001933 | +0.01 | 1.437e-06 | 80.39 |
+| class 14 (psi^2 X^2 D) | -0.01676 | -0.10 | 0.02545 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 0.001355 | +8.3e-03 | 1.726e-04 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 7.354e-04 | +4.5e-03 | 8.348e-09 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
-linearity check: sum of the class interferences -0.01131 +- 8e-05 pb against the all-on row -0.01137 +- 8.1e-05 pb (+0.5 sigma)
+linearity check: sum of the class interferences -0.01308 +- 8.2e-05 pb against the all-on row -0.01302 +- 6.8e-05 pb (-0.6 sigma)
 
 
 ### p p > w- z
 
-Standard Model: 9.721 pb (+- 0.03335), M_W = 80.39 GeV
+Standard Model: 9.883 pb (+- 0.02839), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all 674 operators at once | -0.004646 | -0.05 | 0.01339 | 80.39 |
+| all 674 operators at once | -0.005232 | -0.05 | 0.008356 | 80.39 |
 | class 1 (X^4) | no diagram |  | no diagram | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 1.764e-04 | +1.8\times 10^{-3} | 2.994e-09 | 80.39 |
+| class 3 (H^6 D^2) | 1.787e-04 | +1.8e-03 | 3.031e-09 | 80.39 |
 | class 4 (H^4 D^4) | no diagram |  | no diagram | 80.39 |
-| class 5 (X^3 H^2) | -8.222e-05 | -8.5\times 10^{-4} | 3.217e-07 | 80.39 |
-| class 6 (X^2 H^4) | 0.001119 | +0.01 | 1.002e-07 | 80.39 |
+| class 5 (X^3 H^2) | -8.311e-05 | -8.4e-04 | 3.270e-07 | 80.39 |
+| class 6 (X^2 H^4) | 0.001138 | +0.01 | 1.014e-07 | 80.39 |
 | class 7 (X^2 H^2 D^2) | no diagram |  | no diagram | 80.39 |
-| class 8 (X H^4 D^2) | -5.636e-05 | -5.8\times 10^{-4} | 8.324e-09 | 80.39 |
-| class 9 (psi^2 X^2 H) | 7.217e-08 | +7.4\times 10^{-7} | 9.089e-05 | 80.39 |
-| class 10 (psi^2 X H^3) | 3.908e-07 | +4.0\times 10^{-6} | 2.096e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -5.234e-05 | -5.4\times 10^{-4} | 8.252e-05 | 80.39 |
+| class 8 (X H^4 D^2) | -5.765e-05 | -5.8e-04 | 8.457e-09 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -0.001029 | -0.01 | 5.543e-04 | 80.39 |
 | class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
-| class 13 (psi^2 H^4 D) | 0.001136 | +0.01 | 1.041e-06 | 80.39 |
-| class 14 (psi^2 X^2 D) | -0.007594 | -0.08 | 0.007557 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 7.145e-04 | +7.4\times 10^{-3} | 9.619e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | -3.700e-07 | -3.8\times 10^{-6} | 0.00556 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -3.164e-07 | -3.3\times 10^{-6} | 1.465e-05 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 0.001154 | +0.01 | 7.071e-07 | 80.39 |
+| class 14 (psi^2 X^2 D) | -0.007711 | -0.08 | 0.00773 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 7.258e-04 | +7.3e-03 | 6.142e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 4.476e-04 | +4.5e-03 | 5.081e-09 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
-linearity check: sum of the class interferences -0.004639 +- 4.2e-05 pb against the all-on row -0.004646 +- 5e-05 pb (+0.1 sigma)
+linearity check: sum of the class interferences -0.005237 +- 3.1e-05 pb against the all-on row -0.005232 +- 3.1e-05 pb (-0.1 sigma)
 
 
 ### p p > z z
 
-Standard Model: 9.877 pb (+- 0.03255), M_W = 80.39 GeV
+Standard Model: 9.858 pb (+- 0.0345), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all 674 operators at once | -0.003444 | -0.03 | 0.2774 | 80.39 |
+| all 674 operators at once | -0.002038 | -0.02 | 0.2809 | 80.39 |
 | class 1 (X^4) | no diagram |  | 0.2736 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 3.509e-04 | +3.6\times 10^{-3} | 1.187e-08 | 80.39 |
+| class 3 (H^6 D^2) | 3.477e-04 | +3.5e-03 | 1.173e-08 | 80.39 |
 | class 4 (H^4 D^4) | no diagram |  | no diagram | 80.39 |
 | class 5 (X^3 H^2) | no diagram |  | no diagram | 80.39 |
-| class 6 (X^2 H^4) | 0.002025 | +0.02 | 2.019e-05 | 80.39 |
+| class 6 (X^2 H^4) | 0.002014 | +0.02 | 2.020e-05 | 80.39 |
 | class 7 (X^2 H^2 D^2) | no diagram |  | 0.004444 | 80.39 |
-| class 8 (X H^4 D^2) | -4.465e-10 | -4.5\times 10^{-9} | 8.171e-14 | 80.39 |
-| class 9 (psi^2 X^2 H) | 2.155e-07 | +2.2\times 10^{-6} | 5.672e-04 | 80.39 |
-| class 10 (psi^2 X H^3) | -7.771e-08 | -7.9\times 10^{-7} | 1.652e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -3.362e-04 | -3.4\times 10^{-3} | 5.254e-05 | 80.39 |
-| class 12 (psi^2 H^5) | -1.829e-07 | -1.9\times 10^{-6} | 2.488e-07 | 80.39 |
-| class 13 (psi^2 H^4 D) | 6.291e-04 | +6.4\times 10^{-3} | 3.218e-08 | 80.39 |
-| class 14 (psi^2 X^2 D) | -0.005801 | -0.06 | 0.002212 | 80.39 |
-| class 15 (psi^2 X H^2 D) | -2.777e-04 | -2.8\times 10^{-3} | 1.145e-04 | 80.39 |
-| class 16 (psi^2 X H D^2) | -4.807e-08 | -4.9\times 10^{-7} | 0.003791 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -3.428e-08 | -3.5\times 10^{-7} | 9.787e-06 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 8 (X H^4 D^2) | no diagram |  | no diagram | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | 6.715e-04 | +6.8e-03 | 2.094e-04 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 6.291e-04 | +6.4e-03 | 3.217e-08 | 80.39 |
+| class 14 (psi^2 X^2 D) | -0.005842 | -0.06 | 0.002163 | 80.39 |
+| class 15 (psi^2 X H^2 D) | -2.724e-04 | -2.8e-03 | 1.159e-04 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 4.477e-04 | +4.5e-03 | 5.067e-09 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
-linearity check: sum of the class interferences -0.00341 +- 1.8e-05 pb against the all-on row -0.003444 +- 1.8e-05 pb (+1.4 sigma)
+linearity check: sum of the class interferences -0.002004 +- 1.9e-05 pb against the all-on row -0.002038 +- 1.9e-05 pb (+1.2 sigma)
 

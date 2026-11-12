@@ -1,10 +1,13 @@
 cff-version: 1.2.0
 title: autom8smeft
 message: >-
-  If you use this model, please cite it together with the paper that defines
-  the Murphy basis it encodes and the tools that write and read it. The authors of
-  those references have no involvement in this work.
+  If you use these models, please cite them together with the paper that defines
+  the Murphy basis, the papers the default class psi^2H^2D^3 follows, and the tools
+  that write and read the models. The authors of the Murphy basis and of those tools
+  have no involvement in this work.
 type: software
+version: "1.0.0"
+date-released: "2026-11-11"
 authors:
   - family-names: Assi
     given-names: Benoît
@@ -27,6 +30,7 @@ references:
     authors:
       - family-names: Murphy
         given-names: Christopher W.
+    doi: "10.1007/JHEP10(2020)174"
     identifiers:
       - type: other
         value: "arXiv:2005.00059"
@@ -34,28 +38,124 @@ references:
     volume: "10"
     year: 2020
     start: 174
-    notes: "defines the Murphy basis, which this model encodes"
+    notes: "defines the Murphy basis, on which these models are built"
+  - type: article
+    title: "Higgs associated production with a vector decaying to two fermions in the geoSMEFT"
+    authors:
+      - family-names: Corbett
+        given-names: Tyler
+      - family-names: Martin
+        given-names: Adam
+    doi: "10.21468/SciPostPhys.16.1.019"
+    identifiers:
+      - type: other
+        value: "arXiv:2306.00053"
+    journal: "SciPost Phys."
+    volume: "16"
+    issue: "1"
+    year: 2024
+    start: "019"
+    notes: "the default models replace the class psi^2H^2D^3 of the Murphy basis by operators in which every Higgs field carries a derivative, following this paper"
+  - type: article
+    title: "Monolepton production in SMEFT to O(1/Lambda^4) and beyond"
+    authors:
+      - family-names: Kim
+        given-names: Taegyun
+      - family-names: Martin
+        given-names: Adam
+    doi: "10.1007/JHEP09(2022)124"
+    identifiers:
+      - type: other
+        value: "arXiv:2203.11976"
+    journal: "JHEP"
+    volume: "09"
+    year: 2022
+    start: 124
+    notes: "cited in the paper with the one above for the default class psi^2H^2D^3"
   - type: article
     title: "FeynRules 2.0 - A complete toolbox for tree-level phenomenology"
+    authors:
+      - family-names: Alloul
+        given-names: Adam
+      - family-names: Christensen
+        given-names: Neil D.
+      - family-names: Degrande
+        given-names: Céline
+      - family-names: Duhr
+        given-names: Claude
+      - family-names: Fuks
+        given-names: Benjamin
+    doi: "10.1016/j.cpc.2014.04.012"
     identifiers:
       - type: other
         value: "arXiv:1310.1921"
+    journal: "Comput. Phys. Commun."
+    volume: "185"
+    year: 2014
+    start: 2250
+    end: 2300
     notes: "the model files are written with it"
   - type: article
-    title: "The automated computation of tree-level and next-to-leading order differential cross sections"
+    title: "The automated computation of tree-level and next-to-leading order differential cross sections, and their matching to parton shower simulations"
+    authors:
+      - family-names: Alwall
+        given-names: J.
+      - family-names: Frederix
+        given-names: R.
+      - family-names: Frixione
+        given-names: S.
+      - family-names: Hirschi
+        given-names: V.
+      - family-names: Maltoni
+        given-names: F.
+      - family-names: Mattelaer
+        given-names: O.
+      - family-names: Shao
+        given-names: H.-S.
+      - family-names: Stelzer
+        given-names: T.
+      - family-names: Torrielli
+        given-names: P.
+      - family-names: Zaro
+        given-names: M.
+    doi: "10.1007/JHEP07(2014)079"
     identifiers:
       - type: other
         value: "arXiv:1405.0301"
+    journal: "JHEP"
+    volume: "07"
+    year: 2014
+    start: "079"
     notes: "the UFO is read by it"
   - type: article
     title: "SMEFTsim 3.0 - a practical guide"
+    authors:
+      - family-names: Brivio
+        given-names: Ilaria
+    doi: "10.1007/JHEP04(2021)073"
     identifiers:
       - type: other
         value: "arXiv:2012.11343"
+    journal: "JHEP"
+    volume: "04"
+    year: 2021
+    start: "073"
     notes: "the dimension-six sector of models/dim68_is is SMEFTsim's, in its U(3)^5 framework"
   - type: article
     title: "The SMEFTsim package, theory and tools"
+    authors:
+      - family-names: Brivio
+        given-names: Ilaria
+      - family-names: Jiang
+        given-names: Yun
+      - family-names: Trott
+        given-names: Michael
+    doi: "10.1007/JHEP12(2017)070"
     identifiers:
       - type: other
         value: "arXiv:1709.06492"
+    journal: "JHEP"
+    volume: "12"
+    year: 2017
+    start: "070"
     notes: "SMEFTsim, cited with the flavour framework above"

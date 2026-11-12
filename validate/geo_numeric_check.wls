@@ -8,20 +8,25 @@
    counted apart, with the value z8numRules gives it.
 
      DIM8_ROOT=... wolframscript -file validate/geo_numeric_check.wls 2 *)
-$root = Environment["DIM8_ROOT"];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$NKernels = 0; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"];
 z9N = ToExpression[$ScriptCommandLine[[2]]];
 z9gen = "gen_geo" <> ToString[Max[z9N, 2]] <> ".fr";
-LoadModel["base_geo" <> ToString[z9N] <> "_mw.fr", "dim6_geo.fr", If[FileExistsQ[z9gen], z9gen, "gen_geo4.fr"], "gen.fr"];
+z9gen = If[FileExistsQ[z9gen], z9gen, "gen_geo4.fr"];
+z9base = "base_geo" <> ToString[z9N] <> "_mw.fr";
+z9miss = Select[{z9base, "dim6_geo.fr", z9gen, "gen.fr"}, ! FileExistsQ[#] &];
+If[z9miss =!= {}, Print["[numcheck] ABORT: not in ", Directory[], ": ", z9miss]; Exit[1]];
+LoadModel[z9base, "dim6_geo.fr", z9gen, "gen.fr"];
+If[z8geoN =!= z9N, Print["[numcheck] ABORT: the base is of order ", z8geoN]; Exit[1]];
 Get[$root <> "/validate/geo_numeric.m"];
 z9npOf[z9p_] := Module[{z9io = InteractionOrder /. Flatten[{z9p[[2]]}]},
   If[z9io === InteractionOrder, 0, Total[Cases[If[MatchQ[z9io, {_Symbol, _Integer}], {z9io}, z9io], {NP, z9n_Integer} :> z9n]]]];
 SeedRandom[20261108];
-z9set = Join[{Lam -> 1000., Lam6 -> 1000.}, (#[[1]] -> RandomReal[{-1, 1}] 3^z9npOf[#]/2^z9npOf[#]) & /@
+z9set = Join[{Lam -> 1000.}, (#[[1]] -> RandomReal[{-1, 1}] 3^z9npOf[#]/2^z9npOf[#]) & /@
    Select[M$Parameters, z8numExternalQ[#] && z9npOf[#] > 0 &]];
-Print["[numcheck] ", Length[z9set] - 2, " coefficients set"];
+Print["[numcheck] ", Length[z9set] - 1, " coefficients set"];
 {z9tf, z9mine} = AbsoluteTiming[z8numRules[z9set]];
 z9mine = Association[z9mine];
 Print["[numcheck] z8numRules: ", Length[z9mine], " values in ", Round[z9tf, 0.1], " s"];

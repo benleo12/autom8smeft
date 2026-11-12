@@ -17,8 +17,9 @@
    as it does in the derivation (see below), and the Higgs mass is then part of the test.
 
      DIM8_ROOT=... wolframscript -file validate/check_bilinears.wls [dim6_smeftsim.fr]
+   The exit status is 0 when every residue passes and 1 otherwise.
 *)
-$root = Environment["DIM8_ROOT"];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$NKernels = 0; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"];
@@ -94,3 +95,4 @@ Do[Module[{z9k = Sort[DeleteCases[z9v[[1, All, 1]], G0]], z9m, z9sc},
       If[z9m[[3]] > 10^-13 z9sc && z9m[[2]]/z9m[[3]] < 6.5, z9bad++], {z9kin, {True, False}}]], {z9v, z9dif}];
 Print["[bilinear] ", If[z9bad == 0, "PASS: every two-point residue falls as t^3", ToString[z9bad] <> " two-point residues fall slower than t^3"]];
 Print["[alldone]"];
+Quit[If[z9bad == 0, 0, 1]];

@@ -12,11 +12,18 @@ operator class with its interference (1/Lambda^4) and squared (1/Lambda^8) cross
 the ratio of interference to the SM, and where a class gives no diagram at an order.  The W mass
 of each row is recomputed from the model at the row's settings with validate/eval_ufo_params.py,
 so a row whose vacuum differs from the Standard Model's is visible in the table.  Pure Python.
+
+Nothing is written unless every row checks out against its record and all rows come from one model
+version (provenance.py), and the model the W mass is computed from is that version.
 """
 import os, re, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
+sys.path.insert(0, HERE)
+import provenance  # noqa: E402
+
+
 def tex_proc(proc):
     """'p p > w+ w- z' -> '$pp \\to W^+ W^- Z$' for the LaTeX table (a bare '>' typesets wrongly)."""
     m = {"p": "p", "w+": "W^+", "w-": "W^-", "z": "Z", "h": "H", "a": "\\gamma", "j": "j", "g": "g",
@@ -73,9 +80,14 @@ def mw_of(model, settings, cls=None):
     if key not in _mw_cache:
         py = "python3.11" if subprocess.run(["which", "python3.11"], capture_output=True).returncode == 0 else "python3"
         out = subprocess.run([py, os.path.join(ROOT, "validate", "eval_ufo_params.py"), model] + settings.split() + ["--show=MW"],
-                             capture_output=True, text=True).stdout
-        m = re.search(r"^MW\s*=\s*([-\d.eE+]+)", out, re.M)
-        _mw_cache[key] = float(m.group(1)) if m else float("nan")
+                             capture_output=True, text=True)
+        m = re.search(r"^MW\s*=\s*([-\d.eE+]+)", out.stdout, re.M)
+        mw = float(m.group(1)) if m else float("nan")
+        # a W mass the model does not give stops the table, rather than printing nan in it
+        if out.returncode != 0 or mw != mw:
+            sys.exit(f"table_study.py: not written, validate/eval_ufo_params.py gives no W mass for {model} at "
+                     f"{settings.strip() or 'its defaults'}:\n{out.stderr.strip()[-600:]}")
+        _mw_cache[key] = mw
     return _mw_cache[key]
 
 
@@ -108,6 +120,11 @@ def main(argv):
         if len(base) != 1:
             sys.exit(f"{st}/results.tsv: rows from {len(base)} models ({', '.join(sorted(base))}), name the model")
         model = os.path.join(ROOT, "models", base.pop())
+    version = provenance.require([os.path.join(st, "results.tsv")], "table_study.py")
+    mh = provenance.model_id(model)[0] if os.path.isdir(model) else version
+    if mh != version:
+        sys.exit(f"table_study.py: not written, the rows come from model {version[:12]} and {model} is model "
+                 f"{mh[:12]}, so its W mass is not the rows' (name the model the rows were run with)")
     col = {h: i for i, h in enumerate(head)}
     procs = []
     for r in rows:
@@ -145,20 +162,23 @@ def main(argv):
                     log = os.path.join(os.environ.get("DIM8_RUNS", os.path.expanduser("~/dim8auto_build/mg5runs")), tag + ".log")
                     if os.path.exists(log) and "NoDiagramException" in open(log).read(): v = "NO_DIAGRAMS"
                 return {"NO_DIAGRAMS": "no diagram", "NO_OUTPUT": "no output", "FAILED": "failed", "BAD_SETTING": "bad setting"}.get(v, tex_num(v) if tex else fmt(v))
-            ratio = ""
+            ratio = ratio_md = ""
             if i and re.match(r"^-?[\d.]", i[col["sigma_pb"]]) and sm_x == sm_x and sm_x:
                 dev = 100 * float(i[col["sigma_pb"]]) / sm_x   # the "SM deviation (%)" column of arXiv:2410.21563
-                # "-5.7e-03" typesets as "-5.7e - 03" in math mode; use a power of ten
+                # "-5.7e-03" typesets as "-5.7e - 03" in math mode, so the LaTeX table has a power of
+                # ten, and the Markdown table, which no one typesets, keeps the e notation
                 if abs(dev) >= 0.01:
-                    ratio = f"{dev:+.2f}"
+                    ratio = ratio_md = f"{dev:+.2f}"
                 else:
-                    m, e = f"{dev:+.1e}".split("e")
+                    ratio_md = f"{dev:+.1e}"
+                    m, e = ratio_md.split("e")
                     ratio = f"{m}\\times 10^{{{int(e)}}}"
             settings = (i or s)[col["settings"]] if (i or s) else "dim8_all=1"
             cls = int(tag.rsplit("-cls", 1)[1]) if "-cls" in tag else None
-            mw = mw_of(model, settings, cls) if (i or s) else float("nan")
-            md.append(f"| {label} | {val(i)} | {ratio} | {val(s)} | {mw:.2f} |")
-            tex.append(f"{tex_class(label)} & {val(i, True)} & {('$' + ratio + '$') if ratio else ''} & {val(s, True)} & ${mw:.2f}$\\\\")
+            # a line with no run at all has no settings, and so no W mass
+            mw = f"{mw_of(model, settings, cls):.2f}" if (i or s) else "not run"
+            md.append(f"| {label} | {val(i)} | {ratio_md} | {val(s)} | {mw} |")
+            tex.append(f"{tex_class(label)} & {val(i, True)} & {('$' + ratio + '$') if ratio else ''} & {val(s, True)} & {('$' + mw + '$') if (i or s) else mw}\\\\")
         for t in full_tags:
             if t == base: line("all 674 operators at once", t)
             else: line(f"all, card {t.split('-', 1)[1].replace('_', chr(92) + '_')}", t)

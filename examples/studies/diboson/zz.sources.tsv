@@ -1,0 +1,10 @@
+kind	label	path	sha256	model_version	results
+events	SM	examples/studies/diboson/lhe/p_p___z_z_dim8_mw_NP_0.lhe.gz	48f033a116f33223e544669c1bdaa9340a0641c869942dada23a2f6f0ebe7c8c	87d69304a7f6fb2cc899b5a90b8429ae1ae91a13702f9617ddf68139fbffb0b4	examples/studies/diboson/results.tsv
+events	int	examples/studies/diboson/lhe/p_p___z_z_dim8_mw_NP_2__2.lhe.gz	ca2061005750edb30e071d8f65de9644a2dc9f8dfbbe13e92d4996c7fee4939e	87d69304a7f6fb2cc899b5a90b8429ae1ae91a13702f9617ddf68139fbffb0b4	examples/studies/diboson/results.tsv
+events	sq	examples/studies/diboson/lhe/p_p___z_z_dim8_mw_NP__2_NP_2__4.lhe.gz	01b33f26e43725348f9f1e7bf1f6907d141b4a6d0c827cafebb047076a98a7bb	87d69304a7f6fb2cc899b5a90b8429ae1ae91a13702f9617ddf68139fbffb0b4	examples/studies/diboson/results.tsv
+table	-	examples/studies/diboson/zz_mVV.tsv	c73368ea8864fba4de2f2e8f8b733c1adafd7c551a57248f4da92a96132f5540	-	-
+table	-	examples/studies/diboson/zz_pT.tsv	e9cadec32a6f199a60eb18532a68c675bc913a549be313a95920e07308734623	-	-
+table	-	examples/studies/diboson/zz_mVV_err.tsv	40b2923e6a38a3cd9ef83f4ebf62f74e02e3ddf7f3d2ed3193df094269258f29	-	-
+table	-	examples/studies/diboson/zz_pT_err.tsv	b3d63b4d325e93f9478697546afcc774478bc29a4ee9fe38139e8a68a5da6e88	-	-
+table	-	examples/studies/diboson/zz_mVV_R.tsv	22013be23086b2ef6fde84631ae18511446c8d92f4c09839023cdc8f7a0ae478	-	-
+table	-	examples/studies/diboson/zz_stat.json	c5650c8c40b4f96eaae158619acf5c441d097bdc5584977fef6693af988b7af2	-	-

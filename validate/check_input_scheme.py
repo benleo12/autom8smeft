@@ -35,10 +35,15 @@ def main() -> int:
                g1SM=math.sqrt(4*math.pi*aEW)/math.sqrt(1-sw2))
     # y_e^2 + y_mu^2 of the muon-decay relation, as the model computes it from the masses (gen/input_scheme.py)
     env["ylsq"] = 2*(0.000511**2 + 0.10566**2)/env["vevSM"]**2
+    # and y_e^2 g(x)/f(x), the weight of the Michel eta term, x = m_e^2/m_mu^2
+    x = (0.000511/0.10566)**2
+    env["yleta"] = (2*0.000511**2/env["vevSM"]**2*(1 + 9*x - 9*x**2 - x**3 + 6*x*(1 + x)*math.log(x))
+                    / (1 - 8*x + 8*x**3 - x**4 - 12*x**2*math.log(x)))
     # the flavour structures of block DIM8F that reach muon decay are coefficients like the others
     zero = {c: 0.0 for c in ["cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "c8W2H4x1", "c8W2H4x3",
                              "c8B2H4x1", "c8WBH4x1", "c8H6x1", "c8H6x2", "c8l2H4Dx2", "c8l2H4Dx4",
-                             "c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E"]}
+                             "c8l2H4Dx2FE", "c8l2H4Dx4FE", "c8l4H2x1Fx00", "c8l4H2x1Fx0E",
+                             "c8l2e2H2x1Fx00", "c8l2e2H2x2Fx00"]}
     def derived(wc, L6, L8):
         e = {**env, **wc, "L6": L6, "L8": L8}
         d = {k: env[f"{k}SM"]*(1 + ev(F[f"{k}1"], e) + ev(F[f"{k}2"], e)) for k in ("gw", "g1", "vev")}

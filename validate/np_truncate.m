@@ -35,8 +35,12 @@
    (gen/towers.py): those vertices keep their pieces through NP n, and every other vertex its pieces
    through NP 2, the order its four-or-more-leg content is complete to.  Pieces above that order are
    removed whatever else the structure holds, so that an NP <= n run does not pick up an incomplete one.
-   Unset, the order is 2 for every vertex and the rules above hold unchanged. *)
-ztGeoN = If[Environment["DIM8_GEO_N"] === $Failed, None, ToExpression[Environment["DIM8_GEO_N"]]];
+   Unset, the order is 2 for every vertex and the rules above hold unchanged.
+
+   The parameters are moved with z8UpdateParameters (validate/update_parameters.m), which leaves what
+   FeynRules' UpdateParameters leaves without its minutes per call. *)
+Get[FileNameJoin[{DirectoryName[$InputFileName], "update_parameters.m"}]];
+ztGeoN =If[Environment["DIM8_GEO_N"] === $Failed, None, ToExpression[Environment["DIM8_GEO_N"]]];
 ztCap[ztFields_List] := If[ztGeoN =!= None && Length[ztFields] <= 3, ztGeoN, 2];
 
 ztNPof[ztOpts_List] := Module[{ztIO = InteractionOrder /. ztOpts},
@@ -52,11 +56,15 @@ ztInit[] := Module[{},
   (* the coefficients the probes move: every external parameter that carries an NP order *)
   ztExtQ[ztP_] := (ParameterType /. ztOptsOf[ztP]) === External;
   ztExt = Select[ztParams, ztExtQ[#] && ztNP[#] > 0 &];
-  ztEW = Select[{aEWM1, aEW, Gf, MZ, MH}, KeyExistsQ[ztOptsOf, #] && ztExtQ[#] &];];
+  ztEW = Select[{aEWM1, aEW, Gf, MZ, MH}, KeyExistsQ[ztOptsOf, #] && ztExtQ[#] &];
+  ClearAll[ztFactorQ];
+  ztFactorQ[ztX_] := ztFactorQ[ztX] = AllTrue[DeleteDuplicates[Cases[{ztX}, _Symbol, {0, Infinity}, Heads -> True]],
+    Context[#] === "System`" || KeyExistsQ[ztParamQ, #] &];];
 
-(* a factor is a parameter factor when every symbol in it is a model parameter or a built-in *)
-ztParamFactorQ[ztX_] := AllTrue[DeleteDuplicates[Cases[{ztX}, _Symbol, {0, Infinity}, Heads -> True]],
-  Context[#] === "System`" || KeyExistsQ[ztParamQ, #] &];
+(* a factor is a parameter factor when every symbol in it is a model parameter or a built-in; the answer is
+   kept for each factor (ztFactorQ, set in ztInit with the parameters of the model), since the terms of a
+   vertex repeat the same few factors *)
+ztParamFactorQ[ztX_] := ztFactorQ[ztX];
 
 (* a term -> {structure, parameter factor} *)
 ztSplit[ztT_] := Module[{ztF = If[Head[ztT] === Times, List @@ ztT, {ztT}]},
@@ -71,27 +79,33 @@ ztOrder[ztP_] := Exponent[(ztP /. Conjugate[ztX_] :> ztX) /. ztEpsRules, ztEps];
    coefficients shift the positions, and a genuine piece was removed.  Square roots of distinct
    primes are linearly independent over the rationals, so no integer combination of them vanishes;
    the two probes use disjoint sets of primes. *)
-ztSetProbe[ztK_] := Module[{ztN = Length[ztExt]},
-  UpdateParameters @@ Join[
+ztProbe[ztK_] := Module[{ztN = Length[ztExt]},
+  Join[
     Thread[ztExt -> N[Table[If[ztK == 1, 1/2 + FractionalPart[Sqrt[Prime[ztI]]],
                                          -(3/10 + FractionalPart[Sqrt[Prime[ztN + ztI]]])], {ztI, ztN}], 20]],
     If[MemberQ[ztParams, Lam], {Lam -> If[ztK == 1, 3000., 4500.]}, {}],
-    If[ztK == 2, Thread[ztEW -> (1.013 NumericalValue /@ ztEW)], {}]];
-  ztRules = Dispatch[(# -> NumericalValue[#]) & /@ Select[ztParams, NumericQ[NumericalValue[#]] &]]];
+    If[ztK == 2, Thread[ztEW -> (1.013 NumericalValue /@ ztEW)], {}]]];
+ztSetProbe[ztK_] := (
+  z8UpdateParameters @@ ztProbe[ztK];
+  ztRules = Dispatch[(# -> NumericalValue[#]) & /@ Select[ztParams, NumericQ[NumericalValue[#]] &]]);
 
 ztVal[ztP_] := Module[{ztV = N[ztP /. ztRules]}, If[NumericQ[ztV], ztV, N[NumericalValue[ztP]]]];
 
+(* the seconds each step of ztTruncate takes, for the [clock] line of the report *)
+ztLap[ztName_String] := (AppendTo[ztClock, ztName -> AbsoluteTime[] - ztLapT]; ztLapT = AbsoluteTime[];);
+
 ztTruncate[ztMerged_List] := Module[{ztOrig, ztTerms, ztSplits, ztOrders, ztV1, ztV2, ztGroups,
     ztOut = {}, ztReport = {}, ztWorstZero = 0., ztBestKept = Infinity, ztUnjudged = 0},
+  ztClock = {}; ztLapT = AbsoluteTime[];
   ztInit[];
   ztOrig = Join[Thread[ztExt -> (NumericalValue /@ ztExt)], Thread[ztEW -> (NumericalValue /@ ztEW)],
                 If[MemberQ[ztParams, Lam], {Lam -> NumericalValue[Lam]}, {}]];
-  ztTerms = (If[Head[#] === Plus, List @@ #, {#}] &[Expand[#[[2]]]]) & /@ ztMerged;
-  ztSplits = Map[ztSplit, ztTerms, {2}];
-  ztOrders = Map[ztOrder, ztSplits[[All, All, 2]], {2}];
-  ztSetProbe[1]; ztV1 = Map[ztVal, ztSplits[[All, All, 2]], {2}];
-  ztSetProbe[2]; ztV2 = Map[ztVal, ztSplits[[All, All, 2]], {2}];
-  UpdateParameters @@ ztOrig;
+  ztTerms = (If[Head[#] === Plus, List @@ #, {#}] &[Expand[#[[2]]]]) & /@ ztMerged; ztLap["expand"];
+  ztSplits = Map[ztSplit, ztTerms, {2}]; ztLap["split"];
+  ztOrders = Map[ztOrder, ztSplits[[All, All, 2]], {2}]; ztLap["orders"];
+  ztSetProbe[1]; ztLap["parameters"]; ztV1 = Map[ztVal, ztSplits[[All, All, 2]], {2}]; ztLap["values"];
+  ztSetProbe[2]; ztLap["parameters"]; ztV2 = Map[ztVal, ztSplits[[All, All, 2]], {2}]; ztLap["values"];
+  z8UpdateParameters @@ ztOrig; ztLap["parameters"];
   Do[
     Module[{ztKeys = Transpose[{ztSplits[[ztI, All, 1]], ztOrders[[ztI]]}], ztIdx, ztZero = {},
         ztLive, ztKeep, ztFields = ztMerged[[ztI, 1, All, 1]]},
@@ -118,13 +132,16 @@ ztTruncate[ztMerged_List] := Module[{ztOrig, ztTerms, ztSplits, ztOrders, ztV1, 
       Which[Length[ztKeep] == Length[ztKeys], AppendTo[ztOut, ztMerged[[ztI]]],
             Length[ztLive] > 0, AppendTo[ztOut, {ztMerged[[ztI, 1]], Total[ztTerms[[ztI, ztKeep]]]}]]],
     {ztI, Length[ztMerged]}];
+  ztLap["classification"];
   {ztOut, <|"changed" -> ztReport, "worstZero" -> ztWorstZero, "bestKept" -> ztBestKept,
-            "unjudged" -> ztUnjudged|>}];
+            "unjudged" -> ztUnjudged, "terms" -> Total[Length /@ ztTerms], "clock" -> Merge[ztClock, Total]|>}];
 
-(* one line per changed vertex, and the separation the classification ran with *)
+(* one line per changed vertex, the separation the classification ran with, and where the time went *)
 ztPrintReport[ztRep_] := (
   Scan[Print["[truncate] ", #[[1]], ": ", #[[2]], " of ", #[[3]], " terms removed (NP orders ",
              #[[4]], "), ", #[[5]]] &, ztRep["changed"]];
   Print["[truncate] separation: removed pieces cancel to <= ", ScientificForm[ztRep["worstZero"], 2],
         " of their moduli, kept pieces to >= ", ScientificForm[ztRep["bestKept"], 2],
-        "; ", ztRep["unjudged"], " pieces vanish term by term at a probe and are kept"]);
+        "; ", ztRep["unjudged"], " pieces vanish term by term at a probe and are kept"];
+  Print["[clock] truncation: ", ztRep["terms"], " terms; seconds ",
+        StringRiffle[KeyValueMap[#1 <> " " <> ToString[Round[#2, 0.1]] &, ztRep["clock"]], ", "]]);

@@ -2,7 +2,7 @@
 """Which source a cached vertex block was built from, and whether that is still the source.
 
     python3 validate/cache_source.py stamp <cache dir> <block> [<block> ...]
-    python3 validate/cache_source.py check <cache dir>[;<cache dir> ...] [<block list file>]
+    python3 validate/cache_source.py check <cache dir>[;<cache dir> ...] [<block list file>] [--strict]
     python3 validate/cache_source.py stale <cache dir> <block>
     python3 validate/cache_source.py hash <block>
     python3 validate/cache_source.py backstamp <cache dir> [--repo DIR] [--write]
@@ -32,7 +32,8 @@ block: `check` recomputes the hashes of the blocks in the cache directories (or 
 list) and exits 1 when any stamp differs from the current source, so that validate/fr_writeufo.wls,
 which calls it before loading anything, stops instead of writing a model from a stale block.  A block
 without a stamp says nothing about its source: `check` names how many and does not stop for them, and
-the worker skips them.  ./dim8 build gives one the stamp of the old code when it changes the block's
+the worker skips them, and with --strict `check` stops for them too, and for a block of the list that no cache
+holds, as hpc/build_geo.sh asks before it writes a model.  ./dim8 build gives one the stamp of the old code when it changes the block's
 definition in gen.fr, `backstamp` does it for a whole cache, and ./dim8 rebuild takes no block without
 a stamp, since it would release a model from such a block with only this count to show for it.
 
@@ -208,7 +209,7 @@ def stamp(vdir, blocks):
     return 0
 
 
-def check(vdirs, blocks=None):
+def check(vdirs, blocks=None, strict=False):
     found = {}
     for d in vdirs:
         if not os.path.isdir(d):
@@ -231,7 +232,14 @@ def check(vdirs, blocks=None):
         print("  stale: " + " ".join(stale[:30]) + (" ..." if len(stale) > 30 else ""))
         print("  rebuild them before writing a model: ./dim8 build a dimension-eight block, ./dim8 rebuild a "
               "dimension-six one, or validate/fr_worker.wls either")
-    return 1 if stale else 0
+    if not strict:
+        return 1 if stale else 0
+    missing = sorted(set(blocks or []) - set(found))
+    if unstamped:
+        print("  without a stamp (--strict): " + " ".join(unstamped[:30]) + (" ..." if len(unstamped) > 30 else ""))
+    if missing:
+        print(f"  in no cache (--strict): {len(missing)}: " + " ".join(missing[:30]) + (" ..." if len(missing) > 30 else ""))
+    return 1 if stale or unstamped or missing else 0
 
 
 def _block_key(b):
@@ -331,10 +339,9 @@ def main(argv):
         return stamp(argv[2], argv[3:])
     if cmd == "check":
         vdirs = [os.path.expanduser(d.strip()) for d in argv[2].split(";") if d.strip()]
-        blocks = None
-        if len(argv) > 3:
-            blocks = [l.strip() for l in open(argv[3]) if l.strip()]
-        return check(vdirs, blocks)
+        rest = [x for x in argv[3:] if x != "--strict"]
+        blocks = [l.strip() for l in open(rest[0]) if l.strip()] if rest else None
+        return check(vdirs, blocks, "--strict" in argv[3:])
     if cmd == "stale" and len(argv) == 4:
         return 0 if state(os.path.expanduser(argv[2]), argv[3]) == "stale" else 1
     if cmd == "backstamp":

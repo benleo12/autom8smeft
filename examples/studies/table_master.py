@@ -14,7 +14,8 @@ TeV, and unit coefficients.  The interference carries 1/Lambda^4 and the square 
 brings every entry from the Lambda recorded in its settings column to LAM_PAPER (the W-mass bracket is
 not a tagged order and is not in these tables).  For a class with no interference the bracketed entry
 is the square in units of 1e-4 of the Standard Model.
-Pure Python, reads each study's results.tsv.
+Pure Python, reads each study's results.tsv, and writes nothing unless every row of the four studies
+checks out against its record and all of them come from one model version (provenance.py).
 """
 import math
 import os
@@ -22,6 +23,8 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import provenance  # noqa: E402
 
 CLASSES = {1: "X^4", 2: "H^8", 3: "H^6D^2", 4: "H^4D^4", 5: "X^3H^2", 6: "X^2H^4",
            7: "X^2H^2D^2", 8: "XH^4D^2", 9: "psi^2X^2H", 10: "psi^2XH^3", 11: "psi^2H^2D^3",
@@ -66,8 +69,10 @@ def at_paper_scale(order, sig, err, settings, where):
 
 
 def read(study):
-    """{(process, model, order): (sigma, error)}, sigma None where there was no diagram."""
+    """{(process, model, order): (sigma, error)}, sigma None where there was no diagram, the error the bound of
+    provenance.mc_error, which counts the signed event weights of an interference."""
     out = {}
+    recs = {provenance.key(r): r for r in provenance.read_records(provenance.records_path(os.path.join(HERE, study, "results.tsv")))}
     with open(os.path.join(HERE, study, "results.tsv")) as fh:
         head = fh.readline()
         for line in fh:
@@ -77,7 +82,8 @@ def read(study):
             proc, model, order, sig, err = f[0].strip(), f[1], f[2], f[3], f[4]
             try:
                 out[(proc, model, order)] = at_paper_scale(
-                    order, float(sig), float(err), f[7] if len(f) > 7 else "", f"{study}: {proc} {model}")
+                    order, float(sig), provenance.mc_error(float(err), recs.get((proc, model, order))),
+                    f[7] if len(f) > 7 else "", f"{study}: {proc} {model}")
             except ValueError:
                 # keep the word: NO_DIAGRAMS and NOT_INTEGRATED mean opposite things, and a table
                 # that renders both as a dash claims a class is absent when it was never run
@@ -85,8 +91,14 @@ def read(study):
     return out
 
 
+def r_with_error(i, q):
+    """R = square / |interference| and its Monte Carlo error, from (sigma, error) of the two, which are separate runs."""
+    r = q[0] / abs(i[0])
+    return r, math.hypot(q[1], r * i[1]) / abs(i[0])
+
+
 def tex_ratio(r, err=False):
-    """R as printed: two significant figures, in parentheses when the interference has a Monte Carlo error above a tenth."""
+    """R as printed: two significant figures, in parentheses when R has a Monte Carlo error above a tenth."""
     if r < 0.01:
         t = "<0.01"
     else:
@@ -116,6 +128,8 @@ def label(c):
 
 
 def main():
+    # every row of the table checks out against its record and all come from one model version
+    provenance.require([os.path.join(HERE, s, "results.tsv") for s in dict.fromkeys(s for s, _, _ in COLS)], "table_master.py")
     data = {s: read(s) for s, _, _ in COLS}
     M = {s: study_model(d, s) for s, d in data.items()}
     # The Standard-Model row of a process is the same whichever restriction card carries it,
@@ -174,7 +188,9 @@ def main():
                 rat = (r"$\dagger$" if (isinstance(q[0], str) and q[0] == "NOT_INTEGRATED")
                        or (q[0] is None and isinstance(i[0], float)) else "--")
             else:
-                rat = tex_ratio(q[0] / abs(i[0]), abs(i[1] / i[0]) > 0.1)
+                # the error of R counts the square's error as well as the interference's
+                r, dr = r_with_error(i, q)
+                rat = tex_ratio(r, dr > 0.1 * r)
             cells += [pct, rat]
         rows.append((c, cells))
 
@@ -188,18 +204,20 @@ def main():
     body = []
     for c, cells in rows:
         body.append(label(c) + " & " + " & ".join(cells) + r" \\")
-    # Adam's \AM review comments stay in the caption, verbatim, until their item is resolved: the table
-    # is regenerated, so a comment written only into master.tex would be lost on the next refresh.
     tail = (r"\bottomrule" "\n" r"\end{tabular}" "\n"
             r"\caption{How much each dimension-eight class changes four LHC processes at order $1/\Lambda^4$, and how large its square is compared with that change. "
-            r"All entries are for proton-proton collisions at the LHC with a centre-of-mass energy of $13.6$~TeV, with every coefficient of the class at one and $\Lambda = 3$~TeV, and the $HHjj$ and $e^+e^-$ samples carry the cuts given in \cref{tab:grid}. "
-            r"$\delta$ is the interference with the Standard Model that \MG\ returns at \code{NP\^{}2==2}, in units of $10^{-4}$ of the Standard-Model rate, with an open circle where it is below $0.005$ in these units" + (" and a dagger where the class produces diagrams but was not run in these studies" if any(r"\dagger" in x for _, cells in rows for x in cells) else "") + r". "
-            r"$R = \sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ is the square of the class over its interference in the same sample, which we use to judge the validity of the $1/\Lambda^4$ truncation (\cref{sec:truncation}). "
-            r"Parentheses, in either column, mean that the Monte Carlo error on the interference exceeds a tenth of it, and an open circle in an $R$ column means that the interference and the square both vanish. "
-            r"An asterisk marks a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so that it has a square and no interference, and the number in square brackets beside it is that square in units of $10^{-4}$ of the Standard-Model rate. "
-            r"A dash means the class produces no diagram in that process. "
-            r"The power of each class at four, five and six legs is in \cref{tab:class-powers}, and \cref{sec:routes} explains which of its vertices a process uses. "
-            r"\Cref{tab:grid} extends the interference column to all twelve processes. The shaded classes are those the text discusses, $X^4$ in \cref{sec:classes} and $X^2H^2D^2$, $\psi^2X^2D$ and $\psi^4D^2$ in \cref{sec:truncation}.}" "\n"
+            r"All entries are for the LHC at $13.6$~TeV, with every coefficient of the class at one and $\Lambda = 3$~TeV, and the $HHjj$ and $e^+e^-$ samples carry the cuts of \cref{tab:grid}. "
+            r"$\delta$ is the interference with the SM (\code{NP\^{}2==2}) in units of $10^{-4}$ of the SM rate, and $R = \sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ is the square of the class over its interference. "
+            r"Parentheses mean a Monte Carlo error that can exceed a tenth of the entry. "
+            r"An asterisk marks a nonzero squared contribution with no tree-level SM interference. "
+            r"The number in square brackets gives the square in units of $10^{-4}$ of the SM rate. "
+            r"A dash means no diagram. "
+            # the paper's caption, with a sentence for each symbol only other rows produce
+            + (r"An open circle means an interference below $0.005$ in these units, or in an $R$ column an interference and a square that both vanish. "
+               if any(r"\circ" in x for _, cells in rows for x in cells) else "")
+            + (r"A dagger marks a class that produces diagrams but was not run in these studies. "
+               if any(r"\dagger" in x for _, cells in rows for x in cells) else "")
+            + r"The shaded classes are discussed in the text.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")
     print(head)
     print("\n".join(body))

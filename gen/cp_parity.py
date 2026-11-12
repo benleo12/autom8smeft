@@ -202,6 +202,11 @@ def coefficient_sets(b=None, ufo=None):
     # the parity of its part: that of the operator for the part "re" and the other one for "im".
     import emit_flavour as EF
     structures = EF.load_structures()
+    # without the structures every flavour coefficient would be left out of both sets, and the cards of a model
+    # that has them (block DIM8F) would switch them all off
+    if not structures and ufo and "lhablock = 'DIM8F'" in open(os.path.join(ufo, "parameters.py")).read():
+        raise SystemExit(f"{ufo} has flavour structures (block DIM8F) and {EF.STRUCTURES} is not there: "
+                         "write it with validate/flavour_rank.py mfv before the cards")
     for op in _operators():
         if op.name in bviol or op.name not in structures or not basis.in_basis([op.wc], b):
             continue

@@ -108,7 +108,7 @@ def main(argv):
     card = os.path.join(proc, "Cards", "param_card.dat")
 
     def me(t):
-        set_card(card, {k: v * t for k, v in COEFF.items()} | {"Lam6": 1000.0})
+        set_card(card, {k: v * t for k, v in COEFF.items()} | {"Lam": 1000.0})
         out = subprocess.run(["./check"], cwd=pdir, capture_output=True, text=True).stdout
         m = re.search(r"Matrix element\s*=\s*([0-9.E+-]+)", out)
         if not m:

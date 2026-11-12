@@ -1,11 +1,12 @@
 (* Common headless initialisation for FeynRules 2.3 (the build uses 2.3.49) on Mathematica 14 and 15.
    Usage (in a .wls, with $root the repository):   Get[$root <> "/tests/fr_env/fr_headless_init.m"]
-   Set FR$PathOverride before Get to the FeynRules directory; the scripts in validate/ set it to
-   external/feynrules/feynrules-current under $root.
+   Set FR$PathOverride before Get to the FeynRules directory.  Without it the directory is
+   external/feynrules/feynrules-current under the repository this file is in, which is what the
+   scripts in validate/ set it to.
    Set FR$NKernels before Get to choose the number of parallel subkernels (default 4, 0 = serial).
    Nothing under $FeynRulesPath is modified: both compatibility settings below are applied at
    runtime in the kernel. *)
-If[!ValueQ[FR$PathOverride], FR$PathOverride = "$HOME/Downloads/feynrules-current"];
+If[!ValueQ[FR$PathOverride], FR$PathOverride = FileNameJoin[{ParentDirectory[ParentDirectory[DirectoryName[$InputFileName]]], "external", "feynrules", "feynrules-current"}]];
 $FeynRulesPath = FR$PathOverride;
 If[!ValueQ[FR$NKernels], FR$NKernels = 4];
 
@@ -44,6 +45,10 @@ Off[General::stop];
    e.g. on an HPC system). *)
 If[! MemberQ[$Path, $FeynRulesPath], PrependTo[$Path, $FeynRulesPath]];
 << FeynRules`;
+(* Without FeynRules LoadModel and FeynmanRules stay unevaluated, and a script that compares cached vertices
+   would compare them as they are and still print a verdict.  So nothing goes on without it. *)
+If[! MemberQ[$Packages, "FeynRules`"],
+  Print["[init] ABORT: FeynRules did not load from ", $FeynRulesPath, ": unpack FeynRules 2.3.49 there, or set FR$PathOverride to its directory"]; Quit[1]];
 If[FR$NKernels > 0, FR$KernelNumber = $KernelCount];  (* only used in FeynRules progress messages *)
 (* Setting 4: LoadModel lists the blocks of the external parameters (ParametersMG in
    Core/ClassDeclarations.m) by removing repeated names with

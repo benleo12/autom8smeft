@@ -30,7 +30,7 @@ framework of arXiv:2012.11343, put on the same base, with the same vertices at `
 
 ## Install
 
-The models ship packed, since each is about a gigabyte unpacked. Unpack them in `models/`:
+The models ship packed, since each is about half a gigabyte unpacked. Unpack them in `models/`:
 
     cd models && for f in *.tar.xz; do tar -xJf $f; done
 
@@ -60,8 +60,8 @@ unpacked directories.
 Lambda = 1 TeV. `hel_recycling False` is required. Set the beam energies, MadGraph defaults to
 6500.
 
-Two scales, because nothing forces them equal: `Lam` is the dimension-eight scale in the param
-card, block `DIM8` index 0, and `Lam6` the dimension-six one, block `DIM6` index 1.
+One scale, `Lam` in the param card, block `DIM8` index 0, for both sectors: a dimension-six term is
+`C/Lam^2` and a dimension-eight term `C/Lam^4` with the same `Lam`.
 
 ## Orders
 
@@ -86,26 +86,32 @@ Every coupling of the model carries a definite `NP` order: the shifts of the gau
 vev, the Yukawas and the Higgs quartic by the input scheme are written into the Lagrangian as
 tagged series, so the `NP=0` amplitude is the Standard Model. One derived quantity cannot be
 tagged, because it is a mass and not a coupling: in the `{alpha, MZ, GF}` scheme `M_W` shifts with
-nine dimension-eight entries of the card, those of six operators (`c8H6x2`, `c8W2H4x3`, `c8WBH4x1`,
-`c8l2H4Dx2` and `c8l2H4Dx4` with their structures `c8l2H4Dx2FE` and `c8l2H4Dx4FE`, and the structures
-`c8l4H2x1Fx00` and `c8l4H2x1Fx0E` of `Q_{l^4H^2}^{(1)}`), and in `dim68_is` with `cHDD`, `cHl3`,
+eleven dimension-eight entries of the card, those of eight operators (`c8H6x2`, `c8W2H4x3`, `c8WBH4x1`,
+`c8l2H4Dx2` and `c8l2H4Dx4` with their structures `c8l2H4Dx2FE` and `c8l2H4Dx4FE`, the structures
+`c8l4H2x1Fx00` and `c8l4H2x1Fx0E` of `Q_{l^4H^2}^{(1)}`, and the structures `c8l2e2H2x1Fx00` and
+`c8l2e2H2x2Fx00` of `Q_{l^2e^2H^2}^{(1)}` and `Q_{l^2e^2H^2}^{(2)}`, these two only with the electron
+and muon Yukawas on), and in `dim68_is` with `cHDD`, `cHl3`,
 `cHWB` and `cll1` as well. Its effect is therefore not in `NP^2==2`, and the complete
 `1/Lambda^4` prediction is
 
     sigma(1/Lambda^4) = sigma(NP^2==2, c) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-The bracket is zero in any process in which no W is produced or exchanged. With every entry of
-DIM8 and DIM8F at 1 and Lambda at 1 TeV it is +1.23 +- 0.11 pb in `p p > w+ w-` against an
-interference of -3.6 pb, and 5.8 +- 0.6 per cent of the cross section in `p p > h h j j QCD=0`
-(with `ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV), where the W sits in the two t-channel
-propagators. `examples/studies/run_study.sh` runs the `NP=0` row both ways for you
+The bracket is zero in any process in which no W is produced or exchanged. In `dim8_is` at
+13.6 TeV, with every entry of DIM8 and DIM8F at 1 and Lambda at 1 TeV, it is +1.11 +- 0.19 pb in
+`p p > w+ w-` and 6.7 +- 0.9 per cent of the cross section in `p p > h h j j QCD=0` (with
+`ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV), where the W sits in the two t-channel
+propagators (the rows of `np0_shift.tsv` in `examples/studies/diboson` and
+`examples/studies/vbf_dihiggs`). At Lambda = 3 TeV the bracket of `p p > w+ w-` is
++0.014 +- 0.002 pb (`validate/np0_shift.py examples/studies/diboson --report`), against a tagged
+interference of -0.044 pb (`examples/studies/quickstart/results.tsv`).
+`examples/studies/run_study.sh` runs the `NP=0` row both ways for you
 (rows `NP=0` and `NP=0 on`). In the `{MW, MZ, GF}` models `M_W` is an input and no mass moves with a
 coefficient, so there is no bracket and `NP^2==2` is the whole term.
 
 A model-independent cross-check is to scan one coefficient with no `NP^2` constraint and fit the
 polynomial:
 
-    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale6 1000
+    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale 1000
 
 `sigma_0` is the Standard Model, `sigma_1` the interference, `sigma_2` the square, no tag
 involved, and `--compare-tagged NP^2==1` runs the tagged bin beside it.
@@ -119,7 +125,7 @@ And test any class you rely on for linearity: a term linear in a coefficient fal
 
 Every Wilson coefficient is an external parameter, zero by default, named after its operator:
 `c8q2W2Dx1` is `Q_{q^2W^2D}^{(1)}` in block `DIM8`, and the 85 dimension-six coefficients keep
-SMEFTsim's names in block `DIM6`, alongside `Lam6` at index 1. `models/dim68_is/param_card_template.dat` lists them with
+SMEFTsim's names in block `DIM6`. `models/dim68_is/param_card_template.dat` lists them with
 operator and class.
 
 The flavour structures beyond the leading one of each fermionic operator have coefficients of their
@@ -133,19 +139,54 @@ A complex dimension-eight coefficient appears as `<name>Re` and `<name>Im`, as `
 `<name>Abs` and `<name>Ph`, so set `cuGAbs`, not `cuG`. MadGraph only **warns** on a `set` it does not recognise and carries on, so
 read the value back out of the run's param card rather than trusting the command.
 
+## Models of order N
+
+`dim68_mw_geo<N>` is `dim68_mw` with its two- and three-point vertices complete through `1/Lambda^(2N)`, for
+the two-body decays of the W, Z and Higgs bosons and the other observables that depend at tree level on
+these vertices alone. Beside the operators of dimension six and eight it carries those of dimension 10 to
+`2N + 4` that reach these vertices: the geoSMEFT towers `(H^dag H)^k Q` of `gen/towers.py` and the two
+operators `Q_{WH^6D^2}^{(5),(6)}` that are new at dimension ten. Its input relations, field normalisations,
+Higgs quartic and Yukawas are expanded to the same order. A coefficient of dimension d is named `c<d>...`, as
+`c10H6x1` for `(H^dag H) Q_{H^6}^{(1)}`, and sits in block `DIM<d>` (its flavour structures in `DIM<d>F`)
+with `NP` order `(d - 4)/2`, and every dimension shares the one scale `Lam`. The vertices with four or more
+fields are those of `dim68_mw`, through `1/Lambda^4`, and at `NP <= 2` the whole model is `dim68_mw`. The
+higher orders have to be asked for:
+
+    import model dim68_mw_geo4
+    generate z > e+ e- NP<=4
+
+`examples/studies/zwidth` computes this width at each order from 1 to 20 TeV, with every coefficient that
+enters it at 1, and draws each order against the precision of LEP and an estimate for FCC-ee, which is the
+figure of the paper.  Compute a decay width from the standalone matrix element, as
+`examples/studies/run_study.sh` does with `examples/studies/decay_width.f`, not with `launch`: MadEvent takes
+the error of a decay from the absolute values of its weights, which are the same at every point of a
+two-body phase space, so an order whose helicities enter with both signs can come out wrong with a tiny
+quoted error (the `NP^2==1` term here came out 25 per cent high).
+
+The models of order N exist in the `{MW, MZ, GF}` scheme only. Two ship, packed in `models/` like the others:
+`dim68_mw_geo4`, and `dim68_mw_geo2`, which is `dim68_mw` at `NP <= 2` built the way the higher orders are, the
+control of the construction. `hpc/build_geo.sh` builds a model of any order and checks it before it is released
+([hpc/README.md](hpc/README.md)).
+
 ## What you need
 
 Nothing but python3 for the model itself: the restriction cards, the operator selector,
 `./dim8 series`, the catalogue and the parameter evaluation are pure standard library. MadGraph
-needs its own python3.11 (see below). Fifteen of the validation scripts want `numpy`
-(`validate/zero_lorentz.py`, `zero_vertex.py`, `zero_vertex_dirac.py`, `b4_normalisation.py`,
-`onshell_zero.py`, `drop_zero_structures.py`, `audit_ufo.py`, `compare_ufo.py`, `flavour_rank.py`,
+needs its own python3.11 (see below). Eighteen of the validation scripts import `numpy`
+(`validate/zero_lorentz.py`, `zero_vertex.py`, `zero_vertex_dirac.py`, `onshell_zero.py`,
+`drop_zero_structures.py`, `audit_ufo.py`, `compare_ufo.py`, `same_couplings.py`, `flavour_rank.py`,
 `mfv_generic.py`, `vertex_contract.py`, `g4_highleg.py`, `x4_polynomial.py`, `dim6_vs_smeftsim.py`,
-`vs_matchete_ufo.py`) and four want `sympy` (`gen/derive_input_scheme.py`, `gen/derive_rotation.py`,
-`gen/derive_higgs_yukawa.py`, `gen/derive_geo.py`).
+`vs_matchete_ufo.py`, `geo_export_check.py`, `gf_rate_ufo.py`, `np0_fixed_order.py`), and three more
+need it through `compare_ufo.py` (`geo_tower_check.py`, `geo_vertex_check.py`, `merge_ufo.py`), as do
+the tests `tests/test_geo_basis.py`, `test_geo_export.py` and `test_geo_tower.py`.
+`validate/np0_fixed_order.py` wants `mpmath` as well. Four scripts want `sympy`
+(`gen/derive_input_scheme.py`, `gen/derive_rotation.py`, `gen/derive_higgs_yukawa.py` and
+`gen/derive_geo.py`, the last with `mpmath`), and the figures of the studies want `matplotlib`
+(`examples/studies/paper_figure.py`, `width_figure.py`, and `plot_study.py` for its plots, whose tables
+need nothing).
 Rebuilding the FeynRules models needs Mathematica 14 or 15 with FeynRules 2.3.49, a Python with `numpy`
 (`DIM8_NUMPY_PY` names it) and MadGraph (`MG5_DIR`), and nothing in the shipped model does. The
-operators themselves are encoded in `gen/operators.py`,
+operators themselves are written in `gen/operators.py`,
 one typed object per operator, from which `./dim8 build` writes the FeynRules Lagrangian before it
 computes the vertices. To correct an operator, edit its entry and run `./dim8 rebuild`, which goes from
 that file to the released models. `models/src/README.md` describes the steps, the source files and what
@@ -161,7 +202,7 @@ comparisons want `numpy`.
 
 Run MadGraph through **python3.11**. From Python 3.13 the `locals()` change of PEP 667 breaks
 MadGraph's `model_reader` and every restricted model fails to import with `Unable to evaluate
-mdl_L6 = mdl_Lam6**(-2)`, which looks like a broken restriction card and is not one.
+mdl_L6 = mdl_Lam**(-2)`, which looks like a broken restriction card and is not one.
 
 Each model's `__init__.py` ends with two fixes to MadGraph, which `examples/mg5_fixes.py` explains.
 The first is for a naming bug of MadGraph's ALOHA, which without it stops `p p > e+ e- g` and a few
@@ -201,7 +242,7 @@ derivation gives even, ODD, even, even: the member with no dual is the CP-odd on
 `validate/cp_rates.py` checks the card. A CP-odd set must give zero interference in a total rate,
 and a set chosen by counting duals gives -0.0152 pb on `p p > w+ w-` in `dim8_mw`, with its
 coefficients at one and `Lam` = 3 TeV, where the derived set gives zero. The parity of each operator is recorded as `cp` in `gen/operators.py`, and
-`gen/cp_parity.py` checks the record against the encoded terms at every build.
+`gen/cp_parity.py` checks the record against the terms written there at every build.
 
     import model dim68_is-cls14
     import model dim68_is-dim6
@@ -228,7 +269,7 @@ the option.
 `--max-power N` cuts the card to the operators and coefficients listed at most N powers of lambda
 above the Standard Model amplitude, which the header of the listing gives, those that grow fastest
 with energy relative to it. In `p p > w+ w-` the Standard Model is at lambda^0, and
-`./dim8 select "p p > w+ w-" --max-power 4 --card ww4` keeps the 13 of the 99 that reach lambda^4
+`./dim8 select "p p > w+ w-" --max-power 4 --card ww4` keeps the 13 of the 101 that reach lambda^4
 (E^4/Lambda^4). In `u u~ > z h` it is at lambda^1, and `--max-power 4` keeps those at lambda^5 or
 below. An operator of the input relations, eight powers above the Standard Model at dimension eight
 and four at dimension six, is kept at that power, and one listed without a power is left out, except
@@ -251,17 +292,18 @@ only the kept ones on.
 ## Commands
 
 The selector and the energy counting run on python3 alone, from the vertex lists that ship in
-`build/`. `./dim8 -h` lists every command.
+`build/`, which they check against the unpacked model they are run for. `./dim8 -h` lists every
+command.
 
 | command | what it gives |
 | --- | --- |
 | `./dim8 select "p p > w+ w-"` | the operators that can enter the process, each with the vertex of its leading tree and that tree's power of lambda, then those that enter through the input relations, and with `--model dim68_is` the dimension-six coefficients one by one. `--card NAME` writes both groups into a restriction card |
-| `./dim8 series "u u~ > w+ w-"` | the amplitude topology by topology as a series in lambda, the Standard Model couplings and the dimension-six and dimension-eight classes side by side, without the terms that cannot interfere with the Standard Model |
+| `./dim8 series "u u~ > w+ w-"` | the amplitude topology by topology as a series in lambda, the Standard Model couplings and the dimension-six and dimension-eight classes side by side, without the terms that cannot interfere with the Standard Model, for the model that `--model` names (default `dim68_mw`) in its basis and its input scheme |
 | `./dim8 count psi^2X^2D` | the leading power of lambda of the vertices of a class, by their number of legs (`all` gives every class) |
 | `./dim8 model "p p > h j j" -o vbf` | a FeynRules model file holding only the operators of the process |
 | `./dim8 ufo "p p > h j j" -o vbf` | the UFO of those operators, which needs Mathematica, FeynRules and the vertices of `./dim8 build` |
 | `./dim8 rebuild` | every step from `gen/operators.py` to the released models, with Mathematica, FeynRules, `numpy` and MadGraph (`models/src/README.md`). `--dry-run` shows the steps, which needs none of them |
-| `./dim8 build`, `./dim8 index` | the checks of the encoding and the vertices of every operator, and the vertex lists the selector reads, with Mathematica and FeynRules. `./dim8 build --source-only` needs neither |
+| `./dim8 build`, `./dim8 index` | the checks of `gen/operators.py` and the vertices of every operator, and the vertex lists the selector reads, with Mathematica and FeynRules. `./dim8 build --source-only` needs neither |
 
 The powers are those of the energy counting of arXiv:2504.10617, (Lambda, E, v) ~ (lambda^-3,
 lambda^-2, lambda^-1). No Standard Model tree of n external particles lies below lambda^(2n-8), and
@@ -292,8 +334,9 @@ For example,
     ./dim8 series "u u~ > w+ w-"
 
 starts with the process, its four external legs and the gauge of the vertex lists it used, then the
-power of the Standard Model amplitude, lambda^0 here, and the remark that an unmarked W is counted
-as transverse. The terms follow in three groups, `A_s`, `A_t` and `A_c`: the s channel, the t
+model, its input scheme and its basis, the power of the Standard Model amplitude, lambda^0 here, and
+the remark that an unmarked W is counted as transverse. The terms follow in three groups, `A_s`,
+`A_t` and `A_c`: the s channel, the t
 channel with the u channel merged into it, as for any quark-antiquark initial state, and the
 contact terms. A line of the Standard Model gives a power of lambda, `SM` and every product of
 Standard Model couplings that reaches that power. A line of a class gives the power, the dimension
@@ -312,7 +355,11 @@ M_Z^2/E^2), or by m_t/E for each external top quark of the other chirality.
 Below the terms come the classes left out because none of their operators interferes with the
 Standard Model at leading order in the light fermion masses, the number of operators of the printed
 classes left out for the same reason, and the dimension-eight classes with no tree, which enter
-through the input relations or not at all. Until they are built, a note says that the Feynman-gauge
+through the input relations or not at all. Then come the operators of the input relations of the
+model's scheme, which shift every Standard Model term by v^4/Lambda^4, eight powers of lambda, at
+dimension eight and by v^2/Lambda^2, four powers, at dimension six. They are the second group of
+`./dim8 select`, and the two that enter G_F only with the electron and muon Yukawas on are named
+apart. Until they are built, a note says that the Feynman-gauge
 lists or `build/onshell_zero.json` are missing. The second is written by
 `python3 validate/onshell_zero.py` from the released models, and without it a three-point vertex of
 two light fermions is counted even where it vanishes on shell. The same command with
@@ -320,6 +367,19 @@ two light fermions is counted even where it vanishes on shell. The same command 
 block, `--json` gives every term with its couplings, operators and external legs, and `--vbf` gives
 vector-boson fusion in the effective-W approximation, as in
 `./dim8 series "p p > h h j j QCD=0" --vbf`. `./dim8 series -h` prints every rule.
+
+The series counts the vertices of one model, which `--model` names as for `./dim8 select`, a path or
+a name in `models/`, `dim68_mw` unless another is given, since the series sets the dimension-six terms
+beside the dimension-eight ones. It takes the operators of the model's basis, the vertices of its
+input scheme and no operator without a vertex in it, and a model without a dimension-six sector of
+its own, such as `dim8_mw`, has no dimension-six term. The basis shows in class 11, psi^2H^2D^3. In
+the default basis none of its vertices has fewer than four fields, so it has no term in
+`u u~ > e+ e-` and only a contact term in `u u~ > w+ w-`, while in `--model dim68_mw_murphy` its
+three-point vertices give it terms in the exchange channels of both processes too. Before counting, the
+command checks the vertex lists against the couplings of the model. It stops when the model was
+written from another version of `gen/operators.py`, carries an operator that the lists do not hold,
+or carries the class-11 operators of one basis while its name says the other. `./dim8 select` makes
+the same check.
 
 ## Try it
 
@@ -362,7 +422,7 @@ coefficients of the basis have one, the others being these thirteen and the 120 
 baryon-number-violating operators. All of the thirteen but `Q_{e^4B}^{(2)}` have vertices through
 their structures in `DIM8F`, which tell the two currents apart, and `Q_{e^4B}^{(2)}` has none.
 (`Q_{udWH^2}^{(1,2)}` as printed in the Murphy basis vanish identically, whatever the flavour
-structure, and are encoded in the form that does not.)
+structure, and are written in the form that does not.)
 
 The dimension-six sector is complete at `1/Lambda^4`. Its `NP=1` vertices are SMEFTsim's, and
 checkable against its shipped UFO. The products of a dimension-six operator with the first-order

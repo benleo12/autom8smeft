@@ -5,19 +5,18 @@
     validate/freeze_dim6_inputs.py <UFO dir> --check    change nothing, and exit 1 if the step would
 
 The input relations of both schemes are written in eight dimension-six coefficients as well as the
-dimension-eight ones (gen/input_scheme.py), so FeynRules writes those eight and the scale Lam6 into
-every model built on an input-scheme base, as external parameters of block DIM6.  In a model without
-a dimension-six sector of its own they must stay at zero.  Set alone, one of them shifts the couplings
-and rotates the fields without the operator whose terms those shifts cancel against, which is half a
-calculation, and in the {alpha, MZ, GF} scheme it moves M_W at 1/Lambda^2.  This step makes the nine
-internal parameters, the eight at the value zero and Lam6 at the value it has, and takes block DIM6
-out of the parameter-card template and the restriction cards, so that no card can set them.  Lam6
-cannot be zero, since the input relations hold L6 = Lam6**(-2), and its value changes nothing, since
-every term with L6 holds one of the eight.  The expressions of the input relations stay as FeynRules
-wrote them, since nothing else needs changing: an internal parameter of value zero is what MadGraph
-already makes of every shift that a restriction card switches off.
+dimension-eight ones (gen/input_scheme.py), so FeynRules writes those eight into every model built on
+an input-scheme base, as external parameters of block DIM6.  In a model without a dimension-six sector
+of its own they must stay at zero.  Set alone, one of them shifts the couplings and rotates the fields
+without the operator whose terms those shifts cancel against, which is half a calculation, and in the
+{alpha, MZ, GF} scheme it moves M_W at 1/Lambda^2.  This step makes the eight internal parameters of
+value zero, and takes block DIM6 out of the parameter-card template and the restriction cards, so that
+no card can set them.  The scale of the input relations, L6 = Lam**(-2), is the model's one scale Lam
+of block DIM8, which stays as it is.  The expressions of the input relations stay as FeynRules wrote
+them, since nothing else needs changing: an internal parameter of value zero is what MadGraph already
+makes of every shift that a restriction card switches off.
 
-A model with more in block DIM6 than those nine (DIM6_IN_BASE of ./dim8) has a dimension-six sector of
+A model with more in block DIM6 than those eight (DIM6_IN_BASE of ./dim8) has a dimension-six sector of
 its own, in which they are coefficients like the others, and is left as it is.  So the step can run on
 every model that is released, and running it twice changes nothing.  It stops, changing nothing, when
 one of the eight has a default other than zero, which would change the model, or when it cannot read
@@ -45,10 +44,9 @@ def in_base():
 
 
 def internal(m):
-    """The internal parameter that replaces the external one matched by EXTERNAL."""
-    value = m.group("value") if m.group("name") == "Lam6" else "0"
+    """The internal parameter of value zero that replaces the external one matched by EXTERNAL."""
     return (f"{m.group('var')} = Parameter(name = '{m.group('name')}',{m.group('sep')}nature = 'internal',"
-            f"{m.group('sep')}type = '{m.group('type')}',{m.group('sep')}value = '{value}',"
+            f"{m.group('sep')}type = '{m.group('type')}',{m.group('sep')}value = '0',"
             f"{m.group('sep')}texname = {m.group('tex')})")
 
 
@@ -97,7 +95,7 @@ def main(argv):
     if names - in_base():
         print(f"{os.path.basename(ufo)}: has a dimension-six sector of its own, left as it is")
         return 0
-    off = [m.group("name") for m in found if m.group("name") != "Lam6" and float(m.group("value")) != 0.0]
+    off = [m.group("name") for m in found if float(m.group("value")) != 0.0]
     if off:
         print(f"{path}: default other than zero for {', '.join(off)}: nothing changed")
         return 2

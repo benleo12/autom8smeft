@@ -5,17 +5,38 @@
 # Steps: copy to a staging directory, drop caches and logs, set the author in __init__.py and
 # append to it the two MadGraph fixes of examples/mg5_fixes.py (ALOHA routine names, parameter renaming), make
 # write_param_card.py write the whole default card (examples/fix_param_card_writer.py), raise the NP expansion
-# order to 4 so that double insertions can be requested (the writer sets 2), drop
+# order to 4 so that double insertions can be requested (the writer sets 2), or to N for a model of order N above
+# 4, drop
 # the identically vanishing Lorentz structures, write the decimal literals as exact fractions
 # (validate/exact_literals.py), write an annotated parameter-card template, write
 # the standard restriction cards (one per class of the Murphy basis, plus bosonic, cpeven, cpodd
 # and all, and dim6 and both when the model carries a dimension-six sector), check that the model
-# files are well formed, that they pass validate/audit_ufo.py and validate/check_dimensions_ufo.py
-# and that MadGraph imports them, swap the result into models/<name>, and print the sizes.  Python
+# files are well formed, that they pass validate/audit_ufo.py and validate/check_dimensions_ufo.py, for a
+# model of order N (a name ending in _geo<N>) the export checks of validate/geo_export_check.py, and
+# that MadGraph imports them, swap the result into models/<name>, and print the sizes.  Python
 # and shell, plus MadGraph for the import test.  No Mathematica needed.
 set -e
 SRC=$(cd "${1:?UFO dir}" && pwd); NAME=${2:?release name}
+# the order of a model of order N (gen/towers.py), from its name, and empty for every other model
+GEON=$(echo "$NAME" | sed -n 's/.*_geo\([0-9][0-9]*\)$/\1/p')
 ROOT=$(cd "$(dirname "$0")/.." && pwd); FINAL=$ROOT/models/$NAME; DEST=${FINAL}_new
+# A model of order N is released only with every check run: before anything is copied, its MadGraph must be there,
+# and with DIM8_GEO_STRICT=1 (hpc/build_geo.sh check) so must the provenance, the block list and the reference of the
+# export checks 4 and 5, so that the release, which moves the model into models/ only once every check has passed,
+# cannot pass with a check left out
+if [ -n "$GEON" ]; then
+  MG=${MG5_DIR:-${MG5_DIR:-/path/to/MG5_aMC}}
+  [ "${DIM8_SKIP_MG5_IMPORT:-0}" != 1 ] && [ -x "$MG/bin/mg5_aMC" ] \
+    || { echo "release stopped: a model of order N needs the MadGraph import test, and $MG/bin/mg5_aMC is not there (set MG5_DIR)"; exit 1; }
+  if [ "${DIM8_GEO_STRICT:-0}" = 1 ]; then
+    [ -n "${DIM8_GEO_PROV:-}" ] && [ -e "$DIM8_GEO_PROV" ] && [ -f "${DIM8_GEO_BLOCKS:-}" ] \
+      || { echo "release stopped: DIM8_GEO_STRICT=1 and check 4 would not run (DIM8_GEO_PROV '${DIM8_GEO_PROV:-}', DIM8_GEO_BLOCKS '${DIM8_GEO_BLOCKS:-}')"; exit 1; }
+    [ "${DIM8_GEO_REF:-$ROOT/models/dim68_mw}" != none ] && [ -f "${DIM8_GEO_REF:-$ROOT/models/dim68_mw}/vertices.py" ] \
+      || { echo "release stopped: DIM8_GEO_STRICT=1 and check 5 would not run (DIM8_GEO_REF '${DIM8_GEO_REF:-$ROOT/models/dim68_mw}')"; exit 1; }
+    [ -f "${DIM8_GEO_LOW:-}/vertices.py" ] \
+      || { echo "release stopped: DIM8_GEO_STRICT=1 and check 6 would not run (DIM8_GEO_LOW '${DIM8_GEO_LOW:-}')"; exit 1; }
+  fi
+fi
 # The staging directory must be a name MadGraph can import.  MadGraph takes the directory name as
 # a Python module name, so a name with a dot, such as dim68_is.new, fails the import test below
 # with a misleading "invalid syntax (object_library.py, ...)".  The model is built next to the
@@ -23,7 +44,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd); FINAL=$ROOT/models/$NAME; DEST=${FINAL}_
 # while this runs sees either the old directory or the new one, never a half-copied one.
 mkdir -p $ROOT/models; rm -rf $DEST; cp -r $SRC $DEST
 rm -rf $DEST/__pycache__ $DEST/*.log $DEST/*.cmd $DEST/param_card.dat
-python3 - $DEST $ROOT/examples/mg5_fixes.py <<'EOF'
+python3 - $DEST $ROOT/examples/mg5_fixes.py "${GEON:-0}" <<'EOF'
 import re, sys, os
 d = sys.argv[1]
 # The UFO header names the authors of THIS model.  FeynRules copies M$Information of the base
@@ -39,9 +60,11 @@ if "_change_parameter_name_with_prefix" not in s:
     s = s.rstrip("\n") + "\n" + open(sys.argv[2]).read()
 open(p, "w").write(s); print("__init__.py: author dim8auto, the MadGraph fixes of examples/mg5_fixes.py")
 p = f"{d}/coupling_orders.py"; s = open(p).read()
-s2 = re.sub(r"(NP = CouplingOrder\(name = 'NP',\s*expansion_order = )\d+", r"\g<1>4", s)
-assert s2 != s or "expansion_order = 4" in s, "NP order block not found"
-open(p, "w").write(s2); print("coupling_orders.py: NP expansion_order = 4")
+# a model of order N needs NP <= N for its two- and three-point vertices, which MadGraph cuts at the expansion order
+npmax = max(4, int(sys.argv[3]))
+s2 = re.sub(r"(NP = CouplingOrder\(name = 'NP',\s*expansion_order = )\d+", r"\g<1>" + str(npmax), s)
+assert s2 != s or f"expansion_order = {npmax}" in s, "NP order block not found"
+open(p, "w").write(s2); print(f"coupling_orders.py: NP expansion_order = {npmax}")
 # FeynRules copies its own UFO helper files into every model, and its object_library.py still has
 # the Python 2 form `raise UFOError, "..."`.  Python 3 cannot import such a model, so every later
 # step that imports it would stop.  MadGraph rewrites the file the first time it imports a model,
@@ -84,7 +107,7 @@ python3 $ROOT/examples/fix_param_card_writer.py $DEST || { echo "release stopped
 # uses, and the generated Fortran fails to compile on any process reaching that vertex, with a
 # message that points at the process rather than at the structure.  Every test evaluates the
 # Dirac structures as well and imposes momentum conservation, at random values of every input.
-# The tests need numpy, which MadGraph's Python need not have (the mini's mg5 environment has none):
+# The tests need numpy, which MadGraph's Python need not have (an environment made for MadGraph alone may have none):
 # the first of $DIM8_NUMPY_PY, python3.13 and python3 that imports it runs them.
 NPY=""
 for p in ${DIM8_NUMPY_PY:-} python3.13 python3; do
@@ -163,13 +186,13 @@ for b in blocks:
                 note += "  [no vertex in this model, setting it does nothing]"
         # a model of order N (gen/towers.py): the members of the towers and the four-lepton members of the G_F relation
         elif re.fullmatch(r"DIM(1[0-9]|[2-9][0-9])F?", b) and re.match(r"c\d+[A-Za-z]", pname):
-            d = int(re.match(r"c(\d+)", pname).group(1))
-            base = "c8" + pname[len(f"c{d}"):]
+            dm = int(re.match(r"c(\d+)", pname).group(1))   # its dimension (d is the model directory)
+            base = "c8" + pname[len(f"c{dm}"):]
             base = base if base in op_of else re.sub(r"(Re|Im)$", "", base)
             if base in op_of:
-                note = f"  (H^dag H)^{(d - 8)//2} {' , '.join(op_of[base][0])} (class {op_of[base][1]})"
+                note = f"  (H^dag H)^{(dm - 8)//2} {' , '.join(op_of[base][0])} (class {op_of[base][1]})"
             else:
-                note = f"  a member of dimension {d} with no operator of dimension eight (gen/towers.py)"
+                note = f"  a member of dimension {dm} with no operator of dimension eight (gen/towers.py)"
         elif b == "GEOGF":
             note = "  a four-lepton member that enters only the G_F relation, with no vertex"
         out.append(f"  {code} {num(value):.6e} # {pname}{note}")
@@ -203,12 +226,17 @@ print(' '.join(e['block'] for e in idx if not any(ch in e['ops'][0] for ch in ('
 # operator, goes into the card of its own parity (gen/cp_parity.py, coefficient_sets).
 # In a model of order N (gen/towers.py) the members of the towers go with them, each with its parity
 # (cp_parity.tower_sets).
-$MR cpeven $(python3 -c "
+# The sets are read first, so that a failure stops the release here rather than leave a card without coefficients.
+CPODD=$(python3 -c "
 import sys; sys.path.insert(0,'$ROOT/gen'); import basis, cp_parity
-print(' '.join(cp_parity.coefficient_sets(basis.of_model('$DEST'), '$DEST')[1]))") | grep -E "WARNING|^note:" || true
-$MR cpodd $(python3 -c "
+print(' '.join(cp_parity.coefficient_sets(basis.of_model('$DEST'), '$DEST')[0]))") \
+  || { echo "release stopped: no CP parity sets for the cards of $DEST"; exit 1; }
+CPEVEN=$(python3 -c "
 import sys; sys.path.insert(0,'$ROOT/gen'); import basis, cp_parity
-print(' '.join(cp_parity.coefficient_sets(basis.of_model('$DEST'), '$DEST')[0]))") | grep -E "WARNING|^note:" || true
+print(' '.join(cp_parity.coefficient_sets(basis.of_model('$DEST'), '$DEST')[1]))") \
+  || { echo "release stopped: no CP parity sets for the cards of $DEST"; exit 1; }
+$MR cpeven $CPEVEN | grep -E "WARNING|^note:" || true
+$MR cpodd $CPODD | grep -E "WARNING|^note:" || true
 $MR all all | grep -E "WARNING|^note:" || true
 # Two more when the model carries a dimension-six sector, because separating the two sectors is
 # how you read NP^2==2: it holds the dimension-six square and the dimension-eight interference
@@ -295,14 +323,41 @@ EOF
 # the mass dimension of every vertex.
 $NPY $ROOT/validate/audit_ufo.py $DEST || { echo "release stopped: validate/audit_ufo.py failed, $DEST is left for inspection"; exit 1; }
 python3 $ROOT/validate/check_dimensions_ufo.py $DEST || { echo "release stopped: validate/check_dimensions_ufo.py failed, $DEST is left for inspection"; exit 1; }
+# A model of order N passes the export checks of validate/geo_export_check.py before it is released: the NP order of
+# every coupling is its power of 1/Lambda^2, the vertices with four or more legs hold nothing beyond 1/Lambda^4, the
+# blocks of the towers are those of gen/towers.py, each coefficient reaches a vertex of at most three legs from one
+# block only (the provenance the shards recorded, DIM8_GEO_PROV, with the block list DIM8_GEO_BLOCKS), and at NP <= 2
+# the model is the reference DIM8_GEO_REF, the release dim68_mw by default, and its vertices of at most three legs
+# are, NP order by NP order through N, those of the blocks written without the truncation (DIM8_GEO_LOW, the step low
+# of hpc/build_geo.sh).  hpc/build_geo.sh check sets the four.  DIM8_GEO_REF=none and an unset DIM8_GEO_PROV or
+# DIM8_GEO_LOW leave those checks out, and the check then says that it did not run them.
+if [ -n "$GEON" ]; then
+  REF=${DIM8_GEO_REF:-$ROOT/models/dim68_mw}
+  [ "$REF" = none ] || [ -f "$REF/vertices.py" ] || { echo "release stopped: no reference model $REF for the export checks (DIM8_GEO_REF, or none)"; exit 1; }
+  $NPY $ROOT/validate/geo_export_check.py $DEST $GEON $([ "$REF" = none ] || echo --ref "$REF") \
+      ${DIM8_GEO_PROV:+--prov "$DIM8_GEO_PROV"} ${DIM8_GEO_BLOCKS:+--blocks "$DIM8_GEO_BLOCKS"} ${DIM8_GEO_LOW:+--low "$DIM8_GEO_LOW"} \
+    || { echo "release stopped: the export checks of validate/geo_export_check.py failed, $DEST is left for inspection"; exit 1; }
+  # from N = 3 the model holds members of the towers, each checked against its operator of dimension eight or, for
+  # the two towers without one, against the member of dimension ten and an operator with the same field strength
+  if [ "$GEON" -ge 3 ]; then
+    $NPY $ROOT/validate/geo_tower_check.py $DEST \
+      || { echo "release stopped: validate/geo_tower_check.py failed, $DEST is left for inspection"; exit 1; }
+  fi
+fi
 MG=${MG5_DIR:-${MG5_DIR:-/path/to/MG5_aMC}}
 if [ "${DIM8_SKIP_MG5_IMPORT:-0}" = 1 ] || [ ! -x "$MG/bin/mg5_aMC" ]; then
+  # a model of order N is not released untested: its export check includes the import and a decay through it
+  [ -z "$GEON" ] || { echo "release stopped: a model of order N needs the MadGraph import test, and $MG/bin/mg5_aMC is not there (set MG5_DIR)"; exit 1; }
   echo "WARNING: MadGraph import NOT tested (set MG5_DIR to test it). Do not publish this model untested."
 else
   T=$(mktemp -d); PY311=$(command -v python3.11 || command -v python3)
   printf 'import model %s --modelname\ngenerate e+ e- > z h NP<=2\n' "$DEST" > "$T/import.cmd"
+  # a model of order N also generates a decay through its vertices of order N
+  [ -n "$GEON" ] && printf 'generate z > e+ e- NP<=%s\n' "$GEON" >> "$T/import.cmd"
   (cd "$T" && $PY311 $MG/bin/mg5_aMC -f "$T/import.cmd" > "$T/import.log" 2>&1) || true
-  if grep -q "1 processes with" "$T/import.log" && ! grep -qiE "^(Command .* interrupted|.*Error)" "$T/import.log"; then
+  # one line "1 processes with <n> diagrams generated" for each generate of the command file
+  if [ "$(grep -cE '^1 processes with [1-9][0-9]* diagrams generated' "$T/import.log")" -eq "$(grep -c '^generate' "$T/import.cmd")" ] \
+     && ! grep -qiE "^(Command .* interrupted|.*Error)" "$T/import.log"; then
     echo "MadGraph imports the model and generates through it"
   else
     grep -iE "error|interrupted|invalid" "$T/import.log" | head -5

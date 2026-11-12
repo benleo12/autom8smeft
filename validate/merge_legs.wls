@@ -7,7 +7,7 @@
    Writes build/vertices/<block>.mx and .status (nonhermitian -1: a DIM8_HERMONLY=1 pass of
    fr_worker.wls checks it) and refuses to overwrite a cache entry that is not itself a capped one.
    Run: DIM8_ROOT=<repo> [DIM8_VDIR=<cache>] wolframscript -file validate/merge_legs.wls 426 *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current"; FR$NKernels = 0;
 vdir = If[Environment["DIM8_VDIR"] === $Failed, $root <> "/build/vertices", Environment["DIM8_VDIR"]];
 lo = $root <> "/build/vertices_cap6"; hi = $root <> "/build/vertices_hi";

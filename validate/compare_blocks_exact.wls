@@ -6,7 +6,7 @@
    Dirac matrices).  No sampling and no cap on the colour assignments, so six-gluon vertices are
    compared exactly too (compare_vertex_numeric.wls gives up above 4096 colour assignments).
    Exit code 0 when the blocks agree, 1 otherwise. *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 (* resolve the two files BEFORE the model load changes the working directory, since a relative
    path no longer opens afterwards; an unreadable file or an empty vertex list stops the script
    (loadVerts) instead of comparing as equal *)

@@ -57,7 +57,7 @@ and a complex coefficient moves the numbers of the later coefficients in block `
 gives every card in the model directory the new numbers (`validate/rekey_cards.py`). A card kept
 anywhere else holds the old ones.
 
-The exception is one of the fourteen operators that enter the input relations (`INPUT_SCHEME_WCS` in
+The exception is one of the sixteen operators that enter the input relations (`INPUT_SCHEME_WCS` in
 `./dim8`). The base files hold those relations, which are derived from the operators by hand and are not
 written from the encoding, so the build stops when one of these operators changes. Correct the relation
 in `gen/derive_input_scheme.py`, `gen/derive_rotation.py` or `gen/derive_higgs_yukawa.py`, and then:

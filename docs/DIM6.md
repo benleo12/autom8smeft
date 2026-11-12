@@ -12,7 +12,7 @@ builds from their `Abs` and `Ph` parts. It connects three symbols to our side of
 says what each operator is evaluated on: the corrected couplings and the canonical fields of our
 input scheme, to first order, which is what makes the combined model complete and gauge invariant at
 `1/Lambda^4` (see "What an operator is evaluated on" below). With the eight coefficients the base
-already declares that is 85 in block `DIM6`, plus `Lam6` at index 1.
+already declares that is 85 in block `DIM6`.
 
 ## Why this works at all
 
@@ -34,8 +34,8 @@ the release fixes the eight at zero there, as internal parameters that no card c
 
 ## The three connections
 
-- `LambdaSMEFT` is our `Lam6`, the dimension-six scale, declared in block `DIM6` index 1 and
-  separate from the dimension-eight `Lam`. Two scales, because nothing forces them equal.
+- `LambdaSMEFT` is our `Lam`, the one scale of the model, declared in block `DIM8` index 0. A
+  dimension-six term is `C/Lam^2` and a dimension-eight term `C/Lam^4` with the same `Lam`.
 - `vevhat` is our `vevSM`, which is `1/Sqrt[Sqrt[2] Gf]`. That is what SMEFTsim's `vevhat` is too.
 - `redefCtoZero` is the name of SMEFTsim's truncation rule, which every operator definition ends
   in. Its content here is ours and is the subject of the next section but one.
@@ -55,7 +55,7 @@ unchanged:
 
 `gen/make_dim6.py` also checks every symbol it defines against every name the base declares, and
 aborts rather than warns. A collision does not fail loudly. SMEFTsim calls the sum of its
-dimension-six terms `L6`, while our base declares an internal **parameter** `L6 = 1/Lam6^2` in
+dimension-six terms `L6`, while our base declares an internal **parameter** `L6 = 1/Lam^2` in
 which the input relations are written. A definition landing on that symbol makes FeynRules treat
 a whole Lagrangian as a parameter, and the model load then hangs with no error. The aggregates are
 therefore named `LD6` and `LD6no4f`.
@@ -179,11 +179,12 @@ them, switch one sector off in the param card.
 tags couplings and not masses, and in this scheme `M_W` moves when a coefficient moves, which no
 tag can express. The vev, the Yukawas and the Higgs quartic are written as tagged sums, so the
 `W` mass is the one quantity left. On `p p > w+ w-` the piece missing from the tagged
-dimension-eight interference measures +1.23 +- 0.11 pb, with every entry of DIM8 and DIM8F at 1 and
-Lambda at 1 TeV. Use `validate/order_fit.py`, which scans one coefficient with no `NP^2`
+dimension-eight interference measures +1.11 +- 0.19 pb in `dim8_is` at 13.6 TeV, with every entry of
+DIM8 and DIM8F at 1 and Lambda at 1 TeV (`examples/studies/diboson/np0_shift.tsv`).
+Use `validate/order_fit.py`, which scans one coefficient with no `NP^2`
 constraint and fits the polynomial:
 
-    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale6 1000
+    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale 1000
 
 The fit coefficients are the orders, no tag involved, and it fits one degree higher than asked so
 the contamination beyond the truncation is reported rather than assumed away. With
@@ -270,8 +271,8 @@ phase-space point with nine coefficients on at strength `t`, the W width set to 
 
 The first row is the released sector. It falls by eight per halving, so the residual is third order.
 The second row is a model whose operators are not evaluated on the first-order shifts. Its residual
-is second order, 1.5% in the amplitude at `cHl3 = 1`, `Lam6 = 1 TeV`, which is the product `2 vev1 x
-cHl3 v^2/Lam6^2` missing from each W-lepton vertex. The width has to be off because a width that
+is second order, 1.5% in the amplitude at `cHl3 = 1`, `Lam = 1 TeV`, which is the product `2 vev1 x
+cHl3 v^2/Lam^2` missing from each W-lepton vertex. The width has to be off because a width that
 stays fixed while `M_W` moves leaves a first-order term of relative size `Gamma_W^2/M_W^2 = 7e-4`
 times the shift of `M_W^2`. That term is real, and worth knowing about in a scheme where `M_W` is
 derived.
@@ -329,7 +330,7 @@ bit-identical to the dimension-eight-only model on `p p > e+ e-` (863.1 pb) and 
 
 Invoke MadGraph through **python3.11**. From Python 3.13 the `locals()` snapshot of PEP 667 breaks
 `model_reader`, and every restricted model then fails to import with `Unable to evaluate mdl_L6 =
-mdl_Lam6**(-2): name 'mdl_Lam6' is not defined`. That looks exactly like a broken restriction card
+mdl_Lam**(-2): name 'mdl_Lam' is not defined`. That looks exactly like a broken restriction card
 and is not one.
 
 ## The class-5 Yukawa operators: the mass basis, and how it is reached
@@ -340,7 +341,7 @@ vev so that it does not, which puts it in the same basis as SMEFTsim. The sectio
 check, because the question comes up whenever someone compares coefficient values across models.
 
 **The test.** Read the operator's one-, two- and three-Higgs vertices out of a UFO. In units of
-`C y_f/(2 sqrt2 Lam6^2)`, with MadGraph's `n!` for identical legs, they are
+`C y_f/(2 sqrt2 Lam^2)`, with MadGraph's `n!` for identical legs, they are
 
     operator as written (Yukawa basis):   h 3,  hh 6,  hhh 6
     vev-subtracted     (mass basis):      h 2,  hh 6,  hhh 6
@@ -393,7 +394,7 @@ directions, which leaves `g_s G`, and with it every interaction, where it was. O
 such rescaling, so the operator cannot be taken as the Warsaw basis writes it. Taken that way, the
 vacuum piece stays in the three- and four-gluon vertices and nowhere else. With `cHG` switched on
 the gluon then couples to itself with a strength 1.8% away from the one it couples to quarks with
-(at `cHG = 0.15`, `Lam6 = 1 TeV`), and `check lorentz` fails at `1/Lambda^2`:
+(at `cHG = 0.15`, `Lam = 1 TeV`), and `check lorentz` fails at `1/Lambda^2`:
 
     u u~ > g g      1.0e-2        g g > t t~       5.2e-3
     g g > g g       3.8e-4        u u~ > t t~ g    2.1e-3
@@ -403,17 +404,17 @@ the gluon then couples to itself with a strength 1.8% away from the one it coupl
 a comparison with SMEFTsim on `g g > h` cannot see the problem.
 
 The operator is therefore `(H^dag H - v^2/2) G G`, which is the rescaling carried out: `-1/4 (1 - x)
-G G` with `x = 2 cHG v^2/Lam6^2` is canonical in `G' = Sqrt[1 - x] G` with `g' = g_s/Sqrt[1 - x]`,
+G G` with `x = 2 cHG v^2/Lam^2` is canonical in `G' = Sqrt[1 - x] G` with `g' = g_s/Sqrt[1 - x]`,
 and what is left of the operator is `cHG (H^dag H - v^2/2) G' G'/(1 - x)`. The factor `1/(1 - x)` is
-a product of two coefficients and enters at second order through `rG1 = cHG vevSM^2/Lam6^2`, the
+a product of two coefficients and enters at second order through `rG1 = cHG vevSM^2/Lam^2`, the
 gluon's entry in the table of "What an operator is evaluated on". With the subtraction all six
 processes pass at 1e-14, and SMEFTsim's own model has no `cHG` in the pure-gluon vertices either.
 
 The factor `1/(1 - x)` is gauge invariant on its own and leaves the two-point terms alone, so
 neither the Ward checks nor `check_bilinears.wls` can tell whether it is there. A cross section
 can. With `cHG` alone switched on, the amplitude of `g g > h` is its linear value times
-`1/(1 - x)`, so the cross section at order `cHG^3` must be `2x = 4 cHG v^2/Lam6^2` times the one
-at order `cHG^2`, which is 0.24250 at `cHG = 1`, `Lam6 = 1 TeV`:
+`1/(1 - x)`, so the cross section at order `cHG^3` must be `2x = 4 cHG v^2/Lam^2` times the one
+at order `cHG^2`, which is 0.24250 at `cHG = 1`, `Lam = 1 TeV`:
 
     g g > h  NP<=1 NP^2==2     5883 +- 6.4 pb
     g g > h  NP<=2 NP^2==3     1427 +- 1.6 pb        ratio 0.2426

@@ -120,14 +120,20 @@ def coefficients_table(entries) -> str:
     return "\n".join(head + rows) + "\n"
 
 
-def main(argv) -> int:
-    out = argv[1] if len(argv) > 1 else os.path.join(ROOT, "docs", "catalogue.json")
+def released_couplings():
+    """The text of couplings.py of the released dim8_mw in each basis, by basis (None for a model not there)."""
     import basis
-    from operators import OPS
-    couplings = {}
+    out = {}
     for b in basis.BASES:
         cpath = os.path.join(ROOT, "models", basis.model_name("dim8_mw", b), "couplings.py")
-        couplings[b] = open(cpath, errors="replace").read() if os.path.exists(cpath) else None
+        out[b] = open(cpath, errors="replace").read() if os.path.exists(cpath) else None
+    return out
+
+
+def main(argv) -> int:
+    out = argv[1] if len(argv) > 1 else os.path.join(ROOT, "docs", "catalogue.json")
+    from operators import OPS
+    couplings = released_couplings()
     previous = json.load(open(out)) if None in couplings.values() and os.path.exists(out) else None
     entries = rows(OPS, couplings, previous)
     # through a temporary file, so that a failed write never leaves a truncated catalogue behind

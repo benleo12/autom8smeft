@@ -55,9 +55,11 @@ processes in each of the four models of the default basis, with all 3575 entries
 `DIM8F` at 0.7 and Lambda at 1 TeV, the worst relative deviation 3e-12, which is
 the test that catches a mis-normalised kinetic term and is the reason the form factors sit on
 vev^4. At the level of cross sections, in `dim8_mw` at Lambda = 3 TeV, the class interferences of
-`p p > w+ w-` sum to the all-on result at 1.0 sigma, and the interferences of the 99 operators the
-selector lists for it, run one at a time, at 0.5 sigma. 56 of the 99 have an interference diagram,
-so that is a real additivity test over 56 independent MadGraph runs.
+`p p > w+ w-` sum to the all-on result at 1.0 sigma, and the interferences of the 101 operators the
+selector lists for it, run one at a time, at 0.5 sigma. 56 of the 101 have an interference diagram,
+so that is a real additivity test over 56 independent MadGraph runs. The two that enter `G_F` only
+with the lepton Yukawas on, `Q_{l^2e^2H^2}^{(1)}` and `Q_{l^2e^2H^2}^{(2)}`, have none on the card,
+which sets those Yukawas to zero.
 
 The same Ward identities with the dimension-six sector on instead: the 66 coefficients of
 block `DIM6` and the phases of the complex ones, thirty processes, at `NP<=1` and at `NP<=2`. In
@@ -117,12 +119,12 @@ does by default (its linearised option uses dummy fields and a custom propagator
 warns that expanding a mass shift inside a propagator distorts the W line shape). So the complete
 1/Lambda^4 prediction is the `NP^2==2` cross section plus the difference of the `NP=0` cross
 section with the coefficients on and off. That bracket is zero in any process in which no W is
-produced or exchanged. At Lambda = 3 TeV, with every coefficient at 1, it is below the Monte Carlo
-error in every process of the four studies (rows `NP=0` and `NP=0 on` of
-`examples/studies/*/results_dim8_is.tsv`), VBF di-Higgs included, whose two t-channel propagators
-carry the W. At 1 TeV the W mass shift is 81 times larger. Since the `NP=0` row is the cheapest one
-in any study, run it both ways rather than guess. In the {M_W, M_Z, G_F} scheme
-the bracket is absent by construction.
+produced or exchanged. In our runs of the four studies on `dim8_is`, at Lambda = 3 TeV with every
+coefficient at 1, it was below the Monte Carlo error in every process, VBF di-Higgs included, whose
+two t-channel propagators carry the W. At 1 TeV the W mass shift is 81 times larger. Since the
+`NP=0` row is the cheapest one in any study, run it both ways rather than guess: on `dim8_is`,
+`examples/studies/run_study.sh` writes the rows `NP=0` and `NP=0 on` of every process. In the
+{M_W, M_Z, G_F} scheme the bracket is absent by construction.
 
 **No coefficient whose vertices cancel ships.** Two structures of one vertex can each be nonzero
 and cancel, when they carry couplings equal up to sign, and MadGraph then merges them into one
@@ -284,8 +286,12 @@ refuses to write the baryon-number-violating members of the same classes.
 **Operators that act only through the input relations.** This is the subtlety I would attack if I
 wanted to find a conceptual error rather than a coding one. The muon-decay operators
 `Q_{l^2H^4D}^{(2)}` and `^{(4)}` have no vertex in any `p p > w+ w-` diagram, yet each contributes
--0.7155 pb (`dim8_is`, Lambda at 1 TeV), together two fifths of the whole dimension-eight
-interference, by shifting gw2, the vev and M_W. The mechanism matters: a shifted coupling carries the `NP=2` order tag and MadGraph counts it,
+-0.0062 pb in `dim8_mw` at Lambda = 3 TeV with its coefficient at 1 (rows `dim8_mw-op_c8l2H4Dx2` and
+`dim8_mw-op_c8l2H4Dx4` of `examples/studies/diboson/results_ww_operators.tsv`), together 48 per
+cent of the `NP^2==2` row with every coefficient at 1 (`examples/studies/diboson/results.tsv`). In
+`dim8_is`, where they shift gw2, the vev and M_W, they are together 40 per cent of that row and 46
+per cent of the 1/Lambda^4 cross section, of which the shift of the W mass is part.
+The mechanism matters: a shifted coupling carries the `NP=2` order tag and MadGraph counts it,
 while a shifted mass carries no tag at all. So the order counting is not a complete description of
 where the dimension-eight dependence lives, and a process-specific model built by selecting
 operators that have a vertex is incomplete in this scheme. `./dim8 select` lists such operators in a
@@ -382,9 +388,13 @@ fermions that vanishes between massless spinors, or that is proportional to the 
 boson's momentum, cancels a propagator and leaves a local term of the same power, so a wrong verdict
 puts a term in the wrong topology or drops it. `validate/onshell_zero.py` decides each vertex
 numerically and writes the verdicts to `build/onshell_zero.json`. The class to check by hand is
-psi^2H^2D^3: its q qbar h vertex should vanish between massless spinors, and its q qbar Z vertex
-should be k^2 times a remainder, since Q + Q^dag couples the Z to the total derivative of the quark
-current.
+psi^2H^2D^3 of the Murphy basis (`dim68_mw_murphy`): its q qbar h vertex should vanish between
+massless spinors, and its q qbar Z vertex should be k^2 times a remainder, since Q + Q^dag couples
+the Z to the total derivative of the quark current. In the default basis the class has no
+three-point vertex at all, so `./dim8 series "u u~ > e+ e-"` has no term of it, and with
+`--model dim68_mw_murphy` it has the local term and the s-channel term that these vertices give.
+The series stops rather than count lists that do not fit the model it is given: a copy of
+`dim68_mw_murphy` in a directory named `dim68_mw` must stop it.
 
 **The dimension-six selection.** `./dim8 select --with-dim6` says which dimension-six coefficients can
 change a process at 1/Lambda^4, and a complement of the selection cannot test that: couplings that
@@ -435,12 +445,13 @@ Normalise histograms to the banner's integrated weight.
 Diagram generation is what the full basis costs. Measured on `dim8_mw` with `NP^2==2`, one MadGraph
 session on one core of an Intel Xeon Gold 6148 with the model already compiled: the unrestricted model
 imports in 5 minutes, and `p p > w+ w-` is 796 diagrams in eight subprocesses and a 17-minute session.
-`p p > h h j j QCD=0` on the unrestricted model is 525156 diagrams in 120 subprocesses, and a session
-generating them had not finished after eight hours. A restriction card cuts this, because MadGraph
+`p p > h h j j QCD=0` on the unrestricted model is 525156 diagrams in 120 subprocesses, which took
+3539 core-minutes to generate, spread over 34 sessions, one for each class of quark crossings. A
+restriction card cuts this, because MadGraph
 drops the couplings that vanish at the card's values, among them every coupling proportional to a
 light-quark Yukawa coupling or to the Cabibbo angle, which the cards set to zero. With `dim8_mw-all`,
 which keeps every operator, HHjj is 9540 diagrams in 60 subprocesses. The card `./dim8 select` writes
-for the process keeps 228 operators and gives the same 9540, and `dim8_mw-cls7` gives 600. The
+for the process keeps 230 operators and gives the same 9540, and `dim8_mw-cls7` gives 600. The
 restriction has a cost of its own, since MadGraph simplifies the model at the card's values when it
 imports it: the import of `dim8_mw-all` alone takes 44 minutes, and the HHjj session 44 minutes with
 `dim8_mw-all`, 31 with the selector's card and 13 with `dim8_mw-cls7`. So for `p p > w+ w-` the

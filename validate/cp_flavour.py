@@ -27,7 +27,7 @@ structures and in the processes of cp_rates.py that are their own CP conjugate.
     diagrams of each process with one DIM8F vertex (NP==2).  The session of the card with both sets at
     generic inputs also writes the process directory (NP^2==2, the interference) of each process that has
     such diagrams.  Beside the sessions, the card with both sets goes through fusion_problems of
-    tests/test_restriction_cards.py: MadGraph fuses couplings that agree at the card's placeholder values,
+    validate/card_fusion.py: MadGraph fuses couplings that agree at the card's placeholder values,
     which must not happen to couplings that differ at the values of a run.
 (default)
     Runs each process twice, with the CP-odd DIM8F entries at 1 and with the CP-even ones, every other
@@ -174,8 +174,7 @@ def session(model, card, result, outdir, tags):
 
 
 def guard(model, card):
-    sys.path.insert(0, os.path.join(ROOT, "tests"))
-    import test_restriction_cards as T
+    import card_fusion as T   # validate/card_fusion.py, which tests/test_restriction_cards.py runs on the released cards
     found = T.fusion_problems(T.read_ufo(model), os.path.join(model, f"restrict_{card}.dat"), random.Random(1))
     print(f"fusion check of restrict_{card}.dat: {len(found)} couplings fused or removed wrongly"
           + (f", the first: {found[:3]}" if found else ""), flush=True)

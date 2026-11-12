@@ -39,31 +39,44 @@ def vanishing_wcs():
 
 def main():
     es = catalogue.derived()
+    sys.path.insert(0, os.path.join(ROOT, "gen"))
+    import basis                      # noqa: E402
     # A label whose operator vanishes identically is not a term of the basis.  As printed,
     # Q_{udWH^2}^{(1,2)} vanished, and counting their labels made class 15 agree with Table 1
     # while the encoded basis was two operators short.  Classes 18 to 21 are exempt: their "+b"
     # terms vanish for one generation by construction and Table 1 counts them.
     dead = vanishing_wcs()
-    got, skipped = {}, []
+    # Class 11 is held in two forms, the fifteen operators of the Murphy basis and the fifteen of the
+    # default basis that take their place (gen/basis.py).  A model has one form or the other, so the
+    # terms are counted once for each, the operators common to both with those of that form, and
+    # each count must be that of Table 1.
+    forms = [b for b in ("murphy",) + tuple(x for x in basis.BASES if x != "murphy")
+             if any(e.get("basis") == b for e in es)] or [None]
+    got, skipped = {b: {} for b in forms}, []
     for e in es:
         key = (e["cls"], e["b_violating"]) if e["cls"] >= 18 else e["cls"]
         if e["cls"] < 18 and e["wc"] in dead:
             skipped.append(e["label"])
             continue
-        got[key] = got.get(key, 0) + (2 if e["plus_hc"] else 1)
+        for b in forms:
+            if e.get("basis") in (None, b):
+                got[b][key] = got[b].get(key, 0) + (2 if e["plus_hc"] else 1)
     if skipped:
         print(f"not counted, the operator vanishes identically: {', '.join(skipped)}\n")
     ok = True
-    print(f"{'class':>12s} {'Murphy':>8s} {'encoded':>8s}")
+    name = lambda b: "encoded" if b is None else basis.NAME[b]
+    print(f"{'class':>12s} {'Table 1':>8s} " + " ".join(f"{name(b):>8s}" for b in forms))
     for k in EXPECTED:
-        g = got.get(k, 0)
-        flag = "" if g == EXPECTED[k] else "   <-- MISMATCH"
-        ok &= g == EXPECTED[k]
-        print(f"{str(k):>12s} {EXPECTED[k]:8d} {g:8d}{flag}")
-    tb = sum(v for k, v in got.items() if not (isinstance(k, tuple) and k[1]))
-    tbv = sum(v for k, v in got.items() if isinstance(k, tuple) and k[1])
-    print(f"\nB-conserving terms: {tb} (Murphy {TOTAL_B})\nB-violating terms:  {tbv} (Murphy {TOTAL_BV})\ntotal: {tb + tbv} (Murphy {TOTAL})")
-    ok &= tb == TOTAL_B and tbv == TOTAL_BV
+        g = [got[b].get(k, 0) for b in forms]
+        flag = "" if all(x == EXPECTED[k] for x in g) else "   <-- MISMATCH"
+        ok &= not flag
+        print(f"{str(k):>12s} {EXPECTED[k]:8d} " + " ".join(f"{x:8d}" for x in g) + flag)
+    for b in forms:
+        tb = sum(v for k, v in got[b].items() if not (isinstance(k, tuple) and k[1]))
+        tbv = sum(v for k, v in got[b].items() if isinstance(k, tuple) and k[1])
+        print(f"\n{name(b)}: B-conserving terms {tb} (Table 1 {TOTAL_B}), B-violating terms {tbv} (Table 1 {TOTAL_BV}), "
+              f"total {tb + tbv} (Table 1 {TOTAL})")
+        ok &= tb == TOTAL_B and tbv == TOTAL_BV
     parsed = sum(e["status"] == "ok" for e in es)
     print(f"\noperators encoded: {parsed} / {len(es)}")
     print("term counts", "PASS" if ok else "FAIL")

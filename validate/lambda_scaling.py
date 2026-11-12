@@ -22,7 +22,9 @@ and not a tagging defect, and it is absent in the {M_W, M_Z, G_F} scheme.
 
 This runs the restriction card of every class (restrict_clsN.dat) at both scales and prints the
 ratio with a verdict: linear, QUADRATIC, mixed or zero.  Results append to
-validate/lambda_scaling.tsv, or to validate/lambda_scaling_<model>.tsv for another model.
+validate/lambda_scaling.tsv, or to validate/lambda_scaling_<model>.tsv for another model.  A class
+with no diagram in the process is left out.  A generation that fails for another cause, cards that
+are refused and a run that ends without a result stop the script with the reason and exit status 1.
 """
 from __future__ import annotations
 
@@ -33,7 +35,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(ROOT, "gen"))
-import energy_growth as E   # noqa: E402
+import mg_runs as E         # noqa: E402  the MadGraph runs (validate/mg_runs.py)
 import epower               # noqa: E402
 
 OUT = os.path.join(HERE, "lambda_scaling.tsv")
@@ -65,13 +67,18 @@ def main(argv) -> int:
             if (proc, str(cls)) in done:
                 continue
             E.MODEL = os.path.join(ROOT, "models", f"{model}-cls{cls}")
+            # mg_runs stops here itself when MadGraph is missing or fails
             d = E.generate(tag, "NP^2==2", suffix=f"_lam{cls}" + ("" if model == "dim8_is" else f"_{model}"))
-            if d is None:
-                continue                      # no diagram for this class in this process
+            if d is None:                     # no diagram for this class in this process
+                print(f"{proc:<16s} cls{cls:<3d} no diagram", flush=True)
+                continue
             r = []
             for lam in (1000, 2000):
-                s, e = E.one(d, tag, f"cls{cls}", ["dim8_all=1", f"Lam={lam}"] + extra, energy, nev,
-                             os.path.join(E.WORK, f"lam_{tag}_{cls}_{lam}.log"))
+                log = os.path.join(E.WORK, f"lam_{tag}_{cls}_{lam}.log")
+                s, e = E.one(d, tag, f"cls{cls}", ["dim8_all=1", f"Lam={lam}"] + extra, energy, nev, log)
+                if s is None:
+                    print(f"{proc} cls{cls} at Lam = {lam}: {e}\n  see {log}")
+                    return 1
                 r.append((s, e))
             (a, ea), (b, eb) = r
             if not a or not b:

@@ -48,7 +48,7 @@ file, and a value that another parameter of the same block already has, of eithe
 again.  They carry no meaning: set the physical values in the run's param_card.dat as usual.  The
 dimension-six coefficients of a model that has them are set to zero in the same way unless they
 are selected with dim6 or dim6:<name>, and the selected ones get such values too.
-Everything else (masses, inputs, the scales Lam and Lam6) is copied from the UFO's defaults, unless
+Everything else (masses, inputs, the scale Lam) is copied from the UFO's defaults, unless
 a NAME=VALUE selector sets it.
 
 --renew gives the kept coefficients of every restriction card of a model those values, whatever
@@ -65,9 +65,9 @@ CARD_LINE = re.compile(r"^(\s*(?:\d+\s+)+)([-\deE.+]+)(\s*#\s*(\w+).*)$")
 
 
 def is_coefficient(block, name):
-    """Whether an entry of a card is a coefficient, which a card keeps or zeroes.  The scales Lam and
-    Lam6 share the blocks and must stay."""
-    return (block in ("DIM8", "DIM8F") and name.startswith("c8")) or (block == "DIM6" and name != "Lam6") or is_member(block, name)
+    """Whether an entry of a card is a coefficient, which a card keeps or zeroes.  The scale Lam shares
+    block DIM8 and must stay."""
+    return (block in ("DIM8", "DIM8F") and name.startswith("c8")) or block == "DIM6" or is_member(block, name)
 
 
 # the blocks of the coefficients of the towers of a model of order N (gen/towers.py, gen/input_scheme.py)
@@ -176,11 +176,10 @@ def main(argv):
             sys.exit(f"the member {n} belongs to no single class: {sorted(hits)}")
         return hits.pop()
     cls_of = {n: member_class(n) for n in members}
-    # The dimension-six sector, when the model carries it.  Lam6 is the scale and shares the
-    # block, so it is never a coefficient to keep or zero.
-    ufo_dim6 = [n for n in re.findall(
+    # The dimension-six sector, when the model carries it.
+    ufo_dim6 = re.findall(
         r"name = '(\w+)',\s*nature = 'external',\s*type = '\w+',\s*value = [^,]*,"
-        r"(?:\s*texname = '[^']*',)?\s*lhablock = 'DIM6'", params) if n != "Lam6"]
+        r"(?:\s*texname = '[^']*',)?\s*lhablock = 'DIM6'", params)
     # every external parameter, as (variable, name, default, block, codes), and the inputs among them
     ext = re.findall(r"(\w+) = Parameter\(name = '(\w+)',\s*nature = 'external',\s*type = '\w+',\s*value = ([^,]*),\s*texname = '[^']*',\s*lhablock = '(\w+)',\s*lhacode = \[ ([\d, ]+) \]", params)
     inputs = {pname for _, pname, _, blk, _ in ext if not is_coefficient(blk, pname)}

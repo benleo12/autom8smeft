@@ -34,6 +34,7 @@ import itertools, os, re, sys
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from generic_inputs import generic_value  # noqa: E402
+import eval_ufo_params as E  # noqa: E402  the evaluation of a UFO's parameters and couplings, one for every script
 
 G = np.diag([1.0, -1.0, -1.0, -1.0])
 EPS = np.zeros((4, 4, 4, 4))
@@ -334,24 +335,18 @@ def dead_coefficients(ufo, zeros, verbose=True):
     points, with the coefficient at one and all others at zero."""
     sys.path.insert(0, ufo)
     import parameters as P, couplings as C, vertices as V
-    import cmath, math
 
     wcs = [p.name for p in P.all_parameters
            if p.nature == "external" and p.name.startswith("c8") and p.name != "Lam"]
     # an input that is zero on the card, a light mass or cabi, at a value of its own (generic_inputs.py)
     base = {p.name: generic_value(p.name, float(p.value), p.lhablock) for p in P.all_parameters if p.nature == "external"}
-    ns = {"cmath": cmath, "math": math, "complex": complex,
-          "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
+    ns = E.namespace()
 
     def params(on):
         v = dict(base)
         for k in wcs: v[k] = 0.0
         v[on] = 1.0
-        for p in P.all_parameters:
-            if p.nature == "internal":
-                try: v[p.name] = eval(p.value, ns, v)
-                except Exception: v[p.name] = float("nan")
-        return v
+        return E.internal_parameters(P, v, ns, residue=True)
 
     struct = {}
     txt = open(os.path.join(ufo, "lorentz.py")).read()
@@ -384,9 +379,7 @@ def dead_coefficients(ufo, zeros, verbose=True):
                         # wavefunctions, so the sum is the vertex at one point
                         rng = np.random.default_rng(1000 + rep)
                         if cc != ci: continue
-                        try: g = complex(eval(cp.value, ns, dict(vals)))
-                        except Exception: g = float("nan")
-                        if g != g: continue
+                        g = E.coupling(cp.name, cp.value, ns, vals, residue=cp.value)
                         st = struct.get(vx.lorentz[li].name)
                         if st is None: continue
                         if st.strip() in ("0", ""): continue

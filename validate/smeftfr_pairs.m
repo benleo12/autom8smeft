@@ -19,16 +19,19 @@
 
    RUNNING IT
    ----------
-   fr_compare.wls must be given three model files rather than two, because the SmeftFR
-   blocks need validate/smeftfr_shim.fr on top of our base model:
+   The SmeftFR blocks need validate/smeftfr_shim.fr on top of our base model, so
+   fr_compare.wls is given that file after gen.fr, separated by a comma, here with the
+   list of one class:
 
-       LoadModel["tests/gen_smoke/base.fr", "tests/gen_smoke/gen.fr",
-                 "validate/smeftfr_shim.fr"];
+       wolframscript -file validate/fr_compare.wls tests/gen_smoke/base.fr \
+           tests/gen_smoke/gen.fr,validate/smeftfr_shim.fr validate/smeftfr_by_class/class2.m
 
    The shim defines SMEFT$WB, SMEFTGaugeRules, the Gl / Phi8 / Phi8bar aliases and the 89
    SmeftFR Wilson coefficients, and it Gets the eight SmeftFR bosonic Lagrangian files so
    that every LQ... block named below exists.  See the header of that file for the full
-   convention audit.
+   convention audit, and for where the SmeftFR files, which are not shipped here, come from
+   and go.  gen.fr is written by ./dim8 build --source-only, and FeynRules is expected at
+   external/feynrules/feynrules-current (models/src/README.md).
 
    THE ENTRIES
    -----------

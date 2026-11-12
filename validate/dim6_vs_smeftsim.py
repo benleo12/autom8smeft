@@ -58,18 +58,19 @@ from vertex_contract import compare, response, vertex_numbers  # noqa: E402
 # ------------------------------------------------------------------ the comparison
 def matched_inputs(ours, smeftsim):
     """Our inputs and SMEFTsim's, at SMEFTsim's defaults: alpha as aEWM1 = 1/aEW, the unit CKM
-    matrix, Lambda = 1 TeV."""
+    matrix, Lambda = 1 TeV (our one scale Lam, and SMEFTsim's LambdaSMEFT set equal to it)."""
     def defaults(path):
         txt = open(os.path.join(path, "parameters.py")).read()
         return {n: v for n, nat, v in re.findall(
             r"(\w+) = Parameter\(name = '\w+',\s*nature = '(external)',\s*type = '\w+',\s*value = ([^,]+),", txt)}
     a, b = defaults(ours), defaults(smeftsim)
     common = {n: float(b[n]) for n in a if n in b and not n.startswith("c")}
-    mine = dict(common, cabi=0.0, Lam6=1000.0)
+    lam = 1000.0
+    mine = dict(common, cabi=0.0, Lam=lam)
     if "aEWM1" in a:   # the alpha scheme, where alpha is ours as 1/aEW; in the MW scheme it is derived
         mine["aEWM1"] = 1 / float(b["aEW"]) if "aEW" in b else float(b["aEWM1"])
-    theirs = dict(common, CKMlambda=0.0, CKMA=0.0, CKMrho=0.0, CKMeta=0.0, LambdaSMEFT=1000.0,
-                  linearPropCorrections=0.0, cabi=0.0, Lam6=1000.0)
+    theirs = dict(common, CKMlambda=0.0, CKMA=0.0, CKMrho=0.0, CKMeta=0.0, LambdaSMEFT=lam,
+                  linearPropCorrections=0.0, cabi=0.0, Lam=lam)
     return mine, theirs
 
 
@@ -80,9 +81,9 @@ def probes(ours, smeftsim):
         txt = open(os.path.join(path, "parameters.py")).read()
         return [n for n, blk in re.findall(r"(\w+) = Parameter\(name = '\w+',\s*nature = 'external',.*?lhablock = '(\w+)'",
                                            txt, re.S) if blk in blocks]
-    a = set(coeffs(ours, {"DIM6"})) - {"Lam6"}
+    a = set(coeffs(ours, {"DIM6"}))
     # a reference with our own conventions (a model compared with itself) has a DIM6 block
-    b = set(coeffs(smeftsim, {"SMEFT", "SMEFTcpv"})) or set(coeffs(smeftsim, {"DIM6"})) - {"Lam6"}
+    b = set(coeffs(smeftsim, {"SMEFT", "SMEFTcpv"})) or set(coeffs(smeftsim, {"DIM6"}))
     def internal(path):
         txt = open(os.path.join(path, "parameters.py")).read()
         return set(re.findall(r"(\w+) = Parameter\(name = '\w+',\s*nature = 'internal'", txt))

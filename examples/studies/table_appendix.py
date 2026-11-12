@@ -12,13 +12,15 @@ reader of table_master.py.  A dash is no diagram, so the pattern of dashes shows
 reach which process.
 
 The absolute cross sections, the Monte Carlo errors and the squared terms are in each study's
-results.tsv in the repository.
+results.tsv in the repository.  Nothing is written unless every row of the studies checks out
+against its record and all of them come from one model version (provenance.py).
 """
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import provenance  # noqa: E402
 from table_master import at_paper_scale, study_model  # noqa: E402
 
 # (study, process, column head).  Order: the four body processes first, then the rest.
@@ -48,7 +50,10 @@ UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Stan
 
 
 def read(study):
+    """{(process, model, order): (sigma, error)} at LAM_PAPER, the error the bound of provenance.mc_error, which
+    counts the signed event weights of an interference."""
     out = {}
+    recs = {provenance.key(r): r for r in provenance.read_records(provenance.records_path(os.path.join(HERE, study, "results.tsv")))}
     with open(os.path.join(HERE, study, "results.tsv")) as fh:
         fh.readline()
         for line in fh:
@@ -57,8 +62,8 @@ def read(study):
                 continue
             key = (f[0].strip(), f[1], f[2])
             try:
-                v = at_paper_scale(f[2], float(f[3]), float(f[4]), f[7] if len(f) > 7 else "",
-                                   f"{study}: {f[0].strip()} {f[1]}")
+                v = at_paper_scale(f[2], float(f[3]), provenance.mc_error(float(f[4]), recs.get(key)),
+                                   f[7] if len(f) > 7 else "", f"{study}: {f[0].strip()} {f[1]}")
             except ValueError:
                 # keep the WORD, not just the absence of a number: "NO_DIAGRAMS" and
                 # "NOT_INTEGRATED" mean opposite things and a table that renders both as a dash
@@ -115,6 +120,7 @@ def label(c):
 
 
 def main():
+    provenance.require([os.path.join(HERE, s, "results.tsv") for s in dict.fromkeys(p[0] for p in PROCS)], "table_appendix.py")
     data = {s: read(s) for s in {p[0] for p in PROCS}}
     M = {s: study_model(d, s) for s, d in data.items()}
     sm = [sm_of(data, s, p) for s, p, _ in PROCS]
@@ -143,22 +149,16 @@ def main():
             cells.append(cell(sig, err, s0, sq))
         out.append(label(c) + " & " + " & ".join(cells) + r" \\")
     out += [r"\bottomrule", r"\end{tabular}}",
-            r"\caption{Which dimension-eight classes interfere in each of the twelve processes of \cref{sec:pheno}, and by how much. "
-            r"Each entry is the interference \MG\ returns at \code{NP\^{}2==2}, in units of $10^{-4}$ of that process's Standard-Model rate, "
-            r"for proton-proton collisions at the LHC with a centre-of-mass energy of $13.6$~TeV, with $\Lambda = 3$~TeV and every coefficient of the class at one. A dash "
-            r"is no diagram rather than a small number, and the pattern of dashes follows from the "
-            r"number of legs of \cref{eq:legs} and the field content of the vertices, "
-            r"as \cref{sec:classes} explains. An asterisk is a class that reaches the process only through a channel with no tree-level Standard-Model amplitude, so it has a square and no interference. An open circle is a class that does produce a "
-            r"diagram but interferes below $5\times10^{-7}$ of the Standard-Model rate, "
-            + (r"a dagger one that produces diagrams but was not run in these studies, " if r"\dagger" in "\n".join(out) else "")
-            + r"and parentheses mark a Monte Carlo error above a tenth of the entry. "
-            r"The Drell-Yan processes carry $m_{ee}>200$~GeV, $p_T^\ell>10$~GeV, $|\eta_\ell|<2.5$ and "
-            r"$\Delta R(\ell,\ell)>0.4$, the photon channel additionally $p_T^\gamma>20$~GeV, "
-            r"$|\eta_\gamma|<2.5$ and $\Delta R(\gamma,\ell)>0.4$, and $HHjj$ is generated with "
-            r"$\mathrm{QCD}=0$ and $p_T^j>25$~GeV, $|\eta_j|<5$, $m_{jj}>400$~GeV and "
-            r"$\Delta R(j,j)>0.4$. The diboson and triboson processes carry no cuts. Absolute cross "
-            r"sections, Monte Carlo errors and the squared terms are in each study's "
-            r"\code{results.tsv}.}",
+            r"\caption{Dimension-eight interference in the twelve benchmark processes, in units of $10^{-4}$ of the corresponding SM rate. "
+            r"The first row gives the SM cross sections in pb. "
+            r"Parentheses mark entries whose Monte Carlo error can exceed ten per cent of their magnitude. "
+            r"An asterisk denotes a nonzero squared contribution without tree-level SM interference, and a dash denotes no contributing diagram. "
+            # the paper's caption, with a sentence for each symbol only other rows produce
+            + (r"An open circle denotes a class that produces a diagram but interferes below $5\times10^{-7}$ of the SM rate. "
+               if r"\circ" in "\n".join(out) else "")
+            + (r"A dagger denotes a class that produces diagrams but was not run in these studies. "
+               if r"\dagger" in "\n".join(out) else "")
+            + r"The shaded classes are discussed in the main text. The settings and cuts are given in this appendix.}",
             r"\label{tab:grid}", r"\end{table}"]
     print("\n".join(out))
 

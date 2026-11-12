@@ -118,7 +118,7 @@ for i, b in enumerate(blocks):
         blocks[i] = re.sub(r"value = 0\.?0*(,?\s*)$", r"value = 0.7\1", b, count=1, flags=re.M); n8 += 1
     elif which in ("dim6", "both") and "lhablock = 'DIM6'" in b and name.endswith("Ph"):
         blocks[i] = re.sub(r"value = [^,]*,", "value = %s," % angles[nph % len(angles)], b, count=1); nph += 1
-    elif which in ("dim6", "both") and "lhablock = 'DIM6'" in b and name != "Lam6":
+    elif which in ("dim6", "both") and "lhablock = 'DIM6'" in b:
         blocks[i] = re.sub(r"value = [^,]*,", "value = %s," % spread[n6 % len(spread)], b, count=1); n6 += 1
     elif inputs == "generic" and block not in COEFFICIENT_BLOCKS + ("DECAY",) and re.search(r"value = 0\.?0*,?\s*$", b, re.M):
         v = generic_value(name, 0.0, block)

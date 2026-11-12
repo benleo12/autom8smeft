@@ -19,8 +19,6 @@ computed from the operators and the base.  Every coefficient of NP order p is se
 from the closed form must fall as t^(N+1).  It tests the expansion and the truncation of the vertex, the
 normalisation of the tower members and the normalisation and sign of the CP-odd Q_{l^2H^4D}^{(3)}.
 """
-import cmath
-import math
 import os
 import random
 import re
@@ -35,12 +33,12 @@ def main(argv):
     # the model as the writer leaves it imports too, as in validate/compare_ufo.py
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     from compare_ufo import use_ufo
+    import eval_ufo_params as E   # the evaluation of a UFO's parameters, one for every script
     use_ufo(ufo)
     import parameters as P
     import vertices as V
     ext = {p.name: float(p.value) for p in P.all_parameters if p.nature == "external"}
-    ns = {"cmath": cmath, "math": math, "complex": complex,
-          "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
+    ns = E.namespace()
     order = lambda name: (lambda m: (int(m.group(1)) - 4)//2 if m else 1)(re.match(r"c(\d+)", name))
     rng = random.Random(20261108)
     # every Wilson coefficient: the dimension-six ones (SMEFTsim names, NP order 1) and c<d>... of order (d-4)/2
@@ -48,11 +46,8 @@ def main(argv):
              if re.match(r"c\d+", k) or k in ("cHW", "cHB", "cHWB", "cHDD", "cHl3", "cll1", "cHbox", "cH", "cHG")}
 
     def point(t):
-        vals = dict(ext, Lam=1000.0, Lam6=1000.0, **{k: v*t**order(k) for k, v in coefs.items()})
-        for p in P.all_parameters:
-            if p.nature == "internal":
-                vals[p.name] = eval(p.value, ns, vals)
-        return vals
+        vals = dict(ext, Lam=1000.0, **{k: v*t**order(k) for k, v in coefs.items()})
+        return E.internal_parameters(P, vals, ns)
 
     # a merged model has a vertex of these particles for each set of coupling orders (validate/merge_ufo.py)
     vtx = [v for v in V.all_vertices if sorted(p.name for p in v.particles) == sorted(["ve~", "e-", "W+"])]

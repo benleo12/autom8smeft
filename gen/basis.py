@@ -36,6 +36,8 @@ import re
 BASES = ("geo", "murphy")
 DEFAULT = "geo"
 SUFFIX = {"geo": "", "murphy": "_murphy"}
+# the name of each basis in what the commands print
+NAME = {"geo": "default", "murphy": "Murphy"}
 
 # class 11 of the Murphy basis, and the operators of the default basis that replace them, in the same order
 MURPHY = ("c8l2H2D3x1", "c8l2H2D3x2", "c8l2H2D3x3", "c8l2H2D3x4", "c8e2H2D3x1", "c8e2H2D3x2",

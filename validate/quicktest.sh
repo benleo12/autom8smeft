@@ -67,8 +67,10 @@ say "1. the input scheme is truncated at 1/Lambda^4 and nothing beyond survives 
 r1=$(grep -m1 'largest quadratic/linear' "$S/trunc.txt" | sed 's/.*: //')
 r2=$(grep    'largest quadratic/linear' "$S/trunc.txt" | tail -1 | sed 's/.*: //')
 echo "    quadratic remainder at c=1e-3: $r1, at c=5e-4: $r2 (must halve)"
+# both remainders zero is every parameter exactly linear, which passes; a remainder at the smaller step
+# alone, or no number from the script, does not
 check "quadratic remainder halves when c halves" \
-      "$("$PY" -c "print($r1/$r2)")" 2 0.1
+      "$("$PY" -c "r1, r2 = float('${r1:-nan}'), float('${r2:-nan}'); print(2.0 if r1 == 0 == r2 else r1/r2 if r2 else float('inf'))")" 2 0.1
 
 # ---------------------------------------------------------------- 2. SM parameters, no MadGraph
 say "2. at zero coefficients the derived parameters are the Standard Model's (1 s)"

@@ -766,7 +766,11 @@ def load_data(root: str = ROOT, with_dim6: bool = False, gauge: str = "unitary")
                 "build/vertex_index_fg.json and build/sm_vertices_fg.json, are not in this tree.  They are "
                 "made in Feynman gauge with Mathematica and FeynRules.")
     fg = json.load(open(vfg))
-    lack = [b for b in index if (b.startswith("L6cl") or (b.startswith("L8op") and int(b[4:]) < 675)) and b not in fg]
+    # every block of the index that a released model can carry, those that conserve baryon number as
+    # docs/catalogue.json records it, whatever its number: the operators of the default basis that replace
+    # class 11 of the Murphy basis come after the baryon-number-violating ones (gen/basis.py)
+    bviol = {e["block"] for e in json.load(open(os.path.join(root, "docs", "catalogue.json"))) if e["b_violating"]}
+    lack = [b for b in index if (b.startswith("L6cl") or (b.startswith("L8op") and b not in bviol)) and b not in fg]
     if lack:
         lack.sort(key=lambda b: (b[:4], int(b[4:]) if b[4:].isdigit() else 0, b))
         raise ValueError(f"build/vertex_index_fg.json lacks {len(lack)} entries of build/vertex_index.json "

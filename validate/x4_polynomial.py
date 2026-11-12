@@ -130,7 +130,8 @@ def value(terms, fields):
 
 def main():
     if len(sys.argv) < 2:
-        sys.exit("usage: validate/x4_polynomial.py <out.json>, the file validate/x4_polynomial.wls writes")
+        print("usage: validate/x4_polynomial.py <out.json>, the file validate/x4_polynomial.wls writes", file=sys.stderr)
+        sys.exit(2)
     pairs = json.load(open(sys.argv[1]))
     rngs = [np.random.default_rng(s) for s in (11, 22, 33)]
     points = [tensors(r) for r in rngs]

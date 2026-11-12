@@ -25,10 +25,14 @@ study driver of section 4 finds MadGraph through `MG5_DIR`:
 prints the operators with a tree-level vertex in that process, by class and with the vertex of
 each one's leading tree, and then a second group: the operators with no vertex in the process that
 still move its prediction because they enter the {alpha, MZ, GF} relations (c8B2H4x1, c8H6x1,
-c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4 are the eight that can). On
-p p > w+ w- three of them have no vertex in any diagram, and two of those, c8l2H4Dx2 and
-c8l2H4Dx4, carry a third of the effect. The two groups together are complete at tree level with
-one insertion.
+c8H6x2, c8W2H4x1, c8W2H4x3, c8WBH4x1, c8l2H4Dx2, c8l2H4Dx4, c8l4H2x1, c8l2e2H2x1 and c8l2e2H2x2
+are the eleven that can, the last two only with the electron and muon Yukawas on). On
+p p > w+ w- six of them have no vertex in any diagram, in either scheme, and with the lepton
+Yukawas off three of those six move it, all through muon decay: c8l2H4Dx2, c8l2H4Dx4 and, with
+the opposite sign, c8l4H2x1. With every coefficient at 1, c8l2H4Dx2 and c8l2H4Dx4 carry 46 per
+cent of the 1/Lambda^4 cross section of section 4 in `dim8_is`, where the shift of the W mass is
+part of it (40 per cent of the `NP^2==2` row alone), and 48 per cent in `dim8_mw`. The two groups
+together are complete at tree level with one insertion.
 
 `--card NAME` writes `restrict_NAME.dat` into the model that `--model` names (`models/dim8_mw`, the
 {MW, MZ, GF} scheme, without the option), keeping both groups, and `import model dim8_is-NAME`
@@ -126,6 +130,18 @@ and without `build/onshell_zero.json`, which `python3 validate/onshell_zero.py` 
 three-point vertex of two light fermions even where that vertex vanishes on shell. The output says
 so in both cases.
 
+The series is that of one model, `--model` as for the selector, `dim68_mw` unless another is given,
+and it uses the operators of that model's basis and the vertices of its input scheme. Its last lines
+name the operators of the input relations of the scheme, which shift every Standard Model term by
+v^4/Lambda^4 at dimension eight and v^2/Lambda^2 at dimension six, and so have no topology of their
+own. The two bases differ in class 11, psi^2H^2D^3. In the default basis every Higgs field of these
+operators carries a derivative and none of their vertices has fewer than four fields, while in the
+Murphy basis (`dim68_mw_murphy`) they have three-point vertices with a q qbar Z vertex proportional to
+k^2, which give terms in the s channel as well. The command checks the vertex lists against the
+couplings of the model before it counts, and stops when the model was written from another version
+of `gen/operators.py`, carries an operator the lists do not hold, or carries the class-11 operators
+of one basis while its name says the other.
+
 To test what the series leaves out, import the model with the card of a class it leaves out (a
 chirality-flipping class such as psi^2XH^3, `dim8_is-cls10`, in `u u~ > w+ w-`) and generate
 `NP^2==2` with the masses and Yukawa couplings of the light quarks and leptons set to zero in the
@@ -144,7 +160,7 @@ A directory with two or three text files.
     p p > h h j j QCD=0 | ptj=20 mmjj=500 | bosonic
 
 Restrict heavy processes. `p p > h h j j QCD=0 NP^2==2` on the unrestricted `dim8_mw` is 525156
-diagrams, more than eight hours of generation on one core, and 9540 diagrams in a 31-minute session
+diagrams, 3539 core-minutes of generation, and 9540 diagrams in a 31-minute session
 with the card `./dim8 select` writes for it. A card costs time at import (44 minutes for
 `dim8_mw-all`), so a light process such as `p p > w+ w-` is faster unrestricted.
 
@@ -169,7 +185,8 @@ at 1 with `Lam` at 1000 GeV.
     MG5_DIR=/path/to/MG5_aMC DIM8_CORES=2 \
         examples/studies/run_study.sh mystudy models/dim8_is 5000
 
-Cross sections append to `mystudy/results.tsv`, event files to `mystudy/lhe/`. `DIM8_RUNS` sets
+Cross sections append to `mystudy/results.tsv`, event files to `mystudy/lhe/`, and the record of
+each cross section to `mystudy/records.tsv` (section 5). `DIM8_RUNS` sets
 where process directories go, `DIM8_CORES` caps cores, `DIM8_NEV_SQ` caps events for the squared
 rows.
 
@@ -187,17 +204,50 @@ coefficients, so part of the 1/Lambda^4 term sits in the `NP=0` bin:
 
     sigma(1/Lambda^4) = sigma(NP^2==2) + [ sigma(NP=0, c) - sigma(NP=0, 0) ]
 
-On `p p > w+ w-` with every entry of DIM8 and DIM8F at 1 and Lambda at 1 TeV that bracket is
-+1.23 +- 0.11 pb against an interference of -3.6 pb. It vanishes for every process in which no W
-is produced or exchanged. It does not vanish in vector-boson fusion, where the W sits in the
-t-channel propagators: 5.8 +- 0.6 per cent of the cross section in `p p > h h j j QCD=0` with
-`ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV.
+On `p p > w+ w-` in `dim8_is` at 13.6 TeV, with every entry of DIM8 and DIM8F at 1 and Lambda at
+1 TeV, that bracket is +1.11 +- 0.19 pb (`examples/studies/diboson/np0_shift.tsv`). At Lambda =
+3 TeV it is +0.014 +- 0.002 pb (`validate/np0_shift.py examples/studies/diboson --report`),
+against a tagged interference of -0.044 pb (`examples/studies/quickstart/results.tsv`). It vanishes
+for every process in which no W is produced or exchanged. It does not vanish in vector-boson
+fusion, where the W sits in the t-channel propagators: 6.7 +- 0.9 per cent of the cross
+section in `p p > h h j j QCD=0` at Lambda = 1 TeV (`examples/studies/vbf_dihiggs/np0_shift.tsv`),
+with `ptj` = 25 GeV, `etaj` = 5 and `mmjj` = 400 GeV.
 
 ## 5. Output
 
 `mystudy/results.tsv`, one row per process, model and order: cross section, error, event count,
 the W mass at that row's coefficients, the settings used, and the path to the event file. Event
 files land in `mystudy/lhe/` as gzipped LHE.
+
+`mystudy/records.tsv` says where each cross section comes from: the model MadGraph read (a hash of
+its Python files, the sha256 of the release archive when the directory is a release, the hash of the
+restriction card), the MadGraph version, the `import model` and `generate` commands, the param and run
+cards as the run used them (a hash of each, with a copy in `mystudy/cards/`), and the event file with
+its sha256 and the cross section MadGraph wrote into its header.
+
+    examples/studies/provenance.py check mystudy/results.tsv
+
+compares each line of `results.tsv` with its record, its event file and its cards: the cross section
+and its error, `Lam` and the coefficients the settings switch on, the coefficients the restriction card
+keeps, the process and order generated, the event count, beam energies and cuts of the run card (a
+cut that `processes.txt` does not set must have the value MadGraph writes), whether every line comes
+from one version of the model and, for each restriction card, from one version of that card, and
+whether that version of the model is the released one, whose hash follows from the list
+`models/<name>.sha256` (for a model with no list, the directory `models/<name>/` as it is). A line
+whose cards have no copy in `mystudy/cards/` does not pass. The table and
+figure scripts of `examples/studies/` make this check first and write nothing when it fails.
+`plot_study.py` also writes `<prefix>.sources.tsv`, the event files behind its histograms and the
+tables it wrote, each with its sha256, which `paper_figure.py` checks before it draws: the table must be
+unchanged since, with an event file for every column. For cross sections computed before the records
+were kept, `provenance.py recover` writes the records from the headers of their event files, and lists
+those it cannot trace. Such a record is marked as recovered, since the model and restriction card in it
+are those that `--model` names for the import path of the run, and nothing in the event file confirms
+them. The check passes a recovered line only once `attest` has tied it to the table's model, as below,
+and never one with no event file, which has to be run again. A cross section computed with another
+version of the model or of its restriction card counts as the table's only after `validate/same_couplings.py` has found its couplings equal to those
+of the table's model, restricted by its own card of that name, at the cross section's cards and in every
+vertex that a tree diagram of its process can contain, and `provenance.py attest` has written that into
+its record.
 
 An interference sample has negative weights and reproduces its cross section only statistically,
 so its effective statistics is the excess of positive over negative events.

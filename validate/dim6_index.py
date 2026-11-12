@@ -101,7 +101,7 @@ def input_relation():
 def coefficients(model):
     """{coefficient: the names it has in the model} for the coefficients of the model's block DIM6, a complex
     one as its internal combination and its parts (cuH, cuHAbs, cuHPh), grouped as
-    validate/onshell_zero.py model_names groups them.  The scale Lam6 shares the block and is not one."""
+    validate/onshell_zero.py model_names groups them."""
     txt = open(os.path.join(model, "parameters.py"), errors="replace").read()
     names = collections.defaultdict(list)
     for n in re.findall(r"(\w+) = Parameter\(\s*name = '\w+'", txt):
@@ -109,7 +109,7 @@ def coefficients(model):
     dim6 = set()
     for b in re.split(r"\n(?=\w+ = Parameter\()", txt):
         m = re.match(r"(\w+) = Parameter\(\s*name = '\w+',\s*nature = 'external'", b)
-        if m and re.search(r"lhablock = 'DIM6'", b) and m.group(1) != "Lam6":
+        if m and re.search(r"lhablock = 'DIM6'", b):
             dim6.add(re.sub(r"(Abs|Ph|Re|Im)$", "", m.group(1)))
     return {c: sorted(names[c]) for c in sorted(dim6)}
 

@@ -4,8 +4,7 @@
 validate/zero_vertex.py is the complete test and the one to run.  This one randomises the
 momenta INDEPENDENTLY, so it catches only a structure that vanishes by the antisymmetry of
 Epsilon alone, never one that vanishes through momentum conservation, which ALOHA imposes.  It
-also skips every structure carrying a Gamma matrix.  Its Epsilon-only pass is fast, and
-validate/b4_normalisation.py uses its tensors and its structure reader.
+also skips every structure carrying a Gamma matrix.  Its Epsilon-only pass is fast.
 
     validate/zero_lorentz.py <UFO dir> [--all]    (needs numpy)
 

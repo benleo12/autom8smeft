@@ -1,0 +1,13 @@
+process	model	order	sigma_pb	error_pb	nevents	MW_GeV	settings	lhe
+p p > w+ w-	dim8_mw	NP=0	68.43	0.03768	100000	80.387	dim8_all=0 Lam=3000	lhe/p_p___wp_wm_dim8_mw_NP_0.lhe.gz
+p p > w+ w-	dim8_mw-cls14	NP^2==2	-0.02941	3.427e-05	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_dim8_mwmcls14_NP_2__2.lhe.gz
+p p > w+ w-	dim8_mw-cls14	NP<=2 NP^2==4	0.02169	3.495e-05	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_dim8_mwmcls14_NP__2_NP_2__4.lhe.gz
+p p > w+ w-	dim8_mw-cls6	NP^2==2	-0.0004106	1.055e-06	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_dim8_mwmcls6_NP_2__2.lhe.gz
+p p > w+ w-	dim8_mw-cls13	NP^2==2	0.001309	2.159e-06	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_dim8_mwmcls13_NP_2__2.lhe.gz
+p p > w+ w-	dim8_mw-cls15	NP^2==2	0.000778	2.761e-06	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_dim8_mwmcls15_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-bosonic	NP=0	0.0008706	1.039e-06	100000	80.387	dim8_all=0 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmbosonic_NP_0.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls4	NP^2==2	9.892e-07	1.248e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls4_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls6	NP^2==2	-1.156e-06	4.074e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls6_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls7	NP^2==2	7.418e-07	5.152e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls7_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls15	NP^2==2	1.039e-06	2.472e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls15_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls7	NP<=2 NP^2==4	4.737e-06	5.619e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls7_NP__2_NP_2__4.lhe.gz

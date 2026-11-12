@@ -68,6 +68,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from generic_inputs import COEFFICIENT_BLOCKS, generic_value  # noqa: E402
+import eval_ufo_params as E  # noqa: E402  the evaluation of a UFO's parameters and couplings, one for every script
 
 
 def zero_structures(ufo: str) -> set[str]:
@@ -131,24 +132,22 @@ def random_point(P, seed):
     test can depend on a default value, and an input that is zero on the card first given a value
     of its own (validate/generic_inputs.py), since the light masses and the Cabibbo angle of the
     default card make many couplings zero without making them zero as expressions."""
-    import cmath, math, random
-    ns = {"cmath": cmath, "math": math, "complex": complex,
-          "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
+    import random
+    # with the functions of the UFO's function library: the relation for G_F uses cond, and without it the
+    # second-order shifts of the input scheme and every coupling that carries one are not numbers
+    ns = E.namespace()
     rnd = random.Random(seed)
     v = {}
     for p in P.all_parameters:
         if p.nature != "external":
             continue
-        if p.lhablock in COEFFICIENT_BLOCKS and p.name not in ("Lam", "Lam6"):
+        if p.lhablock in COEFFICIENT_BLOCKS and p.name != "Lam":
             v[p.name] = rnd.uniform(0.3, 1.7)
         else:
             v[p.name] = generic_value(p.name, float(p.value), p.lhablock) * rnd.uniform(0.9, 1.1)
-    for p in P.all_parameters:
-        if p.nature == "internal":
-            try:
-                v[p.name] = eval(p.value, ns, v)
-            except Exception:
-                v[p.name] = float("nan")
+    # a parameter that vanishes by an identity is the zero it stands for, and not what rounding leaves of it,
+    # which differs from one machine to the next (validate/eval_ufo_params.py, RESIDUE)
+    E.internal_parameters(P, v, ns, residue=True)
     return v, ns
 
 
@@ -195,12 +194,9 @@ def cancelling_entries(ufo: str, zero: set[str] = frozenset()) -> dict:
         sys.modules.pop(mod, None)
     import parameters as P, couplings as C, vertices as V
     val, ns = random_point(P, 20261014)
-    gval = {}
-    for c in C.all_couplings:
-        try:
-            gval[c.name] = complex(eval(c.value, ns, dict(val)))
-        except Exception:
-            gval[c.name] = complex("nan")
+    # every coupling is a number here or the script stops with its name: one left out would be an
+    # entry that no group can hold
+    gval = {c.name: E.coupling(c.name, c.value, ns, val, residue=c.value) for c in C.all_couplings}
     struct = {}
     txt = open(os.path.join(ufo, "lorentz.py")).read()
     for name, st in re.findall(r"(\w+) = Lorentz\(name = '\w+',\s*spins = \[[^\]]*\],\s*structure = '([^']*)'\)", txt):
@@ -210,7 +206,7 @@ def cancelling_entries(ufo: str, zero: set[str] = frozenset()) -> dict:
     for vx in V.all_vertices:
         for (ci, li), cp in vx.couplings.items():
             g = gval.get(cp.name, complex("nan"))
-            if g != g or g == 0 or vx.lorentz[li].name in zero:
+            if g == 0 or vx.lorentz[li].name in zero:
                 continue
             ck, cs = colour_key(vx.color[ci])
             legs.setdefault((tuple(p.name for p in vx.particles), ck), []).append(
@@ -283,7 +279,6 @@ def dead_coefficients(ufo: str) -> list:
     on alone.  The couplings that mention it are evaluated once, every Lorentz structure is
     evaluated once per common random point and cached, and the coefficient is dead when every
     vertex it touches sums to zero at three points."""
-    import cmath, math
     sys.path.insert(0, HERE)
     import numpy as np
     import zero_vertex as Z
@@ -291,12 +286,10 @@ def dead_coefficients(ufo: str) -> list:
     for mod in ("parameters", "couplings", "vertices", "lorentz", "object_library", "function_library"):
         sys.modules.pop(mod, None)
     import parameters as P, couplings as C, vertices as V
-    ns = {"cmath": cmath, "math": math, "complex": complex,
-          "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
+    ns = E.namespace()
     ext = [p for p in P.all_parameters if p.nature == "external"]
-    coef_parts = {p.name for p in ext if p.lhablock in COEFFICIENT_BLOCKS and p.name not in ("Lam", "Lam6")}
+    coef_parts = {p.name for p in ext if p.lhablock in COEFFICIENT_BLOCKS and p.name != "Lam"}
     bases = {re.sub(r"(Re|Im)$", "", n) for n in coef_parts} | coef_parts
-    internal = [p for p in P.all_parameters if p.nature == "internal"]
     # coefficient -> couplings that mention it, by one scan of each coupling's identifiers
     by_coef = {}
     for c in C.all_couplings:
@@ -304,6 +297,7 @@ def dead_coefficients(ufo: str) -> list:
             if ident in bases:
                 by_coef.setdefault(re.sub(r"(Re|Im)$", "", ident), set()).add(c.name)
     cvalue = {c.name: compile(c.value, c.name, "eval") for c in C.all_couplings}
+    ctext = {c.name: c.value for c in C.all_couplings}
     # coupling -> (vertex, colour, lorentz) entries
     entries = {}
     for vx in V.all_vertices:
@@ -329,21 +323,12 @@ def dead_coefficients(ufo: str) -> list:
         for on in parts:
             vals = dict(base)
             vals[on] = 1.0
-            for p in internal:
-                try:
-                    vals[p.name] = eval(p.value, ns, vals)
-                except Exception:
-                    vals[p.name] = float("nan")
-            g = {}
-            for cn in by_coef[w]:
-                try:
-                    g[cn] = complex(eval(cvalue[cn], ns, vals))
-                except Exception:
-                    g[cn] = complex("nan")
+            E.internal_parameters(P, vals, ns, residue=True)
+            g = {cn: E.coupling(cn, cvalue[cn], ns, vals, residue=ctext[cn]) for cn in by_coef[w]}
             # sum per (vertex, colour) over the entries whose coupling depends on w
             sums = {}
             for cn, gv in g.items():
-                if gv != gv or gv == 0:
+                if gv == 0:
                     continue
                 for vx, ci, li in entries.get(cn, ()):
                     sums.setdefault((vx.name, ci), (vx, []))[1].append((gv, vx.lorentz[li].name))
@@ -389,11 +374,8 @@ def zero_coefficients(ufo: str, dead: list, text_v: str) -> tuple[str, str, int,
     for name, value in re.findall(r"^(GC_\d+) = Coupling\(name = 'GC_\d+',\s*value = '([^']*)'", C2, re.M):
         if not pat.search(orig.get(name, "")):
             continue
-        try:
-            vals = [complex(eval(value, ns_, dict(v))) for v, ns_ in pts]
-        except Exception:
-            continue
-        if all(x == x and abs(x) == 0 for x in vals):
+        vals = [E.coupling(name, value, ns_, v) for v, ns_ in pts]
+        if all(abs(x) == 0 for x in vals):
             zero_c.add(name)
     hits = {}
     for block in re.split(r"\n\n", text_v):

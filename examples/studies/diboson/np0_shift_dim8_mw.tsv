@@ -1,9 +1,9 @@
 process	set	sigma_pb	error_pb	nevents
-p p > w+ w-	off	68.48	0.1562	5000
-p p > w+ w-	on	68.54	0.2003	5000
-p p > w+ z	off	15.97	0.06702	5000
-p p > w+ z	on	16.06	0.05643	5000
-p p > w- z	off	9.721	0.03335	5000
-p p > w- z	on	9.707	0.0319	5000
-p p > z z	off	9.877	0.03255	5000
-p p > z z	on	9.817	0.02524	5000
+p p > w+ w-	off	68.4	0.1731	5000
+p p > w+ w-	on	68.4	0.1731	5000
+p p > w+ z	off	16.3	0.05283	5000
+p p > w+ z	on	16.3	0.05283	5000
+p p > w- z	off	9.883	0.02839	5000
+p p > w- z	on	9.883	0.02839	5000
+p p > z z	off	9.887	0.01738	5000
+p p > z z	on	9.887	0.01738	5000

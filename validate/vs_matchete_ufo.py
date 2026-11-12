@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""The dimension-eight vertices of models/dim8_mw against the Murphy-basis UFO of Matchete.
+"""The dimension-eight vertices of models/dim8_mw_murphy against the Murphy-basis UFO of Matchete.
 
-    python3 validate/vs_matchete_ufo.py <ufo_murphy_nf5_mW> [--ours models/dim8_mw] [--classes 1,2,...]
+    python3 validate/vs_matchete_ufo.py <ufo_murphy_nf5_mW> [--ours models/dim8_mw_murphy] [--classes 1,2,...]
                                         [--coeffs c8H8,...] [--tol 1e-6] [--show 4]
 
 The reference is the dimension-eight UFO of Hourtz et al. in the Matchete model database
 (gitlab.com/matchete/model-database, UFO-models/SMEFT_Murphy/ufo_murphy_nf5_mW, commit 738e511),
 written in "a modified version of Murphy's basis", five flavours and the {M_W, M_Z, G_F} scheme,
-the scheme of dim8_mw.  It is not shipped here; download it and give its path.
+the scheme of dim8_mw_murphy, our model in the Murphy basis, which is the one to compare with it:
+the default model, dim8_mw, has other operators in class 11 (gen/basis.py).  The UFO is not
+shipped here; download it and give its path.
 
 Pairing.  Our coefficient c8<stem>x<k> (c8<stem> for a class with one operator) is theirs
 c<stem><k> (c<stem>).  Their fermionic coefficients carry flavour indices: c<stem><k>_pp for a
@@ -153,7 +155,7 @@ def main(argv) -> int:
         print(__doc__)
         return 2
     theirs = os.path.abspath(argv[1])
-    ours = os.path.abspath(argv[argv.index("--ours") + 1]) if "--ours" in argv else os.path.join(ROOT, "models", "dim8_mw")
+    ours = os.path.abspath(argv[argv.index("--ours") + 1]) if "--ours" in argv else os.path.join(ROOT, "models", "dim8_mw_murphy")
     tol = float(argv[argv.index("--tol") + 1]) if "--tol" in argv else 1e-6
     show = int(argv[argv.index("--show") + 1]) if "--show" in argv else 4
     plant = argv[argv.index("--plant") + 1] if "--plant" in argv else None

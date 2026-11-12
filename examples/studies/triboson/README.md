@@ -14,16 +14,19 @@ production. The cross sections are small, so these runs want more events than th
 
 Run
 
-    examples/studies/run_study.sh examples/studies/triboson models/dim8_is 5000
+    examples/studies/run_study.sh examples/studies/triboson models/dim8_mw 5000
 
 The class cards ship in the model directory, written by `examples/release_model.sh` when it
-builds `models/dim8_is`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
+builds `models/dim8_mw`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
 time. Cross sections append to `results.tsv` and the event files are kept in `lhe/`,
 one per row, from which
 
     examples/studies/plot_study.py triboson SM=lhe/<...>_NP_0.lhe.gz int=lhe/<...>_NP_2_2.lhe.gz
 
 makes the invariant-mass and leading-p_T tables and plots for the paper.
+
+Every cross section also gets a record in `records.tsv`, and the table scripts and `plot_study.py`
+check each line of `results.tsv` against it before they write anything, as in `../diboson/README.md`.
 
 The interference samples need more events than the Standard-Model ones. Their integral is a
 difference of positive and negative weights, so the effective statistics is the excess of one
@@ -33,12 +36,10 @@ normalises each histogram to the integrated weight from the banner and prints th
 used, which is the signal to raise the event count if the factor is far from one.
 
 One caution about the rows with every coefficient at one, which run on the `bosonic` card in
-this study. The W mass is derived in the {alpha, MZ, GF} scheme, so switching coefficients on
-moves it: with every coefficient of that card at 1 and Lam at 3 TeV the model derives 79.820 GeV
-instead of the tree-level 79.824 of the {alpha, MZ, GF} scheme. The squared term of those rows
-comes out between once (`p p > w+ w- w-`) and twice (`p p > w+ z z`) the interference, so the
-truncation is not self-consistent for them. Those rows are a linearity check, since the class
-interferences must add up to them, rather than a prediction. The
-physics is in the per-class rows, where only a handful of operators are on and the shift is
-small. `results.tsv` carries the derived W mass and the coefficient settings for every row so
-that a distorted one is visible rather than buried.
+this study. With every coefficient of that card at 1 and Lam at 3 TeV, the squared term of those
+rows comes out between three quarters of the interference (`p p > w+ w- w-`) and 1.25 times it
+(`p p > w+ z z`), so the truncation is not self-consistent for them. Those rows are a linearity
+check, since the class interferences must add up to them, rather than a prediction. The physics is
+in the per-class rows, where only a handful of operators are on. In `dim8_mw` the W mass is an
+input, so no coefficient moves it, and `results.tsv` carries the W mass and the coefficient
+settings of every row.

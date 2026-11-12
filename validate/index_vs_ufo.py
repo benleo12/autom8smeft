@@ -243,7 +243,7 @@ def read_model(model, inputs=None, only=None, coeffs=None, goldstones=False, pai
                         r"value = ('[^']*'|[^,]+),(.*?)\)\n", rd("parameters"), re.S)
     coef = set()
     for name, nature, value, rest in params:
-        # by name: the parameter block DIM6 also holds the dimension-six scale Lam6
+        # by name: the parameter block DIM8 also holds the scale Lam
         if coeffs is not None:
             if name in coeffs:
                 coef.add(name)

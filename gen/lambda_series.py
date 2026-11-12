@@ -4,6 +4,7 @@
     gen/lambda_series.py "u u~ > w+ w-" [--latex | --json] [--group channel|vbf|none]
     gen/lambda_series.py "u u~ > w+{0} w-{0}"
     gen/lambda_series.py "p p > h h j j QCD=0" --vbf
+    gen/lambda_series.py "u u~ > e+ e-" --model dim68_mw_murphy
     ./dim8 series ...                       (the same command)
 
 gen/lambda_routes.py gives each class its cheapest tree.  This gives the series of the paper's
@@ -29,6 +30,26 @@ carries.  A Standard Model coupling is named by its
 fields, a quark q, a charged lepton e, a neutrino nu, any electroweak boson V, a gluon g, the Higgs
 boson h and a Goldstone boson phi, so that photon and Z exchange are one term.  The top Yukawa
 couplings are g_{\\bar tth} and g_{\\bar tt\\phi}, and a top mass insertion is m_t.
+
+The model.  The vertices are those of the model that --model names, a path or a name in models/,
+models/dim68_mw unless another is given, read as ./dim8 select reads it (dim8, _series_model).  The
+series holds the dimension-eight operators of the model's basis alone (gen/basis.py).  In the default
+basis every Higgs field of class 11, psi^2H^2D^3, carries a derivative, so that none of its vertices
+has fewer than four fields, and a model with the suffix _murphy has the operators of the Murphy basis
+there, which have three-point vertices.  The lists are without the vertices that the input scheme of
+the model absorbs (build/vertex_index_absorbed.json) and without the operators that have no vertex in
+the model, and they hold the dimension-six classes only for a model with a dimension-six sector of its
+own, each with the vertices that a coefficient of the class moves in that model (build/dim6_index.json,
+dim8 _live_dim6).  They are checked against the couplings of the model first: every dimension-eight coefficient
+that the couplings name must belong to an operator whose vertices the lists hold, and those of class
+11 to the basis the lists are read in, and the command stops otherwise.  The operators of the input
+relations of the model's scheme, {MW, MZ, GF} or {alpha, MZ, GF}, shift every Standard Model term, by
+v^4/Lambda^4 (lambda^8) at dimension eight and v^2/Lambda^2 (lambda^4) at dimension six, and have no
+topology of their own.  They are listed after the terms for a process with an electroweak Standard
+Model tree, the operators that ./dim8 select puts in its second group, and Q_{l^2e^2H^2}^{(1,2)}, which
+enter G_F only with nonzero electron and muon Yukawa couplings, are named apart.  A model without input
+relations (dim8_plain) says so.  The default is the combined model, where ./dim8 select takes
+models/dim8_mw, since the series sets the dimension-six terms beside the dimension-eight ones.
 
 Three things decide which terms are printed.
 
@@ -523,13 +544,17 @@ def _mismatch(conf, ref):
 
 def _units(vertex_index, catalogue):
     """(block, dim, class, number of Higgs fields, label, vertices) for every block of the series,
-    and {(dim, class): [its blocks]}."""
-    units, blocks = [], {}
+    and {(dim, class): [its blocks]}.  The lists are those of one model, which holds the class-11
+    operators of one basis (gen/basis.py, the basis of docs/catalogue.json), and lists that hold both
+    stop with a ValueError, since class 11 would then count the operators of two bases at once."""
+    units, blocks, bases = [], {}, set()
     for block, verts in vertex_index.items():
         if block.startswith("L8op"):
             e = catalogue.get(block)
             if not e or e["b_violating"]:
                 continue
+            if e.get("basis"):
+                bases.add(e["basis"])
             dim, cls, nh, label = 8, LR.CLASSES[e["cls"]], e["fields"]["N_H"], e["label"]
         elif block in LR.DIM6:
             (cls, nh), dim, label = LR.DIM6[block], 6, block
@@ -537,6 +562,9 @@ def _units(vertex_index, catalogue):
             continue
         blocks.setdefault((dim, cls), []).append(block)
         units.append((block, dim, cls, nh, label, verts))
+    if len(bases) > 1:
+        raise ValueError("the vertex lists hold the class-11 operators of both bases (gen/basis.py), and a model "
+                         "holds those of one, so they are not the lists of a model (./dim8 series --model)")
     return units, blocks
 
 
@@ -922,13 +950,46 @@ def _group_tex(terms, factor=False):
     return pieces
 
 
+def _model_text(m):
+    """The scheme and the basis of the model of a result, and whether it has a dimension-six sector."""
+    label = m["input_relations"]["label"]
+    return ((f"{label} scheme" if label else "no input relations") + f", {m['basis_name']} basis"
+            + ("" if m["dim6"] else ", no dimension-six sector of its own and so no dimension-six term"))
+
+
+def _relations_lines(r):
+    """What the input relations of the model give the process, as lines of the text output."""
+    m, ir = r["model"], r["model"]["input_relations"]
+    if not ir["label"]:
+        return [f"  {m['path']} has no input relations, so an operator enters only through its own vertices"]
+    if not ir["sm_tree"]:
+        return [f"  the {ir['label']} input relations shift the Standard Model amplitude, which this process does not "
+                "have, so none of their operators enters"]
+    if not ir["electroweak"]:
+        return [f"  the {ir['label']} input relations do not enter, since every Standard Model tree of the process is "
+                "built from quark and gluon vertices, whose coupling g_s is the input alpha_s"]
+    by = {}
+    for cls, label in ir["dim8"]:
+        by.setdefault(cls, []).append(label)
+    out = [f"  through the {ir['label']} input relations, which shift every Standard Model term"
+           + (" and the W mass" if ir["w_mass"] else "") + " by v^4/Lambda^4, eight powers of lambda: "
+           + ", ".join(f"{cls} ({', '.join(ls)})" for cls, ls in by.items())]
+    if ir["dim6"]:
+        out.append("  and at dimension six by v^2/Lambda^2, four powers of lambda: " + ", ".join(ir["dim6"]))
+    if ir["lepton_yukawa"]:
+        out.append(f"  {', '.join(ir['lepton_yukawa'])} enter G_F only with nonzero electron and muon Yukawas, which "
+                   "the counting sets to zero")
+    return out
+
+
 def latex(results):
     """The series as an align block in the notation of eq:amp-ww, one block per result."""
     lines = []
     for r in results:
         sm = "no Standard Model tree" if r["sm_power"] is None else f"Standard Model amplitude lambda^{r['sm_power']}"
-        lines.append(f"% ./dim8 series \"{r['process']}\"" + (f"  ({r['title']})" if r.get("title") else "")
-                     + f", {sm}, {r['gauge']} gauge"
+        lines.append(f"% ./dim8 series \"{r['process']}\" --model {r['model']['path']}"
+                     + (f"  ({r['title']})" if r.get("title") else "")
+                     + f", {sm}, {r['gauge']} gauge, {_model_text(r['model'])}"
                      + (", an unmarked W or Z counted as transverse ({T})" if r.get("unmarked") else ""))
         groups = [g for g in GROUP_ORDER if any(t["group"] == g for t in r["terms"])]
         if groups:
@@ -951,6 +1012,7 @@ def latex(results):
             lines.append("% square only (no Standard Model tree for "
                          + ", ".join(" ".join(x) for x in r.get("square_initial", [])) + "): "
                          + ", ".join(f"lambda^{t['power']} c_{{{t['cls']}}}" for t in r["square_only"] if t["dim"] != 4))
+        lines += ["% " + x.strip() for x in _relations_lines(r)]
     return "\n".join(lines)
 
 
@@ -981,6 +1043,7 @@ def text(results, notes=()):
             lines.append(r["title"] + ":  " + ",  ".join(r.get("processes", [r["process"]])))
         else:
             lines.append(f"{r['process']}: {r['n']} external legs, {r['gauge']} gauge")
+        lines.append(f"  model {r['model']['path']}, {_model_text(r['model'])}")
         if r["sm_power"] is None:
             lines.append("  no Standard Model tree in this channel: every term below is square only")
         else:
@@ -1017,8 +1080,11 @@ def text(results, notes=()):
         if r.get("left_out_operators"):
             lines.append(f"  and {r['left_out_operators']} operators of the classes above, for the same reason")
         if r["no_tree"]:
-            lines.append("  dimension-eight classes with no tree (input relations only, or not reached): "
-                         + ", ".join(r["no_tree"]))
+            # the input relations of the model enter this process, or none of them does
+            lines.append("  dimension-eight classes with no tree ("
+                         + ("input relations only, or not reached" if r["model"]["input_relations"]["dim8"] else "not reached")
+                         + "): " + ", ".join(r["no_tree"]))
+        lines += _relations_lines(r)
         if r["unevaluated"]:
             lines.append("  three-point vertices of two fermions with no outcome in build/onshell_zero.json, or "
                          "unchecked there, counted as they are: "
@@ -1041,9 +1107,16 @@ def add_arguments(p):
                         "quark lines q qbar' V{p} > X of every polarisation channel")
     p.add_argument("--gauge", choices=("feynman", "unitary"), default=None,
                    help="the vertex lists: feynman (the default when build/vertex_index_fg.json exists) or unitary")
+    p.add_argument("--model", default="models/dim68_mw", metavar="DIR",
+                   help="the released UFO whose vertices, basis and input scheme the series counts, read as "
+                        "./dim8 select reads it, a path or a name in models/ (default models/dim68_mw, the "
+                        "{MW, MZ, GF} scheme with the dimension-six sector, in the default basis)")
 
 
-def run(a):
+def run(a, read_model):
+    """./dim8 series.  read_model(model, gauge, process) is the reader of ./dim8 (_series_model there),
+    which reads the model as ./dim8 select reads it and gives its vertex lists, checked against it, its
+    basis, its scheme and what its input relations give the process."""
     gauge = a.gauge or ("feynman" if os.path.exists(FG_INDEX) else "unitary")
     notes = []
     try:
@@ -1067,11 +1140,17 @@ def run(a):
     if a.vbf and gauge != "feynman":
         notes.append("note: --vbf without the Feynman-gauge lists gives the transverse channels only.")
     try:
-        vi, base = P.load_data(ROOT, gauge=gauge)
-        sm = P.standard_model_vertices(base, goldstones=(gauge == "feynman"))
+        # the vertex lists of the model, which stops the command where they do not fit it
+        m = read_model(a.model, gauge, a.process)
+        vi = m.pop("vertices")
+        sm = P.standard_model_vertices(m.pop("base"), goldstones=(gauge == "feynman"))
     except (ValueError, FileNotFoundError) as e:   # Feynman-gauge lists asked for and missing or incomplete
         sys.exit(f"{a.process}: {e}")
     cat = {e["block"]: e for e in json.load(open(os.path.join(ROOT, "docs", "catalogue.json")))}
+    ir = m["input_relations"]
+    ir["dim8"] = [[LR.CLASSES[cat[b]["cls"]], cat[b]["label"]]
+                  for b in sorted(ir["dim8"], key=lambda b: (cat[b]["cls"], int(b[4:])))]
+    ir["lepton_yukawa"] = [cat[b]["label"] for b in ir["lepton_yukawa"]]
     onshell = load_onshell()
     if onshell is None:
         notes.append("note: build/onshell_zero.json is missing (python3 validate/onshell_zero.py), so a three-point "
@@ -1082,6 +1161,8 @@ def run(a):
                    else [series(a.process, vi, sm, cat, group=a.group, **kw)])
     except ValueError as e:                    # a grouping, mark or QCD order the series cannot count
         sys.exit(f"{a.process}: {e}")
+    for r in results:
+        r["model"] = m
     if a.json:
         print(json.dumps({"results": results, "notes": notes}, indent=1))
     elif a.latex:
@@ -1097,7 +1178,14 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="lambda_series.py", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     add_arguments(ap)
-    return run(ap.parse_args(argv))
+    a = ap.parse_args(argv)
+    # the model is read by ./dim8, as ./dim8 select reads it, so that this and ./dim8 series are one command
+    import importlib.machinery
+    import importlib.util
+    loader = importlib.machinery.SourceFileLoader("dim8_cli", os.path.join(ROOT, "dim8"))
+    cli = importlib.util.module_from_spec(importlib.util.spec_from_loader("dim8_cli", loader))
+    loader.exec_module(cli)
+    return run(a, cli._series_model)
 
 
 if __name__ == "__main__":

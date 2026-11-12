@@ -94,7 +94,7 @@ def default(printed):
 
 
 def is_coefficient(block, name):
-    return (block in ("DIM8", "DIM8F") and name.startswith("c8")) or (block == "DIM6" and name != "Lam6")
+    return (block in ("DIM8", "DIM8F") and name.startswith("c8")) or block == "DIM6"
 
 
 def stale_inputs(entries, model, before):

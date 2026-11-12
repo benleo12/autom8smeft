@@ -12,8 +12,9 @@ combined model has an internal cw, so the dimension-six coefficient cW is writte
 coefficient except the scale Lam, the operators' own in block DIM8 and those of their further flavour
 structures in block DIM8F, which is what the studies mean by "every coefficient at 1".  A name given
 on its own takes the value it is given.  Unknown names are an error, not a warning, because MadGraph's interactive
-`set` accepts a misspelt parameter silently and the run then uses the default.  Prints one line
-per card entry it changed.
+`set` accepts a misspelt parameter silently and the run then uses the default.  A refused request
+exits with 2 and leaves both cards as they were.  A standalone output (a decay, run_study.sh) has no
+run card, and there only the names of the param card are accepted.  Prints one line per card entry it changed.
 """
 import re, sys, os
 
@@ -74,15 +75,24 @@ def main(argv):
         return 2
     d, asg = argv[1], dict(a.split("=", 1) for a in argv[2:])
     pc, rc = os.path.join(d, "Cards", "param_card.dat"), os.path.join(d, "Cards", "run_card.dat")
+    # a refused request leaves both cards as they were, not half edited
+    before = {p: open(p).read() for p in (pc, rc) if os.path.exists(p)}
     hits = edit_param(pc, asg)
     n8 = sum(1 for k in hits if norm(k).startswith("c8") and k not in asg)
-    hits.update(edit_run(rc, asg))
+    if rc in before:
+        hits.update(edit_run(rc, asg))
     missing = [k for k in asg if k not in hits and k != "dim8_all"]
+    err = None
     if missing:
-        print("set_cards: no such parameter or run-card entry:", ", ".join(missing))
-        return 2
-    if "dim8_all" in asg and not n8:
-        print("set_cards: dim8_all requested but the model has no c8 coefficients left")
+        err = "no such parameter or run-card entry: " + ", ".join(missing)
+    # a restricted model with no dimension-eight coefficient left would give Standard-Model numbers.  A card whose
+    # coefficients are all named one by one has them, and dim8_all then has none left to set
+    elif "dim8_all" in asg and not any(norm(k).startswith("c8") for k in hits):
+        err = "dim8_all requested but the model has no c8 coefficients left"
+    if err:
+        for p, text in before.items():
+            open(p, "w").write(text)
+        print("set_cards: " + err)
         return 2
     named = {k: v for k, v in hits.items() if k in asg}
     print(f"set_cards: {n8} dimension-eight coefficients at {asg.get('dim8_all', '-')}"

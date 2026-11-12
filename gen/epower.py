@@ -1,14 +1,13 @@
 """
 gen/epower.py  --  the energy-enhanced (lambda) power counting, as a user-facing tool.
 
-A port of ``Epower_count.nb``, the Mathematica notebook of the Assi-Martin counting paper,
-so that the same numbers are available from ``./dim8 count`` and from Python without
-Mathematica.  It reproduces every evaluated call of the notebook.  The two notebook
-functions are
+The counting of arXiv:2504.10617, for ``./dim8 count`` and for Python, without Mathematica.
+The two functions here, ``leading`` and ``tower``, stand for the Mathematica functions of that
+counting,
 
     CalculatePowersRegime1[D, H, psi, F, n]                 -> leading (p, q, lambdaExp)
     CalculateSubleadingPowersRegime1[D, H, psi, F, n]       -> the leading and subleading vertices, in k
-    CalculateSubleadingPowersRegime1[D, H, psi, F, n, exp]  -> filtered on one exponent
+    CalculateSubleadingPowersRegime1[D, H, psi, F, n, exp]  -> the same, asked for one exponent
 
 and the argument order is kept: (N_D, N_H, N_psi, N_X, n).  Regime 1 is
 Lambda >> E >> v with (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1).
@@ -20,16 +19,14 @@ Lambda >> E >> v with (Lambda, E, v) ~ (lambda^-3, lambda^-2, lambda^-1).
     vertices (p_min + k, q_max - k),  k = 0 .. min(k_max - p_min, q_max)
     lambda  = 3 Dop - 2 q - p
 
-The notebook is reproduced, with the number of legs and the range of k fixed as follows.
+The number of legs and the range of k are these.
 
 * A vertex has  max(psi + F + HD, 3) <= n <= psi + H + 2F + D  legs, where HD is the number of
   Higgs fields that carry a derivative (a covariant derivative of the vacuum is a gauge boson,
   so such a field leaves a leg either way), smallest over the terms of the class.  The terms
   with fewer than three legs are the vacuum energy, the tadpole and the two-point terms, which
   shift masses and normalisations, so none of them is a vertex (eq:legs of the paper).  The
-  notebook has HD = 0 and no floor, which changes five of its eight calls at n = 2 (the other three
-  already have no vertex).  The leading function only checks the lower bound, the subleading one
-  checks both, as in the notebook.
+  leading function checks the lower bound alone, and the subleading one checks both.
 * k_max is the largest number of Higgs fields that can sit at the vacuum when the vertex has n
   legs: of the n legs, at least n - psi - 2F - D must be Higgs fields, since the fermions give one
   leg each, a field strength at most two and a covariant derivative one more gauge boson.  So
@@ -51,7 +48,7 @@ from typing import Dict, List, Optional, Tuple
 
 import basis as _basis
 
-# (N_D, N_H, N_psi, N_X) for every dimension-eight class, notebook order and spelling
+# (N_D, N_H, N_psi, N_X) for every dimension-eight class, in the order of the class numbers
 DIM8_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "X^4": (0, 0, 0, 4), "H^8": (0, 8, 0, 0), "H^6D^2": (2, 6, 0, 0), "H^4D^4": (4, 4, 0, 0),
     "X^3H^2": (0, 2, 0, 3), "X^2H^4": (0, 4, 0, 2), "X^2H^2D^2": (2, 2, 0, 2), "XH^4D^2": (2, 4, 0, 1),
@@ -61,9 +58,7 @@ DIM8_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "psi^2XHD^2": (2, 1, 2, 1), "psi^2H^3D^2": (2, 3, 2, 0), "psi^4H^2": (0, 2, 4, 0),
     "psi^4X": (0, 0, 4, 1), "psi^4HD": (1, 1, 4, 0), "psi^4D^2": (2, 0, 4, 0),
 }
-# psi^4H^2 has the field content (0,2,4,0).  The notebook's call for this class passes
-# (0,4,2,0), the field content of psi^2H^4, so a comparison with the notebook's output uses
-# the notebook's own arguments.
+# The Higgs fields come second and the fermions third, so psi^4H^2 is (0, 2, 4, 0).
 
 DIM6_CLASSES: Dict[str, Tuple[int, int, int, int]] = {
     "H^6": (0, 6, 0, 0), "H^4D^2": (2, 4, 0, 0), "X^2H^2": (0, 2, 0, 2), "psi^2H^3": (0, 3, 2, 0),
@@ -122,7 +117,7 @@ class Tower:
 
 
 def leading(D: int, H: int, psi: int, F: int, n: int, HD: int = 0):
-    """CalculatePowersRegime1.  Returns Leading, or the notebook's message string."""
+    """CalculatePowersRegime1.  Returns Leading, or the string NO_LEGS when the fields cannot make n legs."""
     Dop = op_dimension(D, H, psi, F)
     p = max(H + psi + F - n, 0)
     q = Dop + (4 - n) - p
@@ -133,14 +128,14 @@ def leading(D: int, H: int, psi: int, F: int, n: int, HD: int = 0):
 
 
 def tower(D: int, H: int, psi: int, F: int, n: int, target: Optional[int] = None, HD: int = 0):
-    """CalculateSubleadingPowersRegime1, both arities, with the range of k corrected (see the
-    module docstring): the (p, q) that leg counting allows at n legs, the leading entry at k = 0 and
-    the k-th subleading entry with k more Higgs fields at the vacuum, k powers of lambda higher.
-    Some entries vanish by C or by gauge structure.
+    """CalculateSubleadingPowersRegime1, both arities: the (p, q) that leg counting allows at n legs,
+    in the range of k of the module docstring, the leading entry at k = 0 and the k-th subleading
+    entry with k more Higgs fields at the vacuum, k powers of lambda higher.  Some entries vanish by
+    C or by gauge structure.
 
-    With ``target`` given, behaves like the six-argument notebook function: returns the
-    full list if any entry has that exponent, else a "No match" string.  (The notebook
-    filters and then returns the unfiltered list; that quirk is reproduced.)
+    With ``target`` given it answers whether some vertex of n legs has that power of lambda: the
+    whole list, each row with its lambdaExp, when one does, and a "No match" string when none does.
+    The list is not cut down to the rows of that power.
     """
     Dop = op_dimension(D, H, psi, F)
     pMin = max(H + psi + F - n, 0)

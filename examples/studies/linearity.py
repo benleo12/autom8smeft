@@ -12,18 +12,21 @@ The card has to match.  The triboson and vector-boson-fusion all-on rows are run
 card, so they are compared against classes 1 to 8 and not against all 21.  Comparing all 21
 against a bosonic all-on row gives a 200 sigma "failure" that is entirely the mismatch.  A class
 row that was never integrated makes the check incomplete rather than failed, and is reported so.
+The rows are first checked against their records (provenance.py), as for the tables.
 """
 import os
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+import provenance  # noqa: E402
 import table_appendix as T  # noqa: E402
 
 BOSONIC = set(range(1, 9))
 
 
 def main():
+    provenance.require([os.path.join(HERE, s, "results.tsv") for s in dict.fromkeys(p[0] for p in T.PROCS)], "linearity.py")
     data = {s: T.read(s) for s in {p[0] for p in T.PROCS}}
     rows, skipped = [], []
     for st, pr, h in T.PROCS:

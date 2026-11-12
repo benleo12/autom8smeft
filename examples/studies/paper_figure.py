@@ -4,6 +4,7 @@
     examples/studies/paper_figure.py <in.tsv> <out.pdf> [--xmax GeV] [--xlabel TEXT]
                                      [--title TEXT] [--ratio-max R] [--ratio-min R] [--ymin pb]
                                      [--edges a,b,c,...] [--lambda GeV] [--sample-lambda GeV]
+                                     [--errors <prefix>_stat.json]
 
 plot_study.py produces a diagnostic: every 100 GeV bin it filled, a 6 TeV axis and a ratio panel
 that carries the statistical noise of the empty tail.  This produces the figure that goes in the
@@ -42,6 +43,16 @@ drawn at L with --sample-lambda L0, every interference column multiplied by (L0/
 squared column by (L0/L)^8, the reference column being the Standard Model.  Without
 --sample-lambda the samples are taken to be at L and drawn as they are.  The W-mass bracket
 sigma(NP=0, c) - sigma(NP=0, 0) is not in these columns.
+
+--errors F shades one standard deviation about every curve, read from the <prefix>_stat.json that
+plot_study.py writes beside the .tsv and summed exactly into the bins drawn.  In the lower panel
+the class (or its square) and the Standard Model are independent samples.  Without --errors no
+band is drawn.
+
+Nothing is drawn unless the <prefix>.sources.tsv that plot_study.py writes beside the table names
+the table and the _stat.json of --errors with the sha256 they had when plot_study.py wrote them, and
+an event file for every column of the table, and the rows of the studies those files belong to still
+check out against their records (provenance.py), with the released model for the whole figure.
 """
 from __future__ import annotations
 
@@ -53,6 +64,10 @@ import matplotlib
 matplotlib.use("pdf")
 import matplotlib.pyplot as plt          # noqa: E402
 from matplotlib.ticker import LogLocator, NullFormatter  # noqa: E402
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import provenance  # noqa: E402
+from plot_study import default_edges, ratio, read_stat  # noqa: E402
 
 # Okabe-Ito, which stays distinguishable in greyscale and to a colour-blind reader, fixed per
 # class so that a class is the same colour in every figure of the paper; a squared term takes the
@@ -78,6 +93,20 @@ def colour_of(name, i):
 WIDTH_IN = 5.85
 
 
+def paper_style():
+    """The fonts and axes of the paper's figures (width_figure.py draws with them too)."""
+    plt.rcParams.update({
+        "text.usetex": True,
+        "text.latex.preamble": r"\usepackage{amsmath,amssymb}",
+        "font.family": "serif", "font.size": 10,
+        "axes.labelsize": 11, "xtick.labelsize": 9.5, "ytick.labelsize": 9.5,
+        "axes.linewidth": 0.8, "xtick.direction": "in", "ytick.direction": "in",
+        "xtick.top": True, "ytick.right": True,
+        "xtick.major.size": 4, "ytick.major.size": 4, "xtick.minor.size": 2, "ytick.minor.size": 2,
+        "lines.linewidth": 1.5, "pdf.fonttype": 42,
+    })
+
+
 def read(path):
     rows = [l.rstrip("\n").split("\t") for l in open(path) if l.strip()]
     head, rows = rows[0], rows[1:]
@@ -87,15 +116,14 @@ def read(path):
     return lo, hi, cols
 
 
-def default_edges(start, xmax):
-    """100 GeV bins to 800, 200 to 1600, 400 beyond, from the first filled bin to xmax."""
-    e, x = [start], start
-    while x < xmax - 1e-9:
-        step = 100 if x < 800 else 200 if x < 1600 else 400
-        # the last bin absorbs a remainder shorter than a bin instead of becoming a sliver
-        x = xmax if xmax - x < 2 * step else x + step
-        e.append(x)
-    return e
+def band(ax, edges, ys, errs, color):
+    """One standard deviation shaded about a curve of absolute values on a log axis, cut at the
+    lower edge of the axis, which it does not move."""
+    y0 = ax.get_ylim()[0]
+    lo = [max(y - e, y0) for y, e in zip(ys, errs)]
+    hi = [y + e for y, e in zip(ys, errs)]
+    ax.fill_between(edges, lo + lo[-1:], hi + hi[-1:], step="post", color=color, alpha=0.25,
+                    lw=0, zorder=0)
 
 
 def rebin_to(lo, hi, cols, edges):
@@ -166,6 +194,8 @@ def main(argv) -> int:
         print(__doc__)
         return 2
     src, out = argv[1], argv[2]
+    # the table, and the statistics of --errors, are the files plot_study.py wrote from the checked event files
+    provenance.require_sources(src, "paper_figure.py", [argv[argv.index("--errors") + 1]] if "--errors" in argv[:-1] else [])
 
     def opt(flag, default, cast=float):
         return cast(argv[argv.index(flag) + 1]) if flag in argv else default
@@ -179,6 +209,7 @@ def main(argv) -> int:
     edges_opt = opt("--edges", None, str)
     lam = opt("--lambda", None)
     lam0 = opt("--sample-lambda", lam)
+    stat = read_stat(opt("--errors", None, str)) if "--errors" in argv else None
 
     lo, hi, cols = read(src)
     squares = {k: v for k, v in cols.items() if k.strip().endswith("squared")}
@@ -197,17 +228,16 @@ def main(argv) -> int:
     edges = [float(x) for x in edges_opt.split(",")] if edges_opt else default_edges(start, xmax)
     binned = rebin_to(lo, hi, cols, edges)
     widths = [(b - a) / 100.0 for a, b in zip(edges[:-1], edges[1:])]
+    if stat is not None:
+        missing = [k for k in list(cols) + list(squares) if k not in stat]
+        if missing:
+            sys.exit(f"--errors: no statistics for {', '.join(missing)}")
+        # the error of every column in the bins drawn, scaled to Lambda as the column is
+        g4, g8 = ((lam0 / lam) ** 4, (lam0 / lam) ** 8) if lam is not None and lam != lam0 else (1.0, 1.0)
+        err = {k: [stat[k].part(a, b)[1] * (g8 if k in squares else 1.0 if k == ref else g4)
+                   for a, b in zip(edges[:-1], edges[1:])] for k in list(cols) + list(squares)}
 
-    plt.rcParams.update({
-        "text.usetex": True,
-        "text.latex.preamble": r"\usepackage{amsmath,amssymb}",
-        "font.family": "serif", "font.size": 10,
-        "axes.labelsize": 11, "xtick.labelsize": 9.5, "ytick.labelsize": 9.5,
-        "axes.linewidth": 0.8, "xtick.direction": "in", "ytick.direction": "in",
-        "xtick.top": True, "ytick.right": True,
-        "xtick.major.size": 4, "ytick.major.size": 4, "xtick.minor.size": 2, "ytick.minor.size": 2,
-        "lines.linewidth": 1.5, "pdf.fonttype": 42,
-    })
+    paper_style()
     fig, (ax, rx) = plt.subplots(2, 1, figsize=(WIDTH_IN, 0.86 * WIDTH_IN), sharex=True,
                                  gridspec_kw={"height_ratios": [1.0, 1.0], "hspace": 0.05,
                                               "left": 0.12, "right": 0.79, "top": 0.945,
@@ -226,6 +256,9 @@ def main(argv) -> int:
     ax.set_ylabel(r"$|\sigma|$ per 100 GeV [pb]")
     pos = [v for _, _, ys in top for v in ys if v == v]
     ax.set_ylim(ymin if ymin else max(min(pos) * 0.4, max(pos) * 1e-6), max(pos) * 4)
+    if stat is not None:
+        for i, nm in enumerate(names):
+            band(ax, edges, top[i][2], [e / w for e, w in zip(err[nm], widths)], colour_of(nm, i))
     ax.yaxis.set_major_locator(LogLocator(base=10, numticks=8))
     ax.yaxis.set_minor_locator(LogLocator(base=10, subs=range(2, 10), numticks=12))
     ax.yaxis.set_minor_formatter(NullFormatter())
@@ -253,8 +286,17 @@ def main(argv) -> int:
         top_r = max(v for _, _, rr in bot for v in rr if v == v)
         rmax = 10 ** math.ceil(math.log10(top_r * 1.5))
     rx.set_ylim(rmin, rmax)
-    rx.axhline(1.0, color="0.45", lw=0.8, ls=":")
-    bot.append(("SM", "0.35", [1.0, 1.0]))
+    if stat is not None:
+        # the ratio of two independent samples, the class (or its square) and the reference
+        sq_binned = rebin_to(lo, hi, squares, edges)
+        for i, nm in enumerate(list(names[1:]) + list(squares), start=1):
+            a = binned[nm] if nm in binned else sq_binned[nm]
+            e = [ratio(x, dx, y, dy)[1] for x, dx, y, dy in zip(a, err[nm], r0, err[ref])]
+            band(rx, edges, bot[i - 1][2], e, "0.45" if nm in squares else colour_of(nm, i))
+    # the Standard Model itself, at one, drawn and named only where it is inside the panel
+    if rmin < 1.0 < rmax / 1.2:
+        rx.axhline(1.0, color="0.45", lw=0.8, ls=":")
+        bot.append(("SM", "0.35", [1.0, 1.0]))
     rx.set_ylabel(r"$|\sigma| / \sigma_{\mathrm{SM}}$")
     rx.set_xlabel(xlabel)
     rx.set_xlim(edges[0], edges[-1])

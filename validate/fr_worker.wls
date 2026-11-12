@@ -26,7 +26,7 @@
 *)
 
 (* DIM8_ROOT lets the same script run off-machine, e.g. on an HPC system *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 args = Rest[$ScriptCommandLine];
 (* a non-numeric first argument is a block NAME; ToExpression would evaluate it to the
    block's own Lagrangian and the [alldone] line would print the whole thing *)
@@ -149,6 +149,32 @@ z9nfields[z9t_] := Module[{z9x = z9t /. Power[z9b_, z9n_Integer] /; !FreeQ[z9b, 
 z9legOK[z9t_] := With[{z9k = z9nfields[z9t]}, (z9maxlegs === None || z9k <= z9maxlegs) && (z9minlegs === None || z9k >= z9minlegs)];
 z9legFilter[z9e_] := Module[{z9terms = If[Head[Expand[z9e]] === Plus, List @@ Expand[z9e], {Expand[z9e]}], z9keep},
   z9keep = Select[z9terms, z9legOK]; z9dropped += Length[z9terms] - Length[z9keep]; Total[z9keep]];
+(* DIM8_TRUNCEXP (default on, 0 to disable): with a leg cap, the terms above the cap are not built at all.
+   The filter above runs after ExpandIndices, which multiplies out every factor of a monomial first: a
+   monomial with eight Higgs doublets and a field strength is expanded into all its terms with up to
+   eleven legs, and one such monomial of T12op46 takes more than five hours.  Every factor that holds a
+   field but no Higgs doublet (a gauge field, a fermion, a derivative, a field strength) gives each term
+   of its expansion at least one leg, and a doublet gives its vacuum value or one field
+   (Phi[1] -> 0, Phi[2] -> (v + H)/Sqrt[2] in unitary gauge, plus the Goldstones in Feynman gauge).  So a
+   term has at least z9hard[m] + (the doublets that took their field part) legs.  The doublet definitions
+   are graded by z9g on their field part, and FieldExpand drops each term whose lowest power of z9g is
+   above z9maxlegs - z9hard[m] as it expands.  Only terms with more legs than the cap are dropped, and
+   the leg filter still runs on the rest, so the expansion is the one the filter gave before. *)
+(* the grading of the doublet, the parameter-sum symbols and the cut are in validate/truncexp.m, which
+   validate/check_bilinears_geo.wls uses too *)
+Get[$root <> "/validate/truncexp.m"];
+z9factors[z9m_] := Flatten[If[Head[z9m] === Times, List @@ z9m, {z9m}] /. Power[z9b_, z9n_Integer?Positive] :> Table[z9b, {z9n}]];
+z9hard[z9m_] := Count[z9factors[z9m], z9f_ /; ! z9phiQ[z9f] && ! FreeQ[z9f, _Symbol?FieldQ | (_Symbol?FieldQ)[___]]];
+z9nphi[z9m_] := Count[z9factors[z9m], z9f_ /; z9phiQ[z9f]];
+(* the expansion of one monomial, with the parameter sums still abbreviated: z9expand puts them back *)
+z9expandIdx[z9m_] := Module[{z9b, z9e},
+  If[! z9truncexp, Return[ExpandIndices[z9m, FlavorExpand -> {SU2W, SU2D}]]];
+  z9b = If[z9maxlegs === None, Infinity, z9maxlegs - z9hard[z9m]];
+  If[z9b < 0, Return[0]];
+  If[z9nphi[z9m] <= z9b,
+    Block[{MR$Definitions = z9defsAbbrev}, z9e = ExpandIndices[z9m, FlavorExpand -> {SU2W, SU2D}]],
+    z9e = z9expandIdxB[z9m, z9b, FlavorExpand -> {SU2W, SU2D}]];
+  z9e /. z9g -> 1];
 (* defined AFTER LoadModel so that Eps and ME are the FeynRules` symbols, not Global` ones *)
 z9epsepsRule = Eps[z9a_, z9b_, z9c_, z9d_] Eps[z9e_, z9f_, z9g_, z9h_] :> -Det[Outer[ME, {z9a, z9b, z9c, z9d}, {z9e, z9f, z9g, z9h}]];
 
@@ -530,12 +556,36 @@ z9pieces[nm_String] := Module[{z9body, z9sets},
       Return[{False, #} & /@ If[Head[z9ev] === Plus, List @@ z9ev, {z9ev}]]]];
   Flatten[Table[With[{z9hcQ = z9set[[1]] =!= Hold[z8lagH], z9ev = Expand[ReleaseHold[z9set[[2]]]]},
       {z9hcQ, #} & /@ If[Head[z9ev] === Plus, List @@ z9ev, {z9ev}]], {z9set, z9sets}], 1]];
+(* What the Module of a block returns: the sum of its buckets with their h.c. (gen/emit_fr.py), or that sum
+   through z8geoTrunc[., p] (gen/towers.py), which puts the corrections of the base on the fields and the
+   couplings of a connection operator of order p and cuts their products at the order of the model.  The
+   term-wise path builds the sum itself and never evaluates the Return, so it applies the truncation, which is
+   linear, to each expanded monomial (z9expand).  Without it the vertices of such a block carry gw, g1 and the
+   vev, which come in through the parameter definitions and the doublet, and none of the rotation of Z and A
+   and the rescalings of W, h and the gluon: they are right at the order p and wrong above it.  Any other
+   Return is a step this path does not reproduce, and the worker stops on it.  A block that is not one of
+   ours is evaluated whole (z9pieces), its Return with it. *)
+z9retPlain = Hold[z8lagH + z8lagN + If[z8lagN === 0, 0, HC[z8lagN]] + z8lagS + If[z8lagS === 0, 0, HC[z8lagS]]];
+z9retOrder[nm_String] := Module[{z9body, z9r},
+  z9body = Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold];
+  If[FreeQ[z9body, HoldPattern[Set[_, ExpandIndices[_, ___] /. z8fmgr]]], Return[None]];
+  z9r = Cases[z9body, HoldPattern[Return[z9x_]] :> Hold[z9x], Infinity];
+  Which[
+    z9r === {z9retPlain}, None,
+    MatchQ[z9r, {Hold[z8geoTrunc[_, _Integer]]}] && (z9r[[1]] /. Hold[z8geoTrunc[z9s_, _]] :> Hold[z9s]) === z9retPlain,
+      z9r[[1]] /. Hold[z8geoTrunc[_, z9p_]] :> z9p,
+    True,
+      Print["[termwise] FATAL: ", nm, " returns ", StringTake[ToString[z9r, InputForm], UpTo[400]],
+            ", a step after the expansion that the term-wise path does not reproduce"]; Quit[2]]];
 z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, z9hs, z9fm, z9tot, z9L, z9t, z9c, z9i, z9start, z9ck, z9sig,
     z9cf, z9def, z9mine, z9pv, z9ph, z9pf, z9parts},
   z9fm = If[Not[FeynmanGauge], {G0|GP|GPbar -> 0}, {}];
   z9tE = z9tV = z9tH = 0;
+  z9retP = z9retOrder[nm];
   z9cf = vdir <> "/" <> nm <> ".chunks.mx";
-  z9def = Hash[{Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold], z9chunk, z9maxlegs, z9minlegs, z9epseps, z9split, z9herm}];
+  (* the truncation is part of what the expansion and chunk files hold, so those of a worker without it are refused *)
+  z9def = Hash[Join[{Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold], z9chunk, z9maxlegs, z9minlegs, z9epseps, z9split, z9herm},
+    If[z9retP === None, {}, {"z8geoTrunc", z9retP}]]];
   If[z9partN =!= None,
     (* a part or the merge: the chunks are those that DIM8_PART=prep saved for this definition of the block *)
     If[! FileExistsQ[z9cf], Print["[part] FATAL: ", nm, " has no chunk file; run DIM8_PART=prep first"]; Quit[2]];
@@ -579,7 +629,8 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
      and the leg range, each on this monomial alone, so that the monomials can be expanded side by side *)
   z9expand[z9p_] := Module[{z9q = z9p},
     If[z9epseps, z9q = {z9q[[1]], Expand[z9q[[2]] /. z9epsepsRule]}];
-    z9q = {z9q[[1]], z9post[ExpandIndices[z9q[[2]], FlavorExpand -> {SU2W, SU2D}] /. z9fm]};
+    z9q = {z9q[[1]], z9post[z9expandIdx[z9q[[2]]] /. z9fm] /. z9abbrevBack};
+    If[z9retP =!= None, z9q = {z9q[[1]], z8geoTrunc[z9q[[2]], z9retP]}];
     If[(z9maxlegs =!= None || z9minlegs =!= None) && z9q[[2]] =!= 0, z9q = {z9q[[1]], z9legFilter[z9q[[2]]]}];
     z9q];
   z9dropped = 0;
@@ -587,10 +638,26 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
     z9expI =!= None,
     (* DIM8_PART=expand/i/n: the monomials i, i+n, ... of this definition of the block, saved by number *)
     z9mine = Range[z9expI[[1]], Length[z9ps], z9expI[[2]]];
-    z9expDef = z9def; z9expNP = Length[z9ps]; z9expL = Association[(# -> z9expand[z9ps[[#]]]) & /@ z9mine];
-    z9expT = AbsoluteTime[] - z9t; z9expDropped = z9dropped;
+    z9expDef = z9def; z9expNP = Length[z9ps];
+    (* each monomial is saved as it finishes, <block>.exp<i>of<n>.m<k>.mx, and a restart takes the saved ones
+       of this definition of the block, so an expansion longer than a job is not started over *)
+    z9mf[z9k_] := vdir <> "/" <> nm <> ".exp" <> ToString[z9expI[[1]]] <> "of" <> ToString[z9expI[[2]]] <> ".m" <> ToString[z9k] <> ".mx";
+    z9expL = <||>; z9expT = AbsoluteTime[] - z9t;
+    Do[If[FileExistsQ[z9mf[z9k]],
+         Clear[z9mDef, z9mK, z9mL, z9mT, z9mDropped]; Get[z9mf[z9k]];
+         If[z9mDef === z9def && z9mK === z9k,
+           z9expL[z9k] = z9mL; z9expT += z9mT; z9dropped += z9mDropped; Print["[part] ", nm, " monomial ", z9k, " taken from its checkpoint"]; Continue[]]];
+       z9mT = AbsoluteTime[]; z9mDropped = z9dropped;
+       z9mL = z9expand[z9ps[[z9k]]];
+       z9mT = AbsoluteTime[] - z9mT; z9mDropped = z9dropped - z9mDropped; z9mDef = z9def; z9mK = z9k;
+       DumpSave[z9mf[z9k] <> ".tmp", {z9mDef, z9mK, z9mL, z9mT, z9mDropped}]; RenameFile[z9mf[z9k] <> ".tmp", z9mf[z9k], OverwriteTarget -> True];
+       z9expL[z9k] = z9mL; z9expT += z9mT;
+       Print["[mono] ", nm, " ", z9k, ": ", Round[z9mT, 0.1], " s, ", z9nt[z9mL[[2]]], " terms kept, ", z9mDropped, " dropped"],
+       {z9k, z9mine}];
+    z9expDropped = z9dropped;
     z9pf = vdir <> "/" <> nm <> ".exp" <> ToString[z9expI[[1]]] <> "of" <> ToString[z9expI[[2]]] <> ".mx";
     DumpSave[z9pf <> ".tmp", {z9expDef, z9expNP, z9expL, z9expT, z9expDropped}]; RenameFile[z9pf <> ".tmp", z9pf, OverwriteTarget -> True];
+    Scan[If[FileExistsQ[z9mf[#]], DeleteFile[z9mf[#]]] &, z9mine];
     Print["[part] ", nm, " expansion ", z9part, ": ", Length[z9mine], " of ", Length[z9ps], " monomials in ", Round[z9expT, 0.1], " s"];
     Return[$z9PartDone],
     z9prepN =!= None,
@@ -609,6 +676,7 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
     z9lags = z9expand /@ z9ps];
   z9lags = Select[z9lags, #[[2]] =!= 0 &];
   If[z9epseps, Print["[epseps] ", nm, " Eps pairs rewritten before the expansion"]];
+  If[z9retP =!= None, Print["[geotrunc] ", nm, " z8geoTrunc[., ", z9retP, "] of the block's Return applied to each expanded monomial"]];
   If[z9maxlegs =!= None || z9minlegs =!= None,
     Print["[legs] ", nm, " leg range ", {z9minlegs, z9maxlegs}, ": terms dropped before FeynmanRules ", z9dropped, ", kept ", Total[z9nt[#[[2]]] & /@ z9lags]]];
   If[z9split, z9lags = Flatten[Table[If[Head[z9l[[2]]] === Plus, {z9l[[1]], #} & /@ (List @@ z9l[[2]]), {z9l}], {z9l, z9lags}], 1];
@@ -628,8 +696,8 @@ z9vertsTermwise[nm_String] := Module[{z9ps, z9lags, z9chunks, z9cur, z9n, z9vs, 
   z9vs = {}; z9hs = {}; z9start = 1;
   (* the definition of the block is in the fingerprint, so that a partial file of an operator that has
      changed since is not resumed, even when the chunks have the same lengths *)
-  z9ck = vdir <> "/" <> nm <> ".partial.mx"; z9sig = Hash[{Length /@ z9chunks, z9chunk, z9maxlegs, z9minlegs, z9epseps, z9hermOnly, z9split,
-    Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold]}];
+  z9ck = vdir <> "/" <> nm <> ".partial.mx"; z9sig = Hash[Join[{Length /@ z9chunks, z9chunk, z9maxlegs, z9minlegs, z9epseps, z9hermOnly, z9split,
+    Extract[ToExpression[nm, InputForm, OwnValues], {1, 2}, Hold]}, If[z9retP === None, {}, {"z8geoTrunc", z9retP}]]];
   If[z9checkpoint && FileExistsQ[z9ck],
     Quiet[Get[z9ck]];
     If[ValueQ[z9ckSig] && z9ckSig === z9sig, z9vs = z9ckVs; z9hs = z9ckHs; z9tV = z9ckTV; z9tH = z9ckTH; z9start = z9ckDone + 1;
@@ -774,7 +842,9 @@ runblk[nm_String] := Module[{mx, wx, st, tt, lagX, te, tv, th, nv, nh, nraw, z9k
   Export[st, nm <> " | vertices " <> ToString[nv] <> " | rawvertices " <> ToString[nraw] <> " | nonhermitian " <> ToString[nh] <>
              " | tEval " <> ToString[te] <> " | tVert " <> ToString[tv] <> " | tHerm " <> ToString[th] <>
              If[z9maxlegs === None, "", " | maxlegs " <> ToString[z9maxlegs]] <>
-             If[z9minlegs === None, "", " | minlegs " <> ToString[z9minlegs]], "Text"];
+             If[z9minlegs === None, "", " | minlegs " <> ToString[z9minlegs]] <>
+             (* a connection operator whose vertices carry the truncation of its Return, on either path *)
+             If[z9retOrder[nm] === None, "", " | geotrunc " <> ToString[z9retOrder[nm]]], "Text"];
   (* the stamp of the source the block was built from (validate/cache_source.py), so that a model
      is never written from a block whose operator has changed since *)
   If[Run["python3 '" <> $root <> "/validate/cache_source.py' stamp '" <> vdir <> "' " <> nm <> " > /dev/null"] =!= 0,

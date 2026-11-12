@@ -11,7 +11,7 @@
        ~ 4.5e-5, and the photon-fermion ratio A l lbar / A uq uqbar stays -3/2.  LSM alone does
        not test this: the rotation cancels against terms that live in the OPERATOR blocks.
    (3) the Yukawa compensation: the top two-point term of LYukawa + Q_{quH^5} stays at ymt with c8quH5Re = 5. *)
-$root = Environment["DIM8_ROOT"];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$NKernels = 0; FR$PathOverride = $root <> "/external/feynrules/feynrules-current";
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];
 SetDirectory[$root <> "/tests/gen_smoke"];

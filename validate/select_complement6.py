@@ -33,7 +33,7 @@ program gives the same momenta whatever the card holds, as long as the masses do
 --sets random sets of coefficient values, real ones of random sign and of size between 0.2 and 1.2,
 complex ones through a modulus of that size and a random phase, as the model carries them, the program
 runs with the card at (a) every dimension-six coefficient at its value and (b) only the coefficients the
-selection keeps at the same value and the others at zero.  Lam6 stays at its default, since at one order
+selection keeps at the same value and the others at zero.  Lam stays at its default, since at one order
 every term scales with it alike.
 
 The W mass.  In the {alpha, MZ, GF} scheme M_W is an internal parameter that moves with C_Hl^(3), C_ll',
@@ -169,11 +169,11 @@ def base_name(n):
 
 
 def dim6_parameters(model):
-    """The external parameters of block DIM6 of a UFO, the scale Lam6 left out."""
+    """The external parameters of block DIM6 of a UFO."""
     out = []
     for b in re.split(r"\n(?=\w+ = Parameter\()", open(os.path.join(model, "parameters.py"), errors="replace").read()):
         m = re.match(r"(\w+) = Parameter\(name = '\w+',\s*nature = 'external'", b)
-        if m and "lhablock = 'DIM6'" in b and m.group(1) != "Lam6":
+        if m and "lhablock = 'DIM6'" in b:
             out.append(m.group(1))
     return out
 
@@ -198,7 +198,7 @@ def kept_by_selection(process, model, work):
                 block = b.group(1).upper()
                 continue
             m = re.match(r"\s*\d+\s+(\S+)\s*#\s*(\w+)", line)
-            if block == "DIM6" and m and m.group(2) != "Lam6" and float(m.group(1)) != 0.0:
+            if block == "DIM6" and m and float(m.group(1)) != 0.0:
                 kept.add(m.group(2))
     return kept
 
@@ -313,10 +313,11 @@ def evaluate(pdir, points):
 
 
 def card_with(template, values):
-    """The text of a parameter card with the parameters of block DIM6 at the values given, Lam6 as it is.
-    The values are written with thirteen digits, since MadGraph's card reader keeps twenty characters.  A
-    label is read up to case and up to a suffix __2, since MadGraph writes a name that clashes with another
-    up to case in lower case and numbers the second, as it does with C_W, cW beside the internal cw."""
+    """The text of a parameter card with the parameters of block DIM6 at the values given, every other line
+    as it is.  The values are written with thirteen digits, since MadGraph's card reader keeps twenty
+    characters.  A label is read up to case and up to a suffix __2, since MadGraph writes a name that clashes
+    with another up to case in lower case and numbers the second, as it does with C_W, cW beside the internal
+    cw."""
     lines, block, seen = template.split("\n"), None, set()
     by_label = {n.lower(): n for n in values}
     for i, line in enumerate(lines):
@@ -327,8 +328,6 @@ def card_with(template, values):
         m = re.match(r"(\s*\d+\s+)\S+(\s*#\s*(\w+).*)$", line)
         if block == "DIM6" and m:
             label = re.sub(r"__\d+$", "", m.group(3)).lower()
-            if label == "lam6":
-                continue
             name = by_label.get(label)
             if name is None:
                 stop(f"block DIM6 of the parameter card holds {m.group(3)}, which is not in block DIM6 of the model")

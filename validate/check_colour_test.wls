@@ -14,7 +14,7 @@
    before a change to the test or the canonicalisation, which a build today would not write.  The exit status
    is 1 if there is one.  Believe it when it names the four-gluon vertices of the singlet G Gdual operators, which
    vanish by the Jacobi identity, on a cache from before the change.  *)
-$root = If[Environment["DIM8_ROOT"] === $Failed, "${DIM8_ROOT:-.}", Environment["DIM8_ROOT"]];
+$root = If[Environment["DIM8_ROOT"] === $Failed, ParentDirectory[DirectoryName[$InputFileName]], Environment["DIM8_ROOT"]];
 FR$PathOverride = $root <> "/external/feynrules/feynrules-current";   (* the same FeynRules install as the worker, not the default path of the init file *)
 FR$NKernels = 0;   (* serial: no subkernels on a shared laptop *)
 Get[$root <> "/tests/fr_env/fr_headless_init.m"];   (* loads FeynRules with the headless fixes, as the worker does *)

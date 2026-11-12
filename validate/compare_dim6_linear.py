@@ -5,7 +5,7 @@
 
 Each model is read in its own interpreter (two UFOs cannot be imported side by side, their module
 names collide).  With ONE real coefficient of the parameter block DIM6 at one and the rest at
-zero, every coupling of order NP=1 that carries the dimension-six scale is evaluated, and for
+zero, every coupling of order NP=1 that carries the scale Lam is evaluated, and for
 each vertex, keyed by its PDG codes, the magnitudes over its colour and Lorentz structures are
 compared as a sorted list.  One coefficient at a time is the point: with several on, a model that
 keeps the input shifts inside untagged parameters differs from one that tags them at the per-cent
@@ -23,28 +23,28 @@ import subprocess
 import sys
 
 DUMP = r'''
-import sys, os, cmath, math, json, collections
+import sys, os, re, cmath, math, json, collections
 ufo = os.path.abspath(sys.argv[1]); sys.path.insert(0, ufo)
+sys.path.insert(0, sys.argv[2])
+import eval_ufo_params as E   # the evaluation of a UFO's parameters, one for every script
 mg = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3")); sys.path.insert(0, mg)
 import parameters as P, vertices as V
 ext0 = {p.name: float(p.value) for p in P.all_parameters if p.nature == "external"}
 six = [p.name for p in P.all_parameters if p.nature == "external" and p.lhablock == "DIM6"
-       and p.name != "Lam6" and not p.name.endswith("Ph")]
+       and not p.name.endswith("Ph")]
 for n in six: ext0[n] = 0.0
-ns = {"cmath": cmath, "math": math, "complex": complex,
-      "complexconjugate": lambda z: z.conjugate() if isinstance(z, complex) else z}
-internal = [(p.name, compile(p.value, p.name, "eval")) for p in P.all_parameters if p.nature == "internal"]
+ns = E.namespace()
 entries = []
 for v in V.all_vertices:
     key = ",".join(str(x) for x in sorted(p.pdg_code for p in v.particles))
     for (ic, il), cs in v.couplings.items():
         for c in (cs if isinstance(cs, (list, tuple)) else [cs]):
-            if c.order.get("NP", 0) == 1 and "Lam6" in c.value:
+            if c.order.get("NP", 0) == 1 and re.search(r"\bLam\b", c.value):
                 entries.append((key, v.color[ic] + "|" + v.lorentz[il].structure, compile(c.value, c.name, "eval")))
 out = {}
 for name in six:
     vals = dict(ext0); vals[name] = 1.0
-    for n, code in internal: vals[n] = eval(code, ns, vals)
+    E.internal_parameters(P, vals, ns)
     acc = collections.defaultdict(complex)
     for key, st, code in entries: acc[(key, st)] += complex(eval(code, ns, vals))
     per = collections.defaultdict(list)
@@ -58,7 +58,8 @@ print(json.dumps(out))
 
 
 def dump(ufo):
-    r = subprocess.run([sys.executable, "-c", DUMP, ufo], capture_output=True, text=True)
+    r = subprocess.run([sys.executable, "-c", DUMP, ufo, os.path.dirname(os.path.abspath(__file__))],
+                       capture_output=True, text=True)
     if r.returncode:
         sys.exit(f"could not read {ufo}:\n{r.stderr[-800:]}")
     return json.loads(r.stdout)

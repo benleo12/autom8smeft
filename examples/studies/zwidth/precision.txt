@@ -1,0 +1,12 @@
+# The relative precision on Gamma(Z -> e+ e-) of a measurement and of a projection, which width_figure.py
+# draws as horizontal lines (--lines): a label, the value and its source, separated by tabs.
+#
+# FCC-ee does not quote a projection for the partial width itself.  The value here is ours, from the
+# projected errors of Table 2 of the Feasibility Study, statistical and systematic added in quadrature.
+# With lepton universality Gamma_ll = M_Z Gamma_Z sqrt(sigma_had^0 / (12 pi R_l)), so its relative error is
+# that of Gamma_Z, half that of sigma_had^0 and half that of R_l added in quadrature: 12.6 keV of
+# 2495500 keV, 0.80 pb of 41480.2 pb and 0.071e-3 of 20.767 give 1.1e-5, without the correlations.  The
+# same sum with the present errors of that table gives 1.2e-3, against the 1.0e-3 of the PDG fit of
+# Gamma(l+ l-) (83.984 +- 0.086 MeV).
+LEP	1.43e-3	PDG 2025 update, Z boson listing, p. 5: Gamma(e+ e-) = 83.91 +- 0.12 MeV (OUR FIT)
+FCC-ee estimate	1.1e-5	FCC Feasibility Study Report Vol. 1, arXiv:2505.00272, Table 2 (Gamma_Z, sigma_had^0, R_l), as above

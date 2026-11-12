@@ -2,145 +2,145 @@
 
 ### p p > w+ w- z
 
-Standard Model: 0.0883 pb (+- 2.267e-04), M_W = 80.39 GeV
+Standard Model: 0.08909 pb (+- 2.334e-04), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all 674 operators at once | not run |  | not run | nan |
-| class 1 (X^4) | 2.709e-05 | +0.03 | 0.1764 | 80.39 |
+| all 674 operators at once | not run |  | not run | not run |
+| class 1 (X^4) | 2.797e-05 | +0.03 | 0.1764 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 1.941e-06 | +2.2\times 10^{-3} | 3.250e-11 | 80.39 |
-| class 4 (H^4 D^4) | -6.157e-08 | -7.0\times 10^{-5} | 2.044e-11 | 80.39 |
-| class 5 (X^3 H^2) | 5.231e-06 | +5.9\times 10^{-3} | 8.187e-08 | 80.39 |
-| class 6 (X^2 H^4) | 1.157e-05 | +0.01 | 4.379e-07 | 80.39 |
-| class 7 (X^2 H^2 D^2) | -7.501e-07 | -8.5\times 10^{-4} | 6.397e-04 | 80.39 |
-| class 8 (X H^4 D^2) | -6.301e-07 | -7.1\times 10^{-4} | 1.039e-09 | 80.39 |
-| class 9 (psi^2 X^2 H) | -8.774e-08 | -9.9\times 10^{-5} | 5.064e-04 | 80.39 |
-| class 10 (psi^2 X H^3) | -1.844e-09 | -2.1\times 10^{-6} | 1.295e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -2.148e-05 | -0.02 | 1.596e-05 | 80.39 |
-| class 12 (psi^2 H^5) | -1.615e-09 | -1.8\times 10^{-6} | 6.878e-09 | 80.39 |
-| class 13 (psi^2 H^4 D) | 1.312e-05 | +0.01 | 1.269e-07 | 80.39 |
-| class 14 (psi^2 X^2 D) | -0.001758 | -1.99 | 0.006207 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 5.038e-06 | +5.7\times 10^{-3} | 9.343e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | -1.113e-08 | -1.3\times 10^{-5} | 0.004821 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -2.027e-09 | -2.3\times 10^{-6} | 1.425e-05 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 3 (H^6 D^2) | 1.932e-06 | +2.2e-03 | 3.254e-11 | 80.39 |
+| class 4 (H^4 D^4) | -6.150e-08 | -6.9e-05 | 2.008e-11 | 80.39 |
+| class 5 (X^3 H^2) | 5.135e-06 | +5.8e-03 | 8.441e-08 | 80.39 |
+| class 6 (X^2 H^4) | 1.158e-05 | +0.01 | 4.376e-07 | 80.39 |
+| class 7 (X^2 H^2 D^2) | -7.813e-07 | -8.8e-04 | 6.451e-04 | 80.39 |
+| class 8 (X H^4 D^2) | -6.502e-07 | -7.3e-04 | 1.023e-09 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -7.028e-05 | -0.08 | 3.063e-04 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 1.314e-05 | +0.01 | 1.260e-07 | 80.39 |
+| class 14 (psi^2 X^2 D) | -0.001745 | -1.96 | 0.0064 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 4.672e-06 | +5.2e-03 | 9.444e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 6.035e-06 | +6.8e-03 | 1.016e-10 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
 ### p p > w+ w- w+
 
-Standard Model: 0.07672 pb (+- 2.189e-04), M_W = 80.39 GeV
+Standard Model: 0.07819 pb (+- 2.295e-04), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all, card bosonic | 1.258e-04 | +0.16 | 1.189e-04 | 80.39 |
-| class 1 (X^4) | 1.265e-04 | +0.16 | 1.323e-04 | 80.39 |
+| all, card bosonic | 1.280e-04 | +0.16 | 1.200e-04 | 80.39 |
+| class 1 (X^4) | 1.288e-04 | +0.16 | 1.353e-04 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | -5.660e-08 | -7.4\times 10^{-5} | 2.856e-12 | 80.39 |
-| class 4 (H^4 D^4) | -2.074e-07 | -2.7\times 10^{-4} | 5.936e-11 | 80.39 |
-| class 5 (X^3 H^2) | -1.814e-07 | -2.4\times 10^{-4} | 5.074e-08 | 80.39 |
-| class 6 (X^2 H^4) | 3.429e-06 | +4.5\times 10^{-3} | 1.019e-08 | 80.39 |
-| class 7 (X^2 H^2 D^2) | -3.364e-06 | -4.4\times 10^{-3} | 5.766e-07 | 80.39 |
-| class 8 (X H^4 D^2) | -6.691e-07 | -8.7\times 10^{-4} | 1.125e-09 | 80.39 |
-| class 9 (psi^2 X^2 H) | -1.767e-08 | -2.3\times 10^{-5} | 1.825e-04 | 80.39 |
-| class 10 (psi^2 X H^3) | -6.427e-09 | -8.4\times 10^{-6} | 1.125e-06 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -1.140e-05 | -0.01 | 2.287e-05 | 80.39 |
-| class 12 (psi^2 H^5) | -2.269e-09 | -3.0\times 10^{-6} | 1.282e-08 | 80.39 |
-| class 13 (psi^2 H^4 D) | 1.630e-05 | +0.02 | 2.084e-07 | 80.39 |
-| class 14 (psi^2 X^2 D) | -8.593e-04 | -1.12 | 0.004425 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 2.041e-05 | +0.03 | 8.775e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | 4.294e-09 | +5.6\times 10^{-6} | 0.002527 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | 6.969e-09 | +9.1\times 10^{-6} | 2.020e-05 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 3 (H^6 D^2) | -5.780e-08 | -7.4e-05 | 2.869e-12 | 80.39 |
+| class 4 (H^4 D^4) | -2.109e-07 | -2.7e-04 | 5.971e-11 | 80.39 |
+| class 5 (X^3 H^2) | -1.661e-07 | -2.1e-04 | 5.177e-08 | 80.39 |
+| class 6 (X^2 H^4) | 3.497e-06 | +4.5e-03 | 1.048e-08 | 80.39 |
+| class 7 (X^2 H^2 D^2) | -3.407e-06 | -4.4e-03 | 5.910e-07 | 80.39 |
+| class 8 (X H^4 D^2) | -6.792e-07 | -8.7e-04 | 1.137e-09 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -6.674e-05 | -0.09 | 1.629e-04 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 1.649e-05 | +0.02 | 1.475e-07 | 80.39 |
+| class 14 (psi^2 X^2 D) | -8.765e-04 | -1.12 | 0.004533 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 2.114e-05 | +0.03 | 4.132e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 5.322e-06 | +6.8e-03 | 8.944e-11 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
 ### p p > w+ w- w-
 
-Standard Model: 0.04134 pb (+- 1.418e-04), M_W = 80.39 GeV
+Standard Model: 0.04236 pb (+- 1.402e-04), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all, card bosonic | 5.341e-05 | +0.13 | 3.918e-05 | 80.39 |
-| class 1 (X^4) | 5.385e-05 | +0.13 | 4.012e-05 | 80.39 |
+| all, card bosonic | 5.502e-05 | +0.13 | 4.050e-05 | 80.39 |
+| class 1 (X^4) | 5.489e-05 | +0.13 | 4.113e-05 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | -3.389e-08 | -8.2\times 10^{-5} | 1.553e-12 | 80.39 |
-| class 4 (H^4 D^4) | -1.089e-07 | -2.6\times 10^{-4} | 2.279e-11 | 80.39 |
-| class 5 (X^3 H^2) | -1.241e-07 | -3.0\times 10^{-4} | 1.856e-08 | 80.39 |
-| class 6 (X^2 H^4) | 1.795e-06 | +4.3\times 10^{-3} | 4.334e-09 | 80.39 |
-| class 7 (X^2 H^2 D^2) | -1.513e-06 | -3.7\times 10^{-3} | 1.747e-07 | 80.39 |
-| class 8 (X H^4 D^2) | -3.129e-07 | -7.6\times 10^{-4} | 3.981e-10 | 80.39 |
-| class 9 (psi^2 X^2 H) | -2.057e-08 | -5.0\times 10^{-5} | 5.406e-05 | 80.39 |
-| class 10 (psi^2 X H^3) | -6.681e-09 | -1.6\times 10^{-5} | 4.005e-07 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -5.226e-06 | -0.01 | 7.421e-06 | 80.39 |
-| class 12 (psi^2 H^5) | -2.637e-09 | -6.4\times 10^{-6} | 5.486e-09 | 80.39 |
-| class 13 (psi^2 H^4 D) | 8.327e-06 | +0.02 | 7.904e-08 | 80.39 |
-| class 14 (psi^2 X^2 D) | -3.242e-04 | -0.78 | 0.001316 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 9.277e-06 | +0.02 | 2.682e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | 4.783e-09 | +1.2\times 10^{-5} | 7.562e-04 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | 2.719e-09 | +6.6\times 10^{-6} | 6.185e-06 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 3 (H^6 D^2) | -3.369e-08 | -8.0e-05 | 1.580e-12 | 80.39 |
+| class 4 (H^4 D^4) | -1.112e-07 | -2.6e-04 | 2.164e-11 | 80.39 |
+| class 5 (X^3 H^2) | -1.224e-07 | -2.9e-04 | 1.881e-08 | 80.39 |
+| class 6 (X^2 H^4) | 1.830e-06 | +4.3e-03 | 4.419e-09 | 80.39 |
+| class 7 (X^2 H^2 D^2) | -1.548e-06 | -3.7e-03 | 1.792e-07 | 80.39 |
+| class 8 (X H^4 D^2) | -3.202e-07 | -7.6e-04 | 4.153e-10 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -2.481e-05 | -0.06 | 4.362e-05 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 8.468e-06 | +0.02 | 5.919e-08 | 80.39 |
+| class 14 (psi^2 X^2 D) | -3.326e-04 | -0.79 | 0.001325 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 9.582e-06 | +0.02 | 1.280e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 2.883e-06 | +6.8e-03 | 4.851e-11 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
 ### p p > z z z
 
-Standard Model: 0.009815 pb (+- 5.324e-05), M_W = 80.39 GeV
+Standard Model: 0.009845 pb (+- 4.351e-05), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all, card bosonic | 3.605e-05 | +0.37 | 3.623e-05 | 80.39 |
-| class 1 (X^4) | 3.283e-05 | +0.33 | 3.671e-05 | 80.39 |
+| all, card bosonic | 3.609e-05 | +0.37 | 3.778e-05 | 80.39 |
+| class 1 (X^4) | 3.297e-05 | +0.33 | 3.744e-05 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 5.592e-07 | +5.7\times 10^{-3} | 1.737e-11 | 80.39 |
-| class 4 (H^4 D^4) | -1.038e-07 | -1.1\times 10^{-3} | 3.106e-11 | 80.39 |
+| class 3 (H^6 D^2) | 5.590e-07 | +5.7e-03 | 1.739e-11 | 80.39 |
+| class 4 (H^4 D^4) | -1.035e-07 | -1.1e-03 | 3.041e-11 | 80.39 |
 | class 5 (X^3 H^2) | no diagram |  | no diagram | 80.39 |
-| class 6 (X^2 H^4) | 4.269e-06 | +0.04 | 3.002e-09 | 80.39 |
-| class 7 (X^2 H^2 D^2) | -1.731e-06 | -0.02 | 2.274e-07 | 80.39 |
-| class 8 (X H^4 D^2) | -1.805e-07 | -1.8\times 10^{-3} | 5.686e-11 | 80.39 |
-| class 9 (psi^2 X^2 H) | -1.095e-09 | -1.1\times 10^{-5} | 3.246e-05 | 80.39 |
-| class 10 (psi^2 X H^3) | -2.487e-10 | -2.5\times 10^{-6} | 1.787e-07 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -3.406e-06 | -0.03 | 4.290e-07 | 80.39 |
-| class 12 (psi^2 H^5) | -1.839e-10 | -1.9\times 10^{-6} | 4.736e-09 | 80.39 |
-| class 13 (psi^2 H^4 D) | 6.039e-06 | +0.06 | 3.570e-08 | 80.39 |
-| class 14 (psi^2 X^2 D) | -4.403e-05 | -0.45 | 2.116e-05 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 6.906e-06 | +0.07 | 1.239e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | 7.610e-10 | +7.8\times 10^{-6} | 8.914e-05 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | 1.452e-09 | +1.5\times 10^{-5} | 4.618e-06 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 6 (X^2 H^4) | 4.251e-06 | +0.04 | 3.011e-09 | 80.39 |
+| class 7 (X^2 H^2 D^2) | -1.720e-06 | -0.02 | 2.397e-07 | 80.39 |
+| class 8 (X H^4 D^2) | -1.801e-07 | -1.8e-03 | 5.744e-11 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -1.347e-05 | -0.14 | 5.151e-05 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 6.083e-06 | +0.06 | 3.625e-08 | 80.39 |
+| class 14 (psi^2 X^2 D) | -4.416e-05 | -0.45 | 1.842e-05 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 6.971e-06 | +0.07 | 1.216e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 6.684e-07 | +6.8e-03 | 1.136e-11 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |
 
 ### p p > w+ z z
 
-Standard Model: 0.01849 pb (+- 5.455e-05), M_W = 80.39 GeV
+Standard Model: 0.0187 pb (+- 5.513e-05), M_W = 80.39 GeV
 
 | operators | interference [pb] | deviation from SM [%] | squared [pb] | M_W [GeV] |
 |---|---|---|---|---|
-| all, card bosonic | 2.376e-05 | +0.13 | 2.906e-05 | 80.39 |
-| class 1 (X^4) | 2.095e-05 | +0.11 | 2.898e-05 | 80.39 |
+| all, card bosonic | 2.406e-05 | +0.13 | 3.003e-05 | 80.39 |
+| class 1 (X^4) | 2.165e-05 | +0.12 | 2.955e-05 | 80.39 |
 | class 2 (H^8) | no diagram |  | no diagram | 80.39 |
-| class 3 (H^6 D^2) | 6.337e-07 | +3.4\times 10^{-3} | 1.172e-11 | 80.39 |
-| class 4 (H^4 D^4) | -5.635e-08 | -3.0\times 10^{-4} | 1.507e-11 | 80.39 |
-| class 5 (X^3 H^2) | -2.784e-07 | -1.5\times 10^{-3} | 2.580e-08 | 80.39 |
-| class 6 (X^2 H^4) | 4.088e-06 | +0.02 | 1.709e-09 | 80.39 |
-| class 7 (X^2 H^2 D^2) | -1.574e-06 | -8.5\times 10^{-3} | 4.091e-07 | 80.39 |
-| class 8 (X H^4 D^2) | -3.123e-07 | -1.7\times 10^{-3} | 2.402e-10 | 80.39 |
-| class 9 (psi^2 X^2 H) | -1.279e-08 | -6.9\times 10^{-5} | 1.237e-04 | 80.39 |
-| class 10 (psi^2 X H^3) | -1.976e-09 | -1.1\times 10^{-5} | 2.556e-07 | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -3.785e-06 | -0.02 | 1.377e-05 | 80.39 |
-| class 12 (psi^2 H^5) | -9.118e-10 | -4.9\times 10^{-6} | 3.657e-09 | 80.39 |
-| class 13 (psi^2 H^4 D) | 7.222e-06 | +0.04 | 1.220e-07 | 80.39 |
-| class 14 (psi^2 X^2 D) | -4.395e-04 | -2.38 | 0.002849 | 80.39 |
-| class 15 (psi^2 X H^2 D) | 1.081e-05 | +0.06 | 6.290e-05 | 80.39 |
-| class 16 (psi^2 X H D^2) | 1.828e-10 | +9.9\times 10^{-7} | 0.00181 | 80.39 |
-| class 17 (psi^2 H^3 D^2) | -2.299e-10 | -1.2\times 10^{-6} | 8.584e-06 | 80.39 |
-| class 18 (psi^4 H^2) | no diagram |  | no diagram | 80.39 |
+| class 3 (H^6 D^2) | 6.439e-07 | +3.4e-03 | 1.198e-11 | 80.39 |
+| class 4 (H^4 D^4) | -5.766e-08 | -3.1e-04 | 1.521e-11 | 80.39 |
+| class 5 (X^3 H^2) | -3.052e-07 | -1.6e-03 | 2.657e-08 | 80.39 |
+| class 6 (X^2 H^4) | 4.163e-06 | +0.02 | 1.751e-09 | 80.39 |
+| class 7 (X^2 H^2 D^2) | -1.621e-06 | -8.7e-03 | 4.184e-07 | 80.39 |
+| class 8 (X H^4 D^2) | -3.139e-07 | -1.7e-03 | 2.443e-10 | 80.39 |
+| class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
+| class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -3.524e-05 | -0.19 | 7.032e-05 | 80.39 |
+| class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
+| class 13 (psi^2 H^4 D) | 7.376e-06 | +0.04 | 9.213e-08 | 80.39 |
+| class 14 (psi^2 X^2 D) | -4.488e-04 | -2.40 | 0.002903 | 80.39 |
+| class 15 (psi^2 X H^2 D) | 1.099e-05 | +0.06 | 3.124e-05 | 80.39 |
+| class 16 (psi^2 X H D^2) | no diagram |  | no diagram | 80.39 |
+| class 17 (psi^2 H^3 D^2) | no diagram |  | no diagram | 80.39 |
+| class 18 (psi^4 H^2) | 1.272e-06 | +6.8e-03 | 2.144e-11 | 80.39 |
 | class 19 (psi^4 X) | no diagram |  | no diagram | 80.39 |
 | class 20 (psi^4 H D) | no diagram |  | no diagram | 80.39 |
 | class 21 (psi^4 D^2) | no diagram |  | no diagram | 80.39 |

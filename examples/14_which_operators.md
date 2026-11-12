@@ -70,16 +70,21 @@ dimension-eight interference through their shift of `gw`, the vev and `MW`, with
 any diagram. In `dim8_mw` at Lambda = 3 TeV each shifts the rate by -6.2 fb, against -25.8 fb from
 all operators together.
 
-Nine operators act this way: the two of class 3 (H^6 D^2), four of class 6 (X^2 H^4), the two
-l^2 H^4 D operators of class 13 and `Q_{l^4H^2}^{(1)}` of class 18, whose flavour structure with
-crossed indices contains the four-lepton interaction of muon decay. `./dim8 select` lists whichever of them have no vertex in the
+Eleven operators act this way: the two of class 3 (H^6 D^2), four of class 6 (X^2 H^4), the two
+l^2 H^4 D operators of class 13 and three of class 18. In `Q_{l^4H^2}^{(1)}` the flavour structure
+with crossed indices contains the four-lepton interaction of muon decay. In `Q_{l^2e^2H^2}^{(1)}`
+and `Q_{l^2e^2H^2}^{(2)}` the crossed structure with one electron and one muon Yukawa coupling gives
+muon decay a scalar coupling, which changes the rate through its interference with the Standard
+Model, weighted by the electron's Yukawa coupling, so these two enter G_F only on a card with the
+electron and muon Yukawas on. `./dim8 select` lists whichever of the eleven have no vertex in the
 process under its own heading, "through the {alpha, MZ, GF} input relations, with no vertex in this
 process", counts them in its summary line, marks those of the first group with "(and the input
 relations)", and writes them into the restriction card with `--card` and into the list that `-o`
-writes for `./dim8 ufo`. The two groups together are the complete list at tree level with one insertion.
+writes for `./dim8 ufo`. Beside the two scalar ones, in either group, it prints "(enters G_F only
+with nonzero electron and muon Yukawas)". The two groups together are the complete list at tree level with one insertion.
 
 The second group follows the model named by `--model`. Without the option it is `models/dim8_mw`,
-the {MW, MZ, GF} scheme, where the same nine shift the electromagnetic coupling instead of the W
+the {MW, MZ, GF} scheme, where the same eleven shift the electromagnetic coupling instead of the W
 mass and the heading names that scheme, and the card goes into that model, for
 `import model dim8_mw-NAME`. This page uses `models/dim8_is`, the {alpha, MZ, GF} scheme. With
 `models/dim68_is` the selector also lists the dimension-six coefficients, one by one under the

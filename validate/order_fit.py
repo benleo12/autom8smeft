@@ -26,7 +26,7 @@ parameter departs from linear in c).  The tool fits one degree above what you as
 the extra coefficient, so you can see the contamination rather than assume it away.
 
     validate/order_fit.py <UFO dir or model name> "p p > w+ w-" --coeff c8q2W2Dx1
-    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale6 1000 --degree 2
+    validate/order_fit.py dim68_is "p p > e+ e-" --coeff cHq1 --scale 1000 --degree 2
     validate/order_fit.py dim8_is "p p > w+ w-" --coeff c8q2W2Dx1 --compare-tagged "NP^2==2"
 
 With --compare-tagged it also runs the tagged bin at c = delta and prints it beside what the fit
@@ -43,7 +43,7 @@ import subprocess
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MG = os.environ.get("MG5_DIR", "${MG5_DIR:-/path/to/MG5_aMC}")
+MG = os.environ.get("MG5_DIR", os.path.expanduser("~/Downloads/MG5_aMC_v3_5_3"))
 
 
 def mg5_python() -> str:
@@ -54,7 +54,7 @@ def mg5_python() -> str:
     sys.exit("no python3 found")
 
 
-def write_script(a, values, path, outdir) -> None:
+def script_text(a, values, outdir) -> str:
     """One MadGraph script: generate and output once, then launch once per coefficient value."""
     lines = [f"import model {a.model}", f"generate {a.process} {a.order}",
              f"output {outdir} -f"]
@@ -66,13 +66,15 @@ def write_script(a, values, path, outdir) -> None:
                   f"  set ebeam2 {a.ebeam}",
                   "  set hel_recycling False",
                   f"  set iseed {a.seed + i}"]
-        if a.scale8:
-            lines.append(f"  set Lam {a.scale8}")
-        if a.scale6:
-            lines.append(f"  set lam6 {a.scale6}")
+        if a.scale:
+            lines.append(f"  set Lam {a.scale}")
         lines.append(f"  set {a.coeff} {v!r}")
         lines.append("  0")
-    open(path, "w").write("\n".join(lines) + "\n")
+    return "\n".join(lines) + "\n"
+
+
+def write_script(a, values, path, outdir) -> None:
+    open(path, "w").write(script_text(a, values, outdir))
 
 
 def cross_sections(log: str) -> list[tuple[float, float]]:
@@ -132,8 +134,7 @@ def main() -> None:
     ap.add_argument("--events", type=int, default=5000)
     ap.add_argument("--ebeam", type=float, default=6800)
     ap.add_argument("--seed", type=int, default=21)
-    ap.add_argument("--scale8", default="", help="Lam in GeV, if the model has dimension eight")
-    ap.add_argument("--scale6", default="", help="Lam6 in GeV, if the model has dimension six")
+    ap.add_argument("--scale", default="", help="Lam in GeV, the one scale of both sectors")
     ap.add_argument("--compare-tagged", default="",
                     help="also run this tagged order and print it beside the fitted coefficient")
     ap.add_argument("--rundir", default=os.path.expanduser("~/dim8auto_build/mg5runs/order_fit"))
@@ -149,15 +150,17 @@ def main() -> None:
 
     tag = re.sub(r"\W+", "_", f"{a.process}_{a.coeff}").strip("_")
     outdir = os.path.join(a.rundir, tag)
-    os.makedirs(a.rundir, exist_ok=True)
     script = os.path.join(a.rundir, tag + ".mg5")
-    write_script(a, values, script, outdir)
     print(f"[cfg] model {a.model}  process {a.process}  order {a.order}")
     print(f"[cfg] {a.coeff} at {values}, {a.events} events each, degree {a.degree} + 1")
-    print(f"[cfg] script {script}")
     if a.dry_run:
-        print(open(script).read())
+        # a dry run writes nothing: the script a run would write, on the screen
+        print(f"[cfg] script {script} (dry run, not written)")
+        print(script_text(a, values, outdir))
         return
+    os.makedirs(a.rundir, exist_ok=True)
+    write_script(a, values, script, outdir)
+    print(f"[cfg] script {script}")
 
     log = os.path.join(a.rundir, tag + ".log")
     if a.reuse and os.path.exists(log) and len(cross_sections(open(log, errors="replace").read())) >= len(values):
