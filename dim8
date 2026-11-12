@@ -1148,7 +1148,31 @@ def _write_selection(a, hits, extra, keep6=None, total6=0, which="those listed a
                              + (f" (--with-dim6 keeps the {len(keep6)} {which.removeprefix('those ')})" if keep6 is not None
                                 else " (--with-dim6 keeps them all)"))
         lines.append(f"import with:  import model {os.path.basename(model)}-{a.card}")
+        # MadGraph takes the values of the card as the defaults of the restricted model, and those of the kept
+        # coefficients are placeholders, so the report ends with the command that sets a run's values
+        lines.append("then set:     examples/studies/set_cards.py <process dir> dim8_all=0"
+                     + (" dim6_all=0" if getattr(a, "with_dim6", False) else "")
+                     + f" {_first_kept(os.path.join(model, f'restrict_{a.card}.dat'))}=1 Lam=3000"
+                     + " ebeam1=6800 ebeam2=6800 hel_recycling=False")
+        lines.append("              (after output: every coefficient the card keeps starts at its placeholder value, "
+                     "between 0.1 and 0.9)")
     return lines
+
+
+def _first_kept(card):
+    """The first dimension-eight coefficient that the restriction card keeps, by its name, for the example
+    of the line that says how to set the values of a run."""
+    import re
+    block = None
+    for line in open(card):
+        b = re.match(r"\s*block\s+(\w+)", line, re.I)
+        if b:
+            block = b.group(1).upper()
+            continue
+        m = re.match(r"\s*(\d+)\s+([-\deE.+]+)\s*#\s*(\w+)", line)
+        if m and block in ("DIM8", "DIM8F") and m.group(3) != "Lam" and float(m.group(2)) != 0.0:
+            return m.group(3)
+    return "<coefficient>"
 
 
 def _cut_selection(a, cut, hits, extra, pw, pw6, smp, ir, sel6, extra6, idx6, full6, total6):
@@ -1980,6 +2004,11 @@ def main():
     c.set_defaults(func=cmd_check)
 
     a = ap.parse_args()
+    # at a terminal, select and series print their terminal view (gen/pretty.py), and in a pipe the plain text
+    if a.cmd in ("select", "series") and not getattr(a, "json", False) and not getattr(a, "latex", False):
+        import pretty
+        if pretty.wanted():
+            sys.exit(pretty.run(a.func, a))
     sys.exit(a.func(a) or 0)
 
 

@@ -295,6 +295,13 @@ The selector and the energy counting run on python3 alone, from the vertex lists
 `build/`, which they check against the unpacked model they are run for. `./dim8 -h` lists every
 command.
 
+At a terminal, `./dim8 select` and `./dim8 series` colour each term by how fast it grows relative to the
+Standard Model (red E^4, orange E^2, plain E^0, grey for a term that falls with the energy or enters only
+through a light-fermion Yukawa coupling or mass) and name the fastest-growing terms on their first lines. In a
+pipe or a file, or with `NO_COLOR` set, they print the plain text that this README describes, and
+`FORCE_COLOR=1` keeps the colours through a pipe, as in `FORCE_COLOR=1 ./dim8 select "p p > w+ w-" | less -R`.
+`python3 tests/test_pretty.py` checks both.
+
 | command | what it gives |
 | --- | --- |
 | `./dim8 select "p p > w+ w-"` | the operators that can enter the process, each with the vertex of its leading tree and that tree's power of lambda, then those that enter through the input relations, and with `--model dim68_is` the dimension-six coefficients one by one. `--card NAME` writes both groups into a restriction card |
@@ -396,6 +403,44 @@ admits dimension-six pairs as well.
 
 [docs/RUN_YOUR_OWN_ANALYSIS.md](docs/RUN_YOUR_OWN_ANALYSIS.md) goes from a process to cross
 sections.
+
+## A process of your own
+
+The selector writes the restriction card, MadGraph generates the events, and
+`examples/studies/observable.py` makes any distribution of them. For the operators that reach
+`u u~ > z a` at most six powers of lambda above the Standard Model:
+
+    ./dim8 select "u u~ > z a" --max-power 6 --card za6
+
+and in MadGraph, with the absolute path of the model:
+
+    import model /path/to/autom8smeft/models/dim8_mw-za6
+    generate u u~ > z a NP^2==2
+    output za
+
+The card gives every coefficient it keeps a placeholder value between 0.1 and 0.9, and MadGraph takes
+those as the defaults of the restricted model, so set the values of the run before it starts.
+`./dim8 select --card` ends with the command:
+
+    examples/studies/set_cards.py za dim8_all=0 c8q2W2Dx1=1 Lam=3000 ebeam1=6800 ebeam2=6800 hel_recycling=False
+    za/bin/generate_events -f
+
+`dim8_all=0` zeroes every dimension-eight coefficient and the names after it set the ones wanted.
+`dim6_all=0` does the same for block `DIM6` of a card written with `--with-dim6`, phases included. A
+misspelt name stops the script, where MadGraph's own `set` would accept it and run with the default.
+The same steps with `NP=0` and with `NP<=2 NP^2==4` give the Standard Model and the square. Then
+
+    examples/studies/observable.py m:z,a 200,300,400,600,1000,2000 \
+        SM=za_sm/Events/run_01/unweighted_events.lhe.gz int=za/Events/run_01/unweighted_events.lhe.gz
+
+prints the invariant mass of the Z and the photon in those bins for each sample, in pb with its
+error, and the ratio of each bin to the first sample. Each histogram integrates to the cross section
+of its run, with the signed weights of the interference kept. The kinds are `m`, `pt`, `y` and
+`ptmax`, of any set of final-state particles by PDG id or MadGraph name, and `--tsv` writes the table
+to a file. Any other observable is a function of the final-state four-momenta, and the header of the
+script shows how to histogram one. The normalisation and the errors are those of the paper's
+figures. The script needs nothing but python3, and `python3 tests/test_observable.py` checks it
+against the definitions, event by event.
 
 ## Limits
 

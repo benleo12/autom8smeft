@@ -252,6 +252,14 @@ its record.
 An interference sample has negative weights and reproduces its cross section only statistically,
 so its effective statistics is the excess of positive over negative events.
 
+`examples/studies/observable.py` makes the distribution of any observable of these event files, or of
+any other MadGraph run, with the normalisation and the errors of `plot_study.py`:
+
+    examples/studies/observable.py pt:w+,w- 0,100,200,400,800 SM=<SM events> int=<interference events>
+
+The README shows it on a process of your own, and the header of the script lists the observables it
+knows and how to histogram any other.
+
 ## 6. One operator at a time
 
     for c in $(grep -o 'c8[A-Za-z0-9]*' models/dim8_is/param_card_template.dat | sort -u); do

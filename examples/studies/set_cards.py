@@ -10,8 +10,12 @@ a parameter name collides with one it already has.  MadGraph compares names with
 combined model has an internal cw, so the dimension-six coefficient cW is written into the card as
 "cw" and a literal match would miss it.  The name "dim8_all" is special: it sets every dimension-eight Wilson
 coefficient except the scale Lam, the operators' own in block DIM8 and those of their further flavour
-structures in block DIM8F, which is what the studies mean by "every coefficient at 1".  A name given
-on its own takes the value it is given.  Unknown names are an error, not a warning, because MadGraph's interactive
+structures in block DIM8F, which is what the studies mean by "every coefficient at 1".  "dim6_all" sets
+every entry of block DIM6, the dimension-six coefficients of a dim68 model, and their phases (the names
+ending in Ph, beside the moduli ending in Abs) to 0, so that every coefficient is real and takes the value
+given.  A restriction card from ./dim8 select --card gives each coefficient it keeps a placeholder
+value, which MadGraph takes as the default, so dim8_all=0 (and dim6_all=0) followed by the names wanted
+sets a run to those alone.  A name given on its own takes the value it is given.  Unknown names are an error, not a warning, because MadGraph's interactive
 `set` accepts a misspelt parameter silently and the run then uses the default.  A refused request
 exits with 2 and leaves both cards as they were.  A standalone output (a decay, run_study.sh) has no
 run card, and there only the names of the param card are accepted.  Prints one line per card entry it changed.
@@ -24,17 +28,26 @@ def norm(n):
     return re.sub(r"__\d+$", "", n).lower()
 
 
-def edit_param(path, asg):
+def edit_param(path, asg, seen=None):
+    """Set the entries of the param card that asg names, and add to seen the blocks that hold an entry."""
     keys = {norm(k): k for k in asg}
-    lines, hits = open(path).read().split("\n"), {}
+    lines, hits, block = open(path).read().split("\n"), {}, None
     for i, l in enumerate(lines):
+        b = re.match(r"^\s*block\s+(\w+)", l, re.I)
+        if b:
+            block = b.group(1).upper()
+            continue
         m = re.match(r"^(\s*(?:\d+\s+)+)([-\deE.+]+)(\s*#\s*(\w+))", l)
         if not m:
             continue
         name, key = m.group(4), norm(m.group(4))
+        if seen is not None:
+            seen.add(block)
         val = asg.get(keys.get(key, ""))
         if val is None and "dim8_all" in asg and key.startswith("c8") and key != "lam":
             val = asg["dim8_all"]
+        if val is None and "dim6_all" in asg and block == "DIM6":
+            val = 0 if name.endswith("Ph") else asg["dim6_all"]
         if val is not None:
             lines[i] = f"{m.group(1)}{float(val):.6e}{m.group(3)}"
             hits[keys.get(key, name)] = float(val)
@@ -77,11 +90,13 @@ def main(argv):
     pc, rc = os.path.join(d, "Cards", "param_card.dat"), os.path.join(d, "Cards", "run_card.dat")
     # a refused request leaves both cards as they were, not half edited
     before = {p: open(p).read() for p in (pc, rc) if os.path.exists(p)}
-    hits = edit_param(pc, asg)
+    blocks = set()
+    hits = edit_param(pc, asg, blocks)
     n8 = sum(1 for k in hits if norm(k).startswith("c8") and k not in asg)
+    n6 = sum(1 for k in hits if not norm(k).startswith("c8") and k not in asg)
     if rc in before:
         hits.update(edit_run(rc, asg))
-    missing = [k for k in asg if k not in hits and k != "dim8_all"]
+    missing = [k for k in asg if k not in hits and k not in ("dim8_all", "dim6_all")]
     err = None
     if missing:
         err = "no such parameter or run-card entry: " + ", ".join(missing)
@@ -89,6 +104,8 @@ def main(argv):
     # coefficients are all named one by one has them, and dim8_all then has none left to set
     elif "dim8_all" in asg and not any(norm(k).startswith("c8") for k in hits):
         err = "dim8_all requested but the model has no c8 coefficients left"
+    elif "dim6_all" in asg and "DIM6" not in blocks:
+        err = "dim6_all requested but the card has no block DIM6"
     if err:
         for p, text in before.items():
             open(p, "w").write(text)
@@ -96,6 +113,7 @@ def main(argv):
         return 2
     named = {k: v for k, v in hits.items() if k in asg}
     print(f"set_cards: {n8} dimension-eight coefficients at {asg.get('dim8_all', '-')}"
+          + (f", {n6} dimension-six entries at {asg['dim6_all']} (the phases at 0)" if "dim6_all" in asg else "")
           + (", " + ", ".join(f"{k}={v}" for k, v in sorted(named.items())) if named else ""))
     return 0
 

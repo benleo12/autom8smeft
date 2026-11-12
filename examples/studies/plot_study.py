@@ -195,6 +195,23 @@ def ratio(a, da, b, db):
     return r, math.sqrt(da * da + r * r * db * db) / abs(b)
 
 
+def normalisation(wsum, xsec, xerr):
+    """(f, error, note) for a sample whose weights sum to wsum and whose banner gives xsec and xerr: the factor
+    that takes the histogram to the integrated weight, 1 when the two agree to a per mille, the error of the
+    normalisation, which is the integration's, 0 when the file gives none and None when the banner gives no cross
+    section and the histogram is its own event sum, and the note that says what was done.  tables() and
+    observable.py normalise with it."""
+    if xsec is None:
+        return 1.0, None, ""
+    f, note = 1.0, ""
+    if wsum and abs(wsum - xsec) > 1e-3 * max(abs(xsec), 1e-30):
+        f = xsec / wsum
+        note = f", rescaled by {f:.4g} to the integrated weight {xsec:.6g} pb"
+    if xerr is None:
+        xerr, note = 0.0, note + ", no integration error in the file, so the normalisation counts as exact"
+    return f, xerr, note
+
+
 TRUNC_HEAD = ["sample", "kind", "low_GeV", "high_GeV", "ref_pb", "ref_err_pb", "int_pb", "int_err_pb",
               "sq_pb", "sq_err_pb", "R", "R_err", "int_ref", "int_ref_err", "sq_ref", "sq_ref_err",
               "int_frac", "int_frac_err", "sq_frac", "sq_frac_err"]
@@ -274,17 +291,11 @@ def tables(prefix, samples):
     for label, path in samples:
         mv, pt, wsum, n, xsec, xerr = analyse(path)
         h = ((hist(mv, MBINS), hist(mv, MBINS, 2)), (hist(pt, PBINS), hist(pt, PBINS, 2)))
-        note, f = "", 1.0
-        if xsec is not None and wsum and abs(wsum - xsec) > 1e-3 * max(abs(xsec), 1e-30):
-            f = xsec / wsum
-            note = f", rescaled by {f:.4g} to the integrated weight {xsec:.6g} pb"
+        f, nerr, note = normalisation(wsum, xsec, xerr)
         results[label] = tuple([x * f for x in h1] for h1, _ in h)
-        # the squared weights scale with f^2, and the normalisation carries the integration's error
-        # unless the banner gives no cross section, when the histogram is its own event sum
-        if xsec is not None and xerr is None:
-            xerr = 0.0; note += ", no integration error in the file, so the normalisation counts as exact"
+        # the squared weights scale with f^2
         for (name, edges), (h1, h2) in zip((("mVV", MBINS), ("pT", PBINS)), h):
-            stats[name][label] = Sample(edges, [x * f for x in h1], [x * f * f for x in h2], xerr if xsec is not None else None)
+            stats[name][label] = Sample(edges, [x * f for x in h1], [x * f * f for x in h2], nerr)
         print(f"{label}: {n} events, event sum {wsum:.6g} pb{note}")
     for name, edges, k in (("mVV", MBINS, 0), ("pT", PBINS, 1)):
         with open(f"{prefix}_{name}.tsv", "w") as f:
