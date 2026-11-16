@@ -3,18 +3,18 @@
 The event samples behind the two distribution figures of the paper: `p p > w+ w-` and the
 electroweak `p p > h h j j`, at 13.6 TeV with `models/dim8_mw`, every coefficient of a class at 1
 and Lam at 3 TeV. Each row holds 10^5 events. The rows are the Standard Model (`NP=0`), the
-interference (`NP^2==2`) of each class a figure shows, and the square (`NP<=2 NP^2==4`) of the one
-class whose square it draws:
+interference (`NP^2==2`) of each class a figure shows, and the squares (`NP<=2 NP^2==4`) of
+the selected classes:
 
 | process | Standard Model | interference | square |
 |---|---|---|---|
 | `p p > w+ w-` | full model | `cls14`, `cls6`, `cls13`, `cls15` | `cls14` |
-| `p p > h h j j QCD=0` | `bosonic` card | `cls4`, `cls6`, `cls7`, `cls15` | `cls7` |
+| `p p > h h j j QCD=0` | `bosonic` card | `cls4`, `cls6`, `cls7`, `cls15`, `cls18` | `cls7`, `cls18` |
 
 The cross-section tables use the runs of `../diboson` and `../vbf_dihiggs`, 5000 events for an
 interference and 1000 for a square. These runs are separate and larger because a figure bins the
 pair mass up to about 2.4 TeV, where a Standard-Model bin of a 5000-event sample holds a handful of
-events. The HHjj rows use the cuts and the `bosonic` card of `../vbf_dihiggs`.
+events. All HHjj rows use the cuts of `../vbf_dihiggs`. Its Standard Model sample uses the `bosonic` card.
 
 Each row was run on its own, one study directory a row, and merged here with `merge_rows.py`,
 which carries the row's record and cards. An interference row is

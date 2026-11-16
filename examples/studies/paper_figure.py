@@ -81,6 +81,7 @@ COLOUR = {
     r"X^4": "#D55E00",
     r"X^2H^2D^2": "#0072B2",
     r"H^4D^4": "#7F3C8D",
+    r"\psi^4H^2": "#A65628",
 }
 FALLBACK = ["#999999", "#F0E442", "#1B9E77", "#E7298A"]
 
@@ -275,11 +276,12 @@ def main(argv) -> int:
         rx.stairs(rr, edges, color=colour_of(nm, i),
                   ls="--" if nm.endswith("squared") else "-", baseline=None)
         bot.append((pretty(nm), colour_of(nm, i), rr))
-    # the validity marker: the square of the leading class against the Standard Model, grey
-    for nm, ys in squares.items():
+    # The selected squares against the Standard Model, grey with distinct dash patterns.
+    for square_index, (nm, ys) in enumerate(squares.items()):
         rr = [(abs(a / b) if b else float("nan")) for a, b in zip(rebin_to(lo, hi, {nm: ys}, edges)[nm], r0)]
         rr = [v if v == v and v > 0 else float("nan") for v in rr]
-        rx.stairs(rr, edges, color="0.45", ls="--", lw=1.1, baseline=None)
+        dash = "--" if square_index == 0 else (0, (7, 3))
+        rx.stairs(rr, edges, color="0.45", ls=dash, lw=1.1, baseline=None)
         bot.append((pretty(nm), "0.45", rr))
     rx.set_yscale("log")
     if rmax is None:
