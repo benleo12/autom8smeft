@@ -215,6 +215,27 @@ def parse_process(proc: str, collapse=True, marks: bool = False):
     return (slots, pols) if marks else slots
 
 
+def transverse_channel(proc: str) -> str:
+    """The process with {T} on every W or Z that carries no mark and does not decay, which is the
+    channel gen/lambda_routes.py and gen/lambda_series.py count it in, so that the output can name
+    it.  Decay chains and coupling orders are kept as written.  A W or Z decays when parse_process
+    takes it out of the final state: the first unmarked one of the parent's name, stage by stage."""
+    stages = [s.strip() for s in re.sub(r"\s+\{", "{", proc.strip()).split(",") if s.strip()]
+    sides = [[x.split() for x in st.split(">", 1)] for st in stages]
+    final = [(k, i) for k, st in enumerate(sides) for i in range(len(st[-1]))]
+    for st in sides[1:]:
+        bare = [_mark(sides[k][-1][i].lower())[0] for k, i in final]
+        if st[0] and st[0][0].lower() in bare:
+            final.pop(bare.index(st[0][0].lower()))
+    external = {(0, 0, i) for i in range(len(sides[0][0]))} | {(k, len(sides[k]) - 1, i) for k, i in final}
+    for k, st in enumerate(sides):
+        for j, side in enumerate(st):
+            for i, tok in enumerate(side):
+                if (k, j, i) in external and tok.lower() in POLARISABLE:
+                    side[i] = tok + "{T}"
+    return ", ".join(" > ".join(" ".join(side) for side in st) for st in sides)
+
+
 def _mark(tok: str) -> Tuple[str, Optional[str]]:
     """(particle, polarisation mark) of a token: ("w+", "0") for w+{0}, ("w+", "T") for w+{T},
     (tok, None) without a mark."""

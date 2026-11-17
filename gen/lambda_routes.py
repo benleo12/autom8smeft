@@ -1033,7 +1033,7 @@ def main(argv):
     else:
         print(f"{proc}: {n} external legs, Standard Model amplitude{' of the channel' if channel else ''} ~ "
               f"lambda^{sm} (2n-8 = {2 * n - 8})"
-              + (", an unmarked W or Z being counted as transverse ({T})" if transverse else ""))
+              + (", an unmarked W or Z being counted as transverse, the same as writing {T}" if transverse else ""))
     for dim in (6, 8):
         print(f" dimension {dim}:")
         for key in sorted((k for k in best if k[0] == dim), key=lambda k: (best[k][0], str(k[1]))):

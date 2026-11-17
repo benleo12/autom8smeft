@@ -340,9 +340,10 @@ For example,
 
     ./dim8 series "u u~ > w+ w-"
 
-starts with the process, its four external legs and the gauge of the vertex lists it used, then the
-model, its input scheme and its basis, the power of the Standard Model amplitude, lambda^0 here, and
-the remark that an unmarked W is counted as transverse. The terms follow in three groups, `A_s`,
+starts with the channel it counts, `u u~ > w+{T} w-{T}`, since an unmarked W is counted as
+transverse, its four external legs and the gauge of the vertex lists it used, then the model, its
+input scheme and its basis, the power of the Standard Model amplitude, lambda^0 here, and a remark
+that `{0}` gives the longitudinal channel. The terms follow in three groups, `A_s`,
 `A_t` and `A_c`: the s channel, the t
 channel with the u channel merged into it, as for any quark-antiquark initial state, and the
 contact terms. A line of the Standard Model gives a power of lambda, `SM` and every product of

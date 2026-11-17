@@ -1529,7 +1529,7 @@ def cmd_select(a):
                 smtxt = "the Standard Model has no tree" + (" at QCD=0" if qcd0 else " in this channel" if channel else "")
             else:
                 smtxt = (f"the Standard Model amplitude {'of the channel ' if channel else ''}is lambda^{smp}"
-                         + (", an unmarked W or Z being counted as transverse ({T})" if transverse else ""))
+                         + (", an unmarked W or Z being counted as transverse, the same as writing {T}" if transverse else ""))
             if cut is not None and smp is None:
                 sys.exit(f"--max-power counts the powers of lambda above the Standard Model amplitude, and {smtxt}, "
                          "so there is nothing to count from. Nothing was written. Without --max-power the card "

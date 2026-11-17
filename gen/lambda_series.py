@@ -105,7 +105,8 @@ smallest over these choices.  The Standard Model amplitude of the channel is fou
 and a dimension-eight term at most Delta = 4 powers of lambda above it, which grows at least as
 E^4/Lambda^4 relative to it, is set in bold.  Delta is below 4 only in a channel whose Standard
 Model amplitude lies above lambda^(2n-8), since a dimension-eight tree is at least lambda^(2n-4).
-An unmarked W or Z is counted as transverse, as in the paper, and the output says so.  The
+An unmarked W or Z is counted as transverse, as in the paper, and the output prints the process
+with {T} on it, the channel counted.  The
 Goldstone vertices come from the Feynman-gauge lists (process.load_data, gauge="feynman"),
 build/vertex_index_fg.json and build/sm_vertices_fg.json, which are made in Feynman gauge with
 Mathematica and FeynRules, ship in build/ with the release and also give the internal lines.  A
@@ -597,7 +598,8 @@ def _rec(d, key, power, monos, label, lab, mt, gap=0):
 
 def series(proc, vertex_index, sm, catalogue, group=None, onshell=None, interference=True,
            block_index=None, gauge="unitary"):
-    """The series of a process, as a dict: the header (process, marks, n, 2n-8, the power of the
+    """The series of a process, as a dict: the header (process, channel, the process with {T} on
+    every unmarked W or Z (process.transverse_channel), marks, n, 2n-8, the power of the
     channel's Standard Model amplitude, gauge, grouping, whether a W or Z is unmarked and so
     counted as transverse) and the terms, the Standard Model's with dim 4 and the classes' with
     dim 6 or 8, each with its group, power, coupling monomials, operators and the external legs
@@ -730,9 +732,11 @@ def series(proc, vertex_index, sm, catalogue, group=None, onshell=None, interfer
     left = sorted(cls for (dim, cls), bs in count.items() if all(map(gone, bs)) and (dim, cls) not in have)
     label_of = {u[0]: u[4] for u in units}
     out_ops = sorted((cls, label_of[b]) for (dim, cls), bs in count.items() for b in bs if gone(b))
-    out = {"process": proc, "marks": marks, "n": n, "two_n_minus_8": 2 * n - 8, "sm_power": smp,
+    unmarked = any(m is None and any(x in LR.GOLDSTONE for x in s) for s, m in zip(slots, marks))
+    out = {"process": proc, "channel": P.transverse_channel(proc) if unmarked else proc,
+           "marks": marks, "n": n, "two_n_minus_8": 2 * n - 8, "sm_power": smp,
            "gauge": gauge, "group": mode, "onshell": onshell is not None,
-           "unmarked": any(m is None and any(x in LR.GOLDSTONE for x in s) for s, m in zip(slots, marks)),
+           "unmarked": unmarked,
            "terms": terms, "square_only": square_only,
            "square_initial": sorted(square["initial"]),
            "left_out": left,
@@ -990,7 +994,7 @@ def latex(results):
         lines.append(f"% ./dim8 series \"{r['process']}\" --model {r['model']['path']}"
                      + (f"  ({r['title']})" if r.get("title") else "")
                      + f", {sm}, {r['gauge']} gauge, {_model_text(r['model'])}"
-                     + (", an unmarked W or Z counted as transverse ({T})" if r.get("unmarked") else ""))
+                     + (", an unmarked W or Z counted as transverse, the same as writing {T}" if r.get("unmarked") else ""))
         groups = [g for g in GROUP_ORDER if any(t["group"] == g for t in r["terms"])]
         if groups:
             lines.append(r"\begin{align}")
@@ -1042,7 +1046,7 @@ def text(results, notes=()):
         if r.get("title"):
             lines.append(r["title"] + ":  " + ",  ".join(r.get("processes", [r["process"]])))
         else:
-            lines.append(f"{r['process']}: {r['n']} external legs, {r['gauge']} gauge")
+            lines.append(f"{r.get('channel', r['process'])}: {r['n']} external legs, {r['gauge']} gauge")
         lines.append(f"  model {r['model']['path']}, {_model_text(r['model'])}")
         if r["sm_power"] is None:
             lines.append("  no Standard Model tree in this channel: every term below is square only")
@@ -1051,7 +1055,7 @@ def text(results, notes=()):
                          "A * marks a dimension-eight term at most four powers of lambda above it, which grows at "
                          "least as E^4/Lambda^4 relative to it")
         if r.get("unmarked"):
-            lines.append("  an unmarked W or Z is counted as transverse, as w+{T}, and w+{0} gives its longitudinal channel")
+            lines.append("  an unmarked W or Z is counted as transverse, {T}, and {0} gives its longitudinal channel")
         for part, head in (("terms", None), ("square_only", "square only, no Standard Model tree for "
                                              + ", ".join(" ".join(x) for x in r.get("square_initial", [])))):
             if part == "square_only" and not r[part]:
