@@ -14,6 +14,9 @@ Run
 
     examples/studies/run_study.sh examples/studies/vbf_dihiggs models/dim8_mw 100000
 
+The interference of class 11 ran at 10^6 events instead, since at 10^5 its Monte Carlo error is
+above the five per cent that `table_master.py` and `table_appendix.py` require of every entry.
+
 The class cards ship in the model directory, written by `examples/release_model.sh` when it
 builds `models/dim8_mw`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
 time. Cross sections append to `results.tsv` and the event files are kept in `lhe/`,

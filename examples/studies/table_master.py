@@ -43,6 +43,18 @@ INT, SQ = "NP^2==2", "NP<=2 NP^2==4"
 POWER = {INT: 4, SQ: 8}   # the power of 1/Lambda that each tagged order carries
 LAM_PAPER = 3000.0    # the scale every table and figure of the paper is printed at, in GeV
 UNIT = 1e-4           # the interference is printed in units of 1e-4 of the Standard Model
+# The captions of this table and of the grid state one bound on the Monte Carlo error of every entry, and a
+# table with an entry at or above it is not written, since the run of that row needs more events.  An entry
+# printed as a bound (an open circle, <0.01) has to stay inside it with its error added.
+MC_BOUND, MC_BOUND_WORDS = 0.05, "five per cent"
+
+
+def above_bound(sig, err, cap=None):
+    """Whether an entry breaks the caption's error bound: an error at or above MC_BOUND of sig, or, for an
+    entry printed as below cap, sig and its error together reaching cap."""
+    if cap is not None and abs(sig) < cap:
+        return abs(sig) + (err or 0) >= cap
+    return bool(err) and abs(err / sig) >= MC_BOUND
 
 
 def study_model(d, where):
@@ -97,15 +109,15 @@ def r_with_error(i, q):
     return r, math.hypot(q[1], r * i[1]) / abs(i[0])
 
 
-def tex_ratio(r, err=False):
-    """R as printed: two significant figures, in parentheses when R has a Monte Carlo error above a tenth."""
+def tex_ratio(r):
+    """R as printed: two significant figures."""
     if r < 0.01:
         t = "<0.01"
     else:
         e = math.floor(math.log10(r))
         x = round(r, 1 - e)
         t = (f"{x / 10**e:.1f}\\times10^{{{e}}}" if e >= 3 else f"{x:.0f}" if e >= 1 else f"{x:.{1 - e}f}")
-    return f"$({t})$" if err else f"${t}$"
+    return f"${t}$"
 
 
 def sq_over_sm(x):
@@ -141,7 +153,7 @@ def main():
              if p_ == proc and o_ == "NP=0" and isinstance(x[0], float)]
         sm[(study, proc)] = v[0][0] if v else None
 
-    rows = []
+    rows, loud = [], []    # loud: the entries above the caption's error bound
     for c in sorted(CLASSES):
         cells = []
         for study, proc, _ in COLS:
@@ -161,6 +173,8 @@ def main():
                 continue
             if i[0] == "NO_DIAGRAMS" and isinstance(q[0], float) and s0:
                 cells += [r"$\ast$", "$[" + sq_over_sm(q[0] / s0) + "]$"]
+                if above_bound(q[0] / s0 / UNIT, (q[1] or 0) / s0 / UNIT, 0.01):
+                    loud.append(f"{proc} | {M[study]}-cls{c} | {SQ}: {q[0]:.4g} +- {q[1]:.2g} pb")
                 continue
             if isinstance(i[0], str) or isinstance(q[0], str) or i[0] is None or q[0] is None:
                 mark = ("--" if "NO_DIAGRAMS" in (i[0], q[0]) or (i[0] is None and q[0] is None)
@@ -177,9 +191,8 @@ def main():
                 x = i[0] / s0 / UNIT
                 pct = (r"$\circ$" if abs(x) < 0.005 else f"${x:+.0f}$" if abs(x) >= 100
                        else f"${x:+.1f}$" if abs(x) >= 10 else f"${x:+.2f}$")
-                # parentheses mark a Monte Carlo error above a tenth of the entry, as in the grid
-                if pct != r"$\circ$" and i[1] and abs(i[1] / i[0]) > 0.1:
-                    pct = "$(" + pct.strip("$") + ")$"
+                if above_bound(x, (i[1] or 0) / s0 / UNIT, 0.005):
+                    loud.append(f"{proc} | {M[study]}-cls{c} | {INT}: {i[0]:.4g} +- {i[1]:.2g} pb")
             else:
                 pct = "--"
             if not isinstance(q[0], float) or not isinstance(i[0], float) or i[0] == 0:
@@ -190,7 +203,9 @@ def main():
             else:
                 # the error of R counts the square's error as well as the interference's
                 r, dr = r_with_error(i, q)
-                rat = tex_ratio(r, dr > 0.1 * r)
+                rat = tex_ratio(r)
+                if above_bound(r, dr, 0.01):
+                    loud.append(f"{proc} | {M[study]}-cls{c}: R = {r:.3g} +- {dr:.2g}")
             cells += [pct, rat]
         rows.append((c, cells))
 
@@ -208,7 +223,7 @@ def main():
             r"\caption{How much each dimension-eight class changes four LHC processes at order $1/\Lambda^4$, and how large its square is compared with that change. "
             r"All entries are for the LHC at $13.6$~TeV, with every coefficient of the class at one and $\Lambda = 3$~TeV, and the $HHjj$ and $e^+e^-$ samples carry the cuts of \cref{tab:grid}. "
             r"$\delta$ is the interference with the SM (\code{NP\^{}2==2}) in units of $10^{-4}$ of the SM rate, and $R = \sigma_{1/\Lambda^8}/|\sigma_{1/\Lambda^4}|$ is the square of the class over its interference. "
-            r"Parentheses mean a Monte Carlo error that can exceed a tenth of the entry. "
+            "The Monte Carlo error of every entry is below " + MC_BOUND_WORDS + ". "
             r"An asterisk marks a nonzero squared contribution with no tree-level SM interference. "
             r"The number in square brackets gives the square in units of $10^{-4}$ of the SM rate. "
             r"A dash means no diagram. "
@@ -219,6 +234,9 @@ def main():
                if any(r"\dagger" in x for _, cells in rows for x in cells) else "")
             + r"The shaded classes are discussed in the text.}" "\n"
             r"\label{tab:master}" "\n" r"\end{table}")
+    if loud:
+        sys.exit("table_master.py: not written, the Monte Carlo error of these entries is not below "
+                 + MC_BOUND_WORDS + " (run them with more events):\n  " + "\n  ".join(loud))
     print(head)
     print("\n".join(body))
     print(tail)

@@ -17,7 +17,7 @@ Standard Model: 8.706e-04 pb (+- 1.039e-06), M_W = 80.39 GeV
 | class 8 (X H^4 D^2) | -4.721e-08 | -5.4e-03 | 4.386e-10 | 80.39 |
 | class 9 (psi^2 X^2 H) | no diagram |  | no diagram | 80.39 |
 | class 10 (psi^2 X H^3) | no diagram |  | no diagram | 80.39 |
-| class 11 (psi^2 H^2 D^3) | -9.694e-08 | -0.01 | 1.105e-06 | 80.39 |
+| class 11 (psi^2 H^2 D^3) | -9.534e-08 | -0.01 | 1.105e-06 | 80.39 |
 | class 12 (psi^2 H^5) | no diagram |  | no diagram | 80.39 |
 | class 13 (psi^2 H^4 D) | 1.438e-06 | +0.17 | 1.413e-07 | 80.39 |
 | class 14 (psi^2 X^2 D) | no diagram |  | no diagram | 80.39 |

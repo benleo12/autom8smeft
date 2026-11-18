@@ -21,7 +21,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import provenance  # noqa: E402
-from table_master import at_paper_scale, study_model  # noqa: E402
+from table_master import MC_BOUND_WORDS, above_bound, at_paper_scale, study_model  # noqa: E402
 
 # (study, process, column head).  Order: the four body processes first, then the rest.
 PROCS = [
@@ -76,18 +76,18 @@ def read(study):
     return out
 
 
-def sm_of(data, study, proc):
+def sm_of(data, study, proc, with_error=False):
     v = [x for (p, m, o), x in data[study].items()
          if p == proc and o == "NP=0" and isinstance(x[0], float)]
-    return v[0][0] if v else None
+    return (v[0] if v else (None, None)) if with_error else (v[0][0] if v else None)
 
 
 def cell(sig, err, sm, square=None):
     """One entry, on a three-way encoding that makes the shape of the table readable at a glance:
     a dash where the class produces no diagram, an open circle where it produces one whose
     interference is below 1e-6 of the Standard Model at Lambda = 3 TeV, and otherwise the
-    number, in units of 1e-4 of the Standard Model at 3 TeV.  Parentheses mark a Monte Carlo error above a tenth of the entry.  Writing
-    the negligible entries out as numbers instead buries the pattern of dashes, which is the result."""
+    number, in units of 1e-4 of the Standard Model at 3 TeV.  Writing the negligible entries out as
+    numbers instead buries the pattern of dashes, which is the result."""
     if sig is None or not sm:
         return "--"
     if isinstance(sig, str):
@@ -102,7 +102,7 @@ def cell(sig, err, sm, square=None):
     if abs(pct) < 0.005:
         return r"$\circ$"
     t = f"{pct:+.0f}" if abs(pct) >= 100 else f"{pct:+.1f}" if abs(pct) >= 10 else f"{pct:+.2f}"
-    return f"$({t})$" if (err and abs(err / sig) > 0.1) else f"${t}$"
+    return f"${t}$"
 
 
 # The rows the text of the paper discusses, shaded and with the class in bold so a reader can
@@ -141,17 +141,22 @@ def main():
                           + str(int(f"{x:.1e}".split("e")[1])) + "}$"))
                         for x in sm) + r" \\",
            r"\midrule"]
+    # the entries above the caption's error bound, which stop the table
+    loud = [f"{p} | NP=0: {x:.4g} +- {e:.2g} pb" for s, p, _ in PROCS
+            for x, e in [sm_of(data, s, p, with_error=True)] if x is not None and above_bound(x, e)]
     for c in sorted(CLASSES):
         cells = []
         for (study, proc, _), s0 in zip(PROCS, sm):
             sig, err = data[study].get((proc, f"{M[study]}-cls{c}", INT), (None, None))
             sq = data[study].get((proc, f"{M[study]}-cls{c}", "NP<=2 NP^2==4"), (None, None))[0]
             cells.append(cell(sig, err, s0, sq))
+            if isinstance(sig, float) and s0 and above_bound(sig / s0 / UNIT, (err or 0) / s0 / UNIT, 0.005):
+                loud.append(f"{proc} | {M[study]}-cls{c} | {INT}: {sig:.4g} +- {err:.2g} pb")
         out.append(label(c) + " & " + " & ".join(cells) + r" \\")
     out += [r"\bottomrule", r"\end{tabular}}",
             r"\caption{Dimension-eight interference in the twelve benchmark processes, in units of $10^{-4}$ of the corresponding SM rate. "
             r"The first row gives the SM cross sections in pb. "
-            r"Parentheses mark entries whose Monte Carlo error can exceed ten per cent of their magnitude. "
+            "The Monte Carlo error of every entry is below " + MC_BOUND_WORDS + ". "
             r"An asterisk denotes a nonzero squared contribution without tree-level SM interference, and a dash denotes no contributing diagram. "
             # the paper's caption, with a sentence for each symbol only other rows produce
             + (r"An open circle denotes a class that produces a diagram but interferes below $5\times10^{-7}$ of the SM rate. "
@@ -160,6 +165,9 @@ def main():
                if r"\dagger" in "\n".join(out) else "")
             + r"The shaded classes are discussed in the main text. The settings and cuts are given in this appendix.}",
             r"\label{tab:grid}", r"\end{table}"]
+    if loud:
+        sys.exit("table_appendix.py: not written, the Monte Carlo error of these entries is not below "
+                 + MC_BOUND_WORDS + " (run them with more events):\n  " + "\n  ".join(loud))
     print("\n".join(out))
 
 

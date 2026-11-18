@@ -20,7 +20,7 @@ p p > w+ w- z	dim8_mw-cls13	NP^2==2	1.338e-05	2.814e-08	100000	80.387	dim8_all=1
 p p > w+ w- z	dim8_mw-cls13	NP<=2 NP^2==4	1.324e-07	1.186e-10	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls13_NP__2_NP_2__4.lhe.gz
 p p > w+ w- z	dim8_mw-cls14	NP^2==2	-0.001773	1.725e-06	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls14_NP_2__2.lhe.gz
 p p > w+ w- z	dim8_mw-cls14	NP<=2 NP^2==4	0.006424	1.553e-05	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls14_NP__2_NP_2__4.lhe.gz
-p p > w+ w- z	dim8_mw-cls15	NP^2==2	5.085e-06	1.132e-07	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls15_NP_2__2.lhe.gz
+p p > w+ w- z	dim8_mw-cls15	NP^2==2	5.185e-06	3.45e-08	1000000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls15_NP_2__2.lhe.gz
 p p > w+ w- z	dim8_mw-cls15	NP<=2 NP^2==4	9.549e-05	9.104e-08	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls15_NP__2_NP_2__4.lhe.gz
 p p > w+ w- z	dim8_mw-cls18	NP^2==2	6.091e-06	4.542e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls18_NP_2__2.lhe.gz
 p p > w+ w- z	dim8_mw-cls18	NP<=2 NP^2==4	1.036e-10	7.728e-14	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_z__dim8_mwmcls18_NP__2_NP_2__4.lhe.gz
@@ -33,7 +33,7 @@ p p > w+ w- w+	dim8_mw-cls3	NP^2==2	-5.762e-08	2.814e-10	100000	80.387	dim8_all=
 p p > w+ w- w+	dim8_mw-cls3	NP<=2 NP^2==4	2.914e-12	2.281e-15	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls3_NP__2_NP_2__4.lhe.gz
 p p > w+ w- w+	dim8_mw-cls4	NP^2==2	-2.115e-07	2.162e-10	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls4_NP_2__2.lhe.gz
 p p > w+ w- w+	dim8_mw-cls4	NP<=2 NP^2==4	5.968e-11	5.045e-14	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls4_NP__2_NP_2__4.lhe.gz
-p p > w+ w- w+	dim8_mw-cls5	NP^2==2	-1.987e-07	4.428e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls5_NP_2__2.lhe.gz
+p p > w+ w- w+	dim8_mw-cls5	NP^2==2	-1.96e-07	1.44e-09	1000000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls5_NP_2__2.lhe.gz
 p p > w+ w- w+	dim8_mw-cls5	NP<=2 NP^2==4	5.363e-08	4.184e-11	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls5_NP__2_NP_2__4.lhe.gz
 p p > w+ w- w+	dim8_mw-cls6	NP^2==2	3.475e-06	6.08e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls6_NP_2__2.lhe.gz
 p p > w+ w- w+	dim8_mw-cls6	NP<=2 NP^2==4	1.063e-08	7.938e-12	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wp__dim8_mwmcls6_NP__2_NP_2__4.lhe.gz
@@ -60,7 +60,7 @@ p p > w+ w- w-	dim8_mw-cls3	NP^2==2	-3.308e-08	1.388e-10	100000	80.387	dim8_all=
 p p > w+ w- w-	dim8_mw-cls3	NP<=2 NP^2==4	1.574e-12	1.177e-15	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls3_NP__2_NP_2__4.lhe.gz
 p p > w+ w- w-	dim8_mw-cls4	NP^2==2	-1.108e-07	1.151e-10	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls4_NP_2__2.lhe.gz
 p p > w+ w- w-	dim8_mw-cls4	NP<=2 NP^2==4	2.17e-11	1.881e-14	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls4_NP__2_NP_2__4.lhe.gz
-p p > w+ w- w-	dim8_mw-cls5	NP^2==2	-1.257e-07	2.26e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls5_NP_2__2.lhe.gz
+p p > w+ w- w-	dim8_mw-cls5	NP^2==2	-1.235e-07	7.326e-10	1000000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls5_NP_2__2.lhe.gz
 p p > w+ w- w-	dim8_mw-cls5	NP<=2 NP^2==4	2.043e-08	1.488e-11	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls5_NP__2_NP_2__4.lhe.gz
 p p > w+ w- w-	dim8_mw-cls6	NP^2==2	1.83e-06	3.173e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls6_NP_2__2.lhe.gz
 p p > w+ w- w-	dim8_mw-cls6	NP<=2 NP^2==4	4.486e-09	3.315e-12	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___wp_wm_wm__dim8_mwmcls6_NP__2_NP_2__4.lhe.gz

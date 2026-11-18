@@ -14,7 +14,7 @@ p p > h h j j QCD=0	dim8_mw-cls7	NP^2==2	7.418e-07	5.152e-09	100000	80.387	dim8_
 p p > h h j j QCD=0	dim8_mw-cls7	NP<=2 NP^2==4	4.737e-06	5.619e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls7_NP__2_NP_2__4.lhe.gz
 p p > h h j j QCD=0	dim8_mw-cls8	NP^2==2	-4.721e-08	2.6e-10	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls8_NP_2__2.lhe.gz
 p p > h h j j QCD=0	dim8_mw-cls8	NP<=2 NP^2==4	4.386e-10	5.284e-13	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls8_NP__2_NP_2__4.lhe.gz
-p p > h h j j QCD=0	dim8_mw-cls11	NP^2==2	-9.694e-08	3.53e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls11_NP_2__2.lhe.gz
+p p > h h j j QCD=0	dim8_mw-cls11	NP^2==2	-9.534e-08	1.151e-09	1000000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls11_NP_2__2.lhe.gz
 p p > h h j j QCD=0	dim8_mw-cls11	NP<=2 NP^2==4	1.105e-06	1.062e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls11_NP__2_NP_2__4.lhe.gz
 p p > h h j j QCD=0	dim8_mw-cls13	NP^2==2	1.438e-06	5.902e-09	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls13_NP_2__2.lhe.gz
 p p > h h j j QCD=0	dim8_mw-cls13	NP<=2 NP^2==4	1.413e-07	1.916e-10	100000	80.387	dim8_all=1 Lam=3000	lhe/p_p___h_h_j_j_QCD_0__dim8_mwmcls13_NP__2_NP_2__4.lhe.gz
