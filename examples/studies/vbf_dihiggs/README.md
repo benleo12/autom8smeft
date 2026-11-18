@@ -12,7 +12,7 @@ dimension eight in vector-boson-fusion Higgs production, arXiv:2410.21563.
 
 Run
 
-    examples/studies/run_study.sh examples/studies/vbf_dihiggs models/dim8_mw 5000
+    examples/studies/run_study.sh examples/studies/vbf_dihiggs models/dim8_mw 100000
 
 The class cards ship in the model directory, written by `examples/release_model.sh` when it
 builds `models/dim8_mw`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a

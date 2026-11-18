@@ -187,8 +187,8 @@ at 1 with `Lam` at 1000 GeV.
 
 Cross sections append to `mystudy/results.tsv`, event files to `mystudy/lhe/`, and the record of
 each cross section to `mystudy/records.tsv` (section 5). `DIM8_RUNS` sets
-where process directories go, `DIM8_CORES` caps cores, `DIM8_NEV_SQ` caps events for the squared
-rows.
+where process directories go, `DIM8_CORES` caps cores, `DIM8_NEV_SQ` sets the event count of the
+squared rows, the run's count by default.
 
 Rows per process:
 

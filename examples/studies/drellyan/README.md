@@ -11,7 +11,7 @@ Yukawa couplings of the b and the t.
 
 Run
 
-    examples/studies/run_study.sh examples/studies/drellyan models/dim8_mw 5000
+    examples/studies/run_study.sh examples/studies/drellyan models/dim8_mw 100000
 
 Conventions and columns are those of the other studies, and so are the records of each cross
 section in `records.tsv` that the table scripts check: see `../diboson/README.md`.

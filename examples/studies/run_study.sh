@@ -149,11 +149,11 @@ run_one () { # $1 process line, $2 model spec (dir or dir-card), $3 order
   local gen="$3"; local sets="$SETS"
   [ "$3" = "NP=0" ]    && sets="dim8_all=0$LAMSET"
   [ "$3" = "NP=0 on" ] && gen="NP=0"
-  # The squared rows are there for the cross section, not for distributions (only the leading
-  # classes' squares are ever plotted), and a tiny, peaked squared term can spend an hour
-  # unweighting 5000 events out of tens of thousands of trials; $DIM8_NEV_SQ (default 1000)
-  # caps the event count for that order.
-  local nev=$NEV; [[ "$3" == *"NP^2==4"* ]] && nev=${DIM8_NEV_SQ:-1000}
+  # $DIM8_NEV_SQ sets the event count of the squared rows apart from the others, the run's count by
+  # default.  MadGraph refines a cross section until it has the events asked for, so fewer events is
+  # a less converged number: a squared term that grows with energy came out up to a quarter low at
+  # 1000 events, beyond the error MadGraph quoted.
+  local nev=$NEV; [[ "$3" == *"NP^2==4"* ]] && nev=${DIM8_NEV_SQ:-$NEV}
   local card=""; [ "$2" != "$MODEL" ] && card=${2#$MODEL-}
   local mid; mid=$($PY $HERE/provenance.py model "$MODEL" "$card")
   rm -rf $d

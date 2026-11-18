@@ -10,11 +10,11 @@ dimension eight in vector-boson-fusion Higgs production, arXiv:2410.21563.
 
 Triboson production reaches the quartic gauge vertices directly, so class 1 (X^4) and class 7
 (X^2 H^2 D^2) interfere with the Standard Model at tree level here, which they do not in diboson
-production. The cross sections are small, so these runs want more events than the diboson ones.
+production.
 
 Run
 
-    examples/studies/run_study.sh examples/studies/triboson models/dim8_mw 5000
+    examples/studies/run_study.sh examples/studies/triboson models/dim8_mw 100000
 
 The class cards ship in the model directory, written by `examples/release_model.sh` when it
 builds `models/dim8_mw`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
@@ -37,7 +37,7 @@ used, which is the signal to raise the event count if the factor is far from one
 
 One caution about the rows with every coefficient at one, which run on the `bosonic` card in
 this study. With every coefficient of that card at 1 and Lam at 3 TeV, the squared term of those
-rows comes out between three quarters of the interference (`p p > w+ w- w-`) and 1.25 times it
+rows comes out between three quarters of the interference (`p p > w+ w- w-`) and 1.24 times it
 (`p p > w+ z z`), so the truncation is not self-consistent for them. Those rows are a linearity
 check, since the class interferences must add up to them, rather than a prediction. The physics is
 in the per-class rows, where only a handful of operators are on. In `dim8_mw` the W mass is an

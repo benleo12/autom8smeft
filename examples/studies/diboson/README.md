@@ -20,7 +20,7 @@ amplitude to interfere with.
 
 Run
 
-    examples/studies/run_study.sh examples/studies/diboson models/dim8_mw 5000
+    examples/studies/run_study.sh examples/studies/diboson models/dim8_mw 100000
 
 The class cards ship in the model directory, written by `examples/release_model.sh` when it
 builds `models/dim8_mw`, and `validate/make_restriction.py <model> cls7 cls:7` writes one at a
@@ -57,7 +57,7 @@ settings of every row.
 How to read the class-1 rows. At `NP^2==2` the X^4 class gives no diagram at all in
 `p p > w+ w-`, because a four-field-strength operator has no three-point vertex and its
 four-point ones cannot attach to a quark line, so the row says NO_DIAGRAMS. At `NP<=2 NP^2==4`
-the same class gives 0.55 pb at Lam = 3 TeV, 21 times the interference of the whole model:
+the same class gives 0.56 pb at Lam = 3 TeV, 22 times the interference of the whole model:
 that is `g g > w+ w-` through the G^2 W^2 contact vertex squared, one diagram, with no
 Standard-Model amplitude to interfere with, growing like s^2/Lambda^4 in the amplitude and fed by
 the gluon luminosity. Since it falls as 1/Lambda^8 it is thousands of picobarns at Lam = 1 TeV,

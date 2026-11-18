@@ -11,10 +11,8 @@ the selected classes:
 | `p p > w+ w-` | full model | `cls14`, `cls6`, `cls13`, `cls15` | `cls14` |
 | `p p > h h j j QCD=0` | `bosonic` card | `cls4`, `cls6`, `cls7`, `cls15`, `cls18` | `cls7`, `cls18` |
 
-The cross-section tables use the runs of `../diboson` and `../vbf_dihiggs`, 5000 events for an
-interference and 1000 for a square. These runs are separate and larger because a figure bins the
-pair mass up to about 2.4 TeV, where a Standard-Model bin of a 5000-event sample holds a handful of
-events. All HHjj rows use the cuts of `../vbf_dihiggs`. Its Standard Model sample uses the `bosonic` card.
+The cross-section tables use the runs of `../diboson` and `../vbf_dihiggs`, which also hold 10^5
+events a row, and a row that is in both places has the same cross section in both. All HHjj rows use the cuts of `../vbf_dihiggs`. Its Standard Model sample uses the `bosonic` card.
 
 Each row was run on its own, one study directory a row, and merged here with `merge_rows.py`,
 which carries the row's record and cards. An interference row is

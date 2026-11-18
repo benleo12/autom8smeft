@@ -272,8 +272,8 @@ four studies: in diboson and triboson production, which have no four-fermion tre
 relation alone (`Q_{l^4H^2}^{(1)}`, whose flavour structure with crossed indices contains the
 four-lepton interaction of muon decay). Drell-Yan reaches the others with a vertex. In `dim8_mw`,
 with all coefficients at 1 and Lambda at 3 TeV, `p p > e+ e- | mmll=200` gives, at `NP^2==2`,
-class 18 at +5.60e-4 +- 0.05e-4 pb and class 21 at +2.49e-3 +- 0.07e-3, against a full-model
-+2.86e-3 +- 0.08e-3. Class 19 has no diagram there, and `p p > e+ e- a | mmll=200 pta=20 dral=0.4`
+class 18 at +5.71e-4 +- 0.01e-4 pb and class 21 at +2.61e-3 +- 0.02e-3, against a full-model
++2.94e-3 +- 0.02e-3. Class 19 has no diagram there, and `p p > e+ e- a | mmll=200 pta=20 dral=0.4`
 reaches it, at -4.0e-6 pb of interference. Class 20 has no diagram in any of the studies, since it
 flips chirality, which under minimal flavour violation costs a Yukawa matrix, and the cards of the
 studies keep only the Yukawa couplings of the b and the t. So classes 18, 19 and 21, 243 of the 311 operators, are
